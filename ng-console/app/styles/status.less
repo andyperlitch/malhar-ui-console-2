@@ -1,0 +1,65 @@
+// Status colors
+@status_submitted: #48737f;
+
+@status_accepted: #0084d7;
+@status_pending_deploy: #0084d7;
+
+@status_running: #090;
+@status_active: #090;
+
+@status_failed: #B00;
+@status_killed: #733;
+
+@status_finishing: #D6A405;
+
+@status_finished: #555;
+@status_inactive: #555;
+
+[class^="status-"], [class*=" status-"] {
+    font-weight: bold;
+    text-shadow:0;
+    display: inline-block;
+    padding-left: 16px;
+    background-repeat: no-repeat;
+    background-position: 2px center;
+}
+.status-accepted {
+    background-image: url('@{imagedir}/status_accepted.svg');
+    color: @status_accepted;
+}
+.status-pending-deploy {
+    background-image: url('@{imagedir}/status_accepted.svg');
+    color: @status_pending_deploy;
+}
+.status-running {
+    background-image: url('@{imagedir}/status_running.svg');
+    color: @status_running;
+}
+.status-active {
+    background-image: url('@{imagedir}/status_running.svg');
+    color: @status_active;
+}
+.status-failed {
+    background-image: url('@{imagedir}/status_error.svg');
+    color: @status_failed;
+}
+.status-killed {
+    background-image: url('@{imagedir}/status_killed.svg');
+    color: @status_killed;
+}
+.status-finishing {
+    background-image: url('@{imagedir}/status_finishing.svg');
+    color: @status_finishing;
+}
+.status-finished, .status-ended {
+    background-image: url('@{imagedir}/status_inactive.svg');
+    color: @status_finished;
+}
+.status-inactive {
+    background-image: url('@{imagedir}/status_inactive.svg');
+    color: @status_inactive;
+}
+.status-submitted {
+    background-image: url('@{imagedir}/status_submitted.svg');
+    color: @status_submitted;
+}

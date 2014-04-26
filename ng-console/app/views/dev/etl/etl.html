@@ -1,0 +1,30 @@
+<div ng-include="'views/breadcrumbs.html'"></div>
+<div class="container">
+    <section id="etl-intro">
+        <h1>Build a Real-Time ETL Application</h1>
+        <p>The <em>Extract, Transform, Load</em> (ETL) pattern is an approach to solving a very common problem: ingesting data, transforming and filtering that data, and finally storing it somewhere, perhaps in a database or a file system. <br><br>Constructing an ETL application with the DataTorrent platform provides several perks for dev and ops teams alike: real-time insights, high availability, fault-tolerance, and scalable ingestion, to name a few. Use this page to construct and customize your own ETL application.</p>
+    </section>
+
+    <section id="etl-input-sources">
+        <h2><span class="glyphicon glyphicon-cloud-download"></span> Data Sources</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">name</th>
+                    <th scope="col">type</th>
+                    <th scope="col">edit</th>
+                    <th scope="col">delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="source in sources">
+                    <td>{{source.name}}</td>
+                    <td>{{source.type.label}}</td>
+                    <td><a ng-click="editDataSource(source)"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td><a ng-click="removeDataSource(source)"><span class="glyphicon glyphicon-trash"></span></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" ng-click="addDataSource()"><span class="glyphicon glyphicon-plus"></span> add a data source</button>
+    </section>
+</div>

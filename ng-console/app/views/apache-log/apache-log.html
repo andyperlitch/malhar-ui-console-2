@@ -1,0 +1,23 @@
+<div ng-include="'views/breadcrumbs.html'"></div>
+<div class="container">
+    <section id="apache-log-intro">
+        <h1>Analyze an Apache Log</h1>
+        <p>Interested in seeing a little bit of the power of the DataTorrent platform? This page will help you set up an application that will ingest an Apache Server Access Log.</p>
+    </section>
+
+    <form role="form">
+        <section id="apache-log-input">
+            <h2><span class="glyphicon glyphicon-file"></span> Location of Log File</h2>
+            <p>
+                First, you will need to specify a location of a log file. It should be located on the same machine that the DataTorrent Gateway is running on (where this page is served from).
+            </p>
+            <div class="form-group">
+                <label for="logLocation">Apache Access Log Location</label>
+                <input type="text" class="form-control">
+                <p class="help-block">
+                    This should be an absolute path, eg. <code>/var/log/apache2/access.log</code>.
+                </p>
+            </div>
+        </section>
+    </form>
+</div>

@@ -1,0 +1,132 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="dtConsoleApp" ng-controller="MainCtrl">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- navbar-top -->
+    <div class="container">
+      <div ng-controller="NavbarTopCtrl" class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="navbar-top" bs-navbar>
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">DataTorrent</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+              <li class="dropdown">
+                <a data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  <li class="dropdown-header">cluster info</li>
+                  <li><a href="#" class="displayLicenseInfo">License Info</a></li>
+                  <li><a href="#" class="displayGatewayInfo">Gateway Info</a></li>
+                  <li><a href="#" class="displayConsoleInfo">Console Info</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">docs &amp; help</li>
+                  <li><a target="_blank" href="ttps://www.datatorrent.com/developers/">Developer Center</a></li>
+                  <li><a target="_blank" href="https://www.datatorrent.com/docs/apidocs/">API Docs</a></li>
+                  <li><a target="_blank" href="https://www.datatorrent.com/contact/">Contact DataTorrent</a></li>
+                  <li><a target="_blank" href="https://github.com/DataTorrent/Malhar">Malhar Repository</a></li>
+                </ul>
+
+              </li>
+              <li data-match-route="/config"><a href="#/config">Configuration</a></li>
+              <li data-match-route="/dev"><a href="#/dev">Development</a></li>
+              <li data-match-route="/ops"><a href="#/ops">Operations</a></li>
+            </ul>
+            <!-- <form class="navbar-form navbar-right">
+              <input type="text" class="form-control" placeholder="Search...">
+            </form> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main view area -->
+    <div class="container-fluid" ng-view=""></div>
+    <script>
+
+    // @see http://stackoverflow.com/questions/22199564/chrome-truncates-error-messages-and-adds-omitted-in-window-onerror/22218280#22218280
+    // 
+    window.onerror = function (errorMsg, url, lineNumber, columnNumber, errorObject) {
+        var errMsg;
+        //check the errorObject as IE and FF don't pass it through (yet)
+        if (errorObject && errorObject !== undefined) {
+                errMsg = errorObject.message;
+            }
+            else {
+                errMsg = errorMsg;
+            }
+        console.log('Error: ' + errMsg);
+    }
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="bower_components/angular-ui-sortable/sortable.js"></script>
+    <script src="bower_components/angular-ui-dashboard/dist/angular-ui-dashboard.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/ng-breadcrumbs/dist/ng-breadcrumbs.min.js"></script>
+    <script src="bower_components/pines-notify/jquery.pnotify.js"></script>
+    <script src="bower_components/angular-pines-notify/src/pnotify.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/restangular/dist/restangular.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/templates.js"></script>
+        <script src="scripts/directives/dt-overview.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/Ops.js"></script>
+        <script src="scripts/controllers/navbar-top.js"></script>
+        <script src="scripts/controllers/build-etl.js"></script>
+        <script src="scripts/controllers/apache-log/main.js"></script>
+        <script src="scripts/vendor/visibly.js"></script>
+        <script src="scripts/services/webSocket.js"></script>
+        <script src="scripts/services/overview-data-model.js"></script>
+        <script src="scripts/services/dt-text.js"></script>
+        <script src="scripts/services/dt-formatters.js"></script>
+        <script src="scripts/filters/unsafe.js"></script>
+        <script src="scripts/services/dt-settings.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
