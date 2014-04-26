@@ -1,0 +1,82 @@
+
+// StramEventsWidget styles
+.w-stramEvents {
+    hr {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+}
+.view-mode-text(){
+    font-size: 16px;
+    line-height: 1.5;
+    display: inline-block;
+    vertical-align: middle;
+}
+.view-mode-select {
+
+    h3 {
+        margin: 0 0 0 5px;
+    }
+    h3, label, label input[type="radio"] {
+        .view-mode-text();
+    }
+    input[type="radio"] {
+        margin-left: 0px;
+        margin-right: 5px;
+    }
+}
+.event-list {
+    max-height: 400px;
+    overflow: auto;
+    padding:3px;
+}
+.stram-event-section-title {
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center;
+}
+.event-item {
+    background-color: #CFCFCF;
+    border-radius: 2px;
+    margin-bottom: 3px;
+    font-size: 16px;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &.selected {
+        color: #fff;
+        background-color: #AAA;
+    }
+
+    &.event-startoperator, &.event-startcontainer {
+        background-color: #9dd27d;
+
+        &.selected {
+            background-color: #39af19;
+        }
+    }
+    &.event-stopoperator, &.event-stopcontainer {
+        background-color: #d48e7e;
+        &.selected {
+            background-color: #d44220;
+        }
+    }
+
+    .inner {
+        padding: 5px 10px;
+    }
+
+    .event-item-type {
+        font-weight: bold;
+    }
+    .event-item-timestamp {
+        margin-right: 20px;
+    }
+    .event-item-c2v {
+        float: right;
+    }
+
+}
