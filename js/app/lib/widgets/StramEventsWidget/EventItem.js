@@ -3,7 +3,8 @@ var kt = require('knights-templar');
 var BaseView = require('bassview');
 var EventItem = BaseView.extend({
     className: 'event-item',
-    initialize: function() {
+    initialize: function(options) {
+        this.parent = options.parent;
         this.listenTo(this.model, 'change:selected', this.render);
     },
     render: function() {
@@ -29,14 +30,18 @@ var EventItem = BaseView.extend({
     },
     events: {
         mousedown: function(evt) {
+            var makeSelected = true;
+            evt.preventDefault();
+            evt.originalEvent.preventDefault();
             if (!evt.shiftKey) {
-                evt.preventDefault();
-                evt.originalEvent.preventDefault();
                 this.collection.each(function(evt){
                     evt.set('selected', false);
-                });  
+                });
+            } else {
+                makeSelected = !(!!this.model.get('selected'));
             }
-            this.model.set('selected', true);
+            this.parent.$el.focus();
+            this.model.set('selected', makeSelected);
         }
     },
     template: kt.make(__dirname+'/EventItem.html')

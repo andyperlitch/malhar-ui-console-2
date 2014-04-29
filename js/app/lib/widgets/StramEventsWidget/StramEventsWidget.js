@@ -50,13 +50,6 @@ var StramEventsWidget = BaseView.extend({
         // TODO: load from state
         this.viewMode = 'tail';
 
-        this.collection.fetch({
-            data: {
-                from: Date.now() - 600000,
-                to: Date.now()
-            }
-        });
-
     },
     
     html: function() {

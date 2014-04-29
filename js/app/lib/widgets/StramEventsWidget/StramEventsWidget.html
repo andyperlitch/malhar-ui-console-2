@@ -1,4 +1,5 @@
-<form class="view-mode-select">
+<!-- hiding until backend can provide limit/offset/direction queryString parameters -->
+<form class="view-mode-select" style="display:none;">
     <h3>view mode:</h3>
     <label for="viewMode" class="radio">
         <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
@@ -9,11 +10,13 @@
         range
     </label>
 </form>
-<hr>
+<!-- <hr> -->
+<!-- hiding until backend can provide limit/offset/direction queryString parameters -->
+
 <div class="row-fluid">
     <div class="span7">
         <h3 class="stram-event-section-title">StrAM Events/Decisions</h3>
-        <div class="event-list well"></div>
+        <div class="event-list well" tabindex="1"></div>
     </div>
     <div class="span5">
         <h3 class="stram-event-section-title">Event Viewer</h3>
