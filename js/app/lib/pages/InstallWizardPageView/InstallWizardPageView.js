@@ -156,6 +156,7 @@ var InstallWizardPageView = BaseView.extend({
             license: this.license
         });
         this.$('.install-steps-pane .inner').html(this._currentView.render().el);
+        this._currentView.postRender();
 
         // highlight progress bar
         this.$('.install-steps-progress .install-step').removeClass('active');

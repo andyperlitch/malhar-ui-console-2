@@ -388,8 +388,18 @@ var HadoopView = BaseView.extend({
         if (this.assignments) {
             this.assign(this.assignments);
         }
-
+        this.postRender();
         return this;
+    },
+
+    postRender: function() {
+        // look for error fields
+        var $error = this.$('input:text[value=\'\']:eq(0)');
+        if ($error.length) {
+            $error.focus();
+        } else {
+            BaseView.prototype.postRender.call(this);
+        }
     },
 
     assignments: {
