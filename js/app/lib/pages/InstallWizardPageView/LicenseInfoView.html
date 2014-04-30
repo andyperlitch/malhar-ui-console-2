@@ -14,7 +14,7 @@
     Error Loading License Information
 </p>
 
-<% } else if (license.get('id')) {  %>
+<% } else if (license.id) {  %>
 
 <% if (message) {  %>
 <p class="alert alert-success">
@@ -30,7 +30,18 @@
 
 <div>
     <div class="well">
-        <p><strong>Current License:</strong> <%= license.get('id') %> <a href="#" class="displayLicenseInfo action-link">More Info</a></p>
+        <h4>Current License:</h4>
+        <p>
+            <strong>license id:</strong> <%= license.id %><br>
+            <% if (license.sections && license.sections.length) { %>
+                <% _.each( license.sections, function(section) { %>
+                <strong>start date:</strong> <%= section.startDate %><br>
+                <strong>end date:</strong> <%= section.endDate %><br>
+                <strong>constraint:</strong> <%= section.constraint %><br>
+                <strong>comment:</strong> <%= section.comment %><br>
+                <% }) %>
+            <% } %>
+        </p>
     </div>
 </div>
 
