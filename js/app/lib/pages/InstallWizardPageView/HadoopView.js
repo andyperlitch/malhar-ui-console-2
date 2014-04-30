@@ -322,13 +322,9 @@ var HadoopView = BaseView.extend({
     checkDFSLocation: function () {
         // Check that DFS Location is still valid
         var dfsPromise;
-        if (this.dfsModel.isChanged()) {
-            var value = this.dfsModel.getValue();
-            dfsPromise = this.saveProperty('dt.dfsRootDirectory', value);
-        } else {
-            dfsPromise = this.createResolvedPromise();
-        }
-        
+        var value = this.dfsModel.getValue();
+        dfsPromise = this.saveProperty('dt.dfsRootDirectory', value);
+                
         dfsPromise.fail(function (msg) {
             this.continuing = false;
             this.showError('.dfs-directory-error', msg);
