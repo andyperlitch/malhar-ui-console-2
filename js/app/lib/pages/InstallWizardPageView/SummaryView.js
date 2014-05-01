@@ -102,6 +102,8 @@ var SummaryView = BaseView.extend({
             this.assign(this.assignments);
         }
 
+        this.postRender();
+
         return this;
     },
 

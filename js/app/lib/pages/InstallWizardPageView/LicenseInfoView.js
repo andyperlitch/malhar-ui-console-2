@@ -56,12 +56,6 @@ var LicenseInfoView = BaseView.extend({
             agentMaxTries: 10
         });
         this.listenTo(this.license, 'sync', function () {
-            if (this.navFlow.mockState && this.navFlow.mockState.LicenseInfoView) {
-                if (this.navFlow.mockState.LicenseInfoView.defaultLicense) {
-                    this.license.set('id', 'default-' + this.license.get('id'));
-                }
-            }
-
             this.render();
         }.bind(this));
     },
@@ -116,12 +110,13 @@ var LicenseInfoView = BaseView.extend({
             error: this.error,
             message: this.message,
             licenseRequestBlob: this.licenseRequestBlob,
-            license: this.license
+            license: this.license.toJSON()
         });
         this.$el.html(html);
         if (this.assignments) {
             this.assign(this.assignments);
         }
+        this.postRender();
         return this;
     },
 

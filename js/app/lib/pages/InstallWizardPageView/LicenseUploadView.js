@@ -69,6 +69,7 @@ var LicenseUploadView = BaseView.extend({
         if (this.assignments) {
             this.assign(this.assignments);
         }
+        this.postRender();
         return this;
     },
 
