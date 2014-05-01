@@ -24,6 +24,7 @@ var EventItem = BaseView.extend({
     },
     render: function() {
         var json = this.model.toJSON();
+        json.appId = this.parent.appId;
 
         // give timestamp a proper format
         var timestamp = new Date(json.timestamp*1);
@@ -57,6 +58,9 @@ var EventItem = BaseView.extend({
             }
             this.parent.$el.focus();
             this.model.set('selected', makeSelected);
+        },
+        'mousedown a': function(e) {
+            e.stopPropagation();
         }
     },
     template: kt.make(__dirname+'/EventItem.html')

@@ -33,6 +33,7 @@ var StramEventsWidget = BaseView.extend({
     initialize: function(options) {
         
         BaseView.prototype.initialize.call(this, options);
+        this.appId = options.appId;
         this.collection = new StramEventCollection([],{
             dataSource: options.dataSource,
             appId: options.appId
@@ -49,12 +50,14 @@ var StramEventsWidget = BaseView.extend({
         
         // TODO: load from state
         this.viewMode = 'tail';
+        this.showRaw = false;
 
     },
     
     html: function() {
         var json = {
-            viewMode: this.viewMode
+            viewMode: this.viewMode,
+            showRaw: this.showRaw
         };
         var html = this.template(json);
         return html;
@@ -66,7 +69,8 @@ var StramEventsWidget = BaseView.extend({
     },
 
     events: {
-        'change [name="viewMode"]': 'onViewModeChange'
+        'change [name="viewMode"]': 'onViewModeChange',
+        'change .show-raw-event-data': 'onShowRawChange'
     },
 
     onViewModeChange: function(evt) {
@@ -75,6 +79,13 @@ var StramEventsWidget = BaseView.extend({
             this.viewMode = newMode;
             this.renderContent();
         }
+    },
+
+    onShowRawChange: function(evt) {
+        var showRaw = this.$('form .show-raw-event-data:checked');
+        this.showRaw = !! showRaw.length;
+        var method = this.showRaw ? 'show' : 'hide';
+        this.$('.event-viewer-container')[method]();
     },
     
     template: kt.make(__dirname+'/StramEventsWidget.html','_')

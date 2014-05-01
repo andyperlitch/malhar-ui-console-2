@@ -1,5 +1,5 @@
 <!-- hiding until backend can provide limit/offset/direction queryString parameters -->
-<form class="view-mode-select" style="display:none;">
+<form class="view-mode-select">
     <h3>view mode:</h3>
     <label for="viewMode" class="radio">
         <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
@@ -9,17 +9,20 @@
         <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
         range
     </label>
+    <br>
+    <h3>show raw event data:</h3>
+    <input type="checkbox" class="show-raw-event-data" <% if (showRaw === true) { print('checked="checked"'); } %>>
 </form>
 <!-- <hr> -->
 <!-- hiding until backend can provide limit/offset/direction queryString parameters -->
 
 <div class="row-fluid">
-    <div class="span7">
+    <div class="event-viewer-container" style="display: <% if (showRaw === true) { print('block'); } else { print('none'); } %>">
+        <h3 class="stram-event-section-title">Raw Event Data</h3>
+        <div class="event-viewer well"></div>
+    </div>
+    <div>
         <h3 class="stram-event-section-title">StrAM Events/Decisions</h3>
         <div class="event-list well" tabindex="1"></div>
-    </div>
-    <div class="span5">
-        <h3 class="stram-event-section-title">Event Viewer</h3>
-        <div class="event-viewer well"></div>
     </div>
 </div>

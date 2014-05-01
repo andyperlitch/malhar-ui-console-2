@@ -19,12 +19,13 @@ var EventList = BaseView.extend({
 
     initialize: function(options) {
         this.parent = options.parent;
-        this.listenTo(this.collection, 'add', this.addOne);
+        this.appId = this.parent.appId;
+        this.listenTo(this.collection, 'add', this.addOne.bind(this));
     },
 
     render: function() {
         this.trigger('clean_up');
-        this.collection.each(this.addOne);
+        this.collection.each(this.addOne, this);
     },
 
     addOne: function(model) {
