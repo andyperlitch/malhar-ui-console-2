@@ -33,7 +33,7 @@ var StreamListWidget = require('../widgets/StreamListWidget');
 var AlertListWidget = require('../widgets/AlertListWidget');
 var PhysicalDagWidget = require('../widgets/PhysicalDagWidget');
 var LogicalDagWidget = require('../widgets/LogicalDagWidget');
-var StramEventsWidget = require('../widgets/StramEventsWidget');
+// var StramEventsWidget = require('../widgets/StramEventsWidget');
 // var TopNWidget = DT.widgets.TopNWidget;
 
 
@@ -246,16 +246,16 @@ var AppInstancePageView = BasePageView.extend({
                         model: this.model
                     }
                 },
-                {
-                    name: 'stramEvents', 
-                    defaultId: 'events',
-                    view: StramEventsWidget,
-                    limit: 0,
-                    inject: {
-                        dataSource: this.dataSource,
-                        appId: pageParams.appId
-                    }
-                }
+                // {
+                //     name: 'stramEvents', 
+                //     defaultId: 'events',
+                //     view: StramEventsWidget,
+                //     limit: 0,
+                //     inject: {
+                //         dataSource: this.dataSource,
+                //         appId: pageParams.appId
+                //     }
+                // }
                 // {
                 //     name: 'topN',
                 //     defaultId: 'top n',
@@ -364,13 +364,13 @@ var AppInstancePageView = BasePageView.extend({
                 { widget: 'appMetrics', id: 'metrics chart' }
             ]
         },
-        {
-            dash_id: 'stram-events',
-            widgets: [
-                { widget: 'instanceInfo', id: 'info', width: 60 },
-                { widget: 'stramEvents', id: 'events' }
-            ]
-        },
+        // {
+        //     dash_id: 'stram-events',
+        //     widgets: [
+        //         { widget: 'instanceInfo', id: 'info', width: 60 },
+        //         { widget: 'stramEvents', id: 'events' }
+        //     ]
+        // },
         {
             dash_id: 'ended-recordings',
             widgets: [
