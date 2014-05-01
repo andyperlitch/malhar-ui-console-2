@@ -237,15 +237,21 @@ var HadoopView = BaseView.extend({
     },
 
     continue: function (event) {
+        if (this.continuing) {
+            return;
+        }
+        this.continuing = true;
         event.preventDefault();
 
         if (jQuery(event.target).hasClass('disabled')) {
+            this.continuing = false;
             return;
         }
 
         this.$('.hadoop-location').blur();
 
         if (!this.hadoopLocationModel.isValid()) {
+            this.continuing = false;
             return;
         }
 
@@ -263,6 +269,7 @@ var HadoopView = BaseView.extend({
             this.$('.loading').hide();
             this.$('.continue').removeClass('disabled');
             this.showError('.hadoop-error', msg);
+            this.continuing = true;
         }.bind(this));
 
         hadoopLocationPromise.done(function () {
@@ -283,7 +290,10 @@ var HadoopView = BaseView.extend({
                 if (restartRequired) {
                     var modal = new ConfirmModal({
                         message: 'Changes made require restart. Please restart the Gateway.',
-                        confirmCallback: this.restart.bind(this)
+                        confirmCallback: this.restart.bind(this),
+                        cancelCallback: function() {
+                            this.continuing = false;
+                        }.bind(this)
                     });
                     modal.addToDOM();
                     modal.launch();
@@ -312,14 +322,11 @@ var HadoopView = BaseView.extend({
     checkDFSLocation: function () {
         // Check that DFS Location is still valid
         var dfsPromise;
-        if (this.dfsModel.isChanged()) {
-            var value = this.dfsModel.getValue();
-            dfsPromise = this.saveProperty('dt.dfsRootDirectory', value);
-        } else {
-            dfsPromise = this.createResolvedPromise();
-        }
-        
+        var value = this.dfsModel.getValue();
+        dfsPromise = this.saveProperty('dt.dfsRootDirectory', value);
+                
         dfsPromise.fail(function (msg) {
+            this.continuing = false;
             this.showError('.dfs-directory-error', msg);
         }.bind(this));
 
@@ -332,16 +339,20 @@ var HadoopView = BaseView.extend({
                         this.$('.loading').hide();
                         this.$('.continue').removeClass('disabled');
                         this.showDFSIssue();
+                        this.continuing = false;
                     } else {
+                        this.continuing = false;
                         this.navFlow.go('LicenseInfoView');
                     }
                 }.bind(this));
 
                 dfsIssuePromise.fail(function () {
                     this.error = true;
+                    this.continuing = false;
                     this.render();
                 }.bind(this));
             } else {
+                this.continuing = false;
                 this.navFlow.go('LicenseInfoView');
             }
         }, this))
@@ -377,8 +388,18 @@ var HadoopView = BaseView.extend({
         if (this.assignments) {
             this.assign(this.assignments);
         }
-
+        this.postRender();
         return this;
+    },
+
+    postRender: function() {
+        // look for error fields
+        var $error = this.$('input:text[value=\'\']:eq(0)');
+        if ($error.length) {
+            $error.focus();
+        } else {
+            BaseView.prototype.postRender.call(this);
+        }
     },
 
     assignments: {

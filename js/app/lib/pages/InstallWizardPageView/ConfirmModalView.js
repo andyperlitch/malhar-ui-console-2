@@ -33,7 +33,8 @@ var ConfirmModalView = BaseView.extend({
         });
 
         this.message = options.message;
-        this.confirmCallback = options.confirmCallback;
+        this.confirmCallback = options.confirmCallback || function noop(){};
+        this.cancelCallback = options.cancelCallback || function noop(){};
     },
 
     body: function() {
@@ -52,6 +53,11 @@ var ConfirmModalView = BaseView.extend({
     onConfirm: function(evt) {
         BaseView.prototype.onConfirm.call(this, evt);
         this.confirmCallback.call();
+    },
+
+    onCancel: function(evt) {
+        BaseView.prototype.onCancel.call(this, evt);
+        this.cancelCallback.call();
     },
 
     confirmText: 'restart',
