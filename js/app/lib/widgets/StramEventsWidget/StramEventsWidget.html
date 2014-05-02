@@ -1,17 +1,20 @@
 <!-- hiding until backend can provide limit/offset/direction queryString parameters -->
-<form class="view-mode-select">
-    <h3>view mode:</h3>
-    <label for="viewMode" class="radio">
-        <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
-        tail
-    </label>
-    <label for="viewMode" class="radio">
-        <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
-        range
-    </label>
-    <br>
-    <h3>show raw event data:</h3>
-    <input type="checkbox" class="show-raw-event-data" <% if (showRaw === true) { print('checked="checked"'); } %>>
+<form class="stram-event-options">
+    <div class="option-group view-mode well">
+        <h3>view mode:</h3>
+        <label for="viewMode" class="radio">
+            <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
+            tail
+        </label>
+        <label for="viewMode" class="radio">
+            <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
+            range
+        </label>
+    </div>
+    <div class="option-group well">
+        <h3>show raw event data:</h3>
+        <input type="checkbox" class="show-raw-event-data" <% if (showRaw === true) { print('checked="checked"'); } %>>
+    </div>
 </form>
 <!-- <hr> -->
 <!-- hiding until backend can provide limit/offset/direction queryString parameters -->
