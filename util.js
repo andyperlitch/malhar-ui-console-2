@@ -145,7 +145,7 @@ function addLicenseHeaders(options) {
 					console.log('added license headers to: ' + filepath);
                 } else if (match[1] != year) {
                     console.log('updating year: ' + filepath);
-                    fs.writeFileSync(filepath.replace(license_re, license_string));
+                    fs.writeFileSync(contents.replace(license_re, license_string));
 				} else {
 					already++;
 				}
