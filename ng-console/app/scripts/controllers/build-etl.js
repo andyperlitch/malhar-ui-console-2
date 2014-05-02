@@ -71,7 +71,7 @@ angular.module('dtConsoleApp')
     $scope.editDataSource = function(source) {
 
       var modalInstance = $modal.open({
-        templateUrl: 'views/etl/edit-source.html',
+        templateUrl: 'views/dev/etl/edit-source.html',
         controller: 'EtlEditSourceCtrl',
         resolve: {
           source: function () {
