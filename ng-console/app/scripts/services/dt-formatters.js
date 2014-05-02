@@ -68,13 +68,15 @@ angular.module('dtConsoleApp.formatters', [])
     }])
   .filter('dtCommaGroups', function() {
     function commaGroups(value) {
-      if (typeof value === 'undefined') return '';
-      var parts = value.toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return parts.join(".");
+      if (typeof value === 'undefined') {
+        return '';
+      }
+      var parts = value.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.join('.');
     }
     return commaGroups;
-  })
+  });
   
   // function containerFormatter(value, row) {
   //   if (!value) return '-';

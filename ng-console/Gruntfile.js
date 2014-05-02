@@ -99,7 +99,7 @@ module.exports = function (grunt) {
           ],
           middleware: function (connect, options) {
             if (!Array.isArray(options.base)) {
-                options.base = [options.base];
+              options.base = [options.base];
             }
 
             // Setup the proxy

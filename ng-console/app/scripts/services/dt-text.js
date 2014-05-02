@@ -16,7 +16,7 @@ angular.module('dtConsoleApp')
       'as_of_label'                :  'as of',
       'buffer_server_reads_label'  :  'buffer server reads',
       'buffer_server_writes_label' :  'buffer server writes',
-      'buffer_server_reads_ps'     :  'buffer server reads/s',  
+      'buffer_server_reads_ps'     :  'buffer server reads/s',
       'buffer_server_writes_ps'    :  'buffer server writes/s',
       'buffer_server_bps_label'    :  'buffer server bytes/s',
       'container_id_label'         :  'container id',
@@ -118,6 +118,6 @@ angular.module('dtConsoleApp')
 
     this.get = function(key) {
       return textHash[key] || key;
-    }
+    };
 
   }]);
