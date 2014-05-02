@@ -16,4 +16,14 @@
 
 var util = require('../util');
 
-util.addLicenseHeaders();
+util.addLicenseHeaders({
+    include: [
+        '/js/app',
+        '/js/datatorrent',
+        '/bin',
+        '/ng-console/app/scripts/'
+    ],
+    exclude: [
+        /ng-console\/app\/scripts\/vendor/
+    ]
+});

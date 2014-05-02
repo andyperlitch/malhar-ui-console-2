@@ -92,23 +92,56 @@ exports.precompileTemplates = precompileTemplates;
  * Scans js folders for all js files without the proper license
  * headers.
  */
-function addLicenseHeaders() {
-	var license_string = fs.readFileSync(__dirname + '/bin/license_header.txt') + '\n';
-
-	var license_re = new RegExp('Licensed under the Apache License');
+function addLicenseHeaders(options) {
+    var include = options.include;
+    var exclude = options.exclude;
+    var year = (new Date()).getFullYear();
+	var license_re = require('./bin/license_regex');
+    var license_string = require('./bin/license_header')();
 
 	function doneFn (err, list) {
 
 		if (err) {
 			console.log('An error occurred');
 		} else {
-			var jsfiles = _.filter(list, function(item) {
-				return /\.js$/.test(item);
+			var included = _.filter(list, function(item) {
+				    
+                // Only test js files
+                if (!/\.js$/.test(item)) {
+                    return false;
+                }
+
+                // Filter result variable
+                var include = true;
+
+                // Perform exclusions
+                exclude.forEach(function(ex) {
+
+                    // Test for regex excludes
+                    if (ex instanceof RegExp) {
+                        if (ex.test(item)) {
+                            include = false;
+                            return;
+                        }
+                    }
+                    // Test for string excludes
+                    else {
+                        if (ex === item) {
+                            include = false;
+                            return;   
+                        }
+                    }
+                });
+
+                return include;
+
 			});
 			var already = 0;
-			_.each(jsfiles, function(filepath) {
+			_.each(included, function(filepath) {
 				var contents = fs.readFileSync(filepath);
-				if (!license_re.test(contents)) {
+                var match = license_re.exec(contents);
+                console.log(match);
+				if (!match) {
 					fs.writeFileSync(filepath, license_string + contents);
 					console.log('added license headers to: ' + filepath);
 				} else {
@@ -120,8 +153,16 @@ function addLicenseHeaders() {
 		}
 
 	}
-	walk(path.normalize(__dirname + '/js/app'), doneFn);
-	walk(path.normalize(__dirname + '/js/datatorrent'), doneFn);
-	walk(path.normalize(__dirname + '/bin'), doneFn);
+
+    include.forEach(function(incl) {
+        walk(path.normalize(__dirname + incl), doneFn);
+    });
+	// walk(path.normalize(__dirname + '/js/app'), doneFn);
+	// walk(path.normalize(__dirname + '/js/datatorrent'), doneFn);
+	// walk(path.normalize(__dirname + '/bin'), doneFn);
+ //    walk(path.normalize(__dirname + '/ng-console/app/scripts/controllers'), doneFn);
+ //    walk(path.normalize(__dirname + '/ng-console/app/scripts/directives'), doneFn);
+ //    walk(path.normalize(__dirname + '/ng-console/app/scripts/filters'), doneFn);
+ //    walk(path.normalize(__dirname + '/ng-console/app/scripts/services'), doneFn);
 }
 exports.addLicenseHeaders = addLicenseHeaders;
