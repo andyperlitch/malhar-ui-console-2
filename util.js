@@ -140,10 +140,12 @@ function addLicenseHeaders(options) {
 			_.each(included, function(filepath) {
 				var contents = fs.readFileSync(filepath);
                 var match = license_re.exec(contents);
-                console.log(match);
 				if (!match) {
 					fs.writeFileSync(filepath, license_string + contents);
 					console.log('added license headers to: ' + filepath);
+                } else if (match[1] != year) {
+                    console.log('updating year: ' + filepath);
+                    fs.writeFileSync(filepath.replace(license_re, license_string));
 				} else {
 					already++;
 				}
@@ -157,12 +159,5 @@ function addLicenseHeaders(options) {
     include.forEach(function(incl) {
         walk(path.normalize(__dirname + incl), doneFn);
     });
-	// walk(path.normalize(__dirname + '/js/app'), doneFn);
-	// walk(path.normalize(__dirname + '/js/datatorrent'), doneFn);
-	// walk(path.normalize(__dirname + '/bin'), doneFn);
- //    walk(path.normalize(__dirname + '/ng-console/app/scripts/controllers'), doneFn);
- //    walk(path.normalize(__dirname + '/ng-console/app/scripts/directives'), doneFn);
- //    walk(path.normalize(__dirname + '/ng-console/app/scripts/filters'), doneFn);
- //    walk(path.normalize(__dirname + '/ng-console/app/scripts/services'), doneFn);
 }
 exports.addLicenseHeaders = addLicenseHeaders;
