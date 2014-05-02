@@ -69,8 +69,12 @@ To create a custom directive, run:
 
 By convention, names should be all lower-case with dashes, eg. ng-navbar. This will place a new file into `/app/scripts/directives/` and will also add the appropriate script to `/app/index.html`.
 
+#### Widgets
+Widgets are the most common directive that gets created in this project. To create a new one, run the following command:
 
+    yo angular:directive widgets/dt-widget-name/dt-widget-name
 
+This will correctly create a separate folder for the widget so that all files relating to this widget are located in there.
 
 ## Styles
 This project uses the [LESS CSS pre-processor](http://lesscss.org/) to organize its styling. A "manifest" file is located at `app/styles/main.less`, which @imports all style dependencies (eg. from a bower component) and custom DataTorrent UI component styles (eg. `/app/styles/navbar.less`).
