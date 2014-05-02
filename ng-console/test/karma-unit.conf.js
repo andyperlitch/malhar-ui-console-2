@@ -14,7 +14,7 @@ module.exports = function(config) {
     './test/spec/**/*.js',
 
     // template files
-    'app/scripts/directives/*.tpl.html'
+    'app/scripts/directives/**/*.tpl.html'
   ]);
 
   // here we specify which of the files we want to appear in the coverage report
