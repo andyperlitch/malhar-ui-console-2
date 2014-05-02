@@ -51,7 +51,7 @@ angular.module('dtConsoleApp')
 
       return {
         restrict: 'A',
-        templateUrl: 'scripts/directives/dt-overview.tpl.html',
+        templateUrl: 'scripts/directives/widgets/dt-overview/dt-overview.tpl.html',
         scope: {
           'fields': '=',
           'data': '='
