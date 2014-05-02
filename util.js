@@ -138,14 +138,14 @@ function addLicenseHeaders(options) {
 			});
 			var already = 0;
 			_.each(included, function(filepath) {
-				var contents = fs.readFileSync(filepath);
+				var contents = fs.readFileSync(filepath, 'utf8');
                 var match = license_re.exec(contents);
 				if (!match) {
 					fs.writeFileSync(filepath, license_string + contents);
 					console.log('added license headers to: ' + filepath);
                 } else if (match[1] != year) {
                     console.log('updating year: ' + filepath);
-                    fs.writeFileSync(contents.replace(license_re, license_string));
+                    fs.writeFileSync(filepath, contents.replace(license_re, license_string));
 				} else {
 					already++;
 				}
