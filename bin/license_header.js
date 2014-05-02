@@ -1,7 +1,7 @@
 function getLicenseHeader(year) {
     year = year || (new Date()).getFullYear();
     return '/*\n' +
-        ' * Copyright (c) \n' +year + ' DataTorrent, Inc. ALL Rights Reserved.\n' +
+        ' * Copyright (c) ' + year + ' DataTorrent, Inc. ALL Rights Reserved.\n' +
         ' *\n' +
         ' * Licensed under the Apache License, Version 2.0 (the "License");\n' +
         ' * you may not use this file except in compliance with the License.\n' +
