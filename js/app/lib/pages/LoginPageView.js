@@ -61,16 +61,28 @@ var LoginPageView = BasePage.extend({
         this.assign({
             '#userName': 'userName',
             '#password': 'password'
-        })
+        });
+        _.defer(function() {
+            this.$('#userName').focus();
+        }.bind(this));
         return this;
     },
 
     events: {
+        'keydown': 'checkForSubmit',
         'submit #login-form': 'onSubmit'
     },
 
+    checkForSubmit: function(e) {
+        if (e.which === 13) {
+            this.onSubmit();
+        }
+    },
+
     onSubmit: function(e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         if (this.model.isValid()) {
             var self = this;
             var promise = this.model.login();
