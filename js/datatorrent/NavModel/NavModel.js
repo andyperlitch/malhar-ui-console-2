@@ -81,7 +81,7 @@ var Nav = Backbone.Model.extend({
     },
 
     redirectAuthenticatedUser: function() {
-        this.go(this._authRedirectUrl || 'ops');
+        this.go(this._authRedirectUrl || 'ops', { trigger: false });
         window.location.reload();
     }
 
