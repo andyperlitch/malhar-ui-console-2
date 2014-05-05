@@ -10,6 +10,11 @@
             <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
             range
         </label>
+        <span class="range-params" style="display: <% if (viewMode === 'range') { print('inline'); } else { print('none'); } %>">
+            <input type="text" name="range-from" placeholder="from" class="input-medium"> 
+            to 
+            <input type="text" name="range-to" placeholder="to" class="input-medium"> 
+        </span>
     </div>
     <div class="option-group well">
         <h3>show raw event data:</h3>

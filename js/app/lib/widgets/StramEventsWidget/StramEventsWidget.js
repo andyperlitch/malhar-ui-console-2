@@ -15,6 +15,7 @@
  */
 
 var _ = require('underscore');
+var Backbone = require('backbone');
 var kt = require('knights-templar');
 var BaseView = DT.lib.WidgetView;
 var StramEventCollection = DT.lib.StramEventCollection;
@@ -22,17 +23,37 @@ var StramEventCollection = DT.lib.StramEventCollection;
 var EventList = require('./EventList');
 var EventViewer = require('./EventViewer');
 
+var bbind = DT.lib.Bbindings;
+
 /**
  * StramEventsWidget
  * 
  * Displays StrAM decision events.
  *
 */
+
+var StramEventRange = Backbone.Model.extend({
+    validate: function(attrs) {
+        var errors = {};
+
+
+
+        if (!_.isEmpty(errors)) {
+            return errors;
+        }
+    }
+});
 var StramEventsWidget = BaseView.extend({
     
     initialize: function(options) {
         
         BaseView.prototype.initialize.call(this, options);
+
+        var rangeParams = new StramEventRange({
+            from: '',
+            to: ''
+        });
+
         this.appId = options.appId;
         this.collection = new StramEventCollection([],{
             dataSource: options.dataSource,
