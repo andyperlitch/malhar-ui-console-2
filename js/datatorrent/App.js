@@ -39,9 +39,13 @@ require('../vendor/bootstrap/bootstrap-transition');
 require('../vendor/bootstrap/bootstrap-dropdown');
 require('../vendor/bootstrap/bootstrap-modal');
 require('../vendor/bootstrap/bootstrap-affix');
+require('../vendor/bootstrap/bootstrap-tooltip');
+require('../vendor/bootstrap/bootstrap-collapse');
+require('../vendor/bootstrap/bootstrap-popover');
 require('../vendor/pnotify/jquery.pnotify.min');
 require('../vendor/jsplumb/jquery.jsPlumb-1.5.2-min.js');
 require('../vendor/jquery-ui/ui/minified/jquery-ui.min.js');
+require('../vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker');
 
 // Models
 var DataSource   = require('./DataSource');

@@ -78,10 +78,23 @@ var StramEventsWidget = BaseView.extend({
     html: function() {
         var json = {
             viewMode: this.viewMode,
-            showRaw: this.showRaw
+            showRaw: this.showRaw,
+            widgetId: this.compId()
         };
         var html = this.template(json);
         return html;
+    },
+
+    postRender: function() {
+        this.$('.form_datetime').datetimepicker({
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
     },
     
     assignments: {
