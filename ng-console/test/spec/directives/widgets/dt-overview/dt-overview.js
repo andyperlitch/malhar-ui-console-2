@@ -54,6 +54,10 @@ describe('Directive: dtOverview', function () {
       {
         key: 'special',
         trustAsHtml: true
+      },
+      {
+        key: 'nonexistent',
+        'default': '--'
       }
     ];
     scope.myData = {
@@ -114,6 +118,10 @@ describe('Directive: dtOverview', function () {
 
       it('should return data[key] by default', function() {
         expect(printV(0)).to.equal(100);
+      });
+
+      it('should return the default value if the key is not found on the data object', function() {
+        expect(printV(8)).to.equal('--');
       });
 
       it('should evaluate the value function if present', function() {
