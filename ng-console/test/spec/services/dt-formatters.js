@@ -24,6 +24,12 @@ describe('Module: DtFormatters', function () {
       expect(fn).to.throw();
     });
 
+    it('should return "-" if a non-number is the first arg', function() {
+      expect(f()).to.equal('-');
+      expect(f('not_a_number')).to.equal('-');
+      expect(f('')).to.equal('-');
+    });
+
   });
 
   describe('the cpusFilter', function() {
@@ -67,20 +73,22 @@ describe('Module: DtFormatters', function () {
       expect(f).to.be.a('function');
     });
 
-    it("should format number strings with commas every three places", function(){
-      expect( f("1000000000") ).to.equal("1,000,000,000");
+    it('should format number strings with commas every three places', function(){
+      expect( f('1000000000') ).to.equal('1,000,000,000');
     });
 
-    it("should accept a number as an argument", function() {
-      expect( f(1000000000) ).to.equal("1,000,000,000");
+    it('should accept a number as an argument', function() {
+      expect( f(1000000000) ).to.equal('1,000,000,000');
     });
 
-    it("should not format numbers less than 1000", function() {
-      expect( f("893") ).to.equal("893");
+    it('should not format numbers less than 1000', function() {
+      expect( f('893') ).to.equal('893');
+    });
+
+    it('should return "-" if nothing is passed to it', function() {
+      expect( f() ).to.equal('-');
     });
 
   });
-
-
 
 });

@@ -15,6 +15,9 @@ angular.module('dtConsoleApp.formatters', [])
      * @return {string} returns human-readable string format
      */
     function byteFormatter(bytes, level) {
+      if (bytes === '' || isNaN(bytes*1)) {
+        return '-';
+      }
       var precision = 1;
       level = level || 'b';
       if (!levels.hasOwnProperty(level)) {
@@ -69,7 +72,7 @@ angular.module('dtConsoleApp.formatters', [])
   .filter('dtCommaGroups', function() {
     function commaGroups(value) {
       if (typeof value === 'undefined') {
-        return '';
+        return '-';
       }
       var parts = value.toString().split('.');
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
