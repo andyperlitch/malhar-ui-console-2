@@ -8,16 +8,16 @@ describe('Service: getUri', function () {
     $provide.value('dtSettings', {
       version: 'v8',
       urls: {
-        Test: '/ws/{{v}}/testing/url',
-        Test2: '/ws/{{v}}/testing/{{with}}/{{params}}'
+        Test: '/ws/:v/testing/url',
+        Test2: '/ws/:v/testing/:with/:params'
       },
       actions: {
-        Test: '/ws/{{v}}/do/something',
-        Test2: '/ws/{{v}}/do/{{something}}/with/{{params}}'
+        Test: '/ws/:v/do/something',
+        Test2: '/ws/:v/do/:something/with/:params'
       },
       topics: {
         Test: 'some.topic',
-        Test2: 'some.{{param}}.topic'
+        Test2: 'some.:param.topic'
       }
     });
 
