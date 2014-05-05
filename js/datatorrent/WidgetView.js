@@ -147,6 +147,12 @@ var WidgetView = BaseView.extend({
         this.$el.html(html);
 
         this._doAssignments();
+
+        // check for postRender,
+        // defer to end of call stack
+        if (this.postRender) {
+            _.defer(this.postRender.bind(this));
+        }
         
         return this;
     },
