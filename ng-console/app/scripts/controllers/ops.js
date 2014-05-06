@@ -46,11 +46,13 @@ angular.module('dtConsoleApp')
               },
               {
                 label: text.get('num_containers_label'),
-                key: 'numContainers'
+                key: 'numContainers',
+                'default': '-'
               },
               {
                 label: text.get('num_operators_label'),
-                key: 'numOperators'
+                key: 'numOperators',
+                'default': '-'
               },
               {
                 label: text.get('tuples_per_sec'),

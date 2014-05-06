@@ -5,6 +5,8 @@ angular.module('dtConsoleApp')
 
       function link(scope, elm, attrs) {
 
+        scope.data = scope.data || {};
+
         /**
          * Generates proper label
          * @param  {object} field definition object
