@@ -46,6 +46,13 @@
                 </section>
             </div>
 
+            <% } else if (error) { %>
+                <p class="alert-error alert"><%= DT.text('An error occurred loading the license file:') %></p>
+                <p class="well">
+                    <strong>Code:</strong> <%= error.status %> <br>
+                    <strong>Response:</strong> <%= error.statusText %> <br>
+                </p>
+
             <% } else { %>
                 
                 <%= DT.text('Loading license information...') %>

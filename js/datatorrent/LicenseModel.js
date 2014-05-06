@@ -27,7 +27,8 @@ var LicenseModel = BaseModel.extend({
 
 	defaults: {
 		agent: new LicenseAgent({}),
-        sections: []
+        sections: [],
+        error: false
 	},
 
     toJSON: function() {

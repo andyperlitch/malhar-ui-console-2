@@ -73,7 +73,15 @@ var App = BaseView.extend({
 
         // Retrieve licensing information
         this.license = new LicenseModel({});
-        this.license.fetch();
+        this.license.fetch().fail(function(response) {
+            app.license.set({
+                error: {
+                    status: response.status,
+                    statusText: response.statusText
+                }
+            });
+        });
+
 
         // Create dataSource instance
         var dataSource = this.dataSource = new DataSource(options.host, this.user);

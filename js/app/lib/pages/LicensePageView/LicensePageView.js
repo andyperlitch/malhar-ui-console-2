@@ -73,7 +73,8 @@ var LicensePageView = BaseView.extend({
         });
 
         this.license = options.app.license;
-        this.listenTo(this.license.get('agent'), 'sync', this.render);
+        this.listenTo(this.license.get('agent'), 'sync error', this.render);
+        this.listenTo(this.license, 'error', this.render);
     },
 
     render: function() {
