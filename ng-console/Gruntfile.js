@@ -41,10 +41,10 @@ module.exports = function (grunt) {
           livereload: true
         }
       },
-      jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['karma']
-      },
+      // jsTest: {
+      //   files: ['test/spec/{,*/}*.js'],
+      //   tasks: ['karma']
+      // },
       less: {
         files: ['<%= yeoman.app %>/styles/{,*/}{,*/}*.less'],
         tasks: ['concat:less','less:development']
