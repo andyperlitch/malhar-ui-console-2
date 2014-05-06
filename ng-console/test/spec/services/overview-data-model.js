@@ -2,11 +2,23 @@
 
 describe('Service: OverviewDataModel', function () {
 
-  // load the service's module
-  beforeEach(module('dtConsoleApp'));
+  var OverviewDataModel, ds, widgetScope, Widget, sandbox, subscribeSpy;
 
-  
-  var OverviewDataModel, ds, widgetScope, Widget;
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+  });
+
+  // load the service's module
+  beforeEach(module('dtConsoleApp', function($provide) {
+    $provide.value('getUri', {
+      topic: function() {
+        return 'some.topic';
+      }
+    });
+    $provide.value('webSocket', {
+      subscribe: subscribeSpy = sandbox.spy()
+    })
+  }));
 
   // instantiate service
   beforeEach(inject(function (_OverviewDataModel_, $rootScope) {
@@ -18,7 +30,9 @@ describe('Service: OverviewDataModel', function () {
     Widget = {
       dataAttrName: 'data',
       dataModelOptions: {
-        fields: []
+        fields: [],
+        topic: 'ExampleTopic',
+        url: 'ExampleUrl'
       }
     }
 
@@ -26,6 +40,10 @@ describe('Service: OverviewDataModel', function () {
     ds.setup(Widget, widgetScope);
 
   }));
+
+  afterEach(function() {
+    sandbox.restore();
+  });
 
   it('should be a function', function () {
     expect(OverviewDataModel).to.be.a('function');
@@ -46,7 +64,14 @@ describe('Service: OverviewDataModel', function () {
       expect(widgetScope.fields).to.equal(Widget.dataModelOptions.fields);
     });
 
+    it('should add "topic" and "url" to itself from dataModelOptions', function() {
+      expect(ds.topic).to.equal('ExampleTopic');
+      expect(ds.url).to.equal('ExampleUrl');
+    });
 
+    it('should call "subscribe" on webSocket service', function() {
+      expect(subscribeSpy).to.have.been.calledOnce;
+    });
 
   });
 
