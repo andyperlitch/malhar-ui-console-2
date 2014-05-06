@@ -1,8 +1,18 @@
-# DataTorrent Front
+DataTorrent Front
+=================
 
 Open-source, web-based user interface for use with [DataTorrent](http://datatorrent.com), a stream-processing platform for developing real-time, big data applications in Hadoop. 
 
-## Installation/Building
+Contributing
+------------
+This project welcomes new contributors!
+
+You acknowledge that your submissions to DataTorrent on this repository are made pursuant the terms of the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html) and constitute "Contributions," as defined therein, and you represent and warrant that you have the right and authority to do so.
+
+When **adding new javascript files**, please prepend the Apache v2.0 license header, which can be found in [CONTRIBUTING.md file](https://github.com/DataTorrent/malhar-angular-dashboard/blob/master/CONTRIBUTING.md).
+
+Installation/Building
+---------------------
 
 After cloning the [Malhar](https://github.com/DataTorrent/Malhar) repository from Github:
 
@@ -12,14 +22,16 @@ After cloning the [Malhar](https://github.com/DataTorrent/Malhar) repository fro
     
 This creates a `dist` folder whose contents should be copied into the static file server root on the DataTorrent Gateway.
 
-## Browser Compatibility
+Browser Compatibility
+---------------------
 
 The following browsers are currently supported:
 - Chrome
 - Firefox
 - Safari
 
-## Tests
+Tests
+-----
 
 Tests are written using the [Mocha Framework](http://visionmedia.github.io/mocha/), the [Chai Assertion Library](http://chaijs.com/), and the [Sinon Library](http://sinonjs.org/). The `suite.js` file which is located in `front/test/` includes all the tests to be run. The individual test files are located in the same directory of the file under test, and by convention end in `.spec.js`.
 
@@ -32,7 +44,8 @@ To run tests via command line, run `make clitest` (or `npm test`, which proxies 
 To run the tests in the browser, run `make test`, then go to `http://localhost:3334/test/runner.html` to view the test results.
 
 
-## Development
+Development
+-----------
 
 To start development on the DataTorrent UI, you will need to set up a ssh tunnel to the node in a DataTorrent cluster that has the DT Gateway successfully configured and running.
 
@@ -74,8 +87,3 @@ To create a boilerplate for a widget, run
     ./bin/createWidget [-c] _WIDGET_NAME_
 
 This will append "Widget" to the end of your widget name, so it is not necessary to include it here. The new folder that is created will be located at `front/js/app/lib/widgets/_WIDGET_NAME_Widget`.
-
-
-## Contributing
-
-If you would like to help improve this project, please follow the guidelines in the [section on contributing](https://github.com/DataTorrent/Malhar#contributing) in the Malhar repository. Additionally, for linting we use [JSHint](http://www.jshint.com/), so please run your code through this before submission.
