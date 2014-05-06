@@ -28,7 +28,7 @@ angular.module('dtConsoleApp')
           that.updateScope(metrics);
         });
 
-      }
+      };
 
       return OverviewDataModel;
         

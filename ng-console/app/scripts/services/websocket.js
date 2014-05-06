@@ -130,7 +130,7 @@ angular.module('dtConsoleApp.websocket', ['ui.notify'])
               var message = { type: 'subscribe', topic: topic }; // subscribe message
               this.send(message);
 
-              callbacks = jQuery.Callbacks();
+              callbacks = $.Callbacks();
               topicMap[topic] = callbacks;
             }
 

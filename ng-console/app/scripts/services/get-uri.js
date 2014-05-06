@@ -4,9 +4,9 @@ angular.module('dtConsoleApp')
   .factory('getUri', function (DtSettings) {
 
     function interpolateParams(string, params) {
-        return string.replace(/:(\w+)/g, function(match, paramName) {
-            return encodeURIComponent(params[paramName]);
-        });
+      return string.replace(/:(\w+)/g, function(match, paramName) {
+        return encodeURIComponent(params[paramName]);
+      });
     }
 
     // Public API here

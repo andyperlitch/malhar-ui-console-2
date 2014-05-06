@@ -113,7 +113,7 @@ angular.module('dtConsoleApp')
 
     // Inter-dependent text items
     _.extend(textHash, {
-        'specify_jars_instructions'  :  'Select one or more dependency jars from the following list labeled "' + textHash.dep_options_title + '", then order them as needed in the "' + textHash.dep_choices_title + '" list.',
+      'specify_jars_instructions'  :  'Select one or more dependency jars from the following list labeled "' + textHash.dep_options_title + '", then order them as needed in the "' + textHash.dep_choices_title + '" list.',
     });
 
     this.get = function(key) {

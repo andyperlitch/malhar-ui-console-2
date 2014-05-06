@@ -107,7 +107,7 @@ module.exports = function (grunt) {
 
             // Serve static files
             options.base.forEach(function(base) {
-                middlewares.push(connect.static(base));
+              middlewares.push(connect.static(base));
             });
 
             // Make directory browse-able
