@@ -5,7 +5,7 @@ angular.module('dtConsoleApp')
     _.extend(this, {
       //wsRoot: 'http://localhost:3000',
       alertUrlRoot: '/alerts',
-      version: 'v1',
+      GATEWAY_API_VERSION: 'v1',
       maxAlertActions: 3,
       statusOrder: ['RUNNING','FAILED','FINISHED','KILLED'],
       visibility_timeout: 20000,

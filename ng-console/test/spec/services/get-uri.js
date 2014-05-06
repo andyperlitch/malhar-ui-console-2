@@ -6,7 +6,7 @@ describe('Service: getUri', function () {
   beforeEach(module('dtConsoleApp', function($provide) {
     // Mock DtSettings
     $provide.value('DtSettings', {
-      version: 'v8',
+      GATEWAY_API_VERSION: 'v8',
       urls: {
         Test: '/ws/:v/testing/url',
         Test2: '/ws/:v/testing/:with/:params'

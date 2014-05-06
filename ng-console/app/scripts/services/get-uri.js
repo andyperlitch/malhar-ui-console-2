@@ -13,15 +13,15 @@ angular.module('dtConsoleApp')
     return {
       url: function(key, params) {
         var template = DtSettings.urls[key];
-        return interpolateParams(template, angular.extend({v: DtSettings.version}, params));
+        return interpolateParams(template, angular.extend({v: DtSettings.GATEWAY_API_VERSION}, params));
       },
       action: function(key, params) {
         var template = DtSettings.actions[key];
-        return interpolateParams(template, angular.extend({v: DtSettings.version}, params));
+        return interpolateParams(template, angular.extend({v: DtSettings.GATEWAY_API_VERSION}, params));
       },
       topic: function(key, params) {
         var template = DtSettings.topics[key];
-        return interpolateParams(template, angular.extend({v: DtSettings.version}, params));
+        return interpolateParams(template, angular.extend({v: DtSettings.GATEWAY_API_VERSION}, params));
       }
     };
   });
