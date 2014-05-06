@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dtConsoleApp')
-  .factory('OverviewDataModel', ['WidgetDataModel', 'Restangular', 'webSocket', 'getUri', function (WidgetDataModel, rest, ws, getUri) {
+  .factory('OverviewDataModel', ['WidgetDataModel', 'webSocket', 'ClusterMetrics', 'getUri', function (WidgetDataModel, ws, ClusterMetrics, getUri) {
   
       function OverviewDataModel() {}
 
@@ -23,7 +23,11 @@ angular.module('dtConsoleApp')
         }, this.widgetScope);
 
         // Make initial call to resource
-        
+        var metrics = ClusterMetrics.get();
+        metrics.$promise.then(function() {
+          that.updateScope(metrics);
+        });
+
       }
 
       return OverviewDataModel;
