@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2013 DataTorrent, Inc. ALL Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2014 DataTorrent, Inc. ALL Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 var _ = require('underscore');
 var Notify = DT.lib.Notifier;
@@ -33,7 +33,7 @@ var StreamListWidget = require('../widgets/StreamListWidget');
 var AlertListWidget = require('../widgets/AlertListWidget');
 var PhysicalDagWidget = require('../widgets/PhysicalDagWidget');
 var LogicalDagWidget = require('../widgets/LogicalDagWidget');
-var StramEventsWidget = require('../widgets/StramEventsWidget');
+// var StramEventsWidget = require('../widgets/StramEventsWidget');
 // var TopNWidget = DT.widgets.TopNWidget;
 
 
@@ -246,16 +246,16 @@ var AppInstancePageView = BasePageView.extend({
                         model: this.model
                     }
                 },
-                {
-                    name: 'stramEvents', 
-                    defaultId: 'events',
-                    view: StramEventsWidget,
-                    limit: 0,
-                    inject: {
-                        dataSource: this.dataSource,
-                        appId: pageParams.appId
-                    }
-                }
+                // {
+                //     name: 'stramEvents', 
+                //     defaultId: 'events',
+                //     view: StramEventsWidget,
+                //     limit: 0,
+                //     inject: {
+                //         dataSource: this.dataSource,
+                //         appId: pageParams.appId
+                //     }
+                // }
                 // {
                 //     name: 'topN',
                 //     defaultId: 'top n',
@@ -364,13 +364,13 @@ var AppInstancePageView = BasePageView.extend({
                 { widget: 'appMetrics', id: 'metrics chart' }
             ]
         },
-        {
-            dash_id: 'stram-events',
-            widgets: [
-                { widget: 'instanceInfo', id: 'info', width: 60 },
-                { widget: 'stramEvents', id: 'events' }
-            ]
-        },
+        // {
+        //     dash_id: 'stram-events',
+        //     widgets: [
+        //         { widget: 'instanceInfo', id: 'info', width: 60 },
+        //         { widget: 'stramEvents', id: 'events' }
+        //     ]
+        // },
         {
             dash_id: 'ended-recordings',
             widgets: [

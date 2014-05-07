@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 DataTorrent, Inc. ALL Rights Reserved.
+ * Copyright (c) 2014 DataTorrent, Inc. ALL Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 var _ = require('underscore');
 var kt = require('knights-templar');
 var BasePage = require('bassview');
@@ -60,16 +61,28 @@ var LoginPageView = BasePage.extend({
         this.assign({
             '#userName': 'userName',
             '#password': 'password'
-        })
+        });
+        _.defer(function() {
+            this.$('#userName').focus();
+        }.bind(this));
         return this;
     },
 
     events: {
+        'keydown': 'checkForSubmit',
         'submit #login-form': 'onSubmit'
     },
 
+    checkForSubmit: function(e) {
+        if (e.which === 13) {
+            this.onSubmit();
+        }
+    },
+
     onSubmit: function(e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         if (this.model.isValid()) {
             var self = this;
             var promise = this.model.login();
