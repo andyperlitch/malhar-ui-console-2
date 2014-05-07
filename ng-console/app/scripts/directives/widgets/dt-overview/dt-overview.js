@@ -46,8 +46,8 @@ angular.module('dtConsoleApp')
           }
 
           // Check if the value did not exist on the data object
-          else if (!data.hasOwnProperty(field.key) && field.default) {
-            computed = field.default;
+          else if (!data.hasOwnProperty(field.key)) {
+            computed = field.default || '';
           }
 
           // Otherwise just return the raw
