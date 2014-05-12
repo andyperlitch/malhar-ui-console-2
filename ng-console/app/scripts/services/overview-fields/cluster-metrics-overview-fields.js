@@ -8,19 +8,19 @@ angular.module('dtConsoleApp')
         label: DTtext.get('cores_label'),
         key: 'cpuPercentage',
         filter: 'dtCpuFilter',
-        filterOptions: [true]
+        filterArgs: [true]
       },
       {
         label: DTtext.get('current alloc mem'),
         key: 'currentMemoryAllocatedMB',
         filter: 'dtByteFilter',
-        filterOptions: ['mb']
+        filterArgs: ['mb']
       },
       {
         label: DTtext.get('peak alloc mem'),
         key: 'maxMemoryAllocatedMB',
         filter: 'dtByteFilter',
-        filterOptions: ['mb']
+        filterArgs: ['mb']
       },
       {
         label: DTtext.get('running / pending / failed / finished / killed / submitted'),
