@@ -9,14 +9,12 @@ angular.module('dtConsoleApp')
       'overviewFields/clusterMetricsOverviewFields',
       'TableDataModel',
       'ClusterMetrics',
-      'DTtext',
       function (
         $scope,
         OverviewDataModel,
         clusterMetricsOverviewFields,
         TableDataModel,
-        ClusterMetrics,
-        text
+        ClusterMetrics
       ){
         
         var widgetDefinitions = [
@@ -50,7 +48,8 @@ angular.module('dtConsoleApp')
         var defaultWidgets = _.clone(widgetDefinitions);
     
         $scope.dashboardOptions = {
-          useLocalStorage: false,
+          storage: localStorage,
+          storage_key: 'dashboard.ops',
           widgetButtons: true,
           widgetDefinitions: widgetDefinitions,
           defaultWidgets: defaultWidgets
