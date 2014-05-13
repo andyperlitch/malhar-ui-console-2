@@ -25,6 +25,17 @@ var settings = DT.settings;
  */
 var DagWidget = BaseView.extend({
 
+    initialize: function(options) {
+        BaseView.prototype.initialize.call(this, options);
+        var height = this.widgetDef.get('height');
+        if (height === 'auto') {
+            // Dag widget must have an explicit height
+            this.widgetDef.set('height', this.defaultHeight);
+        }
+    },
+
+    defaultHeight: 300,
+
 	showLocality: false,
 
     onlyScrollOnAlt: true,
@@ -50,7 +61,6 @@ var DagWidget = BaseView.extend({
         this.renderGraph(graph, this.$('.app-dag > .svg-main')[0]);
     },
 
-    
     buildGraph: forceImplement('buildGraph'),
 
     /**
@@ -103,7 +113,7 @@ var DagWidget = BaseView.extend({
         var newHeight = h + 50;
         newHeight = newHeight < 200 ? 200 : newHeight;
         newHeight = newHeight > 500 ? 500 : newHeight;
-        svgParent.height(newHeight);
+        // svgParent.height(newHeight);
 
         var self = this;
 
