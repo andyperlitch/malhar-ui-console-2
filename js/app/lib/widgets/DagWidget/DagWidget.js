@@ -25,6 +25,19 @@ var settings = DT.settings;
  */
 var DagWidget = BaseView.extend({
 
+    initialize: function(options) {
+        BaseView.prototype.initialize.call(this, options);
+        var height = this.widgetDef.get('height');
+        if (height === 'auto') {
+            // Dag widget must have an explicit height
+            this.widgetDef.set('height', this.defaultHeight);
+        }
+    },
+
+    defaultHeight: 300,
+
+    minHeight: 200,
+
 	showLocality: false,
 
     onlyScrollOnAlt: true,
@@ -32,6 +45,20 @@ var DagWidget = BaseView.extend({
     template: forceImplement('template'),
     
     html: forceImplement('html'),
+
+    updateHeight: function() {
+
+        if (this.widgetDef.get('height') < this.minHeight) {
+            this.widgetDef.set('height', this.minHeight);
+            return;
+        }
+
+        BaseView.prototype.updateHeight.apply(this, arguments);
+
+        if (this.minimapArgs && this.minimapArgs.length === 3) {
+            this.resizeMinimap();
+        }
+    },
 
     /**
      * Renders legend, renders graph to .svg-main element
@@ -50,7 +77,6 @@ var DagWidget = BaseView.extend({
         this.renderGraph(graph, this.$('.app-dag > .svg-main')[0]);
     },
 
-    
     buildGraph: forceImplement('buildGraph'),
 
     /**
@@ -103,7 +129,7 @@ var DagWidget = BaseView.extend({
         var newHeight = h + 50;
         newHeight = newHeight < 200 ? 200 : newHeight;
         newHeight = newHeight > 500 ? 500 : newHeight;
-        svgParent.height(newHeight);
+        // svgParent.height(newHeight);
 
         var self = this;
 
@@ -158,6 +184,8 @@ var DagWidget = BaseView.extend({
      */
     renderMinimap: function(graph, graph_dimensions, $root) {
 
+        this.minimapArgs = [graph, graph_dimensions, $root];
+
         // Reference to the group that gets transform attribute updated.
         var graphGroup = $root.find('g>g')[0];
 
@@ -174,8 +202,16 @@ var DagWidget = BaseView.extend({
         // The ratio between the map and the graph
         var mapMultiplier = this.minimapMultiplier = minimapWidth / graph_dimensions.width;
         // Map height
-        var minimapHeight = graph_dimensions.height * mapMultiplier + mapPadding;
+        var minimapHeight = graph_dimensions.height * mapMultiplier;
+
+        if (minimapHeight > this.widgetDef.get('height') - 60) {
+            minimapHeight = this.widgetDef.get('height') - 60;
+            mapMultiplier = this.minimapMultiplier = minimapHeight / graph_dimensions.height;
+            minimapWidth = graph_dimensions.width * mapMultiplier;
+        }
+
         // adjust minimapWidth with padding
+        minimapHeight += mapPadding;
         minimapWidth += mapPadding;
 
         // Create the minimap group
@@ -291,6 +327,12 @@ var DagWidget = BaseView.extend({
 
     },
 
+    resizeMinimap: function() {
+        var $root = this.minimapArgs[2];
+        $root.find('.dag-minimap').remove();
+        this.renderMinimap.apply(this, this.minimapArgs);
+    },
+
     /**
      * Updates the minimap, given the jQuery-wrapped svg element, the new translation and scale
      * @param  {jQuery} $svg      jQuery-wrapped svg element
@@ -302,7 +344,7 @@ var DagWidget = BaseView.extend({
         var viewbox = this.minimap.select('.minimap-viewbox');
         var viewboxWidth = $svg.width() * this.minimapMultiplier / scale;
         var viewboxHeight = $svg.height() * this.minimapMultiplier / scale;
-        var offset = $svg.position().top;
+        var offset = this.$('.form-inline').height();
         var x = translate[0];
         var y = translate[1];
         

@@ -100,7 +100,7 @@ var WidgetView = BaseView.extend({
             newHeight += 'px';
         }
 
-        this.$el.css('height', newHeight);
+        this.$('.widget-content').css('height', newHeight);
 
         return this;
     },
