@@ -44,6 +44,11 @@ var DagWidget = BaseView.extend({
     
     html: forceImplement('html'),
 
+    updateHeight: function() {
+        BaseView.prototype.updateHeight.apply(this, arguments);
+
+    },
+
     /**
      * Renders legend, renders graph to .svg-main element
      * 
@@ -184,8 +189,16 @@ var DagWidget = BaseView.extend({
         // The ratio between the map and the graph
         var mapMultiplier = this.minimapMultiplier = minimapWidth / graph_dimensions.width;
         // Map height
-        var minimapHeight = graph_dimensions.height * mapMultiplier + mapPadding;
+        var minimapHeight = graph_dimensions.height * mapMultiplier;
+
+        if (minimapHeight > this.widgetDef.get('height') - 60) {
+            minimapHeight = this.widgetDef.get('height') - 60;
+            mapMultiplier = this.minimapMultiplier = minimapHeight / graph_dimensions.height;
+            minimapWidth = graph_dimensions.width * mapMultiplier;
+        }
+
         // adjust minimapWidth with padding
+        minimapHeight += mapPadding;
         minimapWidth += mapPadding;
 
         // Create the minimap group
