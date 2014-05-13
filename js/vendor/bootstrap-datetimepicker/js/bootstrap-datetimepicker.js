@@ -274,7 +274,6 @@
 		},
 
 		show: function (e) {
-			console.log('showing');
 			this.picker.show();
 			this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
 			if (this.forceParse) {

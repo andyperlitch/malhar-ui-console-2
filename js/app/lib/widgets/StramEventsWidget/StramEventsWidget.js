@@ -70,8 +70,11 @@ var StramEventsWidget = BaseView.extend({
         }));
         
         // TODO: load from state
-        this.viewMode = 'tail';
+        this.viewMode = 'range';
         this.showRaw = false;
+
+        // Clean up datepickers
+        this.on('clean_up', this.removeDateTimePickers);
 
     },
     
@@ -86,15 +89,33 @@ var StramEventsWidget = BaseView.extend({
     },
 
     postRender: function() {
-        this.$('.form_datetime').datetimepicker({
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0,
-            showMeridian: 1
-        });
+        this.setupDateTimePickers();
+    },
+
+    setupDateTimePickers: function() {
+        var $dates = this.$('.form_datetime');
+        if ($dates.length) {
+            $dates.datetimepicker({
+                weekStart: 0,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                minuteStep: 1,
+                showMeridian: 1,
+                initialDate: new Date()
+            });
+        }
+        
+    },
+
+    removeDateTimePickers: function() {
+        var $dates = this.$('.form_datetime');
+        if ($dates.length) {
+            $dates.datetimepicker('remove');
+            $('.datetimepicker').remove();
+        }
     },
     
     assignments: {
@@ -112,6 +133,11 @@ var StramEventsWidget = BaseView.extend({
         if (newMode !== this.viewMode) {
             this.viewMode = newMode;
             this.renderContent();
+            this.removeDateTimePickers();
+            
+            if (newMode === 'range') {
+                this.setupDateTimePickers();
+            }
         }
     },
 

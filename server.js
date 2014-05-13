@@ -168,7 +168,8 @@ app.use(lessm({
     src: __dirname + '/css',
     prefix: '/css',
     debug: true,
-    sourceMap: true
+    sourceMap: true,
+    relativeUrls: true
 }));
 
 // Serve static files

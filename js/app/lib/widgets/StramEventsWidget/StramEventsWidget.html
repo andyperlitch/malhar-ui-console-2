@@ -10,26 +10,29 @@
             <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
             range
         </label>
-        <span class="range-params" style="display: <% if (viewMode === 'range') { print('inline'); } else { print('none'); } %>">
+        <div class="range-params" style="display: <% if (viewMode === 'range') { print('inline'); } else { print('none'); } %>">
+            
+            <!-- From -->
             <div class="control-group">
-                <div class="controls input-append date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="<%= widgetId %>-range-from">
-                    <input size="16" type="text" value="" readonly>
+                <div class="controls input-append date form_datetime" data-date-format="dd MM yyyy - HH:ii p" data-link-field="<%= widgetId %>-range-from">
+                    <input size="16" type="text" value="">
                     <span class="add-on"><i class="icon-remove"></i></span>
                     <span class="add-on"><i class="icon-th"></i></span>
                 </div>
-                
-            </div>
-            <input
+                <input
                     type="hidden"
                     name="range-from"
                     id="<%= widgetId %>-range-from"
                     placeholder="from"
                     class="input-medium"> 
+            </div>
             
             to
+
+            <!-- To -->
             <div class="control-group">
-                <div class="controls input-append date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="<%= widgetId %>-range-to">
-                    <input size="16" type="text" value="" readonly>
+                <div class="controls input-append date form_datetime" data-date-format="dd MM yyyy - HH:ii p" data-link-field="<%= widgetId %>-range-to">
+                    <input size="16" type="text" value="">
                     <span class="add-on"><i class="icon-remove"></i></span>
                     <span class="add-on"><i class="icon-th"></i></span>
                 </div>
@@ -40,7 +43,11 @@
                     placeholder="to"
                     class="input-medium">
             </div>
-        </span>
+
+            <input type="submit" class="btn btn-primary" value="find">
+
+
+        </div>
     </div>
     <div class="option-group well">
         <h3>show raw event data:</h3>
