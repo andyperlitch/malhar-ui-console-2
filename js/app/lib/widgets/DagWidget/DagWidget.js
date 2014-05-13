@@ -36,6 +36,8 @@ var DagWidget = BaseView.extend({
 
     defaultHeight: 300,
 
+    minHeight: 200,
+
 	showLocality: false,
 
     onlyScrollOnAlt: true,
@@ -45,8 +47,17 @@ var DagWidget = BaseView.extend({
     html: forceImplement('html'),
 
     updateHeight: function() {
+
+        if (this.widgetDef.get('height') < this.minHeight) {
+            this.widgetDef.set('height', this.minHeight);
+            return;
+        }
+
         BaseView.prototype.updateHeight.apply(this, arguments);
 
+        if (this.minimapArgs && this.minimapArgs.length === 3) {
+            this.resizeMinimap();
+        }
     },
 
     /**
@@ -172,6 +183,8 @@ var DagWidget = BaseView.extend({
      * @return {void}
      */
     renderMinimap: function(graph, graph_dimensions, $root) {
+
+        this.minimapArgs = [graph, graph_dimensions, $root];
 
         // Reference to the group that gets transform attribute updated.
         var graphGroup = $root.find('g>g')[0];
@@ -314,6 +327,12 @@ var DagWidget = BaseView.extend({
 
     },
 
+    resizeMinimap: function() {
+        var $root = this.minimapArgs[2];
+        $root.find('.dag-minimap').remove();
+        this.renderMinimap.apply(this, this.minimapArgs);
+    },
+
     /**
      * Updates the minimap, given the jQuery-wrapped svg element, the new translation and scale
      * @param  {jQuery} $svg      jQuery-wrapped svg element
@@ -325,7 +344,7 @@ var DagWidget = BaseView.extend({
         var viewbox = this.minimap.select('.minimap-viewbox');
         var viewboxWidth = $svg.width() * this.minimapMultiplier / scale;
         var viewboxHeight = $svg.height() * this.minimapMultiplier / scale;
-        var offset = $svg.position().top;
+        var offset = this.$('.form-inline').height();
         var x = translate[0];
         var y = translate[1];
         
