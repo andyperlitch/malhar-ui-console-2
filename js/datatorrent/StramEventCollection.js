@@ -26,7 +26,10 @@ var StramEventCollection = BaseCollection.extend({
             appId: this.appId
         });
         this.listenTo(this.dataSource, topic, function(evt) {
-            this.add(evt);
+            var evt = this.interceptEvent(evt);
+            if (evt) {
+                this.add(evt);
+            }
         });
         this.dataSource.subscribe(topic);
     },
@@ -36,6 +39,9 @@ var StramEventCollection = BaseCollection.extend({
         return this.resourceURL('StramEvent', {
             appId: this.appId
         });
+    },
+    interceptEvent: function(evt) {
+        return evt;
     }
 });
 exports = module.exports = StramEventCollection;

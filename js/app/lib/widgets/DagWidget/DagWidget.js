@@ -77,7 +77,7 @@ var DagWidget = BaseView.extend({
         var oldPostRender = renderer._postRender;
         renderer._postRender = function (graph, root) {
             oldPostRender.call(renderer, graph, root);
-            this.postRender(graph, root);
+            this.postGraphRender(graph, root);
         }.bind(this);
 
         // Define the function that calculates the dimensions for
@@ -145,7 +145,7 @@ var DagWidget = BaseView.extend({
     	// empty implementation (not required)
     },
 
-    postRender: function() {
+    postGraphRender: function() {
         // empty implementation
     },
 

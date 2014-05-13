@@ -1,5 +1,43 @@
 <div class="inner">
     <span class="event-item-timestamp"><%= timestamp %></span>
     <span class="event-item-type"><%= type %></span>
-    <span class="event-item-c2v">click to view</span>
+    <% if (type === 'StartOperator') { %>
+    <span class="event-item-info" title="<%= DT.text('operator name') %>">
+        <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+    </span>
+    <span class="event-item-info" title="<%= DT.text('operator id') %>">
+        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.templates.phys_op_link({appId: appId, operatorId: data.operatorId, displayText: data.operatorId }) %>
+    </span>
+    <span class="event-item-info" >
+        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
+    </span>
+    <% } else if (type === 'StopOperator') { %>
+    <span class="event-item-info" title="<%= DT.text('operator name') %>">
+        <span class="event-item-info-label">name:</span>&nbsp;<%= data.operatorName %>
+    </span>
+    <span class="event-item-info" title="<%= DT.text('operator id') %>">
+        <span class="event-item-info-label">id:</span>&nbsp;<%= data.operatorId %>
+    </span>
+    <span class="event-item-info" >
+        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+    </span>
+    <% } else if (type === 'StartContainer') { %>
+    <span class="event-item-info" >
+        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
+    </span>
+    <span class="event-item-info">
+        <span class="event-item-info-label">node:</span>&nbsp;<%= data.containerNodeId %>
+    </span>
+    <% } else if (type === 'StopContainer') { %>
+    <span class="event-item-info" >
+        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+    </span>
+    <span class="event-item-info" >
+        <span class="event-item-info-label">exitStatus:</span>&nbsp;<%= data.exitStatus %>
+    </span>
+    <% } %>
+    
+    <% if (data.reason) { %>
+    <div class="event-item-reason show-on-active"><%= _.escape(data.reason).replace('\n', '<br>') %></div>
+    <% } %>
 </div>

@@ -20,18 +20,20 @@ var EventList = BaseView.extend({
 
     initialize: function(options) {
         this.parent = options.parent;
-        this.listenTo(this.collection, 'add', this.addOne);
+        this.appId = this.parent.appId;
+        this.listenTo(this.collection, 'add', this.addOne.bind(this));
     },
 
     render: function() {
         this.trigger('clean_up');
-        this.collection.each(this.addOne);
+        this.collection.each(this.addOne, this);
     },
 
     addOne: function(model) {
         var itemView = new EventItem({
             model: model,
-            collection: this.collection
+            collection: this.collection,
+            parent: this
         });
         itemView.listenTo(this, 'clean_up', itemView.remove);
         if (this.parent.viewMode === 'tail') {
@@ -39,8 +41,59 @@ var EventList = BaseView.extend({
             this.$el.prepend(itemView.render().el);
             itemView.$el.slideDown('fast');
         } else {
-            this.$el.prepend(itemView.render().el);
+            this.$el.append(itemView.render().el);
         }
+    },
+
+    events: {
+        'keydown': 'onKeyPress'
+    },
+
+    onKeyPress: function(e) {
+        if (this.keys.hasOwnProperty(e.which)) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.keys[e.which].call(this,e);
+        }
+    },
+
+    keys: {
+        // up
+        38: function(e) {
+            var selected = this.collection.pluck('selected');
+            if (this.parent.viewMode === 'tail') {
+                selected.unshift(false);
+                selected.pop();
+            } else {
+                selected.shift();
+                selected.push(false);
+            }
+            selected.forEach(function(selected, i) {
+                this.collection.at(i).set('selected', !!selected);
+            }, this);
+        }, 
+        // down
+        40: function(e) {
+            var selected = this.collection.pluck('selected');
+            if (this.parent.viewMode === 'tail') {
+                selected.shift();
+                selected.push(false);
+            } else {
+                selected.unshift(false);
+                selected.pop();
+            }
+            selected.forEach(function(selected, i) {
+                this.collection.at(i).set('selected', !!selected);
+            }, this);
+        }
+    },
+
+    showLoading: function() {
+        this.$el.html('<span class="events-loading-msg">loading...</span>');
+    },
+
+    removeLoading: function() {
+        this.$('.events-loading-msg').remove();
     }
 
 });

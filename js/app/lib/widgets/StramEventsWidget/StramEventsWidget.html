@@ -1,22 +1,81 @@
-<form class="view-mode-select">
-    <h3>view mode:</h3>
-    <label for="viewMode" class="radio">
-        <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
-        tail
-    </label>
-    <label for="viewMode" class="radio">
-        <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
-        range
-    </label>
-</form>
-<hr>
-<div class="row-fluid">
-    <div class="span7">
-        <h3 class="stram-event-section-title">StrAM Events/Decisions</h3>
-        <div class="event-list well"></div>
+<!-- hiding until backend can provide limit/offset/direction queryString parameters -->
+<form class="stram-event-options">
+    <div class="option-group view-mode well">
+        <h3>view mode:</h3>
+        <label for="viewMode" class="radio">
+            <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
+            tail
+        </label>
+        <label for="viewMode" class="radio">
+            <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
+            range
+        </label>
+        <div class="range-params" style="display: <% if (viewMode === 'range') { print('inline'); } else { print('none'); } %>">
+            
+            <!-- From -->
+            <div class="control-group">
+                <div class="controls input-append date form_datetime" data-link-field="<%= widgetId %>-range-from">
+                    <input 
+                        size="16" 
+                        name="range-from"
+                        id="<%= widgetId %>-range-from"
+                        placeholder="from"
+                        type="text" 
+                        value="<%= range.from.toLocaleString() %>">
+                    <span class="add-on"><i class="icon-remove"></i></span>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+<!--                 <input
+                    type="hidden"
+                    name="range-from"
+                    id="<%= widgetId %>-range-from"
+                    placeholder="from"
+                    class="input-medium">  -->
+            </div>
+            
+            to
+
+            <!-- To -->
+            <div class="control-group">
+                <div class="controls input-append date form_datetime" data-link-field="<%= widgetId %>-range-to">
+                    <input 
+                        size="16" 
+                        type="text" 
+                        name="range-to"
+                        id="<%= widgetId %>-range-to"
+                        placeholder="to"
+                        value="<%= range.to.toLocaleString() %>">
+                    <span class="add-on"><i class="icon-remove"></i></span>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+<!--                 <input
+                    type="hidden"
+                    name="range-to"
+                    id="<%= widgetId %>-range-to"
+                    placeholder="to"
+                    class="input-medium"> -->
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="find">
+
+
+        </div>
     </div>
-    <div class="span5">
-        <h3 class="stram-event-section-title">Event Viewer</h3>
+    <div class="option-group well">
+        <h3>show raw event data:</h3>
+        <input type="checkbox" class="show-raw-event-data" <% if (showRaw === true) { print('checked="checked"'); } %>>
+    </div>
+</form>
+<!-- <hr> -->
+<!-- hiding until backend can provide limit/offset/direction queryString parameters -->
+
+<div class="row-fluid">
+    <div class="event-viewer-container" style="display: <% if (showRaw === true) { print('block'); } else { print('none'); } %>">
+        <h3 class="stram-event-section-title">Raw Event Data</h3>
         <div class="event-viewer well"></div>
+    </div>
+    <div>
+        <h3 class="stram-event-section-title">StrAM Events/Decisions</h3>
+        <div class="event-list well" tabindex="1"></div>
     </div>
 </div>

@@ -1,3 +1,7 @@
-<% _.each( selected, function(item) { %>
+<% if (selected.length) {
+    _.each( selected, function(item) { %>
     <pre><%= JSON.stringify(item.get('data'), 0, 3) %></pre>
-<% }) %>
+    <% });
+} else { %>
+    <pre>click an event to view its raw data</pre>
+<% } %>

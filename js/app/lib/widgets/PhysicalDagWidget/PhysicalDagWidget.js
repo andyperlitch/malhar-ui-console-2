@@ -83,7 +83,7 @@ var PhysicalDagWidget = BaseView.extend({
         return graph;
     },
 
-    postRender: function(graph, root) {
+    postGraphRender: function(graph, root) {
         var nodeMap = this.nodeMap;
         var colors = d3.scale.category20(); //TODO do not limit to 20 colors
 

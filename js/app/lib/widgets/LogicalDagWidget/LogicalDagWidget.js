@@ -244,7 +244,7 @@ var LogicalDagWidget = BaseView.extend({
      * @param  {SVGElement}    d3 selection
      * @return {void}
      */
-    postRender: function (graph, root) {
+    postGraphRender: function (graph, root) {
         // add metric label, structure is the following
         // g.node
         // g.node-metric-label

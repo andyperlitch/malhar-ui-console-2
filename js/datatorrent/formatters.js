@@ -23,9 +23,10 @@ function containerFormatter(value, row) {
     if (!value) return '-';
     var vals = value.split('_');
     var displayval = vals[vals.length -1];
+    row = row || {};
     return templates.container_link({
         containerId: value,
-        appId: row.collection ? row.collection.appId : null,
+        appId: row.collection ? row.collection.appId : row.appId ? row.appId : null,
         containerIdShort: displayval
     });
 }
