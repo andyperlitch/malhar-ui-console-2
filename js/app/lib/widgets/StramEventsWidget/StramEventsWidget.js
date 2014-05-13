@@ -125,7 +125,8 @@ var StramEventsWidget = BaseView.extend({
 
     events: {
         'change [name="viewMode"]': 'onViewModeChange',
-        'change .show-raw-event-data': 'onShowRawChange'
+        'change .show-raw-event-data': 'onShowRawChange',
+        'submit .stram-event-options': 'onRangeSubmit'
     },
 
     onViewModeChange: function(evt) {
@@ -146,6 +147,21 @@ var StramEventsWidget = BaseView.extend({
         this.showRaw = !! showRaw.length;
         var method = this.showRaw ? 'show' : 'hide';
         this.$('.event-viewer-container')[method]();
+    },
+
+    onRangeSubmit: function(evt) {
+        evt.preventDefault();
+        var from, to;
+
+        from = new Date(this.$('[name="range-from"]').val());
+        to = new Date(this.$('[name="range-to"]').val());
+
+        if (from.toString() === 'Invalid Date') {
+            console.log('from date is invalid: ', this.$('[name="range-from"]').val());
+        } else if (to.toString() === 'Invalid Date') {
+            console.log('to date is invalid');
+        }
+
     },
     
     template: kt.make(__dirname+'/StramEventsWidget.html','_')
