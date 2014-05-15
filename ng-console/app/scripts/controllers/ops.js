@@ -49,7 +49,7 @@ angular.module('dtConsoleApp')
     
         $scope.dashboardOptions = {
           storage: localStorage,
-          storage_key: 'dashboard.ops',
+          storageKey: 'dashboard.ops',
           widgetButtons: true,
           widgetDefinitions: widgetDefinitions,
           defaultWidgets: defaultWidgets
