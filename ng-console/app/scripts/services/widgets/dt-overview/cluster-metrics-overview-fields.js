@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dtConsoleApp')
-  .factory('overviewFields/clusterMetricsOverviewFields', function (DTtext, $filter) {
+  .factory('widgets/dtOverview/clusterMetricsOverviewFields', function (DTtext, $filter) {
     // Public API here
     return [
       {

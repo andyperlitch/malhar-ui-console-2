@@ -8,9 +8,10 @@ angular.module('dtConsoleApp')
       TableDataModel.prototype = Object.create(WidgetDataModel.prototype);
 
       TableDataModel.prototype.init = function() {
-        // Set fields from dataModelOptions
-        this.widgetScope.fields = this.dataModelOptions.fields;
-        this.url = this.dataModelOptions.url;
+        // Set columns from dataModelOptions
+        this.widgetScope.columns = this.dataModelOptions.columns;
+        this.resource = this.dataModelOptions.resource;
+        this.resourceAction = this.dataModelOptions.resourceAction;
         this.topic = this.dataModelOptions.topic;
 
         // Subscribe to websocket topic
@@ -23,9 +24,9 @@ angular.module('dtConsoleApp')
         }, this.widgetScope);
 
         // Make initial call to resource
-        var metrics = ClusterMetrics.get();
-        metrics.$promise.then(function() {
-          that.updateScope(metrics);
+        var response = this.resource[this.resourceAction]();
+        response.$promise.then(function() {
+          that.updateScope(response);
         });
 
       };

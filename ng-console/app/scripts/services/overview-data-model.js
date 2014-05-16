@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dtConsoleApp')
-  .factory('OverviewDataModel', ['WidgetDataModel', 'webSocket', 'ClusterMetrics', 'getUri', function (WidgetDataModel, ws, ClusterMetrics, getUri) {
+  .factory('OverviewDataModel', ['WidgetDataModel', 'webSocket', 'getUri', function (WidgetDataModel, ws, getUri) {
   
       function OverviewDataModel() {}
 
@@ -10,8 +10,8 @@ angular.module('dtConsoleApp')
       OverviewDataModel.prototype.init = function() {
         // Set fields from dataModelOptions
         this.widgetScope.fields = this.dataModelOptions.fields;
-        this.url = this.dataModelOptions.url;
         this.topic = this.dataModelOptions.topic;
+        this.resource = this.dataModelOptions.resource;
 
         // Subscribe to websocket topic
         var that = this;
@@ -23,9 +23,9 @@ angular.module('dtConsoleApp')
         }, this.widgetScope);
 
         // Make initial call to resource
-        var metrics = ClusterMetrics.get();
-        metrics.$promise.then(function() {
-          that.updateScope(metrics);
+        var response = this.resource.get();
+        response.$promise.then(function() {
+          that.updateScope(response);
         });
 
       };

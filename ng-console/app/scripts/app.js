@@ -13,7 +13,8 @@ angular.module('dtConsoleApp', [
   'mgcrea.ngStrap.navbar',
   'mgcrea.ngStrap.dropdown',
   'ng-breadcrumbs',
-  'restangular'
+  'restangular',
+  'datatorrent.mlhrTable'
 ])
 .config(function (webSocketProvider, $routeProvider) {
   webSocketProvider.setWebSocketURL('ws://node0.morado.com:9090/pubsub');

@@ -6,16 +6,12 @@ angular.module('dtConsoleApp')
     [
       '$scope',
       'OverviewDataModel',
-      'overviewFields/clusterMetricsOverviewFields',
+      'widgets/dtOverview/clusterMetricsOverviewFields',
       'TableDataModel',
       'ClusterMetrics',
-      function (
-        $scope,
-        OverviewDataModel,
-        clusterMetricsOverviewFields,
-        TableDataModel,
-        ClusterMetrics
-      ){
+      'Applications',
+      'widgets/dtTable/applicationsListColumns',
+      function ($scope, OverviewDataModel, clusterMetricsOverviewFields, TableDataModel, ClusterMetrics, Applications, applicationsListColumns ){
         
         var widgetDefinitions = [
           {
@@ -36,11 +32,14 @@ angular.module('dtConsoleApp')
           {
             name: 'AppList',
             title: 'Application List',
-            template: '<div dt-table columns="columns" rows="rows"></div>',
+            template: '<div columns="columns" rows="rows"></div>',
             dataModelType: TableDataModel,
             dataAttrName: 'rows',
             dataModelOptions: {
-              topic: 'Applications'
+              topic: 'Applications',
+              resource: Applications,
+              resourceAction: 'getRunning',
+              columns: applicationsListColumns
             }
           }
         ];
