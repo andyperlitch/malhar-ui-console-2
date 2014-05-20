@@ -110,7 +110,8 @@ var StramEventsWidget = BaseView.extend({
             viewMode: this.viewMode,
             showRaw: this.showRaw,
             widgetId: this.compId().replace('.','-'),
-            range: this.rangeParams.toJSON()
+            range: this.rangeParams.toJSON(),
+            eventListHeight: this.widgetDef.get('height') + 'px'
         };
         var html = this.template(json);
         return html;
