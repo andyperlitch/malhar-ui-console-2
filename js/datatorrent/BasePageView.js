@@ -35,6 +35,8 @@ var BasePageView = BaseView.extend({
     // This is to allow for a page module to define itself
     // on initialization. See `./AppInstancePageView.js:initialize()`
     dashExt: '',
+
+    storageHash: '',
     
     initialize: function(options) {
         // scroll to top, TODO save/restore scroll position (so that it is not lost on back button)
@@ -98,7 +100,8 @@ var BasePageView = BaseView.extend({
         // storing in localStorage
         localStorage.setItem(this.__lsPrefix+'.dashboards',JSON.stringify({
             dashboards: dashboards,
-            version: window.UI_VERSION
+            version: window.UI_VERSION,
+            storageHash: this.storageHash
         }));
     },
 
@@ -111,7 +114,7 @@ var BasePageView = BaseView.extend({
         try {
             var json = JSON.parse(item);
             var dashboards = json.dashboards;
-            if (dashboards instanceof Array && json.version === window.UI_VERSION) {
+            if (dashboards instanceof Array && json.version === window.UI_VERSION && json.storageHash === this.storageHash) {
                 return dashboards;
             } else {
                 localStorage.removeItem(itemKey);
