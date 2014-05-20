@@ -55,6 +55,11 @@ var StramEventsWidget = BaseView.extend({
         
         BaseView.prototype.initialize.call(this, options);
 
+        if (this.widgetDef.get('height') === 'auto') {
+            // Requires explicit height
+            this.widgetDef.set('height', this.defaultHeight);
+        }
+
         this.rangeParams = new StramEventRange({
             from: '',
             to: ''
@@ -90,7 +95,16 @@ var StramEventsWidget = BaseView.extend({
         this.on('clean_up', this.removeDateTimePickers);
 
     },
+
+    defaultHeight: 300,
     
+    updateHeight: function() {
+        BaseView.prototype.updateHeight.call(this);
+        this.$el.css('height', 'auto');
+    },
+
+    heightResizeElement: '.event-list',
+
     html: function() {
         var json = {
             viewMode: this.viewMode,

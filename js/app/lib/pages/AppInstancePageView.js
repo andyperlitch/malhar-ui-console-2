@@ -316,9 +316,10 @@ var AppInstancePageView = BasePageView.extend({
         {
             dash_id: 'logical',
             widgets: [
-                { widget: 'instanceInfo', id: 'info', width: 60 },
-                { widget: 'instanceAction', id: 'actions', width: 40 },
-                { widget: 'instanceOverview', id: 'overview' },
+                { widget: 'stramEvents', id: 'events', width: 34, height: 133, 'float': 'right' },
+                { widget: 'instanceInfo', id: 'info', width: 36 },
+                { widget: 'instanceAction', id: 'actions', width: 30 },
+                { widget: 'instanceOverview', id: 'overview', width: 66 },
                 { widget: 'logicalDAG', id: 'logical DAG' },
                 { widget: 'logicalOperatorList', id: 'logical operators' },
                 { widget: 'appMetrics', id: 'metrics', width: 60 },
