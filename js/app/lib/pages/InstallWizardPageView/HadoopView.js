@@ -327,7 +327,22 @@ var HadoopView = BaseView.extend({
                 
         dfsPromise.fail(function (msg) {
             this.continuing = false;
-            this.showError('.dfs-directory-error', msg);
+
+            var pdre = /permission\s+denied/i;
+
+            if (pdre.test(msg)) {
+                msg = '<strong>Automatic creation of the DFS directory failed due to permission issues.</strong><br>' + 
+                    'Depending on your installation, the following commands may resolve the issue: <br><br>' +
+                    '<pre class="well" style="padding: 7px;">sudo -u hdfs hdfs dfs -mkdir -p /user/dtadmin/datatorrent\n' +
+                    'sudo -u hdfs hdfs dfs -chmod 1777 /user/dtadmin/datatorrent</pre><br><br><strong>Error:</strong><br> ' + msg;
+
+                this.showError('.dfs-directory-error', msg, true);
+            }
+            else {
+                this.showError('.dfs-directory-error', msg);    
+            }
+
+            
         }.bind(this));
 
         dfsPromise.done(_.bind(function() {
@@ -365,9 +380,14 @@ var HadoopView = BaseView.extend({
         return d.promise();
     },
 
-    showError: function (selector, msg) {
+    showError: function (selector, msg, html) {
         var el = this.$(selector);
-        el.text(msg);
+        if (html) {
+            el.html(msg);
+        }
+        else {
+            el.text(msg);
+        }
         el.show();
     },
 
