@@ -45,6 +45,8 @@ var StramEventsWidget = require('../widgets/StramEventsWidget');
 var AppInstancePageView = BasePageView.extend({
     
     pageName: 'AppInstancePageView',
+
+    storageHash: 'd9sfa08780sd',
     
     useDashMgr: true, 
     
