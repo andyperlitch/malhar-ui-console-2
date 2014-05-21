@@ -91,6 +91,14 @@ var StramEventsWidget = BaseView.extend({
         this.showRaw = false;
         this.setInterceptFunction();
 
+        if (this.viewMode === 'tail') {
+            this.collection.fetch({
+                data: {
+                    offset: 10
+                }
+            });
+        }
+
         // Clean up datepickers
         this.on('clean_up', this.removeDateTimePickers);
 
