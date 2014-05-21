@@ -190,11 +190,13 @@ describe('BasePageView.js', function() {
 
         it('should return the array located at item.dashboards', function() {
             window.UI_VERSION = '0.9';
+            pageInstance.storageHash = 'abc';
             var dashSave = {
                 version: window.UI_VERSION,
                 dashboards: [
                     { test: 'test' }
-                ]
+                ],
+                storageHash: 'abc'
             };
             localStorage.setItem(key, JSON.stringify(dashSave));
             expect(pageInstance.retrieveDashes()).to.eql(dashSave.dashboards);
