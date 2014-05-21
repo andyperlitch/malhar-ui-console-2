@@ -28,14 +28,14 @@
 <table class="config-table">
     <thead>
         <tr>
-            <th scope="col" style="width: 33%;">item</th>
-            <th scope="col" style="width: 33%;">description</th>
-            <th scope="col" style="width: 33%;">value</th>
+            <th scope="col" style="width: 20%;">item</th>
+            <th scope="col" style="width: 50%;">description</th>
+            <th scope="col" style="width: 30%;">value</th>
         </tr>
     </thead>
     <tbody>
     <tr>
-        <td>Hadoop Installation Location</td>
+        <td>Hadoop Installation</td>
         <td>The absolute path to the location of your Hadoop installation, typically specified by <code>$HADOOP_PREFIX</code>.</td>
         <td>
             <div class="control-group">
@@ -52,15 +52,12 @@
         <td>
             Directory in a Distributed File System (e.g. HDFS) where all datatorrent artifacts will be stored, including checkpoints, recordings, etc.  This directory must be accessible and writable by the DataTorrent Gateway and DataTorrent applications running in Hadoop.<br><br>
 
-            This can be an DFS path like<br>
-            <code>/home/USER/datatorrent</code><br>
-            or a URL like <br>
-            <code>hdfs://localhost:9000/home/USER/datatorrent</code>
+            This can be an DFS path like <code>/user/dtadmin/datatorrent</code> or a URL like <code>hdfs://localhost:9000/user/dtadmin/datatorrent</code> <br><br>
         </td>
         <td>
             <div class="control-group" style="overflow: auto;">
                 <div class="controls">
-                    <input tabindex="2" type="text" class="dfs-directory" value="<%= dfsModel.get('value') %>" placeholder="e.g. /home/USER/datatorrent" />
+                    <input tabindex="2" type="text" class="dfs-directory" value="<%= dfsModel.get('value') %>" placeholder="e.g. /user/USER/datatorrent" />
                     <span class="help-block"></span>
                 </div>
                 <div class="server-error dfs-directory-error"></div>
