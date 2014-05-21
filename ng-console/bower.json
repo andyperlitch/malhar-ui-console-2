@@ -28,6 +28,7 @@
   },
   "resolutions": {
     "angular": "1.2.6",
-    "angular-ui-sortable": "0.12.3"
+    "angular-ui-sortable": "0.12.3",
+    "pines-notify": "2.0.1"
   }
 }
