@@ -25,6 +25,8 @@ var ModalView = BaseView.extend({
 		if (options.hasOwnProperty('launchOptions')) {
 			this.launchOptions = options.launchOptions;
 		}
+		this.deferred = $.Deferred();
+
 	},
 
 	title: 'No title',
@@ -36,6 +38,10 @@ var ModalView = BaseView.extend({
 	className: 'modal',
 
     closeBtn: true,
+
+    promise: function() {
+    	return this.deferred.promise();
+    },
 
 	render: function() {
 
@@ -108,11 +114,13 @@ var ModalView = BaseView.extend({
 
 	onConfirm: function(evt) {
 		evt.preventDefault();
+		this.deferred.resolve();
 		this.destroy();
 	},
 
 	onCancel: function(evt) {
 		evt.preventDefault();
+		this.deferred.reject();
 		this.destroy();
 	},
 
