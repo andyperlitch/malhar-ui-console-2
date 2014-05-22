@@ -140,7 +140,8 @@ var StramEventsWidget = BaseView.extend({
                 startView: 2,
                 forceParse: 0,
                 minuteStep: 1,
-                showMeridian: 1
+                showMeridian: 1,
+                pickerPosition: 'bottom-left'
             });
         }
     },
