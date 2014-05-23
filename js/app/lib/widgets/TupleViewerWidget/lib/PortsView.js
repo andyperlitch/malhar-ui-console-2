@@ -50,9 +50,8 @@ var PortsView = BaseView.extend({
         this.$('input[type="checkbox"]').each(function(i, el){
             if (this.checked) selected.push(this.value);
         });
-        console.log('selected', selected);
         this.collection.each(function(port){
-            if (selected.indexOf(port.get("id")) > -1) port.set("selected", true);
+            if (selected.indexOf(port.get("id") + '') > -1) port.set("selected", true);
             else port.set("selected", false);
         });
     },

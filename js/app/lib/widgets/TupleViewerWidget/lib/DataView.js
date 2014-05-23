@@ -39,7 +39,11 @@ var DataView = BaseView.extend({
         var html = "";
         var ports = this.model.ports;
         _.each(data, function(tuple) {
-            var port = ports.where({id: tuple.get("portId")})[0];
+            var portId = tuple.get('portId');
+            if (portId !== '') {
+                portId *= 1;
+            }
+            var port = this.model.ports.where({ id: portId })[0];
             var type = port ? port.get("type") : "loading";
             var content = JSON.stringify(tuple.get("data"), null, 4);
             content = _.escape(content);
