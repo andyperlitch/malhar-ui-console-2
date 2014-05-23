@@ -79,13 +79,15 @@ var StramEventsWidget = BaseView.extend({
             this.widgetDef.set('height', this.defaultHeight);
         }
 
+        this.storageKey = this.compId(options.appId);
+
         this.rangeParams = new StramEventRange(
             {
                 from: '',
                 to: ''
             },
             {
-                storageKey: this.compId(options.appId),
+                storageKey: this.storageKey + '.rangeParams',
                 storage: localStorage
             }
         );
@@ -112,7 +114,7 @@ var StramEventsWidget = BaseView.extend({
         }
         
         // TODO: load from state
-        this.viewMode = 'tail';
+        this.viewMode = localStorage.getItem(this.storageKey + '.viewMode') || 'tail';
         this.showRaw = false;
         this.setInterceptFunction();
 
@@ -202,6 +204,8 @@ var StramEventsWidget = BaseView.extend({
             if (newMode === 'range') {
                 this.setupDateTimePickers();
             }
+
+            localStorage.setItem(this.storageKey + '.viewMode', newMode);
         }
     },
 
