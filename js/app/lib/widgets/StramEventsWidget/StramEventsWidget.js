@@ -46,7 +46,7 @@ var StramEventRange = Backbone.Model.extend({
                     var parsed = JSON.parse(stored);
                     this.set(parsed);
                 } catch(e) {
-                    // do nothing
+                    options.storage.removeItem(options.storageKey);
                 }
             }
         }
@@ -119,7 +119,7 @@ var StramEventsWidget = BaseView.extend({
         if (this.viewMode === 'tail') {
             this.collection.fetch({
                 data: {
-                    offset: 10
+                    limit: 10
                 }
             });
         }
