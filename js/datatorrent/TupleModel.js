@@ -32,7 +32,8 @@ var TupleModel = Backbone.Model.extend({
         }
         var json = this.toJSON();
         var rjson = recording.serialize();
-        var port = json.portId ? recording.ports.where({id: json.portId})[0] : false;
+
+        var port = json.portId ? recording.ports.where({id: json.portId * 1})[0] : false;
         if (port) {
             json.type = port.get('type');
             json.port = port.get('name');

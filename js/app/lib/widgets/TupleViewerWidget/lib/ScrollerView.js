@@ -58,7 +58,11 @@ var ScrollerView = BaseView.extend({
     
     renderCanvasPreview: function(model) {
         var tv_json = this.model.serialize();
-        var port = this.model.ports.where({ id: model.get('portId') })[0];
+        var portId = model.get('portId');
+        if (portId !== '') {
+            portId *= 1;
+        }
+        var port = this.model.ports.where({ id: portId })[0];
         if (port === undefined) return;
         var type = port.get("type");
         var strokeColor = this.canvasColors[type];
