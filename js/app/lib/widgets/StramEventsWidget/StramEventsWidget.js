@@ -19,9 +19,10 @@ var Backbone = require('backbone');
 var kt = require('knights-templar');
 var BaseView = DT.lib.WidgetView;
 var StramEventCollection = DT.lib.StramEventCollection;
-
+var Notifier = DT.lib.Notifier;
 var EventList = require('./EventList');
 var EventViewer = require('./EventViewer');
+var text = DT.text;
 
 var bbind = DT.lib.Bbindings;
 
@@ -197,10 +198,10 @@ var StramEventsWidget = BaseView.extend({
         to = new Date(toVal);
 
         if (from.toString() === 'Invalid Date') {
-            console.log('from date is invalid: ', fromVal);
+            Notifier.error('Invalid "from" date');
             return;
         } else if (to.toString() === 'Invalid Date') {
-            console.log('to date is invalid: ', toVal);
+            Notifier.error('Invalid "to" date');
             return;
         }
 
