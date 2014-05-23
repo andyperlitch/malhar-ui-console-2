@@ -38,7 +38,7 @@ var LogicalOperatorCollection = OperatorCollection.extend({
             appId: this.appId
         });
         this.listenTo(this.dataSource, topic, function(data) {
-            this.set(this.responseTransform(data));
+            this.set(data[this.responseTransform]);
         });
         this.dataSource.subscribe(topic);
     },

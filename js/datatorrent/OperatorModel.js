@@ -64,14 +64,14 @@ var OperatorModel = BaseModel.extend({
     },
     
     urlRoot: function() {
-        var urlRoot = this.resourceURL('Operator', {
+        var urlRoot = this.resourceURL('PhysicalOperator', {
             appId: this.get('appId')
         });
         return urlRoot;
     },
     
     subscribe: function() {
-        var topic = this.resourceTopic('Operators', {
+        var topic = this.resourceTopic('PhysicalOperators', {
             appId: this.get('appId')
         });
         this.checkForDataSource();

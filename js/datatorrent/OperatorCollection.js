@@ -48,23 +48,23 @@ var OperatorCollection = Base.extend({
     },
     
     url: function() {
-        return this.resourceURL('Operator', {
+        return this.resourceURL('PhysicalOperator', {
             appId: this.appId
         });
     },
     
     subscribe: function() {
-        var topic = this.resourceTopic('Operators', {
+        var topic = this.resourceTopic('PhysicalOperators', {
             appId: this.appId
         });
         this.listenTo(this.dataSource, topic, function(data) {
-            this.set(data.operators);
+            this.set(data[this.responseTransform]);
         });
         this.dataSource.subscribe(topic);
     },
 
     unsubscribe: function() {
-        var topic = this.resourceTopic('Operators', {
+        var topic = this.resourceTopic('PhysicalOperators', {
             appId: this.appId
         });
         this.stopListening(this.dataSource, topic);
