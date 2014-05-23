@@ -21,6 +21,21 @@
     <span class="event-item-info" >
         <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
     </span>
+
+    <% } else if (type === 'OperatorError') { %>
+    <span class="event-item-info" title="<%= DT.text('operator name') %>">
+        <span class="event-item-info-label">name:</span>&nbsp;<%= data.operatorName %>
+    </span>
+    <span class="event-item-info" title="<%= DT.text('operator id') %>">
+        <span class="event-item-info-label">id:</span>&nbsp;<%= data.operatorId %>
+    </span>
+    <span class="event-item-info" >
+        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+    </span>
+    <div class="event-item-reason show-on-active">
+        <pre class="well"><%= data.errorMessage %></pre>
+    </div>
+
     <% } else if (type === 'StartContainer') { %>
     <span class="event-item-info" >
         <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>

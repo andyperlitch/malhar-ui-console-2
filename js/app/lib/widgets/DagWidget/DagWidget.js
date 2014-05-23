@@ -100,7 +100,7 @@ var DagWidget = BaseView.extend({
         var renderer = new dagreD3.Renderer();
 
         // Extend original post render function
-        var oldPostRender = renderer._postRender;
+        var oldPostRender = this.defaultPostRender;
         renderer._postRender = function (graph, root) {
             oldPostRender.call(renderer, graph, root);
             this.postGraphRender(graph, root);
@@ -169,6 +169,26 @@ var DagWidget = BaseView.extend({
 
     renderLegend: function() {
     	// empty implementation (not required)
+    },
+
+    // Due to issue with dagre-d3 library
+    defaultPostRender: function (graph, root) {
+        if (graph.isDirected() && root.select('#arrowhead').empty()) {
+            root
+                .append('svg:defs')
+                .append('svg:marker')
+                .attr('id', 'arrowhead')
+                .attr('viewBox', '0 0 10 10')
+                .attr('refX', 8)
+                .attr('refY', 5)
+                // .attr('markerUnits', 'strokewidth')
+                .attr('markerWidth', 8)
+                .attr('markerHeight', 5)
+                .attr('orient', 'auto')
+                .attr('style', 'fill: #333')
+                .append('svg:path')
+                .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+        }
     },
 
     postGraphRender: function() {

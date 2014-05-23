@@ -17,6 +17,9 @@
 var BaseCollection = require('./BaseCollection');
 var StramEventModel = require('./StramEventModel');
 var StramEventCollection = BaseCollection.extend({
+
+    debugName: 'Stram Events',
+
     initialize:function(models,options) {
         this.appId = options.appId;
         this.dataSource = options.dataSource;

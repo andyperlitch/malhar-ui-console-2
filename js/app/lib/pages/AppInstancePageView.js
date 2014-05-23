@@ -46,7 +46,7 @@ var AppInstancePageView = BasePageView.extend({
     
     pageName: 'AppInstancePageView',
 
-    storageHash: 'd9sfa08780sd',
+    storageHash: 'asd8fasdf8s',
     
     useDashMgr: true, 
     
@@ -302,6 +302,16 @@ var AppInstancePageView = BasePageView.extend({
                         table_id: 'ops.app.reclist',
                         nav: this.app.nav
                     }
+                },
+                {
+                    name: 'stramEvents', 
+                    defaultId: 'events',
+                    view: StramEventsWidget,
+                    limit: 0,
+                    inject: {
+                        dataSource: this.dataSource,
+                        appId: pageParams.appId
+                    }
                 }
             ];
             defaultDashId = 'ended-recordings';
@@ -318,10 +328,11 @@ var AppInstancePageView = BasePageView.extend({
         {
             dash_id: 'logical',
             widgets: [
-                { widget: 'instanceInfo', id: 'info', width: 60 },
-                { widget: 'instanceAction', id: 'actions', width: 40 },
-                { widget: 'instanceOverview', id: 'overview' },
-                { widget: 'logicalDAG', id: 'logical DAG' },
+                { widget: 'stramEvents', id: 'events', width: 34, height: 469, 'float': 'right' },
+                { widget: 'instanceInfo', id: 'info', width: 36 },
+                { widget: 'instanceAction', id: 'actions', width: 30 },
+                { widget: 'instanceOverview', id: 'overview', width: 66 },
+                { widget: 'logicalDAG', id: 'logical DAG', width: 66 },
                 { widget: 'logicalOperatorList', id: 'logical operators' },
                 { widget: 'appMetrics', id: 'metrics', width: 60 },
                 { widget: 'streamList', id: 'stream list', width: 40 },

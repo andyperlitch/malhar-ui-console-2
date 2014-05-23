@@ -21,7 +21,8 @@ var WidgetDefModel = Backbone.Model.extend({
         'widget':'',
         'id':'',
         'width':100,
-        'height': 'auto'
+        'height': 'auto',
+        'float': 'none'
     },
     
     validate: function(attrs) {

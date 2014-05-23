@@ -19,9 +19,10 @@ var Backbone = require('backbone');
 var kt = require('knights-templar');
 var BaseView = DT.lib.WidgetView;
 var StramEventCollection = DT.lib.StramEventCollection;
-
+var Notifier = DT.lib.Notifier;
 var EventList = require('./EventList');
 var EventViewer = require('./EventViewer');
+var text = DT.text;
 
 var bbind = DT.lib.Bbindings;
 
@@ -33,6 +34,24 @@ var bbind = DT.lib.Bbindings;
 */
 
 var StramEventRange = Backbone.Model.extend({
+    initialize: function(attrs, options) {
+        if (options.storage) {
+            this.on('change', function() {
+                options.storage.setItem(options.storageKey, JSON.stringify(this.toJSON()));
+            });
+
+            var stored = options.storage.getItem(options.storageKey);
+            if (stored) {
+                try {
+                    var parsed = JSON.parse(stored);
+                    this.set(parsed);
+                } catch(e) {
+                    options.storage.removeItem(options.storageKey);
+                }
+            }
+        }
+
+    },
     validate: function(attrs) {
         var errors = {};
 
@@ -55,10 +74,23 @@ var StramEventsWidget = BaseView.extend({
         
         BaseView.prototype.initialize.call(this, options);
 
-        this.rangeParams = new StramEventRange({
-            from: '',
-            to: ''
-        });
+        if (this.widgetDef.get('height') === 'auto') {
+            // Requires explicit height
+            this.widgetDef.set('height', this.defaultHeight);
+        }
+
+        this.storageKey = this.compId(options.appId);
+
+        this.rangeParams = new StramEventRange(
+            {
+                from: '',
+                to: ''
+            },
+            {
+                storageKey: this.storageKey + '.rangeParams',
+                storage: localStorage
+            }
+        );
 
         this.appId = options.appId;
         this.collection = new StramEventCollection([],{
@@ -82,21 +114,39 @@ var StramEventsWidget = BaseView.extend({
         }
         
         // TODO: load from state
-        this.viewMode = 'tail';
+        this.viewMode = localStorage.getItem(this.storageKey + '.viewMode') || 'tail';
         this.showRaw = false;
         this.setInterceptFunction();
+
+        if (this.viewMode === 'tail') {
+            this.collection.fetch({
+                data: {
+                    limit: 10
+                }
+            });
+        }
 
         // Clean up datepickers
         this.on('clean_up', this.removeDateTimePickers);
 
     },
+
+    defaultHeight: 300,
     
+    updateHeight: function() {
+        BaseView.prototype.updateHeight.call(this);
+        this.$el.css('height', 'auto');
+    },
+
+    heightResizeElement: '.event-list',
+
     html: function() {
         var json = {
             viewMode: this.viewMode,
             showRaw: this.showRaw,
             widgetId: this.compId().replace('.','-'),
-            range: this.rangeParams.toJSON()
+            range: this.rangeParams.toJSON(),
+            eventListHeight: this.widgetDef.get('height') + 'px'
         };
         var html = this.template(json);
         return html;
@@ -117,7 +167,8 @@ var StramEventsWidget = BaseView.extend({
                 startView: 2,
                 forceParse: 0,
                 minuteStep: 1,
-                showMeridian: 1
+                showMeridian: 1,
+                pickerPosition: 'bottom-left'
             });
         }
     },
@@ -153,6 +204,8 @@ var StramEventsWidget = BaseView.extend({
             if (newMode === 'range') {
                 this.setupDateTimePickers();
             }
+
+            localStorage.setItem(this.storageKey + '.viewMode', newMode);
         }
     },
 
@@ -173,10 +226,10 @@ var StramEventsWidget = BaseView.extend({
         to = new Date(toVal);
 
         if (from.toString() === 'Invalid Date') {
-            console.log('from date is invalid: ', fromVal);
+            Notifier.error('Invalid "from" date');
             return;
         } else if (to.toString() === 'Invalid Date') {
-            console.log('to date is invalid: ', toVal);
+            Notifier.error('Invalid "to" date');
             return;
         }
 

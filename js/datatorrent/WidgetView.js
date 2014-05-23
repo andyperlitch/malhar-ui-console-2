@@ -53,6 +53,9 @@ var WidgetView = BaseView.extend({
 
         // Listen for changes to the height attribute
         this.listenTo(this.widgetDef, 'change:height', this.updateHeight);
+
+        // Listen for changes to float attribute
+        this.listenTo(this.widgetDef, 'change:float', this.updateFloat);
         
         // Listen for removals
         this.listenTo(this.widgetDef, 'remove', this.remove);
@@ -63,11 +66,12 @@ var WidgetView = BaseView.extend({
         // Set initial width
         this.updateWidth();
         this.updateHeight();
+        this.updateFloat();
         
         // Listen for changes in width
         this.listenTo(this.widgetDef, 'resize change:width', _.debounce(this.onResize, 300));
     },
-    
+
     // Should be implemented in sub classes
     onResize: function() {
         // empty implementation
@@ -100,8 +104,19 @@ var WidgetView = BaseView.extend({
             newHeight += 'px';
         }
 
-        this.$('.widget-content').css('height', newHeight);
+        this.$(this.heightResizeElement).css('height', newHeight);
 
+        return this;
+    },
+
+    heightResizeElement: '.widget-content',
+
+    updateFloat: function() {
+        var flt = this.widgetDef.get('float');
+        if (['left', 'right', 'none'].indexOf(flt) < 0) {
+            flt = 'none';
+        }
+        this.$el.css('float', flt);
         return this;
     },
     
@@ -145,6 +160,8 @@ var WidgetView = BaseView.extend({
         html = this.BASE_TEMPLATE(json);
         
         this.$el.html(html);
+        this.updateHeight();
+        this.updateFloat();
 
         this._doAssignments();
 

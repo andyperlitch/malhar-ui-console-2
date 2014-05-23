@@ -21,7 +21,18 @@ var OperatorCollection = require('./OperatorCollection');
 var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var Notifier = require('./Notifier');
+var Modal = require('./ModalView');
 var text = require('./text');
+
+var KillContainerModal = Modal.extend({
+    title: text('Kill Application Master?'),
+    confirmText: text('yes, kill the application master'),
+    body: function() {
+        return 'Are you sure you want to kill the application master?' + 
+        ' <strong>This will likely kill the entire application, depending ' + 
+        'on your specific Hadoop settings (yarn.resourcemanager.am.max-attempts).</strong>';
+    }
+});
 
 /**
  * Model for containers
@@ -184,31 +195,53 @@ var ContainerModel = BaseModel.extend({
         }
     },
 
-    kill: function() {
+    /**
+     * If force is truthy, it won't confirm to kill the app master
+     * @param  {Boolean} force 
+     * @return {promise}       returns the ajax promise from the call.
+     */
+    kill: function(force) {
         var appId = this.get('appId') || (this.collection ? this.collection.appId : undefined);
+        var containerId = this.get('id');
+
         if (!appId) {
             LOG(3, 'Container:kill requires the presence of an appId.');
             return;
         }
-        $.ajax({
-            type: 'POST',
-            url: this.resourceAction('killContainer', {
-                appId: appId,
-                containerId: this.get('id')
-            }),
-            success: function() {
-                Notifier.success({
-                    title: text('kill_ctnr_sent_title'),
-                    text: text('kill_ctnr_sent_text')
-                });
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                Notifier.error({
-                    title: text('kill_ctnr_fail_title'),
-                    text: text('kill_ctnr_fail_text')(errorThrown)
-                });
-            }
-        });
+
+        if (/0001$/.test(containerId)) {
+            // app master
+            var modal = new KillContainerModal();
+            var promise = modal.promise();
+            modal.addToDOM();
+            modal.launch();
+            promise.then(sendKillSignal.bind(this));
+            return promise;
+        }
+
+        return sendKillSignal.call(this);
+
+        function sendKillSignal() {
+            return $.ajax({
+                type: 'POST',
+                url: this.resourceAction('killContainer', {
+                    appId: appId,
+                    containerId: this.get('id')
+                }),
+                success: function() {
+                    Notifier.success({
+                        title: text('kill_ctnr_sent_title'),
+                        text: text('kill_ctnr_sent_text')
+                    });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    Notifier.error({
+                        title: text('kill_ctnr_fail_title'),
+                        text: text('kill_ctnr_fail_text')(errorThrown)
+                    });
+                }
+            });
+        }
     }
     
 });
