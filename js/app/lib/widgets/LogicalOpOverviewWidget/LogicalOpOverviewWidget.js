@@ -32,8 +32,8 @@ var LogicalOpOverviewWidget = BaseView.extend({
     	{ key: 'status', label: DT.text('status_label'), value: function(statuses) {
 			return DT.formatters.logicalOpStatusFormatter(statuses);
     	}},
-		{ key: 'partitionCount', label: DT.text('num_partitions_label') },
-		{ key: 'containerCount', label: DT.text('num_containers_label') },
+		{ key: 'partitions', label: DT.text('num_partitions_label'), value: function(v) { return v.length; } },
+		{ key: 'containerIds', label: DT.text('num_containers_label'), value: function(v) { return v.length; } },
 		{ key: 'tuplesProcessedPSMA', label: DT.text('processed_per_sec'), value: function(v) { return DT.formatters.commaGroups(v.toString()); } },
 		{ key: 'totalTuplesProcessed', label: DT.text('processed_total'), value: function(v) { return DT.formatters.commaGroups(v.toString()); } },
 		{ key: 'tuplesEmittedPSMA', label: DT.text('emitted_per_sec'), value: function(v) { return DT.formatters.commaGroups(v.toString()); } },

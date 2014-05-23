@@ -48,7 +48,7 @@ function logicalNameFormatter(value, row) {
 
 exports = module.exports = [
 	{ id: 'selector', key: 'selected', label: '', select: true, width: 40, lock_width: true },
-	{ id: 'logicalName', key: 'logicalName', label: 'name', sort: 'string', sort_value: 'a', filter: 'like', format: logicalNameFormatter, width: 100 },
+	{ id: 'name', key: 'name', label: 'name', sort: 'string', sort_value: 'a', filter: 'like', format: logicalNameFormatter, width: 100 },
     { id: 'className', key: 'className', label: 'class', sort: 'string', filter: 'like', width: 250 },
     { id: 'cpuMin', key: 'cpuMin', label: DT.text('cpu_min_label'), sort: 'number', filter: 'number', format: cpuFormatter },
     { id: 'cpuMax', key: 'cpuMax', label: DT.text('cpu_max_label'), sort: 'number', filter: 'number', format: cpuFormatter },

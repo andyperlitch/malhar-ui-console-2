@@ -17,8 +17,8 @@
 var _ = require('underscore');
 var BigInteger = require('jsbn');
 var WindowId = require('./WindowId');
-var OperatorModel = require('./OperatorModel');
-var OperatorCollection = require('./OperatorCollection');
+var OperatorModel = require('./PhysicalOperatorModel');
+var PhysicalOperatorCollection = require('./PhysicalOperatorCollection');
 
 /**
  * Logical Operator model
@@ -28,13 +28,13 @@ var OperatorCollection = require('./OperatorCollection');
 **/
 var LogicalOperatorModel = OperatorModel.extend({
 
-    idAttribute: 'logicalName',
+    idAttribute: 'name',
 
     defaults: {
         appId: '',
-        logicalName: '',
+        name: '',
         className: '',
-        containers: [],
+        containerIds: [],
         cpuPercentageMA: 0,
         cpuMin: 0,
         cpuMax: 0,
@@ -43,7 +43,7 @@ var LogicalOperatorModel = OperatorModel.extend({
         recoveryWindowId: 0,    // new WindowId('75')
         failureCount: 1,
         hosts: [],
-        ids: [],
+        partitions: [],
         ports: [],
         lastHeartbeat: 0,
         latencyMA: 0,
@@ -60,14 +60,15 @@ var LogicalOperatorModel = OperatorModel.extend({
         OperatorModel.prototype.initialize.call(this, attrs, options);
 
         if (options.keepPhysicalCollection) {
-            this.physicalOperators = new OperatorCollection([], {
-                dataSource: this.dataSource
+            this.physicalOperators = new PhysicalOperatorCollection([], {
+                dataSource: this.dataSource,
+                logicalName: this.get('name')
             });
             this.physicalOperators.appId = this.get('appId');
         }
     },
 
-    url: function() {
+    urlRoot: function() {
         return this.resourceURL('LogicalOperator', {
             appId: this.get('appId')
         });
@@ -78,10 +79,10 @@ var LogicalOperatorModel = OperatorModel.extend({
         var topic = this.resourceTopic('LogicalOperators', {
             appId: this.get('appId')
         });
-        var logicalName = this.get('logicalName');
+        var name = this.get('name');
         this.listenTo(this.dataSource, topic, function(data) {
-            var op = _.find(data, function(o) {
-                return o.logicalName === logicalName;
+            var op = _.find(data.operators, function(o) {
+                return o.name === name;
             });
             this.set(op);
             this.trigger('update');

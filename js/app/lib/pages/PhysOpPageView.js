@@ -21,7 +21,7 @@
 var _ = require('underscore');
 var Notifier = DT.lib.Notifier;
 var BasePageView = DT.lib.BasePageView;
-var Operator = DT.lib.OperatorModel;
+var PhysicalOperator = DT.lib.PhysicalOperatorModel;
 var path = require('path');
 
 // widgets
@@ -44,7 +44,7 @@ var PhysOpPageView = BasePageView.extend({
         BasePageView.prototype.initialize.call(this,options);
         
         // Create operator model
-        this.model = new Operator({
+        this.model = new PhysicalOperator({
             appId: options.pageParams.appId,
             id: options.pageParams.operatorId
         }, {

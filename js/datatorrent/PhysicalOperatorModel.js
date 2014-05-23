@@ -23,7 +23,7 @@ var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var formatters = require('./formatters');
 var BaseModel = require('./BaseModel');
-var OperatorModel = BaseModel.extend({
+var PhysicalOperatorModel = BaseModel.extend({
     
     debugName: 'operator',
     
@@ -104,4 +104,4 @@ var OperatorModel = BaseModel.extend({
     }
     
 });
-exports = module.exports = OperatorModel;
+exports = module.exports = PhysicalOperatorModel;

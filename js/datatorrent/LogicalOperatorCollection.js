@@ -24,7 +24,7 @@
 var _ = require('underscore');
 var WindowId = require('./WindowId');
 var BigInteger = require('jsbn');
-var OperatorCollection = require('./OperatorCollection');
+var OperatorCollection = require('./PhysicalOperatorCollection');
 var LogicalOperatorModel = require('./LogicalOperatorModel');
 var LogicalOperatorCollection = OperatorCollection.extend({
 	

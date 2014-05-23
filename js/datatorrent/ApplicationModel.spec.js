@@ -19,7 +19,7 @@ var Backbone = require('backbone');
 var DataSource = require('./DataSource');
 var BaseModel = require('./BaseModel');
 var ApplicationModel = require('./ApplicationModel');
-var OperatorCollection = require('./OperatorCollection');
+var PhysicalOperatorCollection = require('./PhysicalOperatorCollection');
 var ContainerCollection = require('./ContainerCollection');
 var WindowId = require('./WindowId');
 
@@ -58,7 +58,7 @@ describe('ApplicationModel.js', function() {
 
         });
 
-        sandbox.stub(OperatorCollection.prototype, 'fetch', function() {
+        sandbox.stub(PhysicalOperatorCollection.prototype, 'fetch', function() {
 
         });
 
@@ -104,13 +104,13 @@ describe('ApplicationModel.js', function() {
             appmodel.setContainers([]);
             appmodel.setOperators([]);
             appmodel.fetch();
-            expect(OperatorCollection.prototype.fetch).to.have.been.calledOnce;
+            expect(PhysicalOperatorCollection.prototype.fetch).to.have.been.calledOnce;
             expect(ContainerCollection.prototype.fetch).to.have.been.calledOnce;
         });
 
         it('should NOT call fetch for containers and operators if they are NOT present', function() {
             appmodel.fetch();
-            expect(OperatorCollection.prototype.fetch).not.to.have.been.called;
+            expect(PhysicalOperatorCollection.prototype.fetch).not.to.have.been.called;
             expect(ContainerCollection.prototype.fetch).not.to.have.been.called;
         });        
 

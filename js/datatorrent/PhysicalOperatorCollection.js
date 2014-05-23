@@ -15,20 +15,21 @@
  */
 
 /**
- * Operator Collection
+ * Physical Operator Collection
 */
 var _ = require('underscore');
 var Base = require('./ApplicationSubCollection');
-var Operator = require('./OperatorModel');
-var OperatorCollection = Base.extend({
+var PhysicalOperator = require('./PhysicalOperatorModel');
+var PhysicalOperatorCollection = Base.extend({
     
     debugName: 'operators',
     
-    model: Operator,
+    model: PhysicalOperator,
     
     initialize: function(models, options) {
         Base.prototype.initialize.call(this, models, options);
-        this.containerId = options.containerId || false; 
+        this.containerId = options.containerId || false;
+        this.logicalName = options.logicalName || false;
     },
     
     toJSON: function(aggregates) {
@@ -58,7 +59,8 @@ var OperatorCollection = Base.extend({
             appId: this.appId
         });
         this.listenTo(this.dataSource, topic, function(data) {
-            this.set(data[this.responseTransform]);
+            var ops = this.responseTransform(data);
+            this.set(ops);
         });
         this.dataSource.subscribe(topic);
     },
@@ -70,20 +72,27 @@ var OperatorCollection = Base.extend({
         this.stopListening(this.dataSource, topic);
     },
     
-    set: function(models, options) {
-        
-        var containerId = this.containerId;
-        
-        if ( containerId ) {
-            models = _.filter(models, function(op) {
+    responseTransform: function(data) {
+
+        var ops = data.operators;
+
+        if (this.logicalName) {
+            var name = this.logicalName;
+            ops = _.filter(ops, function(op) {
+                return op.name === name;
+            });
+        }
+
+        if ( this.containerId ) {
+            var containerId = this.containerId;
+            ops = _.filter(ops, function(op) {
                 return op.container === containerId;
             });
         }
+
+        return ops;
         
-        Base.prototype.set.call(this, models, options);
-    },
-    
-    responseTransform: 'operators'
+    }
     
 });
-exports = module.exports = OperatorCollection;
+exports = module.exports = PhysicalOperatorCollection;
