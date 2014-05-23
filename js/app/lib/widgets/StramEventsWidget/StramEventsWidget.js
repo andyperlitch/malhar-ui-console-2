@@ -34,6 +34,24 @@ var bbind = DT.lib.Bbindings;
 */
 
 var StramEventRange = Backbone.Model.extend({
+    initialize: function(attrs, options) {
+        if (options.storage) {
+            this.on('change', function() {
+                options.storage.setItem(options.storageKey, JSON.stringify(this.toJSON()));
+            });
+
+            var stored = options.storage.getItem(options.storageKey);
+            if (stored) {
+                try {
+                    var parsed = JSON.parse(stored);
+                    this.set(parsed);
+                } catch(e) {
+                    // do nothing
+                }
+            }
+        }
+
+    },
     validate: function(attrs) {
         var errors = {};
 
@@ -61,10 +79,16 @@ var StramEventsWidget = BaseView.extend({
             this.widgetDef.set('height', this.defaultHeight);
         }
 
-        this.rangeParams = new StramEventRange({
-            from: '',
-            to: ''
-        });
+        this.rangeParams = new StramEventRange(
+            {
+                from: '',
+                to: ''
+            },
+            {
+                storageKey: this.compId(options.appId),
+                storage: localStorage
+            }
+        );
 
         this.appId = options.appId;
         this.collection = new StramEventCollection([],{
