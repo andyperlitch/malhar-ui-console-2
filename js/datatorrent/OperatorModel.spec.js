@@ -16,9 +16,9 @@
 
 var _ = require('underscore');
 var WindowId = require('./WindowId');
-var Model = require('./OperatorModel');
+var Model = require('./PhysicalOperatorModel');
 
-describe('OperatorModel.js', function() {
+describe('PhysicalOperatorModel.js', function() {
     
 	var sandbox, m;
 

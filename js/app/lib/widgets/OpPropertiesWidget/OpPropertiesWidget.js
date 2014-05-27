@@ -42,13 +42,7 @@ var OpPropertiesWidget = ListWidget.extend({
         }));
         
         // Check if the operator has loaded
-        var logicalNameAttr; // Attribute of name of logical operator
-
-        if (this.model instanceof LogicalOperatorModel) {
-            logicalNameAttr = 'logicalName';
-        } else {
-            logicalNameAttr = 'name';
-        }
+        var logicalNameAttr = 'name'; // Attribute of name of logical operator
 
         if (this.model.get(logicalNameAttr)) {
             

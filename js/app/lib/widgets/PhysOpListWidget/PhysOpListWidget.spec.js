@@ -15,7 +15,7 @@
  */
 
 var _ = require('underscore');
-var Operator = DT.lib.OperatorModel;
+var Operator = DT.lib.PhysicalOperatorModel;
 var Widget = DT.widgets.Widget;
 var Backbone = require('backbone');
 var W = require('./PhysOpListWidget');

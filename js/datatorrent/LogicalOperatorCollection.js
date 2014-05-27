@@ -24,7 +24,7 @@
 var _ = require('underscore');
 var WindowId = require('./WindowId');
 var BigInteger = require('jsbn');
-var OperatorCollection = require('./OperatorCollection');
+var OperatorCollection = require('./PhysicalOperatorCollection');
 var LogicalOperatorModel = require('./LogicalOperatorModel');
 var LogicalOperatorCollection = OperatorCollection.extend({
 	
@@ -34,23 +34,22 @@ var LogicalOperatorCollection = OperatorCollection.extend({
 
 	subscribe: function() {
 		this.checkForDataSource();
-        var topic = this.resourceTopic('Operators', {
+        var topic = this.resourceTopic('LogicalOperators', {
             appId: this.appId
         });
         this.listenTo(this.dataSource, topic, function(data) {
-            this.set(this.responseTransform(data));
+            this.set(data[this.responseTransform]);
         });
         this.dataSource.subscribe(topic);
     },
 
-	responseTransform: function(res) {
-		
-		// Group by the logical name
-		var grouped = _.groupBy(res.operators, "logicalName");
-		
-		// reduce each subset to aggregated logical operator object
-		return _.map(grouped, LogicalOperatorModel.prototype.reducePhysicalOperators); // end of map
-	}
+	responseTransform: 'operators',
+
+    url: function() {
+        return this.resourceURL('LogicalOperator', {
+            appId: this.appId
+        });
+    }
 
 });
 exports = module.exports = LogicalOperatorCollection;

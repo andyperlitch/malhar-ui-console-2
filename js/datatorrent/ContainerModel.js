@@ -17,7 +17,7 @@
 var _ = require('underscore');
 var BaseModel = require('./BaseModel');
 var BigInteger = require('jsbn');
-var OperatorCollection = require('./OperatorCollection');
+var PhysicalOperatorCollection = require('./PhysicalOperatorCollection');
 var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var Notifier = require('./Notifier');
@@ -92,7 +92,7 @@ var ContainerModel = BaseModel.extend({
         // Only create new collection if necessary
         if (!this.operators) {
             // Create the new collection
-            this.operators = new OperatorCollection([], {
+            this.operators = new PhysicalOperatorCollection([], {
                 dataSource: this.dataSource,
                 appId: this.get('appId'),
                 containerId: this.get('id')

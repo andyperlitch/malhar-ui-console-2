@@ -36,7 +36,7 @@ var MetricModel = Backbone.Model.extend({
 
         var newMap = {};
         collection.each(function (model) {
-            var id = model.get('logicalName');
+            var id = model.get('name');
             var value = model.get(this.metricId);
             newMap[id] = value;
         }, this);
@@ -75,7 +75,7 @@ var MetricModel = Backbone.Model.extend({
             this.implementation.updateAll(this.operators, newMap);
         } else {
             this.operators.each(function (operator) {
-                var id = operator.get('logicalName');
+                var id = operator.get('name');
                 this.implementation.update(id, operator, newMap);
             }.bind(this));
         }

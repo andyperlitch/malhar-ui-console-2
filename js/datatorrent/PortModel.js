@@ -60,7 +60,7 @@ var PortModel = BaseModel.extend({
 
     subscribe: function() {
 
-        var topic = this.resourceTopic('Operators', {
+        var topic = this.resourceTopic('PhysicalOperators', {
             appId: this.get('appId')
         });
         var operatorId = this.get('operatorId');

@@ -25,7 +25,7 @@ var BaseModel = require('./BaseModel');
 var bormat = require('bormat');
 var LogicalPlan = require('./LogicalPlanModel');
 var PhysicalPlan = require('./PhysicalPlanModel');
-var Operators = require('./OperatorCollection');
+var PhysicalOperators = require('./PhysicalOperatorCollection');
 var Containers = require('./ContainerCollection');
 var WindowId = require('./WindowId');
 var loadInfoAttempts = 1;
@@ -166,7 +166,7 @@ var ApplicationModel = BaseModel.extend({
         
         // Only create new collection if necessary
         if (!this.operators) {
-            this.operators = new Operators([], {
+            this.operators = new PhysicalOperators([], {
                 dataSource: this.dataSource,
                 appId: this.get('id')
             });

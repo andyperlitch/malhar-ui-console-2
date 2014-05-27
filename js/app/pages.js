@@ -193,9 +193,9 @@ exports = module.exports = [
     /** Logical Operator View */
     {
         'name': 'LogicalOpPageView',
-        'routes': ['ops/apps/:appId/logicalOperators/:logicalName'],
+        'routes': ['ops/apps/:appId/logicalOperators/:name'],
         'view': require('./lib/pages/LogicalOpPageView'),
-        'paramList': ['appId', 'logicalName'],
+        'paramList': ['appId', 'name'],
         'mode': 'ops',
         'breadcrumbs': [
             { name: text('ops_main_breadcrumb'), href: '#ops' },
@@ -209,8 +209,8 @@ exports = module.exports = [
                 name: 'logical operators'
             },
             { 
-                name: function(page, appId, logicalName) {
-                    return logicalName;
+                name: function(page, appId, name) {
+                    return name;
                 }
             }
         ]

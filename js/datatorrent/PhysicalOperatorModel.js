@@ -23,7 +23,7 @@ var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var formatters = require('./formatters');
 var BaseModel = require('./BaseModel');
-var OperatorModel = BaseModel.extend({
+var PhysicalOperatorModel = BaseModel.extend({
     
     debugName: 'operator',
     
@@ -64,14 +64,14 @@ var OperatorModel = BaseModel.extend({
     },
     
     urlRoot: function() {
-        var urlRoot = this.resourceURL('Operator', {
+        var urlRoot = this.resourceURL('PhysicalOperator', {
             appId: this.get('appId')
         });
         return urlRoot;
     },
     
     subscribe: function() {
-        var topic = this.resourceTopic('Operators', {
+        var topic = this.resourceTopic('PhysicalOperators', {
             appId: this.get('appId')
         });
         this.checkForDataSource();
@@ -104,4 +104,4 @@ var OperatorModel = BaseModel.extend({
     }
     
 });
-exports = module.exports = OperatorModel;
+exports = module.exports = PhysicalOperatorModel;

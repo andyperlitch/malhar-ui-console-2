@@ -55,11 +55,11 @@ var LogicalDagWidget = BaseView.extend({
                 label: DT.text('max_latency_label')
             },
             {
-                value: 'partitionCount',
+                value: 'partitions',
                 label: DT.text('partitions_label')
             },
             {
-                value: 'containerCount',
+                value: 'containerIds',
                 label: DT.text('containers_label')
             },
             {
@@ -107,7 +107,7 @@ var LogicalDagWidget = BaseView.extend({
                 this.displayGraph(data.toJSON());
 
                 //this.metricModel = new MetricModel(null, { operators: this.operators });
-                this.partitionsMetricModel = MetricModelFactory.getMetricModel('partitionCount');
+                this.partitionsMetricModel = MetricModelFactory.getMetricModel('partitions');
                 //this.listenTo(this.partitionsMetricModel, 'change', this.updatePartitions);
                 //this.partitionsMetricModel.subscribe();
 

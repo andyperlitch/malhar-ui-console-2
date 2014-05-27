@@ -24,7 +24,7 @@ var LogicalOpListPalette = BaseView.extend({
 
     inspectItem: function(e) {
         var selected = this.getSelected()[0];
-        this.nav.go('ops/apps/' + this.appId + '/logicalOperators/' + selected.get('logicalName'));
+        this.nav.go('ops/apps/' + this.appId + '/logicalOperators/' + selected.get('name'));
     }
 
 

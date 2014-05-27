@@ -56,7 +56,7 @@ var LogicalOpListWidget = BaseView.extend({
             collection: this.collection,
             id: this.compId() + '.logicalOpList',
             save_state: true,
-            row_sorts: ['logicalName']
+            row_sorts: ['name']
         }));
 
         this.subview('palette', new Palette({

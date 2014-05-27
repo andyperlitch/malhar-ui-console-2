@@ -47,13 +47,15 @@ var LogicalOpPageView = BasePageView.extend({
         // Create logical operator model
         this.model = new LogicalOperator({
             appId: pageParams.appId,
-            logicalName: pageParams.logicalName
+            name: pageParams.name
         }, {
             dataSource: this.dataSource,
             keepPhysicalCollection: true
         });
         this.model.fetch();
         this.model.subscribe();
+        this.model.physicalOperators.fetch();
+        this.model.physicalOperators.subscribe();
         
         // Define widgets
         this.defineWidgets([
