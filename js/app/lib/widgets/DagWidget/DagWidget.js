@@ -147,8 +147,7 @@ var DagWidget = BaseView.extend({
 
         zoomBehavior.on("zoom", function() {
                 var ev = d3.event;
-
-                if (self.onlyScrollOnAlt && !ev.sourceEvent.altKey && ev.sourceEvent.type === "wheel") {
+                if (self.onlyScrollOnAlt && !ev.sourceEvent.altKey && (ev.sourceEvent.type === "wheel" || ev.sourceEvent.type === "mousewheel")) {
                     var sev = ev.sourceEvent;
                     window.scrollBy(0, sev.deltaY);
                     zoomBehavior.translate(lastZoomLevel.translate);
