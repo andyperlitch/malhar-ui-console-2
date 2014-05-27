@@ -46,6 +46,8 @@ var DagWidget = BaseView.extend({
     
     html: forceImplement('html'),
 
+    // heightResizeElement: '.event-list',
+
     updateHeight: function() {
 
         if (this.widgetDef.get('height') < this.minHeight) {

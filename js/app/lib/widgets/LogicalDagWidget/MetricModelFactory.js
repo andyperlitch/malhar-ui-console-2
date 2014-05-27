@@ -37,8 +37,7 @@ var MetricModelFactory = {
 
         tuplesProcessedPSMA: {
             showMetric: function (id, map) {
-                var value = map[id];
-                return (map.hasOwnProperty(id) && value > 0);
+                return map.hasOwnProperty(id);
             },
 
             valueToString: function (value) {
@@ -48,8 +47,7 @@ var MetricModelFactory = {
 
         tuplesEmittedPSMA: {
             showMetric: function (id, map) {
-                var value = map[id];
-                return (map.hasOwnProperty(id) && value > 0);
+                return map.hasOwnProperty(id);
             },
 
             valueToString: function (value) {
@@ -59,21 +57,25 @@ var MetricModelFactory = {
 
         latencyMA: {
             showMetric: function (id, map) {
-                var value = map[id];
-                return (map.hasOwnProperty(id) && value > 0);
-            }
+                return map.hasOwnProperty(id);
+            },
         },
 
-        partitionCount: {
-            showMetric: function (id, map) {
-                var value = map[id];
-                return (map.hasOwnProperty(id) && value > 1);
-            }
-        },
-
-        containerCount: {
+        partitions: {
             showMetric: function (id, map) {
                 return map.hasOwnProperty(id);
+            },
+            valueToString: function(value) {
+                return value.length;
+            }
+        },
+
+        containerIds: {
+            showMetric: function (id, map) {
+                return map.hasOwnProperty(id);
+            },
+            valueToString: function(value) {
+                return value.length;
             }
         },
 
@@ -113,7 +115,7 @@ var MetricModelFactory = {
             },
 
             valueToString: function (value) {
-                return new Date(value).toLocaleTimeString();
+                return new Date(value * 1).toLocaleTimeString();
             }
         },
 
@@ -129,8 +131,7 @@ var MetricModelFactory = {
 
         totalTuplesProcessed: {
             showMetric: function (id, map) {
-                var value = map[id];
-                return (map.hasOwnProperty(id) && value > 0);
+                return map.hasOwnProperty(id);
             },
 
             valueToString: function (value) {
@@ -140,8 +141,7 @@ var MetricModelFactory = {
 
         totalTuplesEmitted: {
             showMetric: function (id, map) {
-                var value = map[id];
-                return (map.hasOwnProperty(id) && value > 0);
+                return map.hasOwnProperty(id);
             },
 
             valueToString: function (value) {
