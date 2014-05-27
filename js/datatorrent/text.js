@@ -43,6 +43,7 @@ var textHash = {
     'cpu_min_label'              :  'min cpu',
     'cpu_max_label'              :  'max cpu',
     'cpu_avg_label'              :  'avg cpu',
+    'cpu_sum_label'              :  'total cpu',
     'current_wid_label'          :  'current wID',
     'ended_at_label'             :  'ended at',
     'ended_label'                :  'ended',
