@@ -21,7 +21,6 @@ var WidgetItem = BaseView.extend({
     
     initialize: function(options) {
         BaseView.prototype.initialize.call(this, options);
-        
         this.listenTo(this.model, 'remove', this.remove);
     },
     
@@ -56,6 +55,12 @@ var WidgetItem = BaseView.extend({
         this.model.trigger('hover_on_widget', false);
     },
     
+    remove: function() {
+        this.$('*').off();
+        this.$el.html('');
+        BaseView.prototype.remove.call(this);
+    },
+
     template: kt.make(__dirname+'/WidgetListItem.html','_')
     
 });
