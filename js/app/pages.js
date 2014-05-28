@@ -232,8 +232,9 @@ exports = module.exports = [
                 // HCURL
                 return '#ops/apps/'+appId;
             }},
+            { name: 'physical operators' },
             { name: function(page, appId, operatorId) {
-                return 'operator_'+operatorId;
+                return operatorId;
             },href: function(page, appId, operatorId) {
                 // HCURL
                 return '#ops/apps/'+appId+'/operators/'+operatorId;
