@@ -31,13 +31,14 @@ var CtnrOverviewWidget = require('../widgets/CtnrOverviewWidget');
 var CtnrMetricsWidget = require('../widgets/CtnrMetricsWidget');
 var OpListWidget = require('../widgets/PhysOpListWidget');
 var GaugeWidget = require('../widgets/GaugeWidget');
-var MemoryGaugeModel = require('../../../datatorrent/MemoryGaugeModel');
 var CpuGaugeModel = require('../../../datatorrent/CpuGaugeModel');
 
 var ContainerPageView = BasePageView.extend({
     
     pageName: 'ContainerPageView',
     
+    storageHash: '26321s9df',
+
     useDashMgr: true,
     
     initialize: function(options){
@@ -70,10 +71,6 @@ var ContainerPageView = BasePageView.extend({
             { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
                 model: this.model
             }},
-            { name: 'memoryGauge', defaultId: 'memory gauge', view: GaugeWidget, limit: 0, inject: {
-                label: 'Memory',
-                model: function() { return new MemoryGaugeModel(null, { model: this.model }); }
-            }},
             { name: 'cpuGauge', defaultId: 'CPU gauge', view: GaugeWidget, limit: 0, inject: {
                 label: 'CPU',
                 model: function() { return new CpuGaugeModel(null, { operators: this.model.operators }); }
@@ -97,11 +94,10 @@ var ContainerPageView = BasePageView.extend({
         {
             dash_id: 'default',
             widgets: [
-                { widget: 'info', id: 'container info', width: 65 },
-                { widget: 'actions', id: 'actions', width: 35 },
-                { widget: 'overview', id: 'overview' },
-                { widget: 'memoryGauge', id: 'memory gauge', width: 50 },
-                { widget: 'cpuGauge', id: 'CPU gauge', width: 50 },
+                { widget: 'cpuGauge', id: 'CPU gauge', width: 25.5, 'float': 'right' },
+                { widget: 'info', id: 'container info', width: 54.5 },
+                { widget: 'actions', id: 'actions', width: 20 },
+                { widget: 'overview', id: 'overview', width: 74.5, height: 112 },
                 { widget: 'operatorList', id: 'operator list'},
                 { widget: 'containerMetrics', id: 'metrics'}
             ]
