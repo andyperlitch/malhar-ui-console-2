@@ -22,22 +22,9 @@ var _ = require('underscore');
 var kt = require('knights-templar');
 var BaseView = require('bassview');
 var Bbind = require('./Bbindings');
+var Epoxy = require('backbone.epoxy');
+
 var SettingsView = BaseView.extend({
-    
-    initialize: function() {
-        this.subview('widgetWidth', new Bbind.text({
-            attr: 'width',
-            model: this.model
-        }));
-        this.subview('widgetId', new Bbind.text({
-            attr: 'id',
-            model: this.model
-        }));
-        this.subview('widgetHeight', new Bbind.text({
-            attr: 'height',
-            model: this.model
-        }));
-    },
     
     render: function() {
         // Set up markup
@@ -46,14 +33,16 @@ var SettingsView = BaseView.extend({
         
         // Add to html
         this.$el.html(markup);
-        // Assign subview
-        this.assign({
-            '.widgetWidth': 'widgetWidth',
-            '.widgetHeight': 'widgetHeight',
-            '.widgetId': 'widgetId'
+
+        // Set up epoxy binding
+        this.epoxyBindings = new Epoxy.View({
+            el: this.$('.widget-settings-form')[0],
+            model: this.model
         });
+        this.epoxyBindings.listenTo(this, 'clean_up', this.epoxyBindings.remove);
+
         this.$el.on('hidden', function(){
-            this.$el.remove();
+            this.remove();
         }.bind(this));
         this.$el.modal({
             'show': true

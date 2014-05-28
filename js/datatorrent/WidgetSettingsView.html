@@ -2,22 +2,36 @@
     <h3 class="widget-settings-title"><span class="muted">Widget Settings:</span> <%= widget %></h3>
 </div>
 <div class="modal-body">
-    <form>
+    <form class="widget-settings-form">
       <fieldset>
         <label>Name</label>
-        <input type="text" value="<%= id %>" class="widgetId">
+        <input type="text" data-bind="value:id" class="widgetId">
         
-        <label>Width (in percentage)</label>
-        <div class="input-append">
-            <input type="text" value="<%= width %>" class="widgetWidth">
-            <span class="add-on">%</span>
+        <div class="control-group">
+            <label>Width (in percentage)</label>
+            <div class="input-append">
+                <input type="text" data-bind="value:width" class="widgetWidth">
+                <span class="add-on">%</span>
+            </div>
         </div>
 
-        <label>Height (in pixels, or "auto")</label>
-        <div class="input-append">
-            <input type="text" value="<%= height %>" class="widgetHeight">
-            <span class="add-on">(px)</span>
-            <span class="help-block">"auto" means that the height will be automatically set</span>
+        <div class="control-group">
+            <label>Height (in pixels, or "auto")</label>
+            <div class="input-append">
+                <input type="text" data-bind="value:height" class="widgetHeight">
+                <span class="add-on">(px)</span>
+                <span class="help-block">"auto" means that the height will be automatically set</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Float</label>
+            <% _.each( ['none', 'left', 'right'], function(value) { %>
+                <label class="radio inline">
+                    <input type="radio" name="float" value="<%= value %>" data-bind="checked:float">
+                    <%= value %>
+                </label>
+            <% }) %>
         </div>
 
       </fieldset>
