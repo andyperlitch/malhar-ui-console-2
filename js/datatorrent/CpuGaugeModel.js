@@ -39,7 +39,6 @@ var CpuGaugeModel = Backbone.Model.extend({
         } else {
             value = 0;
         }
-
         this.set('value', value);
     }
 });
