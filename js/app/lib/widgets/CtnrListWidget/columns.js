@@ -86,5 +86,5 @@ exports = module.exports = [
     { id: 'memoryMBAllocated', label: DT.text('alloc_mem_label'), key: 'memoryMBAllocated', format: memoryFormatter, filter: 'number', sort: 'number' },
     // { id: 'memoryMBFree', label: 'Free Memory (MB)', key: 'memoryMBFree', format: 'commaInt', filter: 'number', sort: 'number' },
     { id: 'numOperators', label: DT.text('num_operators_label'), key: 'numOperators', format: 'commaInt', filter: 'number', sort: 'number' },
-    { id: 'state', label: DT.text('state_label'), key: 'state', sort: 'string', filter:'like', format: statusFormatter }
+    { id: 'state', label: DT.text('state_label'), key: 'state', sort: 'string', filter:'like', format: statusFormatter, sort_value: 'a' }
 ];
