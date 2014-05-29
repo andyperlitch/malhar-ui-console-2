@@ -51,7 +51,10 @@ angular.module('dtConsoleApp')
           storageKey: 'dashboard.ops',
           widgetButtons: true,
           widgetDefinitions: widgetDefinitions,
-          defaultWidgets: defaultWidgets
+          defaultWidgets: defaultWidgets,
+          defaultLayouts: [
+            { title: 'default', active: true , defaultWidgets: defaultWidgets },
+          ]
         };
     
       }]);
