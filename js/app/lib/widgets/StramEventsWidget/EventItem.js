@@ -27,11 +27,7 @@ var EventItem = BaseView.extend({
         var json = this.model.toJSON();
         json.appId = this.parent.appId;
 
-        // give timestamp a proper format
-        var timestamp = new Date(json.timestamp*1);
-        var nowDay = new Date().toDateString();
-
-        json.timestamp = nowDay === timestamp.toDateString() ? timestamp.toLocaleTimeString() : timestamp.toLocaleString();
+        json.timestamp = DT.formatters.toRelativeString(new Date(json.timestamp*1));
 
         var html = this.template(json);
         this.$el.html(html);

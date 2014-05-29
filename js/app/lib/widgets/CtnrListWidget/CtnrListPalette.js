@@ -27,7 +27,8 @@ var Palette = BaseView.extend({
         'click .killCtnrs': 'killContainers',
         'click .selectAllButMaster': 'selectAllButMaster',
         'click .selectAll': 'selectAll',
-        'click .deselectAll': 'deselectAll'
+        'click .deselectAll': 'deselectAll',
+        'click .getEndedCtnrs': 'getEndedCtnrs'
     },
     
     inspectContainer: function() {
@@ -71,6 +72,12 @@ var Palette = BaseView.extend({
         });
         this.collection.trigger('change_selected');
         this.collection.trigger('tabled:update');  
+    },
+
+    getEndedCtnrs: function() {
+        return this.collection.fetch({
+            data: {}
+        });
     },
 
     template: kt.make(__dirname+'/CtnrListPalette.html')
