@@ -43,7 +43,6 @@ var Palette = BaseView.extend({
             var promise = ctnr.kill();
             promise.always(self.render.bind(self));
         });
-        this.deselectAll();
     },
 
     selectAll: function() {
