@@ -2,7 +2,8 @@
 <div class="palette-actions">
 
     <% if (selected.length === 0) { %>
-        <button class="btn" disabled><%= DT.text('select an item') %></button>
+        <button class="btn selectAll btn-info"><i class="icon-check icon-white"></i> <%= DT.text('select active') %></button>
+        <button class="btn selectAllButMaster"><i class="icon-check"></i> <%= DT.text('select all active but app master') %></button>
     <% } else if (selected.length === 1) {%>
         <button class="inspectItem btn btn-primary"><i class="icon-eye-open icon-white"></i> <%= DT.text('inspect') %></button>
         <% if (selected[0].containerLogsUrl) {
@@ -10,7 +11,8 @@
         } %>
         <button class="killCtnrs btn btn-danger"><i class="icon-ban-circle icon-white"></i> <%= DT.text('kill') %></button>
     <% } else { %>
-        <button class="killCtnrs btn btn-danger"><i class="icon-ban-circle icon-white"></i> <%= DT.text('kill all') %></button>
+        <button class="killCtnrs btn btn-danger"><i class="icon-ban-circle icon-white"></i> <%= DT.text('kill selected') %></button>
+        <button class="deselectAll btn"> <%= DT.text('deselect all') %></button>
     <% } %>
     
 </div>

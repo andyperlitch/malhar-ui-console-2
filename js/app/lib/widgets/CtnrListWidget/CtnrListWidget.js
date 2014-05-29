@@ -40,7 +40,7 @@ var CtnrListWidget = ListWidget.extend({
             columns:list_columns,
             id: 'ops.apps.app.ctnrs'+this.compId(),
             save_state: true,
-            row_sorts: ['id'],
+            row_sorts: ['state','id'],
             max_rows: 10
         }));
         

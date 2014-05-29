@@ -24,7 +24,10 @@ var Palette = BaseView.extend({
     
     events: {
         'click .inspectItem' : 'inspectContainer',
-        'click .killCtnrs': 'killContainers'
+        'click .killCtnrs': 'killContainers',
+        'click .selectAllButMaster': 'selectAllButMaster',
+        'click .selectAll': 'selectAll',
+        'click .deselectAll': 'deselectAll'
     },
     
     inspectContainer: function() {
@@ -40,6 +43,34 @@ var Palette = BaseView.extend({
             var promise = ctnr.kill();
             promise.always(self.render.bind(self));
         });
+    },
+
+    selectAll: function() {
+        this.collection.each(function(c) {
+            if (c.get('state') === 'ACTIVE') {
+                c.selected = true;
+            }
+        });
+        this.collection.trigger('change_selected');
+        this.collection.trigger('tabled:update');
+    },
+
+    selectAllButMaster: function() {
+        this.collection.each(function(c) {
+            if ( c.get('state') === 'ACTIVE' && !(/_[0]+1$/.test(c.get('id'))) ) {
+                c.selected = true;
+            }
+        });
+        this.collection.trigger('change_selected');
+        this.collection.trigger('tabled:update');
+    },
+
+    deselectAll: function() {
+        this.collection.each(function(c) {
+            c.selected = false;
+        });
+        this.collection.trigger('change_selected');
+        this.collection.trigger('tabled:update');  
     },
 
     template: kt.make(__dirname+'/CtnrListPalette.html')
