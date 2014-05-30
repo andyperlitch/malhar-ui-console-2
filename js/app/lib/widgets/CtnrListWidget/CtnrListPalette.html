@@ -1,6 +1,5 @@
 <span class="select-status"><strong><%=selected.length%></strong> <%= DT.text('row(s) selected') %></span>
 <div class="palette-actions">
-
     <% if (selected.length === 0) { %>
         <button class="btn selectAll btn-info"><i class="icon-check icon-white"></i> <%= DT.text('select active') %></button>
         <button class="btn selectAllButMaster"><i class="icon-check"></i> <%= DT.text('select all active but app master') %></button>
@@ -14,5 +13,5 @@
         <button class="killCtnrs btn btn-danger"><i class="icon-ban-circle icon-white"></i> <%= DT.text('kill selected') %></button>
         <button class="deselectAll btn"> <%= DT.text('deselect all') %></button>
     <% } %>
-    
+    <button class="btn getEndedCtnrs"><i class="icon-arrow-down"></i> <%= DT.text('retrieve killed') %></button>
 </div>

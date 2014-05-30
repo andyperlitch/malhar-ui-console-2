@@ -117,6 +117,17 @@ function cpusFormatter(percent, isNumerator) {
     return percent + '';
 }
 
+function toRelativeString(date) {
+
+    if (!(date instanceof Date)) {
+        throw new TypeError('toRelativeString requires a Date');
+    }
+
+    var nowDay = new Date().toDateString();
+
+    return nowDay === date.toDateString() ? date.toLocaleTimeString() : date.toLocaleString();
+}
+
 exports.containerFormatter = containerFormatter;
 exports.windowFormatter = windowFormatter;
 exports.windowOffsetFormatter = windowOffsetFormatter;
@@ -127,3 +138,4 @@ exports.commaGroups = bormat.commaGroups;
 exports.timeSince = bormat.timeSince;
 exports.byteFormatter = byteFormatter;
 exports.cpusFormatter = cpusFormatter;
+exports.toRelativeString = toRelativeString;

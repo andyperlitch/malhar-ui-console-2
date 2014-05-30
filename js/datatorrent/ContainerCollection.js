@@ -42,9 +42,19 @@ var ContainerCollection = Base.extend({
             appId: this.appId
         });
         this.listenTo(this.dataSource, topic, function(data) {
-            this.set(data.containers);
+            this.set(data.containers, { remove: false });
         });
         this.dataSource.subscribe(topic);
+    },
+
+    fetch: function(options) {
+        // when data is not supplied, assume we should only
+        // retrieve active containers
+        options = options || {};
+        if (!options.data) {
+            options.data = { states: ['ACTIVE', 'NEW', 'ALLOCATED'].join(',') };
+        }
+        Base.prototype.fetch.call(this, options);
     }
         
 });
