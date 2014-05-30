@@ -38,30 +38,42 @@ var Info = BaseView.extend({
 
     	];
 
-    	if (this.model.get('state') === 'RUNNING') {
-    		result.push(
-    			{ key: 'as_of', label: DT.text('as_of_label') },
-    			{ key: 'currentWindowId', label: DT.text('current_wid_label'), title: DT.text('current_wid_title') },
-		    	{ key: 'recoveryWindowId', label: DT.text('recovery_wid_label'), title: DT.text('recovery_wid_title') },
-		    	{ key: 'stats', label: DT.text('processed_per_sec'), value: function(stats) { return stats.tuplesProcessedPSMA_f || '-' } },
-		    	{ key: 'stats', label: DT.text('emitted_per_sec'), value: function(stats) { return stats.tuplesEmittedPSMA_f || '-' } },
-		    	{ key: 'stats', label: DT.text('processed_total'), value: function(stats) { return stats.totalTuplesProcessed_f || '-' } },
-		    	{ key: 'stats', label: DT.text('emitted_total'), value: function(stats) { return stats.totalTuplesEmitted_f || '-' } },
-		    	{ key: 'stats', label: DT.text('num_operators_label'), value: function(stats) { return stats.numOperators } },
-		    	{ key: 'stats', label: DT.text('planned/alloc. ctnrs'), value: function(stats, attrs) {
-		    		//return stats.plannedContainers + ' / ' + stats.allocatedContainers + ' (' +  attrs.totalAllocatedMemory  + ' GB)';
-                    return stats.plannedContainers + ' / ' + stats.allocatedContainers;
-		    	}},
-			    { key: 'stats', label: DT.text('latency_ms_label'), value: function(stats) { return stats.latency } },
-                { key: 'stats', label: DT.text('alloc_mem_label'), value: function(stats) {
-                    return formatters.byteFormatter(stats.totalMemoryAllocated, 'mb')
-                } }
-    		);
-    	} else {
-    		result.push(
-				{ key: 'as_of', label: DT.text('ended_at_label') }
-    		);
-    	}
+    	switch( this.model.get('state') ) {
+
+            case 'RUNNING':
+                result.push(
+                    { key: 'as_of', label: DT.text('as_of_label') },
+                    { key: 'currentWindowId', label: DT.text('current_wid_label'), title: DT.text('current_wid_title') },
+                    { key: 'recoveryWindowId', label: DT.text('recovery_wid_label'), title: DT.text('recovery_wid_title') },
+                    { key: 'stats', label: DT.text('processed_per_sec'), value: function(stats) { return stats.tuplesProcessedPSMA_f || '-' } },
+                    { key: 'stats', label: DT.text('emitted_per_sec'), value: function(stats) { return stats.tuplesEmittedPSMA_f || '-' } },
+                    { key: 'stats', label: DT.text('processed_total'), value: function(stats) { return stats.totalTuplesProcessed_f || '-' } },
+                    { key: 'stats', label: DT.text('emitted_total'), value: function(stats) { return stats.totalTuplesEmitted_f || '-' } },
+                    { key: 'stats', label: DT.text('num_operators_label'), value: function(stats) { return stats.numOperators } },
+                    { key: 'stats', label: DT.text('planned/alloc. ctnrs'), value: function(stats, attrs) {
+                        //return stats.plannedContainers + ' / ' + stats.allocatedContainers + ' (' +  attrs.totalAllocatedMemory  + ' GB)';
+                        return stats.plannedContainers + ' / ' + stats.allocatedContainers;
+                    }},
+                    { key: 'stats', label: DT.text('latency_ms_label'), value: function(stats) { return stats.latency } },
+                    { key: 'stats', label: DT.text('alloc_mem_label'), value: function(stats) {
+                        return formatters.byteFormatter(stats.totalMemoryAllocated, 'mb')
+                    } }
+                );
+            break;
+
+            case 'ACCEPTED':
+                result.push(
+                    { key: 'as_of', label: DT.text('as_of_label') }
+                );
+            break;
+
+            default: 
+                result.push(
+                    { key: 'as_of', label: DT.text('ended_at_label') }
+                );
+            break;
+
+        }
 
     	result.push({
     		key: 'up_for',
