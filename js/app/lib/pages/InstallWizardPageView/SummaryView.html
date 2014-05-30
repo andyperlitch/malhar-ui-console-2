@@ -30,10 +30,10 @@
     <p class="welcome-text">Below is a list of identified issues. Please refer to the installation guide in the Developer Center for more information.</p>
 
     <div class="issue-list">
-    <% issues.each(function (issue) { %>
-        <div class="alert <%= issue.get('severity') === 'error' ? 'alert-error': '' %>">
-            <h4><%= issue.get('key') %></h4>
-            <%= issue.get('description') %>
+    <% _.each(issues, function (issue) { %>
+        <div class="alert <%= issue.severity === 'error' ? 'alert-error': '' %>">
+            <h4><%= issue.key %></h4>
+            <%= issue.description %>
         </div>
     <% }) %>
     </div>

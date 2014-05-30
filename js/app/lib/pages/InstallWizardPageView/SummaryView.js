@@ -93,7 +93,10 @@ var SummaryView = BaseView.extend({
         var html = this.template({
             errorMsg: this.errorMsg,
             loading: this.loading,
-            issues: this.issues
+            // ONLY SHOW ERRORS, NOT WARNINGS OR OTHERWISE
+            issues: _.filter(this.issues.toJSON(), function(i) {
+                return i.severity === 'error';
+            })
         });
 
         this.$el.html(html);
