@@ -65,10 +65,12 @@ exports = module.exports = {
         killApp                  :'/ws/:v/applications/:appId/kill',
         killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
         launchApp                :'/ws/:v/jars/:fileName/applications/:appName/launch',
+        setLogLevel              :'/ws/:v/applications/:appId/loggers',
         specifyDepJars           :'/ws/:v/jars/:fileName/dependencyJars',
         restartGateway           :'/ws/:v/config/restart',
         loginUser                :'/ws/:v/login',
-        logoutUser               :'/ws/:v/logout'
+        logoutUser               :'/ws/:v/logout',
+
     },
     
     topics: {

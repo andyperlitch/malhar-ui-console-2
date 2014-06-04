@@ -49,3 +49,4 @@ require('../js/app/lib/widgets/PerfMetricsWidget/PerfMetricsWidget.spec');
 require('../js/app/lib/widgets/LogicalDagWidget/MetricModel.spec');
 require('../js/app/lib/widgets/AppListWidget/columns.spec');
 require('../js/app/lib/widgets/PhysOpListWidget/PhysOpListWidget.spec');
+require('../js/app/lib/widgets/LogLevelWidget/LogLevelWidget.spec');

@@ -1,0 +1,28 @@
+<form action="#" class="log-level-form">
+    
+    <% _.each( loggers, function(logger, i) { %>
+    <div class="alert alert-warning log-level-error-<%= i %>" style="display:none;"></div>
+    <div class="row-fluid log-level-item">
+        <a href="#" class="remove-log-level-item" data-index="<%= i %>">&times;</a>
+        <div class="control-group span6">
+            <input type="text" class="logger-input" data-index="<%= i %>" data-attr="target" id="target-<%= i %>" placeholder="<%= DT.text('log_level_target_label') %>" value="<%= logger.target || '' %>">
+            <p class="help-block"><%= DT.text('log_level_target_desc') %></p>
+        </div>
+        <div class="control-group span6">
+            <select id="logLevel-<%= i %>" class="logger-input" data-index="<%= i %>" data-attr="logLevel">
+                <option value="">- <%= DT.text('log_level_level_label') %> -</option>
+                <% _.each( levels, function(level) { %>
+                    <option 
+                        value="<%= level %>"
+                        <% if (logger.logLevel === level) { print('selected="selected"') } %>
+                        ><%= level %></option>
+                <% }) %>
+            </select>
+            <p class="help-block"><%= DT.text('log_level_level_desc') %></p>
+        </div>
+    </div>
+    <% }) %>
+    <a href="#" class="btn btn-primary addLogger"><%= DT.text('add logger') %></a>
+    <button type="submit" class="btn btn-primary"><%= DT.text('update log levels') %></button>
+
+</form>

@@ -34,6 +34,7 @@ var AlertListWidget = require('../widgets/AlertListWidget');
 var PhysicalDagWidget = require('../widgets/PhysicalDagWidget');
 var LogicalDagWidget = require('../widgets/LogicalDagWidget');
 var StramEventsWidget = require('../widgets/StramEventsWidget');
+var LogLevelWidget = require('../widgets/LogLevelWidget');
 // var TopNWidget = DT.widgets.TopNWidget;
 
 
@@ -255,6 +256,15 @@ var AppInstancePageView = BasePageView.extend({
                     limit: 0,
                     inject: {
                         dataSource: this.dataSource,
+                        appId: pageParams.appId
+                    }
+                },
+                {
+                    name: 'logLevel',
+                    defaultId: 'Log Level Setter',
+                    view: LogLevelWidget,
+                    limit: 1,
+                    inject: {
                         appId: pageParams.appId
                     }
                 }
