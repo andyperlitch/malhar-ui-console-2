@@ -344,9 +344,9 @@ var AppInstancePageView = BasePageView.extend({
                 { widget: 'instanceOverview', id: 'overview', width: 66 },
                 { widget: 'logicalDAG', id: 'logical DAG', width: 66 },
                 { widget: 'logicalOperatorList', id: 'logical operators' },
-                { widget: 'appMetrics', id: 'metrics', width: 60 },
+                { widget: 'appMetrics', id: 'metrics', width: 60, 'float': 'left' },
                 { widget: 'streamList', id: 'stream list', width: 40 },
-            
+                { widget: 'logLevel', id: 'set log levels', width: 40 }
             ]
         },
         {
