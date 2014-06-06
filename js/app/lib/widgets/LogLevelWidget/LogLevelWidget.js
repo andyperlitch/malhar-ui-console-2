@@ -76,6 +76,10 @@ var LogLevelWidget = BaseView.extend({
                 this.$('.log-level-error-' + i).text(text('Please specify a target and a log level')).show();
                 errors = true;
             }
+            else if (!/^(\w+\.?)+(\*|\w+)$/.test(logger.target)) {
+                this.$('.log-level-error-' + i).text(text('Invalid target name')).show();
+                errors = true;
+            }
         });
 
         if (errors) {
