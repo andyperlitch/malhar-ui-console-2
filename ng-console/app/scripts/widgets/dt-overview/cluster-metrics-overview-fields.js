@@ -1,29 +1,29 @@
 'use strict';
 
 angular.module('dtConsoleApp')
-  .factory('widgets/dtOverview/clusterMetricsOverviewFields', function (DTtext, $filter) {
+  .factory('clusterMetricsOverviewFields', function (DtText, $filter) {
     // Public API here
     return [
       {
-        label: DTtext.get('cores_label'),
+        label: DtText.get('cores_label'),
         key: 'cpuPercentage',
         filter: 'dtCpuFilter',
         filterArgs: [true]
       },
       {
-        label: DTtext.get('current alloc mem'),
+        label: DtText.get('current alloc mem'),
         key: 'currentMemoryAllocatedMB',
         filter: 'dtByteFilter',
         filterArgs: ['mb']
       },
       {
-        label: DTtext.get('peak alloc mem'),
+        label: DtText.get('peak alloc mem'),
         key: 'maxMemoryAllocatedMB',
         filter: 'dtByteFilter',
         filterArgs: ['mb']
       },
       {
-        label: DTtext.get('running / pending / failed / finished / killed / submitted'),
+        label: DtText.get('running / pending / failed / finished / killed / submitted'),
         key: 'numAppsRunning',
         value: function(numAppsRunning, attrs) {
           return '<span class="status-running">' + $filter('dtCommaGroups')(attrs.numAppsRunning) + '</span> / ' +
@@ -37,22 +37,22 @@ angular.module('dtConsoleApp')
         default: '-'
       },
       {
-        label: DTtext.get('num_containers_label'),
+        label: DtText.get('num_containers_label'),
         key: 'numContainers',
         'default': '-'
       },
       {
-        label: DTtext.get('num_operators_label'),
+        label: DtText.get('num_operators_label'),
         key: 'numOperators',
         'default': '-'
       },
       {
-        label: DTtext.get('tuples_per_sec'),
+        label: DtText.get('tuples_per_sec'),
         key: 'tuplesProcessedPSMA',
         filter: 'dtCommaGroups'
       },
       {
-        label: DTtext.get('emitted_per_sec'),
+        label: DtText.get('emitted_per_sec'),
         key: 'tuplesEmittedPSMA',
         filter: 'dtCommaGroups'
       }

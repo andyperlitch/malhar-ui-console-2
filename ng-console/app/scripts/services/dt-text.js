@@ -6,7 +6,7 @@ angular.module('dtConsoleApp')
    *
    * May be used in the future for i18n support
    */
-  .service('DTtext', ['$filter', function Dtext($filter) {
+  .service('DtText', ['$filter', '$log', function Dtext($filter, $log) {
     
     var textHash = {
       // Labels
@@ -117,7 +117,11 @@ angular.module('dtConsoleApp')
     });
 
     this.get = function(key) {
-      return textHash[key] || key;
+      if (textHash.hasOwnProperty(key)) {
+        return textHash[key];
+      }
+      $log.warn('Text item with key="' + key + '" was not found in the text package!');
+      return key;
     };
 
   }]);

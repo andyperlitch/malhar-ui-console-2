@@ -1,0 +1,28 @@
+<p class="palette">
+    <span ng-show="selected.length === 1">
+        <a href="#ops/applications/{{selected[0]}}" class="btn btn-primary">
+            <span class="glyphicon glyphicon-eye-open"></span>
+            <span dt-text="inspect"></span>
+        </a>
+        <button class="btn btn-warning" ng-click="endApp('shutdown', selected[0])">
+            <span class="glyphicon glyphicon-remove"></span>
+            <span dt-text="shutdown"></span>
+        </button>
+        <button class="btn btn-danger" ng-click="endApp('kill', selected[0])">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+            <span dt-text="kill"></span>
+        </button>
+    </span>
+    <button class="btn btn-default" ng-click="getAllApps()">
+        <span class="glyphicon glyphicon-download"></span>
+        <span dt-text="retrieve ended apps"></span>
+    </button>
+</p>
+<mlhr-table 
+    options="options"
+    columns="columns" 
+    rows="rows" 
+    class="dt-table"
+    table-class="table" 
+    selected="selected">
+</mlhr-table>

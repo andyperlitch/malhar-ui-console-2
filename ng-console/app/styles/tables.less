@@ -1,0 +1,36 @@
+@table-border-color:#AAA;
+@table-alternate-row-color:#EFEFEF;
+@dt-table-tfoot-font-size:11px;
+@dt-table-font-size:12px;
+@dt-table-border-color:@table-border-color;
+.table {
+    border: 1px solid @table-border-color;
+}
+.table th input {
+    font-weight: normal;
+}
+.table tr:nth-child(even){
+    background-color: @table-alternate-row-color;
+}
+.dt-table tfoot {
+    font-size: @dt-table-tfoot-font-size;
+}
+.dt-table .table {
+    line-height: 1;
+    font-size: @dt-table-font-size;
+}
+.dt-table .table th, .dt-table .table td {
+    padding: 3px;
+}
+.dt-table .table th {
+    input {
+        margin: 0;
+    }
+    border-color: @dt-table-border-color;
+}
+.dt-table .table td {
+    input {
+        margin: 0;
+    }
+    border-color: @dt-table-border-color;
+}

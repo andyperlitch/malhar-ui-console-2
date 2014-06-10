@@ -125,24 +125,35 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/templates.js"></script>
+
+        <script src="scripts/vendor/visibly.js"></script>
+
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/Ops.js"></script>
+        <script src="scripts/controllers/ops.js"></script>
         <script src="scripts/controllers/navbar-top.js"></script>
         <script src="scripts/controllers/build-etl.js"></script>
         <script src="scripts/controllers/apache-log/main.js"></script>
-        <script src="scripts/vendor/visibly.js"></script>
-        <script src="scripts/services/webSocket.js"></script>
-        <script src="scripts/services/overview-data-model.js"></script>
-        <script src="scripts/services/dt-text.js"></script>
+        
         <script src="scripts/services/dt-formatters.js"></script>
-        <script src="scripts/filters/unsafe.js"></script>
-        <script src="scripts/services/dt-settings.js"></script>
-        <script src="scripts/directives/widgets/dt-overview/dt-overview.js"></script>
-        <script src="scripts/services/get-uri.js"></script>
         <script src="scripts/services/dt-resources.js"></script>
-        <script src="scripts/services/table-data-model.js"></script>
-        <script src="scripts/services/widgets/dt-overview/cluster-metrics-overview-fields.js"></script>
-        <script src="scripts/services/widgets/dt-table/applications-list-columns.js"></script>
+        <script src="scripts/services/dt-settings.js"></script>
+        <script src="scripts/services/dt-text.js"></script>
+        <script src="scripts/services/get-uri.js"></script>
+        <script src="scripts/services/web-socket.js"></script>
+        
+        <script src="scripts/filters/unsafe.js"></script>
+
+        <!-- widgets -->
+        <script src="scripts/widgets/dt-overview/overview-data-model.js"></script>
+        <script src="scripts/widgets/dt-overview/dt-overview.js"></script>
+        <script src="scripts/widgets/dt-overview/cluster-metrics-overview-fields.js"></script>
+        <script src="scripts/widgets/dt-table/table-data-model.js"></script>
+        <script src="scripts/widgets/dt-table/app-list-data-model.js"></script>
+        <!-- end widgets -->
+        
+        <script src="scripts/filters/app-id-link.js"></script>
+        <script src="scripts/filters/time-since.js"></script>
+        <script src="scripts/directives/dt-text.js"></script>
         <!-- endbuild -->
 </body>
 </html>

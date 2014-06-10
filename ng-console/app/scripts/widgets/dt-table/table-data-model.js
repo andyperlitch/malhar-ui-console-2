@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dtConsoleApp')
-  .factory('TableDataModel', ['WidgetDataModel', 'webSocket', 'ClusterMetrics', 'getUri', function (WidgetDataModel, ws, ClusterMetrics, getUri) {
+  .factory('TableDataModel', ['WidgetDataModel', 'webSocket', 'getUri', function (WidgetDataModel, ws, getUri) {
   
       function TableDataModel() {}
 
