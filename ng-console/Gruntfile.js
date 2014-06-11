@@ -413,6 +413,11 @@ module.exports = function (grunt) {
         autoWatch: false,
         singleRun: true
       },
+      coverage: {
+        configFile: './test/karma-coverage.conf.js',
+        autoWatch: false,
+        singleRun: true
+      },
       unit_auto: {
         configFile: './test/karma-unit.conf.js'
       },
@@ -483,7 +488,9 @@ module.exports = function (grunt) {
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
+    'karma:unit',
+    'karma:midway',
+    'karma:e2e'
   ]);
 
   grunt.registerTask('build', [
