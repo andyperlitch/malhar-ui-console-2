@@ -11,9 +11,23 @@ describe('Filter: appIdLink', function () {
     appIdLink = $filter('appIdLink');
   }));
 
-  it('should return the input prefixed with "appIdLink filter:"', function () {
-    var text = 'angularjs';
-    expect(appIdLink(text)).toBe('appIdLink filter: ' + text);
+  it('should return a string', function() {
+    expect(appIdLink('myappid')).to.be.a('string');
+  });
+
+  it('should return an <a>nchor', function() {
+    var string = appIdLink('myappid');
+    var anchor = angular.element(string);
+    expect(anchor.length).to.equal(1);
+  });
+
+  it('should return an anchor with a href and title', function() {
+    var string = appIdLink('myappid');
+    var anchor = angular.element(string);
+    expect(anchor.attr('href')).to.be.a('string');
+    expect(anchor.attr('href').length).to.be.above(0);
+    expect(anchor.attr('title')).to.be.a('string');
+    expect(anchor.attr('title').length).to.be.above(0);
   });
 
 });
