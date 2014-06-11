@@ -51,7 +51,7 @@ angular.module('dtConsoleApp')
       getActive: {
         method: 'GET',
         params: {
-          states: 'RUNNING,ACCEPTED'
+          states: 'RUNNING,ACCEPTED,SUBMITTED'
         },
         responseType: 'json',
         transformResponse: transform,
