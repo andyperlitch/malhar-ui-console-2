@@ -73,6 +73,8 @@ angular.module('dtConsoleApp')
       AppListDataModel.prototype.init = function() {
         
         var that = this;
+
+        // Set up items on scope
         this.widgetScope.columns = columns;
         this.widgetScope.selected = this.selected = [];
         this.widgetScope.options = {
@@ -83,19 +85,20 @@ angular.module('dtConsoleApp')
           ]
         };
 
+        // Retrieve active applications via REST
         var result = ApplicationsRest.getActive();
         result.$promise.then(function() {
           that.widgetScope.rows = result;
         });
         that.widgetScope.rows = result;
 
+        // Expose functions required on widget scope
         this.widgetScope.getAllApps = function() {
           var result = ApplicationsRest.getAll();
           result.$promise.then(function() {
             that.widgetScope.rows = result;
           });
         };
-
         this.widgetScope.endApp = function(type, id) {
           var app = _.where(that.widgetScope.rows, {id: id})[0];
           if (app) {
@@ -105,6 +108,15 @@ angular.module('dtConsoleApp')
           }
         };
 
+        // Create PubSub instance and subscribe
+        this.pubsub = new ApplicationsPubSub();
+        this.pubsub.subscribe(function(data) {
+          that.widgetScope.rows = data;
+        });
+      };
+
+      AppListDataModel.prototype.destroy = function() {
+        this.pubsub.unsubscribe();
       };
 
       return AppListDataModel;
