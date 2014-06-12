@@ -76,7 +76,7 @@ angular.module('dtConsoleApp')
       scope: {
         textKey: '@'
       },
-      templateUrl: 'template/overview-item.html'
+      templateUrl: 'scripts/widgets/dt-overview/overview-item.html'
     };
   })
 ;
