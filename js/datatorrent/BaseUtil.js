@@ -36,11 +36,22 @@ function subscribeToTopic(topic) {
 }
 
 function fetchError(object, response, options) {
-    var message = {
-        'title': this.debugName + ' failed to load (' + response.status + ')',
-        'text': 'Server responded with: ' + response.statusText
-    };
-    Notifier.error(message);
+    switch(response.status) {
+        case 404: 
+            var message = {
+                'title': this.debugName + ' not found',
+                'text': 'This resource is not available in the strAM version used to launch this application. Some features of the UI may not be fully functional.'
+            };
+            Notifier.info(message);
+        break;
+        default:
+            var message = {
+                'title': this.debugName + ' failed to load (' + response.status + ')',
+                'text': 'Server responded with: ' + response.statusText
+            };
+            Notifier.error(message);
+        break;
+    }
 }
 
 function quietFetchError(object, response, options) {

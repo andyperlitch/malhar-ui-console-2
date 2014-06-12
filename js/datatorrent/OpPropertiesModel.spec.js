@@ -27,6 +27,7 @@ describe('OpPropertiesModel.js', function() {
 
         this.sandbox.stub(Notifier, 'success');
         this.sandbox.stub(Notifier, 'error');
+        this.sandbox.stub(Notifier, 'info');
 
         this.model = new OpPropertiesModel({}, {
             appId: 'application_123',
@@ -47,9 +48,17 @@ describe('OpPropertiesModel.js', function() {
         expect(this.model.get('key2')).to.equal('value2');
     });
 
-    it('should notify on load failure', function() {
+    it('should notify on load failure (404)', function() {
         this.server.respondWith('GET', url,
             [404, {}, '']);
+        this.model.fetch();
+        this.server.respond();
+        expect(Notifier.info).to.have.been.calledOnce;
+    });
+
+    it('should error on load failure (500)', function() {
+        this.server.respondWith('GET', url,
+            [500, {}, '']);
         this.model.fetch();
         this.server.respond();
         expect(Notifier.error).to.have.been.calledOnce;
