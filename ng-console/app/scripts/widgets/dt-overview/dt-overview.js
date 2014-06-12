@@ -76,11 +76,7 @@ angular.module('dtConsoleApp')
       scope: {
         textKey: '@'
       },
-      templateUrl: 'template/overview-item.html',
-      link: function (scope) {
-        //console.log('key');
-        //console.log(scope.textKey);
-      }
+      templateUrl: 'template/overview-item.html'
     };
   })
 ;
