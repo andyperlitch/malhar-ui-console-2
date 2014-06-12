@@ -56,6 +56,11 @@ angular.module('dtConsoleApp', [
       templateUrl: 'views/ops/index.html',
       label: 'Operations'
     })
+    .when('/ops/apps/:appId', {
+      controller: 'ApplicationCtrl',
+      templateUrl: 'views/ops/index.html',
+      label: 'Applications'
+    })
 
     // DEFAULT
     .otherwise({

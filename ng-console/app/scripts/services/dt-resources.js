@@ -27,7 +27,7 @@ angular.module('dtConsoleApp')
       });
       this.handlers = [];
     }
-  }
+  };
 
   return AbstractPubSub;
 

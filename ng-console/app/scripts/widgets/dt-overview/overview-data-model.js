@@ -15,19 +15,19 @@ angular.module('dtConsoleApp')
 
         // Subscribe to websocket topic
         var that = this;
-        ws.subscribe(getUri.topic(this.topic), function(data) {
-
+        ws.subscribe(this.topic, function(data) {
           that.updateScope(data);
           that.widgetScope.$apply();
 
         }, this.widgetScope);
 
         // Make initial call to resource
-        var response = this.resource.get();
-        response.$promise.then(function() {
-          that.updateScope(response);
-        });
-
+        if (this.resource) {
+          var response = this.resource.get();
+          response.$promise.then(function() {
+            that.updateScope(response);
+          });
+        }
       };
 
       return OverviewDataModel;

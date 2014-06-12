@@ -43,7 +43,7 @@ angular.module('dtConsoleApp')
           string = (hours < 10 ? '0' : '')+hours+':'+(minutes < 10 ? '0' : '')+minutes+':'+(seconds < 10 ? '0' : '')+seconds;
         }
         else {
-          string = days + ' day' + (days == 1 ? '' : 's') + ', ' + hours.toString() + ':' + (minutes < 10 ? '0' : '') + minutes.toString();
+          string = days + ' day' + (days === 1 ? '' : 's') + ', ' + hours.toString() + ':' + (minutes < 10 ? '0' : '') + minutes.toString();
         }
 
       } else {
@@ -59,19 +59,25 @@ angular.module('dtConsoleApp')
 
         var crossedThreshold = false;
         for (var i=0; i < levels.length; i++) {
-          if ( options.maxUnit === levels[i].singular ) crossedThreshold = true;
-          if ( remaining < levels[i].ms || !crossedThreshold ) continue;
+          if ( options.maxUnit === levels[i].singular ) {
+            crossedThreshold = true;
+          }
+          if ( remaining < levels[i].ms || !crossedThreshold ) {
+            continue;
+          }
           level++;
           var num = Math.floor( remaining / levels[i].ms );
-          var label = num == 1 ? levels[i].singular : levels[i].plural ;
+          var label = num === 1 ? levels[i].singular : levels[i].plural ;
           string += num + ' ' + label + separator;
           remaining %= levels[i].ms;
-          if ( level >= max_levels ) break;
-        };
+          if ( level >= max_levels ) {
+            break;
+          }
+        }
         string = string.substring(0, string.length - separator.length);
       }
 
 
       return string;
-    }
+    };
   });

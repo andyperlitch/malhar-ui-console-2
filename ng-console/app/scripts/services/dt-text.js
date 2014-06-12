@@ -13,6 +13,7 @@ angular.module('dtConsoleApp')
       'alert_label'                :  'alert',
       'alloc_mem_mb_label'         :  'allocated mem. (mb)',
       'alloc_mem_label'            :  'allocated mem.',
+      'planned_alloc_ctnrs_label'  :  'planned/alloc. ctnrs',
       'as_of_label'                :  'as of',
       'buffer_server_reads_label'  :  'buffer server reads',
       'buffer_server_writes_label' :  'buffer server writes',

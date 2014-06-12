@@ -9,7 +9,7 @@ angular.module('dtConsoleApp')
         shortId = parts[parts.length - 1];
       }
       
-      var link = '<a href="#ops/applications/' + appId + '" title="' + appId + '">' + shortId + '</a>';
+      var link = '<a href="#ops/apps/' + appId + '" title="' + appId + '">' + shortId + '</a>';
       return link;
     };
   });
