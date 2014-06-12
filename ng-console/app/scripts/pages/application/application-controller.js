@@ -24,7 +24,7 @@ angular.module('dtConsoleApp')
       {
         name: 'AppMetrics',
         title: 'Application Info',
-        templateUrl: 'template/overview.html',
+        templateUrl: 'scripts/pages/application/overview.html',
         style: {
           width: '100%'
         }
