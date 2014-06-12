@@ -22,6 +22,14 @@ angular.module('dtConsoleApp')
 
     var widgetDefinitions = [
       {
+        name: 'AppMetrics',
+        title: 'Application Info',
+        templateUrl: 'template/overview.html',
+        style: {
+          width: '100%'
+        }
+      },
+      {
         name: 'ApplicationMetrics',
         title: 'Application Info',
         template: '<div dt-overview fields="fields" data="widgetData"></div>',
@@ -38,6 +46,7 @@ angular.module('dtConsoleApp')
     ];
 
     var defaultWidgets = _.clone(widgetDefinitions);
+    //var defaultWidgets = _.clone([widgetDefinitions[0]]);
 
     $scope.dashboardOptions = {
       //storage: localStorage,
@@ -50,11 +59,22 @@ angular.module('dtConsoleApp')
       ]
     };
   })
-  .factory('appMetricsOverviewFields', function (DtText) { //TODO
+  .controller('ApplicationOverviewCtrl', function ($scope, $routeParams, webSocket) {
+    var appId = $routeParams.appId;
+
+    webSocket.subscribe('applications.' + appId, function (data) {
+      console.log(data);
+      $scope.fields = data;
+      $scope.$apply();
+    }, $scope);
+  })
+  .factory('appMetricsOverviewFields', function (DtText) {
+    //TODO
     var fields = [
       {
         label: DtText.get('state_label'),
         key: 'state'
+        //valueTemplate: '{{field.value}}<div dt-state="" value="field.value"></div>'
       },
       {
         label: DtText.get('as_of_label'),

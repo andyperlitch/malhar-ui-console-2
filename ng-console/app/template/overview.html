@@ -1,0 +1,41 @@
+<div ng-controller="ApplicationOverviewCtrl">
+    <div dt-overview-item text-key="state_label">
+        <span dt-state value="fields.state"></span>
+    </div>
+    <div dt-overview-item text-key="as_of_label">
+        TODO
+    </div>
+    <div dt-overview-item text-key="current_wid_label">
+        <span dt-state value="fields.currentWindowId"></span>
+    </div>
+    <div dt-overview-item text-key="recovery_wid_label">
+        {{fields.recoveryWindowId}}
+    </div>
+    <div dt-overview-item text-key="processed_per_sec">
+        TODO
+    </div>
+    <div dt-overview-item text-key="emitted_per_sec">
+        TODO
+    </div>
+    <div dt-overview-item text-key="processed_total">
+        {{fields.tuplesProcessedPSMA|dtCommaGroups}}
+    </div>
+    <div dt-overview-item text-key="emitted_total">
+        {{fields.tuplesEmittedPSMA|dtCommaGroups}}
+    </div>
+    <div dt-overview-item text-key="num_operators_label">
+        TODO
+    </div>
+    <div dt-overview-item text-key="planned_alloc_ctnrs_label">
+        TODO
+    </div>
+    <div dt-overview-item text-key="latency_ms_label">
+        TODO
+    </div>
+    <div dt-overview-item text-key="alloc_mem_label">
+        TODO
+    </div>
+    <div dt-overview-item text-key="up_for_label">
+        TODO
+    </div>
+</div>

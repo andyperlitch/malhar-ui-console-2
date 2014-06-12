@@ -8,6 +8,7 @@ angular.module('dtConsoleApp')
         key: '@dtText'
       },
       link: function postLink(scope, element) {
+        console.log(scope.key);
         element.text(DtText.get(scope.key));
       }
     };
