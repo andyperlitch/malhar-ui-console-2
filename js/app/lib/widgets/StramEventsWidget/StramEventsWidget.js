@@ -68,6 +68,7 @@ var StramEventRange = Backbone.Model.extend({
         return json;
     }
 });
+
 var StramEventsWidget = BaseView.extend({
     
     initialize: function(options) {

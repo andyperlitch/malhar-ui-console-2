@@ -36,13 +36,7 @@ var EventList = BaseView.extend({
             parent: this
         });
         itemView.listenTo(this, 'clean_up', itemView.remove);
-        if (this.parent.viewMode === 'tail') {
-            itemView.$el.css('display', 'none');
-            this.$el.prepend(itemView.render().el);
-            itemView.$el.slideDown('fast');
-        } else {
-            this.$el.append(itemView.render().el);
-        }
+        this.$el.append(itemView.render().el);
     },
 
     events: {

@@ -12,6 +12,10 @@
     display: inline-block;
     vertical-align: middle;
 }
+img.event-viewer-direction-indicator {
+    float: left;
+    margin-right: 3px;
+}
 .stram-event-options {
 
     text-align: center;
@@ -144,6 +148,29 @@
         display: inline-block;
         .controls {
             margin-bottom: 0;
+        }
+    }
+}
+.event-row-container {
+    position: relative;
+    .followEvents {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        z-index: 2;
+        span.indicator {
+            display: inline-block;
+            background-color: #BBB;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 0 0 2px #a6a6a6,0 0 2px #000, 0 0 0 2px #FFF, 0 0 2px 2px;
+            margin-right: 3px;
+            .active {
+                background-color: #35B435;
+                box-shadow: inset 0 0 2px #008000,0 0 2px #000, 0 0 0 2px #FFF, 0 0 2px 2px;
+            }
         }
     }
 }

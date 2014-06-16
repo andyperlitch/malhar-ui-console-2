@@ -67,9 +67,12 @@
     </div>
 </form>
 <!-- <hr> -->
-<!-- hiding until backend can provide limit/offset/direction queryString parameters -->
-
-<div class="row-fluid">
+<div class="row-fluid event-row-container">
+    <button class="btn followEvents">
+        <span class="indicator"></span>
+        follow events
+    </button>
+    <img class="event-viewer-direction-indicator" src="img/stram_events_direction.png" />
     <div class="event-viewer-container" style="display: <% if (showRaw === true) { print('block'); } else { print('none'); } %>">
         <!-- <h3 class="stram-event-section-title">Raw Event Data</h3> -->
         <div class="event-viewer well"></div>
