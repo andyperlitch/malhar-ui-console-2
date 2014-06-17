@@ -170,7 +170,7 @@ exports = module.exports = [
     /** Physical Operator View */
     {
         'name': 'PhysOpPageView',
-        'routes': ['ops/apps/:appId/operators/:operatorId'],
+        'routes': ['ops/apps/:appId/operators/:operatorId', 'ops/apps/:appId/physicalOperators/:operatorId'],
         'view': require('./lib/pages/PhysOpPageView'),
         'paramList': ['appId', 'operatorId'],
         'mode': 'ops',
@@ -219,7 +219,7 @@ exports = module.exports = [
     /** Physical Port View */
     {
         'name': 'PortPageView',
-        'routes': ['ops/apps/:appId/operators/:operatorId/ports/:portName'],
+        'routes': ['ops/apps/:appId/operators/:operatorId/ports/:portName', 'ops/apps/:appId/physicalOperators/:operatorId/ports/:portName'],
         'view': require('./lib/pages/PortPageView'),
         'paramList': ['appId', 'operatorId', 'portName'],
         'mode': 'ops',
@@ -312,7 +312,7 @@ exports = module.exports = [
     /** Recording View */
     {
         'name': 'RecordingPageView',
-        'routes': ['ops/apps/:appId/operators/:operatorId/recordings/:startTime'],
+        'routes': ['ops/apps/:appId/operators/:operatorId/recordings/:startTime', 'ops/apps/:appId/physicalOperators/:operatorId/recordings/:startTime'],
         'view': require('./lib/pages/RecordingPageView'),
         'paramList': ['appId', 'operatorId', 'startTime'],
         'mode': 'ops',

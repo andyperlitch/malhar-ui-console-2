@@ -12,7 +12,7 @@
 
     <% } else if (type === 'ContainerError') { %>
     <span class="event-item-info" >
-        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
     </span>
     <div class="event-item-reason show-on-active">
         <pre class="well"><%= data.errorMessage %></pre>
@@ -20,21 +20,21 @@
     
     <% } else if (type === 'CreateOperator') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="<%= data.operatorName %>"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info" title="<%= DT.text('operator id') %>">
-        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.templates.phys_op_link({appId: appId, operatorId: data.operatorId, displayText: data.operatorId }) %>
+        <span class="event-item-info-label">id:</span>&nbsp;<a href="#" class="physOpLink" data-id="<%= data.operatorId %>"><%= data.operatorId %></a>
     </span>
     
     <% } else if (type === 'OperatorError') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= data.operatorName %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" data-name="<%= data.operatorName %>" class="logicalOpLink"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info" title="<%= DT.text('operator id') %>">
         <span class="event-item-info-label">id:</span>&nbsp;<%= data.operatorId %>
     </span>
     <span class="event-item-info" >
-        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
     </span>
     <div class="event-item-reason show-on-active">
         <pre class="well"><%= data.errorMessage %></pre>
@@ -42,7 +42,7 @@
     
     <% } else if (type === 'Partition') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="<%= data.operatorName %>"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info">
         <span class="event-item-info-label">numOldPartitions:</span>&nbsp;<%= data.oldNumPartitions %>
@@ -53,7 +53,7 @@
 
     <% } else if (type === 'RemoveOperator') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="<%= data.operatorName %>"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info">
         <span class="event-item-info-label">id:</span>&nbsp;<%= data.operatorId %>
@@ -61,7 +61,7 @@
 
     <% } else if (type === 'SetOperatorProperty') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">operator:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+        <span class="event-item-info-label">operator:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="<%= data.operatorName %>"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info">
         <span class="event-item-info-label">property:</span>&nbsp;<%= data.propertyName %>
@@ -72,10 +72,10 @@
 
     <% } else if (type === 'SetPhysicalOperatorProperty') { %>
     <span class="event-item-info" title="<%= DT.text('operator id') %>">
-        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.templates.phys_op_link({appId: appId, operatorId: data.operatorId, displayText: data.operatorId }) %>
+        <span class="event-item-info-label">id:</span>&nbsp;<a href="#" class="physOpLink" data-id="<%= data.operatorId %>"><%= data.operatorId %></a>
     </span>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="<%= data.operatorName %>"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info">
         <span class="event-item-info-label">property:</span>&nbsp;<%= data.propertyName %>
@@ -94,10 +94,10 @@
 
     <% } else if (type === 'StartOperator') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="<%= data.operatorName %>"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info" title="<%= DT.text('operator id') %>">
-        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.templates.phys_op_link({appId: appId, operatorId: data.operatorId, displayText: data.operatorId }) %>
+        <span class="event-item-info-label">id:</span>&nbsp;<a href="#" class="physOpLink" data-id="<%= data.operatorId %>"><%= data.operatorId %></a>
     </span>
     <span class="event-item-info" >
         <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
@@ -105,7 +105,7 @@
 
     <% } else if (type === 'StopContainer') { %>
     <span class="event-item-info" >
-        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+        <span class="event-item-info-label">id:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
     </span>
     <span class="event-item-info" >
         <span class="event-item-info-label">exitStatus:</span>&nbsp;<%= data.exitStatus %>
@@ -113,13 +113,13 @@
     
     <% } else if (type === 'StopOperator') { %>
     <span class="event-item-info" title="<%= DT.text('operator name') %>">
-        <span class="event-item-info-label">name:</span>&nbsp;<%= data.operatorName %>
+        <span class="event-item-info-label">name:</span>&nbsp;<a href="#" data-name="<%= data.operatorName %>" class="logicalOpLink"><%= data.operatorName %></a>
     </span>
     <span class="event-item-info" title="<%= DT.text('operator id') %>">
         <span class="event-item-info-label">id:</span>&nbsp;<%= data.operatorId %>
     </span>
     <span class="event-item-info" >
-        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId) %>
+        <span class="event-item-info-label">container:</span>&nbsp;<%= DT.formatters.containerFormatter(data.containerId, {appId: appId}) %>
     </span>
 
     <% } %>
