@@ -35,7 +35,6 @@ var RecTable = ListWidget.extend({
         this.dataSource = options.dataSource;
         this.nav = options.nav;
         
-        
         // Set up recordings collection
         this.recordings = new Recordings([], {
             appId: options.pageParams.appId,
@@ -56,6 +55,17 @@ var RecTable = ListWidget.extend({
             dataSource: this.dataSource,
             nav: this.nav
         }));
+
+        // Watch others for updates
+        var watch = options.watch;
+        if (watch && watch.length) {
+            for (var i = 0; i < watch.length; i++) {
+                var item = watch[i];
+                this.listenTo(item.object, item.event, function() {
+                    this.recordings.fetch();
+                });
+            }
+        }
     },
     
     listTitle: 'Recordings Table'

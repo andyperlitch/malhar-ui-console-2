@@ -122,7 +122,10 @@ var PhysOpPageView = BasePageView.extend({
                     dataSource: this.dataSource,
                     pageParams: options.pageParams,
                     table_id: 'ops.app.op.reclist',
-                    nav: this.app.nav
+                    nav: this.app.nav,
+                    watch: [
+                        { object: this.model, event: 'change:recordingStartTime' }
+                    ]
                 }
             },
             {
