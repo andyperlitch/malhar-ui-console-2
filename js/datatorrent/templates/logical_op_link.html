@@ -1,1 +1,5 @@
-<a href="#ops/apps/<%= appId %>/logicalOperators/<%= logicalName %>"><%= logicalName %></a>
+<% if (logicalName.indexOf('#merge#') >= 0) %>
+    <span><%= logicalName %></span>
+<% else { %>
+    <a href="#ops/apps/<%= appId %>/logicalOperators/<%= logicalName %>"><%= logicalName %></a>
+<% } %>
