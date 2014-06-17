@@ -81,7 +81,7 @@ img.event-viewer-direction-indicator {
 
     &.selected {
         color: #FFF;
-        background-color: @stram-event-default-color-hover;
+        background-color: @stram-event-default-color-active;
         .show-on-active {
             display: inherit;
         }
@@ -90,24 +90,76 @@ img.event-viewer-direction-indicator {
         }
     }
 
-    &.event-startoperator, &.event-startcontainer {
-        background-color: @stram-event-start-color;
+    &.event-changelogicalplan {
+        background-color: @stram-event-changelogicalplan-color;
         &.selected {
-            background-color: @stram-event-start-color-hover;
+            background-color: @stram-event-changelogicalplan-color-active;
         }
     }
-    &.event-stopoperator, &.event-stopcontainer {
-        background-color: @stram-event-stop-color;
-
+    &.event-containererror {
+        background-color: @stram-event-containererror-color;
         &.selected {
-            background-color: @stram-event-stop-color-hover;
+            background-color: @stram-event-containererror-color-active;
         }
     }
-
-    &.event-operatorerror, &.event-containererror {
-        background-color: @stram-event-error-color;
+    &.event-createoperator {
+        background-color: @stram-event-createoperator-color;
         &.selected {
-            background-color: @stram-event-error-color-hover;
+            background-color: @stram-event-createoperator-color-active;
+        }
+    }
+    &.event-operatorerror {
+        background-color: @stram-event-operatorerror-color;
+        &.selected {
+            background-color: @stram-event-operatorerror-color-active;
+        }
+    }
+    &.event-partition {
+        background-color: @stram-event-partition-color;
+        &.selected {
+            background-color: @stram-event-partition-color-active;
+        }
+    }
+    &.event-removeoperator {
+        background-color: @stram-event-removeoperator-color;
+        &.selected {
+            background-color: @stram-event-removeoperator-color-active;
+        }
+    }
+    &.event-setoperatorproperty {
+        background-color: @stram-event-setoperatorproperty-color;
+        &.selected {
+            background-color: @stram-event-setoperatorproperty-color-active;
+        }
+    }
+    &.event-setphysicaloperatorproperty {
+        background-color: @stram-event-setphysicaloperatorproperty-color;
+        &.selected {
+            background-color: @stram-event-setphysicaloperatorproperty-color-active;
+        }
+    }
+    &.event-startcontainer {
+        background-color: @stram-event-startcontainer-color;
+        &.selected {
+            background-color: @stram-event-startcontainer-color-active;
+        }
+    }
+    &.event-startoperator {
+        background-color: @stram-event-startoperator-color;
+        &.selected {
+            background-color: @stram-event-startoperator-color-active;
+        }
+    }
+    &.event-stopcontainer {
+        background-color: @stram-event-stopcontainer-color;
+        &.selected {
+            background-color: @stram-event-stopcontainer-color-active;
+        }
+    }
+    &.event-stopoperator {
+        background-color: @stram-event-stopoperator-color;
+        &.selected {
+            background-color: @stram-event-stopoperator-color-active;
         }
     }
 
@@ -123,6 +175,7 @@ img.event-viewer-direction-indicator {
 
     .event-item-type {
         font-weight: bold;
+        letter-spacing: 0.05em;
     }
     .event-item-timestamp {
         margin-right: 20px;
