@@ -68,6 +68,10 @@ var StramEventsWidget = BaseView.extend({
         });
 
         this.appId = options.appId;
+        this.physicalOperators = options.physicalOperators;
+        this.logicalOperators = options.logicalOperators;
+        this.nav = options.nav;
+
         this.collection = new StramEventCollection([],{
             dataSource: options.dataSource,
             appId: options.appId
@@ -176,7 +180,9 @@ var StramEventsWidget = BaseView.extend({
     events: {
         'submit .stram-event-options': 'onRangeSubmit',
         'blur .form_datetime input': 'updateDateFields',
-        'click .followEvents': 'toggleFollowEvents'
+        'click .followEvents': 'toggleFollowEvents',
+        'click .physOpLink': 'followPhysOpLink',
+        'click .logicalOpLink': 'followLogicalOpLink'
     },
 
     onViewModeChange: function(evt) {
@@ -281,6 +287,34 @@ var StramEventsWidget = BaseView.extend({
                 limit: settings.stramEvents.TAIL_INIT_OFFSET
             }
         });
+    },
+
+    followLogicalOpLink: function(e) {
+        e.preventDefault();
+        var $el = $(e.target);
+        var name = $el.data('name');
+        if ( this.logicalOperators && this.logicalOperators.get(name) ) {
+            this.nav.go('#ops/apps/' + this.appId + '/logicalOperators/' + name);
+        } else {
+            Notifier.warning({
+                title: text.get('Operator no longer exists'),
+                text: text.get('This operator no longer exists in the logical plan of the application.')
+            });
+        }
+    },
+
+    followPhysOpLink: function(e) {
+        e.preventDefault();
+        var $el = $(e.target);
+        var id = $el.data('id');
+        if ( this.physicalOperators && this.physicalOperators.get(id) ) {
+            this.nav.go('#ops/apps/' + this.appId + '/physicalOperators/' + id);
+        } else {
+            Notifier.warning({
+                title: text.get('Operator no longer exists'),
+                text: text.get('This operator no longer exists in the physical plan of the application.')
+            });
+        }
     },
     
     template: kt.make(__dirname+'/StramEventsWidget.html','_')

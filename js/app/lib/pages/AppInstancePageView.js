@@ -256,7 +256,10 @@ var AppInstancePageView = BasePageView.extend({
                     limit: 0,
                     inject: {
                         dataSource: this.dataSource,
-                        appId: pageParams.appId
+                        appId: pageParams.appId,
+                        logicalOperators: this.getLogicalOperators.bind(this),
+                        physicalOperators: this.model.operators,
+                        nav: this.app.nav
                     }
                 },
                 {
@@ -320,7 +323,10 @@ var AppInstancePageView = BasePageView.extend({
                     limit: 0,
                     inject: {
                         dataSource: this.dataSource,
-                        appId: pageParams.appId
+                        appId: pageParams.appId,
+                        logicalOperators: this.getLogicalOperators.bind(this),
+                        physicalOperators: this.model.operators,
+                        nav: this.app.nav
                     }
                 }
             ];
