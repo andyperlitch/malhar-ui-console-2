@@ -23,6 +23,7 @@ var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var formatters = require('./formatters');
 var BaseModel = require('./BaseModel');
+var PortCollection = require('./PortCollection');
 var PhysicalOperatorModel = BaseModel.extend({
     
     debugName: 'operator',
@@ -47,6 +48,22 @@ var PhysicalOperatorModel = BaseModel.extend({
         'totalTuplesProcessed': '',
         'tuplesEmittedPSMA': '',
         'tuplesProcessedPSMA': ''
+    },
+
+    initialize: function(attrs, options) {
+        BaseModel.prototype.initialize.call(this, attrs, options);
+        this.ports = new PortCollection(attrs.ports, {
+            dataSource: options.dataSource,
+            appId: attrs.appId,
+            operatorId: attrs.id
+        });
+        this.on('change:ports', function(model, value) {
+            this.ports.set(value);
+        });
+        this.on('change:appId change:id', function(model, value) {
+            this.ports.appId = this.get('appId');
+            this.ports.operatorId = this.get('id');
+        });
     },
     
     serialize: function(noFormat) {
