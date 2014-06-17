@@ -1,7 +1,9 @@
 DataTorrent Front
 =================
 
-Open-source, web-based user interface for use with [DataTorrent](http://datatorrent.com), a stream-processing platform for developing real-time, big data applications in Hadoop. 
+**NOTE: An angular version of this tool is under active development and will eventually replace this version (built with Backbone+Browserify). As a result, new feature requests will be put on hold until the angular migration is complete.** To work with the angular version, switch to the [ngConsole branch](https://github.com/DataTorrent/malhar-ui-console/tree/ngConsole).
+
+Open-source, web-based user interface for use with [DataTorrent RTS](http://datatorrent.com), a stream-processing platform for developing real-time, big data applications in Hadoop 2.x. 
 
 Contributing
 ------------
@@ -14,13 +16,16 @@ When **adding new javascript files**, please prepend the Apache v2.0 license hea
 Installation/Building
 ---------------------
 
-After cloning the [Malhar](https://github.com/DataTorrent/Malhar) repository from Github:
+First, clone the repository:
 
-    cd front
+    git clone git@github.com:DataTorrent/malhar-ui-console.git && cd malhar-ui-console
+
+Then, install dependencies and build:
+
     npm install .
     make build
-    
-This creates a `dist` folder whose contents should be copied into the static file server root on the DataTorrent Gateway.
+
+This creates a `dist` folder whose contents should be copied (or linked) into the static file server root on the DataTorrent Gateway.
 
 Browser Compatibility
 ---------------------
@@ -33,7 +38,7 @@ The following browsers are currently supported:
 Tests
 -----
 
-Tests are written using the [Mocha Framework](http://visionmedia.github.io/mocha/), the [Chai Assertion Library](http://chaijs.com/), and the [Sinon Library](http://sinonjs.org/). The `suite.js` file which is located in `front/test/` includes all the tests to be run. The individual test files are located in the same directory of the file under test, and by convention end in `.spec.js`.
+Tests are written using the [Mocha Framework](http://visionmedia.github.io/mocha/), the [Chai Assertion Library](http://chaijs.com/), and the [Sinon Library](http://sinonjs.org/). The `suite.js` file which is located in `test/` includes all the tests to be run. The individual test files are located in the same directory of the file under test, and by convention end in `.spec.js`.
 
 ### CLI
 
@@ -64,17 +69,17 @@ Then, open `http://localhost:3333/` in your browser and you should see the dashb
 
 ### The DT Global Variable
 
-At runtime, the variable DT is available on the global namespace and contains all the base components that the Front relies on, such as classes that model aspects of your datatorrent applications and views that are common throughout the project. To view what is on this module, take a look at the file located at `front/js/datatorent/index.js`.
+At runtime, the variable DT is available on the global namespace and contains all the base components that the Front relies on, such as classes that model aspects of your datatorrent applications and views that are common throughout the project. To view what is on this module, take a look at the file located at `js/datatorent/index.js`.
 
 
 ### Pages
 
-The file located at `front/js/app/pages.js` acts as an index for all registered pages, and contains more information therein about how to set up a page. The actual page definitions are located in `front/js/app/lib/pages/` and specify a page name, the widgets that can be instantiated, the default widget configurations (called dashboards), and the page-wide models that will be instantiated. The best way to get familiar with these is to review the code.
+The file located at `js/app/pages.js` acts as an index for all registered pages, and contains more information therein about how to set up a page. The actual page definitions are located in `js/app/lib/pages/` and specify a page name, the widgets that can be instantiated, the default widget configurations (called dashboards), and the page-wide models that will be instantiated. The best way to get familiar with these is to review the code.
 
 
 ### Widgets
 
-Widgets are simply enhanced backbone views. It is recommended (but not necessarily required) to have all widgets extend from DT.widgets.Widget, which maps to the base backbone view located at `front/js/datatorrent/WidgetView.js`.
+Widgets are simply enhanced backbone views. It is recommended (but not necessarily required) to have all widgets extend from DT.widgets.Widget, which maps to the base backbone view located at `js/datatorrent/WidgetView.js`.
 
 #### Location
 
@@ -86,4 +91,4 @@ To create a boilerplate for a widget, run
 
     ./bin/createWidget [-c] _WIDGET_NAME_
 
-This will append "Widget" to the end of your widget name, so it is not necessary to include it here. The new folder that is created will be located at `front/js/app/lib/widgets/_WIDGET_NAME_Widget`.
+This will append "Widget" to the end of your widget name, so it is not necessary to include it here. The new folder that is created will be located at `js/app/lib/widgets/_WIDGET_NAME_Widget`.
