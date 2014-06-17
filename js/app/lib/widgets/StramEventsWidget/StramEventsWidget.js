@@ -22,7 +22,9 @@ var StramEventCollection = DT.lib.StramEventCollection;
 var Notifier = DT.lib.Notifier;
 var EventList = require('./EventList');
 var EventViewer = require('./EventViewer');
+var Epoxy = require('backbone.epoxy');
 var text = DT.text;
+var settings = DT.settings;
 
 var bbind = DT.lib.Bbindings;
 
@@ -34,28 +36,8 @@ var bbind = DT.lib.Bbindings;
 */
 
 var StramEventRange = Backbone.Model.extend({
-    initialize: function(attrs, options) {
-        if (options.storage) {
-            this.on('change', function() {
-                options.storage.setItem(options.storageKey, JSON.stringify(this.toJSON()));
-            });
-
-            var stored = options.storage.getItem(options.storageKey);
-            if (stored) {
-                try {
-                    var parsed = JSON.parse(stored);
-                    this.set(parsed);
-                } catch(e) {
-                    options.storage.removeItem(options.storageKey);
-                }
-            }
-        }
-
-    },
     validate: function(attrs) {
         var errors = {};
-
-
 
         if (!_.isEmpty(errors)) {
             return errors;
@@ -68,6 +50,7 @@ var StramEventRange = Backbone.Model.extend({
         return json;
     }
 });
+
 var StramEventsWidget = BaseView.extend({
     
     initialize: function(options) {
@@ -79,18 +62,10 @@ var StramEventsWidget = BaseView.extend({
             this.widgetDef.set('height', this.defaultHeight);
         }
 
-        this.storageKey = this.compId(options.appId);
-
-        this.rangeParams = new StramEventRange(
-            {
-                from: '',
-                to: ''
-            },
-            {
-                storageKey: this.storageKey + '.rangeParams',
-                storage: localStorage
-            }
-        );
+        this.rangeParams = new StramEventRange(this.widgetDef.get('rangeParams') || { from: '', to: ''});
+        this.listenTo(this.rangeParams, 'change', function() {
+            this.widgetDef.set('rangeParams', this.rangeParams.toJSON());
+        });
 
         this.appId = options.appId;
         this.collection = new StramEventCollection([],{
@@ -113,18 +88,21 @@ var StramEventsWidget = BaseView.extend({
             range: []
         }
         
-        // TODO: load from state
-        this.viewMode = localStorage.getItem(this.storageKey + '.viewMode') || 'tail';
-        this.showRaw = false;
-        this.setInterceptFunction();
-
-        if (this.viewMode === 'tail') {
-            this.collection.fetch({
-                data: {
-                    limit: 10
-                }
+        // Defaults
+        if (!this.widgetDef.has('viewMode')) {
+            this.widgetDef.set({
+                'viewMode': 'tail',
+                'showRaw': false,
+                'followEvents': true
             });
         }
+
+        if (this.widgetDef.get('viewMode') === 'tail') {
+            this.loadLatestEvents();
+        }
+
+        // Listeners
+        this.listenTo(this.widgetDef, 'change:viewMode', this.onViewModeChange);
 
         // Clean up datepickers
         this.on('clean_up', this.removeDateTimePickers);
@@ -141,18 +119,27 @@ var StramEventsWidget = BaseView.extend({
     heightResizeElement: '.event-list',
 
     html: function() {
-        var json = {
-            viewMode: this.viewMode,
-            showRaw: this.showRaw,
-            widgetId: this.compId().replace('.','-'),
-            range: this.rangeParams.toJSON(),
-            eventListHeight: this.widgetDef.get('height') + 'px'
-        };
+        var json = this.widgetDef.toJSON();
+        json.widgetId = this.compId().replace('.','-');
+        json.range = this.rangeParams.toJSON();
+        json.eventListHeight = this.widgetDef.get('height') + 'px';
+
         var html = this.template(json);
+
+        if (this.epoxyBindings) {
+            this.epoxyBindings.remove();
+            this.epoxyBindings.stopListening();
+        }
+
         return html;
     },
 
     postRender: function() {
+        this.epoxyBindings = new Epoxy.View({
+            el: this.$('.stram-event-options')[0],
+            model: this.widgetDef
+        });
+        this.epoxyBindings.listenTo(this, 'clean_up', this.epoxyBindings.remove);
         this.setupDateTimePickers();
     },
 
@@ -187,33 +174,31 @@ var StramEventsWidget = BaseView.extend({
     },
 
     events: {
-        'change [name="viewMode"]': 'onViewModeChange',
-        'change .show-raw-event-data': 'onShowRawChange',
         'submit .stram-event-options': 'onRangeSubmit',
-        'blur .form_datetime input': 'updateDateFields'
+        'blur .form_datetime input': 'updateDateFields',
+        'click .followEvents': 'toggleFollowEvents'
     },
 
     onViewModeChange: function(evt) {
-        var newMode = this.$('form [name="viewMode"]:checked').val();
-        if (newMode !== this.viewMode) {
-            this.cache[this.viewMode] = this.collection.toJSON();
-            this.collection.reset(this.cache[newMode]);
-            this.viewMode = newMode;
-            this.setInterceptFunction();
-            this.renderContent();
-            if (newMode === 'range') {
-                this.setupDateTimePickers();
-            }
-
-            localStorage.setItem(this.storageKey + '.viewMode', newMode);
+        var newMode = this.widgetDef.get('viewMode');
+        var oldMode = this.widgetDef.previous('viewMode');
+        
+        if (oldMode) {
+            this.cache[oldMode] = this.collection.toJSON();    
         }
-    },
+        
+        this.collection.reset(this.cache[newMode]);
+        this.setInterceptFunction();
 
-    onShowRawChange: function(evt) {
-        var showRaw = this.$('form .show-raw-event-data:checked');
-        this.showRaw = !! showRaw.length;
-        var method = this.showRaw ? 'show' : 'hide';
-        this.$('.event-viewer-container')[method]();
+        if (newMode === 'range') {
+            this.setupDateTimePickers();
+        } else if (this.cache.tail.length === 0) {
+            this.collection.fetch({
+                data: {
+                    limit: 20
+                }
+            });
+        }
     },
 
     onRangeSubmit: function(evt) {
@@ -283,6 +268,19 @@ var StramEventsWidget = BaseView.extend({
         } else {
             this.collection.interceptEvent = StramEventCollection.prototype.interceptEvent;
         }
+    },
+
+    toggleFollowEvents: function(e) {
+        e.preventDefault();
+        this.widgetDef.set('followEvents', !this.widgetDef.attributes.followEvents);
+    },
+
+    loadLatestEvents: function() {
+        this.collection.fetch({
+            data: {
+                limit: settings.stramEvents.TAIL_INIT_OFFSET
+            }
+        });
     },
     
     template: kt.make(__dirname+'/StramEventsWidget.html','_')

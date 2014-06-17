@@ -12,6 +12,10 @@
     display: inline-block;
     vertical-align: middle;
 }
+img.event-viewer-direction-indicator {
+    float: left;
+    margin-right: 3px;
+}
 .stram-event-options {
 
     text-align: center;
@@ -63,8 +67,9 @@
     text-align: center;
 }
 .event-item {
+    position: relative;
     cursor: pointer;
-    background-color: #CFCFCF;
+    background-color: @stram-event-default-color;
     border-radius: 2px;
     margin-bottom: 1px;
     font-size: 16px;
@@ -75,32 +80,93 @@
     user-select: none;
 
     &.selected {
-        color: #fff;
-        background-color: #AAA;
+        color: #FFF;
+        background-color: @stram-event-default-color-active;
         .show-on-active {
             display: inherit;
         }
-    }
-
-    &.event-startoperator, &.event-startcontainer {
-        background-color: #9dd27d;
-
-        &.selected {
-            background-color: #39af19;
-        }
-    }
-    &.event-stopoperator, &.event-stopcontainer {
-        background-color: #d4c469;
-        &.selected {
-            background-color: #d49709;
+        a {
+            color: #BBE8FD;
         }
     }
 
+    &.event-changelogicalplan {
+        background-color: @stram-event-changelogicalplan-color;
+        &.selected {
+            background-color: @stram-event-changelogicalplan-color-active;
+        }
+    }
+    &.event-containererror {
+        background-color: @stram-event-containererror-color;
+        &.selected {
+            background-color: @stram-event-containererror-color-active;
+        }
+    }
+    &.event-createoperator {
+        background-color: @stram-event-createoperator-color;
+        &.selected {
+            background-color: @stram-event-createoperator-color-active;
+        }
+    }
     &.event-operatorerror {
-        background-color: #d48e7e;
+        background-color: @stram-event-operatorerror-color;
         &.selected {
-            background-color: #d44220;
+            background-color: @stram-event-operatorerror-color-active;
         }
+    }
+    &.event-partition {
+        background-color: @stram-event-partition-color;
+        &.selected {
+            background-color: @stram-event-partition-color-active;
+        }
+    }
+    &.event-removeoperator {
+        background-color: @stram-event-removeoperator-color;
+        &.selected {
+            background-color: @stram-event-removeoperator-color-active;
+        }
+    }
+    &.event-setoperatorproperty {
+        background-color: @stram-event-setoperatorproperty-color;
+        &.selected {
+            background-color: @stram-event-setoperatorproperty-color-active;
+        }
+    }
+    &.event-setphysicaloperatorproperty {
+        background-color: @stram-event-setphysicaloperatorproperty-color;
+        &.selected {
+            background-color: @stram-event-setphysicaloperatorproperty-color-active;
+        }
+    }
+    &.event-startcontainer {
+        background-color: @stram-event-startcontainer-color;
+        &.selected {
+            background-color: @stram-event-startcontainer-color-active;
+        }
+    }
+    &.event-startoperator {
+        background-color: @stram-event-startoperator-color;
+        &.selected {
+            background-color: @stram-event-startoperator-color-active;
+        }
+    }
+    &.event-stopcontainer {
+        background-color: @stram-event-stopcontainer-color;
+        &.selected {
+            background-color: @stram-event-stopcontainer-color-active;
+        }
+    }
+    &.event-stopoperator {
+        background-color: @stram-event-stopoperator-color;
+        &.selected {
+            background-color: @stram-event-stopoperator-color-active;
+        }
+    }
+
+    .reason-indicator {
+        position: absolute;
+        top: 3px;
+        right: 3px;
     }
 
     .inner {
@@ -109,6 +175,7 @@
 
     .event-item-type {
         font-weight: bold;
+        letter-spacing: 0.05em;
     }
     .event-item-timestamp {
         margin-right: 20px;
@@ -134,6 +201,30 @@
         display: inline-block;
         .controls {
             margin-bottom: 0;
+        }
+    }
+}
+.event-row-container {
+    position: relative;
+    text-align: left;
+    .followEvents {
+        position: absolute;
+        right: 28px;
+        top: 8px;
+        z-index: 2;
+        span.indicator {
+            display: inline-block;
+            background-color: #BBB;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 0 0 2px #a6a6a6,0 0 2px #000, 0 0 0 2px #FFF, 0 0 2px 2px;
+            margin-right: 3px;
+            &.active {
+                background-color: #35B435;
+                box-shadow: inset 0 0 2px #008000,0 0 2px #000, 0 0 0 2px #FFF, 0 0 2px 2px;
+            }
         }
     }
 }

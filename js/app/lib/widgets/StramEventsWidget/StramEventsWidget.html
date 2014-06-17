@@ -3,14 +3,14 @@
     <div class="option-group view-mode well">
         <h3>view mode:</h3>
         <label for="viewMode" class="radio">
-            <input type="radio" name="viewMode" value="tail" <% if (viewMode === 'tail') { print('checked'); } %>>
+            <input type="radio" name="viewMode" value="tail" data-bind="checked:viewMode">
             tail
         </label>
         <label for="viewMode" class="radio">
-            <input type="radio" name="viewMode" value="range" <% if (viewMode === 'range') { print('checked'); } %>>
+            <input type="radio" name="viewMode" value="range" data-bind="checked:viewMode">
             range
         </label>
-        <div class="range-params" style="display: <% if (viewMode === 'range') { print('inline'); } else { print('none'); } %>">
+        <div class="range-params" data-bind="toggle:equal(viewMode,'range')">
             
             <!-- From -->
             <div class="control-group">
@@ -25,12 +25,6 @@
                     <span class="add-on"><i class="icon-remove"></i></span>
                     <span class="add-on"><i class="icon-th"></i></span>
                 </div>
-<!--                 <input
-                    type="hidden"
-                    name="range-from"
-                    id="<%= widgetId %>-range-from"
-                    placeholder="from"
-                    class="input-medium">  -->
             </div>
             
             to
@@ -48,12 +42,6 @@
                     <span class="add-on"><i class="icon-remove"></i></span>
                     <span class="add-on"><i class="icon-th"></i></span>
                 </div>
-<!--                 <input
-                    type="hidden"
-                    name="range-to"
-                    id="<%= widgetId %>-range-to"
-                    placeholder="to"
-                    class="input-medium"> -->
             </div>
 
             <input type="submit" class="btn btn-primary" value="find">
@@ -61,21 +49,20 @@
 
         </div>
     </div>
-    <div class="option-group well">
-        <h3>show raw event data:</h3>
-        <input type="checkbox" class="show-raw-event-data" <% if (showRaw === true) { print('checked="checked"'); } %>>
+
+    <div class="row-fluid event-row-container">
+        <button class="btn followEvents" data-bind="toggle:equal(viewMode,'tail')" title="When enabled, this list will automatically scroll to the bottom when new events come in">
+            <span class="indicator" data-bind="classes:{active:followEvents}"></span>
+            follow events
+        </button>
+        <img class="event-viewer-direction-indicator" src="img/stram_events_direction.png" />
+        <div class="event-viewer-container" data-bind="toggle:showRaw">
+            <!-- <h3 class="stram-event-section-title">Raw Event Data</h3> -->
+            <div class="event-viewer well"></div>
+        </div>
+        <div>
+            <!-- <h3 class="stram-event-section-title">StrAM Events/Decisions</h3> -->
+            <div class="event-list well" tabindex="1" style="height: <%= eventListHeight %>"></div>
+        </div>
     </div>
 </form>
-<!-- <hr> -->
-<!-- hiding until backend can provide limit/offset/direction queryString parameters -->
-
-<div class="row-fluid">
-    <div class="event-viewer-container" style="display: <% if (showRaw === true) { print('block'); } else { print('none'); } %>">
-        <!-- <h3 class="stram-event-section-title">Raw Event Data</h3> -->
-        <div class="event-viewer well"></div>
-    </div>
-    <div>
-        <!-- <h3 class="stram-event-section-title">StrAM Events/Decisions</h3> -->
-        <div class="event-list well" tabindex="1" style="height: <%= eventListHeight %>"></div>
-    </div>
-</div>
