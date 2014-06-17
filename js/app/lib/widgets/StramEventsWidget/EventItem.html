@@ -56,10 +56,7 @@
         <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
     </span>
     <span class="event-item-info">
-        <span class="event-item-info-label">id:</span>&nbsp;<%= data.numOldPartitions %>
-    </span>
-    <span class="event-item-info">
-        <span class="event-item-info-label">numNewPartitions:</span>&nbsp;<%= data.numNewPartitions %>
+        <span class="event-item-info-label">id:</span>&nbsp;<%= data.operatorId %>
     </span>
 
     <% } else if (type === 'SetOperatorProperty') { %>
