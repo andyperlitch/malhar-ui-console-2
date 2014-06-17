@@ -46,7 +46,7 @@ var DagWidget = BaseView.extend({
     
     html: forceImplement('html'),
 
-    // heightResizeElement: '.event-list',
+    heightResizeElement: '.svg-main',
 
     updateHeight: function() {
 
