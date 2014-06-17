@@ -21,7 +21,8 @@ var EventList = BaseView.extend({
     initialize: function(options) {
         this.parent = options.parent;
         this.appId = this.parent.appId;
-        this.listenTo(this.collection, 'add', this.addOne.bind(this));
+        this.listenTo(this.collection, 'add', this.addOne);
+        this.listenTo(this.collection, 'reset', this.render);
     },
 
     render: function() {
@@ -37,6 +38,14 @@ var EventList = BaseView.extend({
         });
         itemView.listenTo(this, 'clean_up', itemView.remove);
         this.$el.append(itemView.render().el);
+        if (this.parent.widgetDef.get('followEvents') && this.parent.widgetDef.get('viewMode') === 'tail') {
+            var top = itemView.$el.position().top;
+            var curScrollPosition = this.$el.scrollTop();
+            this.$el.stop();
+            this.$el.animate({
+                scrollTop: top + curScrollPosition
+            }, 200);
+        }
     },
 
     events: {
@@ -55,13 +64,8 @@ var EventList = BaseView.extend({
         // up
         38: function(e) {
             var selected = this.collection.pluck('selected');
-            if (this.parent.viewMode === 'tail') {
-                selected.unshift(false);
-                selected.pop();
-            } else {
-                selected.shift();
-                selected.push(false);
-            }
+            selected.shift();
+            selected.push(false);
             selected.forEach(function(selected, i) {
                 this.collection.at(i).set('selected', !!selected);
             }, this);
@@ -69,13 +73,8 @@ var EventList = BaseView.extend({
         // down
         40: function(e) {
             var selected = this.collection.pluck('selected');
-            if (this.parent.viewMode === 'tail') {
-                selected.shift();
-                selected.push(false);
-            } else {
-                selected.unshift(false);
-                selected.pop();
-            }
+            selected.unshift(false);
+            selected.pop();
             selected.forEach(function(selected, i) {
                 this.collection.at(i).set('selected', !!selected);
             }, this);

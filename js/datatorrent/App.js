@@ -61,6 +61,13 @@ var HeaderView = require('./HeaderView');
 // Settings
 var settings = require('./settings');
 
+// App-wide epoxy filters, etc
+var Epoxy = require('backbone.epoxy');
+Epoxy.binding.addFilter('equal', function(attr, value) {
+    return attr == value;
+});
+
+
 // App Class Definition
 var App = BaseView.extend({
     
