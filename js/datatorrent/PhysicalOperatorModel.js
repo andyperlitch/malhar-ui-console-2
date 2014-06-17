@@ -51,6 +51,7 @@ var PhysicalOperatorModel = BaseModel.extend({
     },
 
     initialize: function(attrs, options) {
+        options = options || {};
         BaseModel.prototype.initialize.call(this, attrs, options);
         this.ports = new PortCollection(attrs.ports, {
             dataSource: options.dataSource,
@@ -109,8 +110,8 @@ var PhysicalOperatorModel = BaseModel.extend({
         if (startTimeRE.test(this.get('recordingStartTime'))) {
             return true;
         }
-        return _.some(this.get('ports'), function(port) {
-            return startTimeRE.test(port.recordingStartTime);
+        return this.ports.some(function(port) {
+            return startTimeRE.test(port.get('recordingStartTime'));
         });
     },
 
