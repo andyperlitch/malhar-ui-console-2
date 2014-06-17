@@ -23,6 +23,7 @@ var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var formatters = require('./formatters');
 var BaseModel = require('./BaseModel');
+var PortCollection = require('./PortCollection');
 var PhysicalOperatorModel = BaseModel.extend({
     
     debugName: 'operator',
@@ -47,6 +48,23 @@ var PhysicalOperatorModel = BaseModel.extend({
         'totalTuplesProcessed': '',
         'tuplesEmittedPSMA': '',
         'tuplesProcessedPSMA': ''
+    },
+
+    initialize: function(attrs, options) {
+        options = options || {};
+        BaseModel.prototype.initialize.call(this, attrs, options);
+        this.ports = new PortCollection(attrs.ports, {
+            dataSource: options.dataSource,
+            appId: attrs.appId,
+            operatorId: attrs.id
+        });
+        this.on('change:ports', function(model, value) {
+            this.ports.set(value);
+        });
+        this.on('change:appId change:id', function(model, value) {
+            this.ports.appId = this.get('appId');
+            this.ports.operatorId = this.get('id');
+        });
     },
     
     serialize: function(noFormat) {
@@ -92,8 +110,8 @@ var PhysicalOperatorModel = BaseModel.extend({
         if (startTimeRE.test(this.get('recordingStartTime'))) {
             return true;
         }
-        return _.some(this.get('ports'), function(port) {
-            return startTimeRE.test(port.recordingStartTime);
+        return this.ports.some(function(port) {
+            return startTimeRE.test(port.get('recordingStartTime'));
         });
     },
 

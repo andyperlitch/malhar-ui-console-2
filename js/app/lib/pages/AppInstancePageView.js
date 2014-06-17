@@ -189,7 +189,10 @@ var AppInstancePageView = BasePageView.extend({
                     inject: {
                         dataSource: this.dataSource,
                         pageParams: pageParams,
-                        nav: this.app.nav
+                        nav: this.app.nav,
+                        watch: [
+                            { object: this.model.operators, event: 'change:recordingStartTime' }
+                        ]
                     }
                 },
                 {

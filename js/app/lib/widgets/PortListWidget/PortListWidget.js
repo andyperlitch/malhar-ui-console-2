@@ -31,17 +31,10 @@ var PortList = ListWidget.extend({
         
         // injections
         this.dataSource = options.dataSource;
-        
-        // set up ports collection
-        this.ports = new Ports(this.model.get('ports'), { 
-            dataSource: this.dataSource,
-            appId: this.model.get('appId'),
-            operatorId: this.model.get('id')
-        });
 
         // create the tabled view
         this.subview('tabled', new Tabled({
-            collection: this.ports,
+            collection: this.collection,
             columns: list_columns,
             id: 'portlist'+this.compId(),
             save_state: true
@@ -49,18 +42,11 @@ var PortList = ListWidget.extend({
         
         // create the palette view
         this.subview('palette', new Palette({
-            collection: this.ports,
+            collection: this.collection,
             model: this.model,
             dataSource: this.dataSource,
             nav: options.nav
         }));
-        
-        // listen for port changes
-        this.listenTo(this.model, 'change:ports', this.updatePorts);
-    },
-    
-    updatePorts: function() {
-        this.ports.set(this.model.get('ports'));
     }
     
 });

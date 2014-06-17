@@ -60,9 +60,7 @@ var PhysOpPageView = BasePageView.extend({
                 defaultId: 'operator info',
                 view: PhysOpInfoWidget,
                 limit: 0, inject: {
-                    model: function() {
-                        return this.model
-                    },
+                    model: this.model,
                     nav: this.app.nav
                 }
             },
@@ -83,9 +81,7 @@ var PhysOpPageView = BasePageView.extend({
                 defaultId: 'overview',
                 view: PhysOpOverviewWidget,
                 limit: 0, inject: {
-                    model: function() {
-                        return this.model
-                    }, 
+                    model: this.model, 
                     nav: this.app.nav
                 }
             },
@@ -95,9 +91,7 @@ var PhysOpPageView = BasePageView.extend({
                 defaultId: 'metrics', 
                 view: OpMetricsWidget,
                 limit: 0, inject: {
-                    model: function() {
-                        return this.model
-                    },
+                    model: this.model,
                     dataSource: this.dataSource
                 }
             },
@@ -107,9 +101,8 @@ var PhysOpPageView = BasePageView.extend({
                 defaultId: 'port list',
                 view: PortListWidget,
                 limit: 1, inject: {
-                    model: function() {
-                        return this.model
-                    },
+                    model: this.model,
+                    collection: this.model.ports,
                     dataSource: this.dataSource,
                     nav: this.app.nav
                 }
@@ -122,7 +115,11 @@ var PhysOpPageView = BasePageView.extend({
                     dataSource: this.dataSource,
                     pageParams: options.pageParams,
                     table_id: 'ops.app.op.reclist',
-                    nav: this.app.nav
+                    nav: this.app.nav,
+                    watch: [
+                        { object: this.model, event: 'change:recordingStartTime' },
+                        { object: this.model.ports, event: 'change:recordingStartTime' }
+                    ]
                 }
             },
             {
