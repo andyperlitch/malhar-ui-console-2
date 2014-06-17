@@ -45,10 +45,10 @@
         <span class="event-item-info-label">name:</span>&nbsp;<%= DT.templates.logical_op_link({appId: appId, logicalName: data.operatorName}) %>
     </span>
     <span class="event-item-info">
-        <span class="event-item-info-label">numOldPartitions:</span>&nbsp;<%= data.numOldPartitions %>
+        <span class="event-item-info-label">numOldPartitions:</span>&nbsp;<%= data.oldNumPartitions %>
     </span>
     <span class="event-item-info">
-        <span class="event-item-info-label">numNewPartitions:</span>&nbsp;<%= data.numNewPartitions %>
+        <span class="event-item-info-label">numNewPartitions:</span>&nbsp;<%= data.newNumPartitions %>
     </span>
 
     <% } else if (type === 'RemoveOperator') { %>
