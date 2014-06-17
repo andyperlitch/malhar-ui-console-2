@@ -16,6 +16,7 @@
 
 var BaseView = require('bassview');
 var EventItem = require('./EventItem');
+var settings = DT.settings;
 var EventList = BaseView.extend({
 
     initialize: function(options) {
@@ -44,7 +45,7 @@ var EventList = BaseView.extend({
             this.$el.stop();
             this.$el.animate({
                 scrollTop: top + curScrollPosition
-            }, 200);
+            }, settings.stramEvents.ANIMATE_SCROLL_TIME);
         }
     },
 

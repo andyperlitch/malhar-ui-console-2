@@ -107,6 +107,11 @@ exports = module.exports = {
         }
     },
 
+    stramEvents: {
+        TAIL_INIT_OFFSET: 50,
+        ANIMATE_SCROLL_TIME: 500
+    },
+
     interpolateParams: function(string, params) {
         return string.replace(/:(\w+)/g, function(match, paramName) {
             return encodeURIComponent(params[paramName]);

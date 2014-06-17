@@ -24,6 +24,7 @@ var EventList = require('./EventList');
 var EventViewer = require('./EventViewer');
 var Epoxy = require('backbone.epoxy');
 var text = DT.text;
+var settings = DT.settings;
 
 var bbind = DT.lib.Bbindings;
 
@@ -97,11 +98,7 @@ var StramEventsWidget = BaseView.extend({
         }
 
         if (this.widgetDef.get('viewMode') === 'tail') {
-            this.collection.fetch({
-                data: {
-                    limit: 20
-                }
-            });
+            this.loadLatestEvents();
         }
 
         // Listeners
@@ -276,6 +273,14 @@ var StramEventsWidget = BaseView.extend({
     toggleFollowEvents: function(e) {
         e.preventDefault();
         this.widgetDef.set('followEvents', !this.widgetDef.attributes.followEvents);
+    },
+
+    loadLatestEvents: function() {
+        this.collection.fetch({
+            data: {
+                limit: settings.stramEvents.TAIL_INIT_OFFSET
+            }
+        });
     },
     
     template: kt.make(__dirname+'/StramEventsWidget.html','_')
