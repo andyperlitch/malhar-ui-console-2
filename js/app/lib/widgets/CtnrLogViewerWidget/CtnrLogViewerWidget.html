@@ -1,0 +1,12 @@
+<form action="#" class="form-inline log-select-form">
+    <label for="logName">view log:</label>
+    <select class="ctnr-log-select" name="logName">
+        <option value="">-- select a log --</option>
+        <% _.each( logs, function(log) { %>
+        <option value="<%= log.name %>"><%= log.name %></option>
+        <% }) %>
+    </select>
+</form>
+<pre class="well log-content">
+    
+</pre>

@@ -15,8 +15,10 @@
  */
 
 var _ = require('underscore');
+var Backbone = require('backbone');
 var kt = require('knights-templar');
 var BaseView = DT.lib.WidgetView;
+var ContainerLogCollection = DT.lib.ContainerLogCollection;
 
 /**
  * CtnrLogViewerWidget
@@ -30,23 +32,36 @@ var CtnrLogViewerWidget = BaseView.extend({
         
         BaseView.prototype.initialize.call(this, options);
         
-        // listeners, subviews, etc.
-        
+        this.collection = new ContainerLogCollection([], {
+            appId: this.model.get('appId'),
+            containerId: this.model.get('id')
+        });
+        this.listenTo(this.collection, 'sync', function() {
+            if (!this.widgetDef.get('logName')) {
+                this.render();
+            }
+        });
+        this.collection.fetch();
     },
     
     html: function() {
-        
-        var html = '';
-        
-        // generate markup here
-        
+        var html = this.template({
+            state: this.widgetDef.toJSON(),
+            logs: this.collection.toJSON()
+        });
         return html;
     },
     
-    assignments: {
-        
-        // assign subviews here
-        
+    events: {
+        'change .ctnr-log-select': 'onChangeLog'
+    },
+
+    onChangeLog: function(e) {
+        var logName = this.$('.ctnr-log-select').val();
+        var log = this.collection.get(logName);
+        if (!log) {
+            return;
+        }
     },
     
     template: kt.make(__dirname+'/CtnrLogViewerWidget.html','_')
