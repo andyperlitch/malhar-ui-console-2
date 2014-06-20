@@ -32,6 +32,7 @@ exports = module.exports = {
         ConfigIssue              :'/ws/:v/config/issues',
         ConfigProperty           :'/ws/:v/config/properties',
         Container                :'/ws/:v/applications/:appId/physicalPlan/containers',
+        ContainerLog             :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/logs',
         DependencyJar            :'/ws/:v/dependencyJars',
         GatewayInfo              :'/ws/:v/about',
         GatewayRestart           :'/ws/:v/config/restart',
