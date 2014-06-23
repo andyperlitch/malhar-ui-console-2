@@ -1,8 +1,9 @@
+@overview-item-border-color: #CCC;
 .page-overview {
     padding:5px;
     .overview-item {
         padding: 7px;
-        border: thin solid #ccc;
+        border: thin solid @overview-item-border-color;
         background-color: #FFF;
         display: inline-block;
         vertical-align: middle;
@@ -20,6 +21,15 @@
             color: black;
             font-size: 140%;
             display: block;
+        }
+
+        .overview-subitem {
+            display: inline-block;
+            border-right: thin solid @overview-item-border-color;
+            padding: 0 0.5em;
+            &:last-child {
+                border-right: none;
+            }
         }
     }
 	
