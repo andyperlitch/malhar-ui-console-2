@@ -64,6 +64,12 @@ var ContainerModel = BaseModel.extend({
             currentWindowId_f: new WindowId('0')
         }
     },
+
+    getLogNames: function() {
+        return this.isAppMaster() 
+            ? ['AppMaster.stdout','AppMaster.stderr','dt.log']
+            : ['stdout','stderr','dt.log','gc.log'];
+    },
     
     urlRoot: function() {
         return this.resourceURL('Container', {
@@ -84,7 +90,9 @@ var ContainerModel = BaseModel.extend({
         if (!json.containerLogsUrl) {
             json.containerLogsUrl = false;
         }
-        
+        json.isAppMaster = this.isAppMaster();
+        json.logNames = this.getLogNames();
+        // console.log('json', json);
         return json;
     },
     
@@ -209,7 +217,7 @@ var ContainerModel = BaseModel.extend({
             return;
         }
 
-        if (/0001$/.test(containerId)) {
+        if (this.isAppMaster()) {
             // app master
             var modal = new KillContainerModal();
             var promise = modal.promise();
@@ -242,6 +250,10 @@ var ContainerModel = BaseModel.extend({
                 }
             });
         }
+    },
+
+    isAppMaster: function() {
+        return /0001$/.test(this.get('id'));
     }
     
 });

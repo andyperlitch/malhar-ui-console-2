@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var kt = require('knights-templar');
 var BaseView = require('bassview');
 var ContainerLogModel = DT.lib.ContainerLogModel;
 var ContainerLogPageView = BaseView.extend({
@@ -9,8 +10,10 @@ var ContainerLogPageView = BaseView.extend({
         delete this.params.logName;
         this.params.parameters = this.parseParameters(this.params.parameters);
         this.model = new ContainerLogModel(this.params);
-        this.model.getLogContent()
-            .then(this.render.bind(this));
+        $.when(
+            this.model.fetch(),
+            this.model.getLogContent()
+        ).then(this.render.bind(this));
     },
 
     defaultParams: {
@@ -38,9 +41,17 @@ var ContainerLogPageView = BaseView.extend({
     },
 
     render: function() {
-        this.$el.html('<pre class="well">' + JSON.stringify(this.model.toJSON(), 0, 4) + '</pre>');
+        // this.$el.html('<pre class="well">' + JSON.stringify(this.model.toJSON(), 0, 4) + '</pre>');
+        var json = {
+            log: this.model.toJSON(),
+            logs: this.model.allLogs
+        }
+        var html = this.template(json);
+        this.$el.html(html);
         return this;
-    }
+    },
+
+    template: kt.make(__dirname+'/ContainerLogPageView.html')
 
 });
 exports = module.exports = ContainerLogPageView;

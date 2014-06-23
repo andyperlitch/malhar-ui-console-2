@@ -1,0 +1,18 @@
+<form class="container-log-page">
+    <h1><%= log.name %></h1>
+    <label>jump to:</label>
+    <select class="logName">
+        <% _.each( logs, function(choice) { %>
+            <option value="<%= choice.name %>" <% if (choice.name === log.name) { print('selected="selected"'); } %>>
+                <%= choice.name %>
+            </option>
+        <% }) %>
+    </select>
+
+    length: <%= log.length %>
+
+    <pre class="well">
+        <%= log.content %>
+    </pre>
+</form>
+

@@ -1,5 +1,8 @@
+var _ = require('underscore');
 var BaseModel = require('./BaseModel');
 var ContainerLogModel = BaseModel.extend({
+
+    debugName: 'container log',
 
     idAttribute: 'name',
 
@@ -12,6 +15,15 @@ var ContainerLogModel = BaseModel.extend({
         content: ''
     },
 
+    fetch: function(options) {
+        options || (options = {});
+        options.url = this.resourceURL('ContainerLog', {
+            appId: this.get('appId'),
+            containerId: this.get('containerId')
+        });
+        return BaseModel.prototype.fetch.call(this, options);
+    },
+
     url: function() {
         return this.resourceURL('ContainerLog', {
             appId: this.get('appId'),
@@ -21,6 +33,7 @@ var ContainerLogModel = BaseModel.extend({
 
     responseTransform: function(data) {
         var name = this.get('name');
+        this.allLogs = data.logs;
         return _.find(data.logs, function(log) {
             return log.name === name;
         });
@@ -33,7 +46,6 @@ var ContainerLogModel = BaseModel.extend({
 
         var self = this;
         var url = this.url();
-        console.log('url', url);
         var promise = $.ajax({
             type: 'GET',
             url: url,
