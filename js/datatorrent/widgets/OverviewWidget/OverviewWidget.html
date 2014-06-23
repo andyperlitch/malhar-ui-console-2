@@ -13,17 +13,22 @@
 	print('"');
 
 } %>>
+	<% if (d.template) { %>
+		<%= d.template(attrs) %>
+	<% } else { %>
 	<span class="key"><%= d.label %></span>
-	<span class="value"><% if (typeof d.value === 'function') {
+		<span class="value"><% if (typeof d.value === 'function') {
 
-			print( d.value(attrs[d.key], attrs) );
+				print( d.value(attrs[d.key], attrs) );
 
-		} else {
+			} else {
 
-			print( attrs[d.key] );
+				print( attrs[d.key] );
 
-		} 
-	%></span>
+			} 
+		%></span>
+	<% } %>
+
 </div>
 	
 <% }) %>
