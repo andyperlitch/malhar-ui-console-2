@@ -333,8 +333,8 @@ var HadoopView = BaseView.extend({
             if (pdre.test(msg)) {
                 msg = '<strong>Automatic creation of the DFS directory failed due to permission issues.</strong><br>' + 
                     'Depending on your installation, the following commands may resolve the issue: <br><br>' +
-                    '<pre class="well" style="padding: 7px;">sudo -u hdfs hdfs dfs -mkdir -p /user/dtadmin/datatorrent\n' +
-                    'sudo -u hdfs hdfs dfs -chmod 1777 /user/dtadmin/datatorrent</pre><br><br><strong>Error:</strong><br> ' + msg;
+                    '<pre class="well" style="padding: 7px;">sudo -u hdfs hdfs dfs -mkdir -p /user/USERNAME/datatorrent\n' +
+                    'sudo -u hdfs hdfs dfs -chmod 1777 /user/USERNAME/datatorrent</pre><br><br><strong>Error:</strong><br> ' + msg;
 
                 this.showError('.dfs-directory-error', msg, true);
             }
