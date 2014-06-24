@@ -105,6 +105,28 @@ app.configure(function(){
 //     res.json({issues: config_issues});
 // });
 
+
+// MOCK USER AND LICENSE CALLS WHEN THEY ARE BROKEN
+// app.get('/ws/v1/licenses/files/current', function(req, res) {
+//     res.status(200);
+//     res.json({});
+//     res.end();
+// });
+
+// app.get('/ws/v1/licenses/agents', function(req, res) {
+//     res.status(200);
+//     res.json({});
+//     res.end();
+// });
+
+// app.get('/ws/v1/profile/user', function(req, res) {
+//     res.status(200);
+//     res.json({});
+//     res.end();
+// });
+
+
+
 // REST API Requests
 app.get('/ws/*', function(req, res) {
     proxy.proxyRequest(req, res);

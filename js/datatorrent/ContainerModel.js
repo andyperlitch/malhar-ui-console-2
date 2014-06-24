@@ -242,6 +242,10 @@ var ContainerModel = BaseModel.extend({
                 }
             });
         }
+    },
+
+    isAppMaster: function() {
+        return /0001$/.test(this.get('id'));
     }
     
 });

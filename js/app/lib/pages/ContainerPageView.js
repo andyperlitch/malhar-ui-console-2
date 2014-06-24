@@ -37,7 +37,7 @@ var ContainerPageView = BasePageView.extend({
     
     pageName: 'ContainerPageView',
     
-    storageHash: '26321s9df',
+    storageHash: 'asd4fw84efw415',
 
     useDashMgr: true,
     
@@ -60,34 +60,51 @@ var ContainerPageView = BasePageView.extend({
         this.model.subscribe();
 
         // Define widgets
-        this.defineWidgets([
-            { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
-                model: this.model, 
-                nav: this.app.nav
-            }},
-            { name: 'actions', defaultId: 'actions', view: CtnrActionWidget, limit: 0, inject: {
-                model: this.model
-            }},
-            { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
-                model: this.model
-            }},
-            { name: 'cpuGauge', defaultId: 'CPU gauge', view: GaugeWidget, limit: 0, inject: {
-                label: 'CPU',
-                model: function() { return new CpuGaugeModel(null, { operators: this.model.operators }); }
-            }},
-            { name: 'operatorList', defaultId: 'operator list', view: OpListWidget, limit: 1, inject: {
-                dataSource:this.dataSource,
-                operators: this.model.operators, 
-                appId: this.model.get('appId'), 
-                nav: this.app.nav
-            }},
-            { name: 'containerMetrics', defaultId: 'metrics', view: CtnrMetricsWidget, limit: 0, inject: {
-                dataSource:this.dataSource,
-                model: this.model
-            }}
-        ]);
+        if (!this.model.isAppMaster()) {
+            this.defineWidgets([
+                { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
+                    model: this.model, 
+                    nav: this.app.nav
+                }},
+                { name: 'actions', defaultId: 'actions', view: CtnrActionWidget, limit: 0, inject: {
+                    model: this.model
+                }},
+                { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
+                    model: this.model
+                }},
+                { name: 'cpuGauge', defaultId: 'CPU gauge', view: GaugeWidget, limit: 0, inject: {
+                    label: 'CPU',
+                    model: function() { return new CpuGaugeModel(null, { operators: this.model.operators }); }
+                }},
+                { name: 'operatorList', defaultId: 'operator list', view: OpListWidget, limit: 1, inject: {
+                    dataSource:this.dataSource,
+                    operators: this.model.operators, 
+                    appId: this.model.get('appId'), 
+                    nav: this.app.nav
+                }},
+                { name: 'containerMetrics', defaultId: 'metrics', view: CtnrMetricsWidget, limit: 0, inject: {
+                    dataSource:this.dataSource,
+                    model: this.model
+                }}
+            ]);
+            this.loadDashboards('default', ['master']);
+        } else {
+            this.defineWidgets([
+                { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
+                    model: this.model, 
+                    nav: this.app.nav
+                }},
+                { name: 'actions', defaultId: 'actions', view: CtnrActionWidget, limit: 0, inject: {
+                    model: this.model
+                }},
+                { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
+                    model: this.model
+                }}
+            ]);
+            this.loadDashboards('master', ['default']);
+        }
         
-        this.loadDashboards('default');
+        
     },
     
     defaultDashes: [
@@ -100,6 +117,14 @@ var ContainerPageView = BasePageView.extend({
                 { widget: 'overview', id: 'overview', width: 74.5, height: 112 },
                 { widget: 'operatorList', id: 'operator list'},
                 { widget: 'containerMetrics', id: 'metrics'}
+            ]
+        },
+        {
+            dash_id: 'master',
+            widgets: [
+                { widget: 'info', id: 'container info', width: 80 },
+                { widget: 'actions', id: 'actions', width: 20 },
+                { widget: 'overview', id: 'overview' }
             ]
         }
     ],
