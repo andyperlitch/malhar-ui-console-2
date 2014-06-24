@@ -1,15 +1,21 @@
 <form class="container-log-page">
-    <h1><%= log.name %></h1>
-    <label>jump to:</label>
-    <select class="logName">
-        <% _.each( logs, function(choice) { %>
-            <option value="<%= choice.name %>" <% if (choice.name === log.name) { print('selected="selected"'); } %>>
-                <%= choice.name %>
-            </option>
-        <% }) %>
-    </select>
+    <h1>
+        <span><%= log.name %></span>
+        <span class="muted">(<%= DT.formatters.byteFormatter(log.length) %>)</span>
+        <span class="jump-to-container-wrapper">
+            <label>jump to:</label>
+            <select class="logName">
+                <% _.each( logs, function(choice) { %>
+                    <option value="<%= choice.name %>" <% if (choice.name === log.name) { print('selected="selected"'); } %>>
+                        <%= choice.name %>
+                    </option>
+                <% }) %>
+            </select>
+        </span>
+    </h1>
+    <hr>
 
-    length: <%= log.length %>
+    
 
     <pre class="well">
         <%= log.content %>

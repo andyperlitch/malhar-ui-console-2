@@ -5,6 +5,7 @@ var ContainerLogModel = DT.lib.ContainerLogModel;
 var ContainerLogPageView = BaseView.extend({
 
     initialize: function(options) {
+        this.nav = options.app.nav;
         this.params = options.pageParams;
         this.params.name = this.params.logName;
         delete this.params.logName;
@@ -49,6 +50,15 @@ var ContainerLogPageView = BaseView.extend({
         var html = this.template(json);
         this.$el.html(html);
         return this;
+    },
+
+    events: {
+        'change .logName': 'jumpToLog'
+    },
+
+    jumpToLog: function(e) {
+        var log = this.$('.logName').val();
+        this.nav.go('ops/apps/' + this.params.appId + '/containers/' + this.params.containerId + '/logs/' + log);
     },
 
     template: kt.make(__dirname+'/ContainerLogPageView.html')
