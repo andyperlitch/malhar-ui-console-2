@@ -13,5 +13,5 @@
     <span class="value"><%=jvmName%></span>
 </div>
 <% if (containerLogsUrl) {
-    print(DT.templates.ctnr_log_btngrp({ appId:appId, id: id, isAppMaster: isAppMaster, containerLogsUrl: containerLogsUrl, logNames: logNames }));
+    print(DT.templates.ctnr_log_btngrp({ appId:appId, id: id, containerLogsUrl: containerLogsUrl, logs: logs }));
 } %>

@@ -18,6 +18,7 @@ var _ = require('underscore');
 var BaseModel = require('./BaseModel');
 var BigInteger = require('jsbn');
 var PhysicalOperatorCollection = require('./PhysicalOperatorCollection');
+var ContainerLogCollection = require('./ContainerLogCollection');
 var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var Notifier = require('./Notifier');
@@ -65,10 +66,12 @@ var ContainerModel = BaseModel.extend({
         }
     },
 
-    getLogNames: function() {
-        return this.isAppMaster() 
-            ? ['AppMaster.stdout','AppMaster.stderr','dt.log']
-            : ['stdout','stderr','dt.log','gc.log'];
+    initialize: function(attrs, options) {
+        BaseModel.prototype.initialize.call(this, attrs, options);
+        this.logs = new ContainerLogCollection([], {
+            appId: attrs.appId,
+            containerId: attrs.id
+        });
     },
     
     urlRoot: function() {
@@ -91,8 +94,12 @@ var ContainerModel = BaseModel.extend({
             json.containerLogsUrl = false;
         }
         json.isAppMaster = this.isAppMaster();
-        json.logNames = this.getLogNames();
-        // console.log('json', json);
+        return json;
+    },
+
+    toJSON: function() {
+        var json = BaseModel.prototype.toJSON.call(this);
+        json.logs = this.logs.toJSON();
         return json;
     },
     

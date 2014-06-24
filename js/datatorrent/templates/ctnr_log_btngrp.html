@@ -4,9 +4,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
-    <% _.each( logNames, function(log) { %>
-    <li><a href="#ops/apps/<%= appId %>/containers/<%= id %>/logs/<%= log %>"><%= log %></a></li>
-    <% }) %>
+    <% if (logs.length === 0) { %>
+      <li class="disabled"><a tabindex="-1" href="#">Loading...</a></li>
+    <% } else { %>
+      <% _.each( logs, function(log) { %>
+      <li><a href="#ops/apps/<%= appId %>/containers/<%= id %>/logs/<%= log.name %>"><%= log.name %> (<%= DT.formatters.byteFormatter(log.length) %>)</a></li>
+      <% }) %>
+    <% } %>
     <li class="divider"></li>
     <li><a target="_blank" href="<%= containerLogsUrl %>" target="_blank"><%= DT.text('view in Hadoop UI') %></a></li>
   </ul>

@@ -343,9 +343,6 @@ exports = module.exports = [
                 }
             },
             {
-                name: 'logs'
-            },
-            {
                 name: function(page, appId, containerId, logName) {
                     return logName;
                 }
