@@ -24,49 +24,50 @@ var BaseView = DT.widgets.OverviewWidget;
 */
 var CtnrOverviewWidget = BaseView.extend({
 
-    overview_items: [
-    	{
-    		label: DT.text('state_label'),
-    		key: 'state',
-    		value: function(state) {
-    			return '<span class="' + DT.formatters.statusClassFormatter(state) + '">' + state + '</state>';
-    		}
-    	},
-    	{
-    		label: DT.text('alloc_mem_mb_label'),
-    		key: 'memoryMBAllocated'
-    	},
-    	{
-    		label: DT.text('free_mem_mb_label'),
-    		key: 'memoryMBFree'
-    	},
-    	{
-    		label: DT.text('num_operators_label'),
-    		key: 'numOperators'
-    	},
-    	{
-    		label: DT.text('as_of_label'),
-    		key: 'as_of'
-    	},
-    	{
-    		label: DT.text('current_wid_label'),
-    		title: DT.text('current_wid_title'),
-    		key: 'currentWindowId'
-    	},
-    	{
-    		label: DT.text('recovery_wid_label'),
-    		title: DT.text('recovery_wid_title'),
-    		key: 'recoveryWindowId'
-    	},
-    	{
-    		label: DT.text('processed_per_sec'),
-    		key: 'tuplesProcessedPSMA_f'
-    	},
-    	{
-    		label: DT.text('emitted_per_sec'),
-    		key: 'tuplesEmittedPSMA_f'
-    	}
-    ]
+    overview_items: function() {
+        var items = [
+            {
+                label: DT.text('state_label'),
+                key: 'state',
+                value: function(state) {
+                    return '<span class="' + DT.formatters.statusClassFormatter(state) + '">' + state + '</state>';
+                }
+            },
+            {
+                label: DT.text('alloc_mem_mb_label'),
+                key: 'memoryMBAllocated'
+            }
+        ];
+
+        if (!this.model.isAppMaster()) {
+            items.push({
+                label: DT.text('as_of_label'),
+                key: 'as_of'
+            },
+            {
+                label: DT.text('num_operators_label'),
+                key: 'numOperators'
+            }, {
+                label: DT.text('current_wid_label'),
+                title: DT.text('current_wid_title'),
+                key: 'currentWindowId'
+            },
+            {
+                label: DT.text('recovery_wid_label'),
+                title: DT.text('recovery_wid_title'),
+                key: 'recoveryWindowId'
+            },
+            {
+                label: DT.text('processed_per_sec'),
+                key: 'tuplesProcessedPSMA_f'
+            },
+            {
+                label: DT.text('emitted_per_sec'),
+                key: 'tuplesEmittedPSMA_f'
+            });
+        }
+        return items;
+    }
     
 });
 exports = module.exports = CtnrOverviewWidget;

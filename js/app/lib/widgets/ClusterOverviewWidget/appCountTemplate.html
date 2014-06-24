@@ -1,0 +1,29 @@
+<div class="overview-subitem">
+    <div class="key">running</div>
+    <div class="value status-running"><%= DT.formatters.commaGroups(numAppsRunning) %></div>
+</div>
+
+<div class="overview-subitem">
+    <div class="key">pending</div>
+    <div class="value status-pending-deploy"><%= DT.formatters.commaGroups(numAppsPending) %></div>
+</div>
+
+<div class="overview-subitem">
+    <div class="key">failed</div>
+    <div class="value status-failed"><%= DT.formatters.commaGroups(numAppsFailed) %></div>
+</div>
+
+<div class="overview-subitem">
+    <div class="key">finished</div>
+    <div class="value status-finished"><%= DT.formatters.commaGroups(numAppsFinished) %></div>
+</div>
+
+<div class="overview-subitem">
+    <div class="key">killed</div>
+    <div class="value status-killed"><%= DT.formatters.commaGroups(numAppsKilled) %></div>
+</div>
+
+<div class="overview-subitem">
+    <div class="key">submitted</div>
+    <div class="value status-submitted"><%= DT.formatters.commaGroups(numAppsSubmitted) %></div>
+</div>
