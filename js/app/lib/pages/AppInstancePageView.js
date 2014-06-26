@@ -47,7 +47,7 @@ var AppInstancePageView = BasePageView.extend({
     
     pageName: 'AppInstancePageView',
 
-    storageHash: 'asd8fasdf8s',
+    storageHash: 'b1rtbd26sfbs45',
     
     useDashMgr: true, 
     
@@ -288,7 +288,7 @@ var AppInstancePageView = BasePageView.extend({
                 // }
             ];
             defaultDashId = 'logical';
-            excludeDashIds = ['ended-recordings'];
+            excludeDashIds = ['ended'];
         } else {
             dashExt = ':STOPPED',
             widgetsToDefine = [
@@ -331,10 +331,22 @@ var AppInstancePageView = BasePageView.extend({
                         physicalOperators: this.model.operators,
                         nav: this.app.nav
                     }
+                },
+                {
+                    name: 'containerList',
+                    defaultId: 'containers list',
+                    view: CtnrListWidget,
+                    limit: 1,
+                    inject: {
+                        dataSource: this.dataSource,
+                        containers: this.model.containers,
+                        instance: this.model,
+                        nav: this.app.nav
+                    }
                 }
             ];
-            defaultDashId = 'ended-recordings';
-            excludeDashIds = ['running-metric-view','operators-containers','alerts-recordings', 'dag-view', 'physical-dag-view'];
+            defaultDashId = 'ended';
+            excludeDashIds = ['logical','physical','physical-dag-view', 'alerts-recordings', 'metric-view'];
         }
         
         // Set the results
@@ -397,18 +409,12 @@ var AppInstancePageView = BasePageView.extend({
             ]
         },
         {
-            dash_id: 'stram-events',
-            widgets: [
-                { widget: 'instanceInfo', id: 'info', width: 60 },
-                { widget: 'stramEvents', id: 'events' }
-            ]
-        },
-        {
-            dash_id: 'ended-recordings',
+            dash_id: 'ended',
             widgets: [
                 { widget: 'instanceInfo', id: 'info' },
                 { widget: 'instanceOverview', id: 'overview' },
-                { widget: 'appRecordings', id: 'recording list' }
+                { widget: 'containerList', id: 'container list', width: 50 },
+                { widget: 'appRecordings', id: 'recording list', width: 50 }
             ]
         }
     ],
