@@ -47,7 +47,8 @@ build_debug:
 	mkdir dist_tmp/img
 	./node_modules/.bin/lessc -ru --strict-imports css/index.less dist_tmp/css/index.css
 	./node_modules/.bin/browserify -t ./node_modules/ktbr js/start.js > dist_tmp/js/bundle.js
-	cat js/vendor/jquery/dist/jquery.js dist_tmp/js/bundle.js > dist_tmp/js/bundle.js
+	cat js/vendor/jquery/dist/jquery.js dist_tmp/js/bundle.js > dist_tmp/js/bundle2.js
+	mv dist_tmp/js/bundle2.js dist_tmp/js/bundle.js
 	cp img/* dist_tmp/img/
 	rm -rf dist
 	mv dist_tmp dist
