@@ -60,18 +60,18 @@ describe('ApplicationCollection.js', function() {
 	    	c = new Collection([], { dataSource: dataSource });
 		});
 
-	    it('should pass the option data.states=RUNNING by default', function() {
+	    it('should pass the option data.states=RUNNING,SUBMITTED,ACCEPTED by default', function() {
 	   		sandbox.stub($, 'ajax', function(options) {
 	   			expect(options).to.have.property('data');
-	   			expect(options.data).to.eql({ states: 'RUNNING' });
+	   			expect(options.data).to.eql({ states: 'RUNNING,SUBMITTED,ACCEPTED' });
 	   		});
 	   		c.fetch();
 	    });
 
-	    it('should add the option data.states=RUNNING to an existing options that gets passed', function() {
+	    it('should add the option data.states=RUNNING,SUBMITTED,ACCEPTED to an existing options that gets passed', function() {
 	    	sandbox.stub($, 'ajax', function(options) {
 	   			expect(options).to.have.property('data');
-	   			expect(options.data).to.eql({ states: 'RUNNING' });
+	   			expect(options.data).to.eql({ states: 'RUNNING,SUBMITTED,ACCEPTED' });
 	   			expect(options.async).to.equal(false);
 	   		});
 	   		c.fetch({
