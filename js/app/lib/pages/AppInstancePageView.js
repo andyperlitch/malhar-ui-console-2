@@ -347,6 +347,7 @@ var AppInstancePageView = BasePageView.extend({
             ];
             defaultDashId = 'ended';
             excludeDashIds = ['logical','physical','physical-dag-view', 'alerts-recordings', 'metric-view'];
+            this.model.containers.fetch({ data: {}});
         }
         
         // Set the results

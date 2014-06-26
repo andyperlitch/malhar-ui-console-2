@@ -31,10 +31,10 @@ var ApplicationCollection = BaseCollection.extend({
 
     fetch: function(options) {
         // when data is not supplied, assume we should only
-        // retrieve running applications
+        // retrieve running,accepted, and submitted applications
         options = options || {};
         if (!options.data) {
-            options.data = { states: 'RUNNING' };
+            options.data = { states: 'RUNNING,SUBMITTED,ACCEPTED' };
         }
         BaseCollection.prototype.fetch.call(this, options);
     },
