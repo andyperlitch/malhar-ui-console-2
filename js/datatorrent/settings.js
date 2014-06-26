@@ -116,7 +116,8 @@ exports = module.exports = {
     containerLogs: {
         DEFAULT_START_OFFSET: -4096,
         DEFAULT_SCROLL_REQUEST_KB: 16,
-        UNSET_REQUEST_FLAG_WAIT: 300
+        UNSET_REQUEST_FLAG_WAIT: 100,
+        GREP_DEBOUNCE_WAIT: 500
     },
 
     interpolateParams: function(string, params) {

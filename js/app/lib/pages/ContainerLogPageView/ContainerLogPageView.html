@@ -3,6 +3,7 @@
         <span><%= log.name %></span>
         <span class="muted">(<%= DT.formatters.byteFormatter(log.length) %>)</span>
         <span class="jump-to-container-wrapper">
+            <% if (logs && logs.length) { %>
             <label>jump to:</label>
             <select class="logName">
                 <% _.each( logs, function(choice) { %>
@@ -11,14 +12,27 @@
                     </option>
                 <% }) %>
             </select>
+            <% } %>            
         </span>
     </h1>
     <hr>
 
     <div class="parameter-inputs">
-        <label for="start">start offset:</label> <input type="text" name="start" data-bind="value:start" placeholder="start offset" title="starting byte offset">
-        <label for="end">end offset:</label> <input type="text" name="end" data-bind="value:end" placeholder="end offset" title="ending byte offset">
-        <!-- <input type="text" name="grep" placeholder="grep string"> -->
+
+        <div class="input-prepend input-append">
+            <span class="add-on">start at:</span>
+            <input class="input-small" type="text" name="start" data-bind="value:kb2bytes(start)" placeholder="start offset" title="starting byte offset">
+            <span class="add-on">KB</span>
+        </div>
+        <div class="input-prepend input-append">
+            <span class="add-on">end at:</span>
+            <input class="input-small" type="text" name="end" data-bind="value:kb2bytes(end)" placeholder="end offset" title="ending byte offset">
+            <span class="add-on">KB</span>
+        </div>
+        <div class="input-prepend">
+            <span class="add-on">grep:</span>
+            <input type="text" name="grep" data-bind="value:grep,events:['keyup']" placeholder="search string">
+        </div>
         <input type="submit" class="btn btn-primary">
     </div>
 

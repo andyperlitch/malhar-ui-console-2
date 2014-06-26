@@ -12,6 +12,7 @@ var ContainerLogParameters = Backbone.Model.extend({
 
     toQueryParams: function(logLength) {
         var json = _.clone(this.toJSON());
+        delete json.grep;
         _.each(json, function(val, key, list) {
             if (val === '') {
                 delete list[key];
@@ -87,8 +88,8 @@ var ContainerLogModel = BaseModel.extend({
         });
 
         promise.then(function(data, responseText, xhr) {
-            var responseLength = xhr.getResponseHeader('content-length') - 2;
-            parameters.set('end', parameters.get('start')*1 + responseLength);
+            var responseLength = xhr.getResponseHeader('content-length');
+            parameters.set('end', parameters.get('start')*1 + responseLength*1);
             self.set('content', data);
         });
 

@@ -67,6 +67,20 @@ var Epoxy = require('backbone.epoxy');
 Epoxy.binding.addFilter('equal', function(attr, value) {
     return attr == value;
 });
+Epoxy.binding.addFilter('kb2bytes', {
+    get: function( value ) {
+        if (value === '') {
+            return value;
+        }
+        return Math.round(value / 1024);
+    },
+    set: function( value ) {
+        if (value === '') {
+            return value;
+        }
+        return value * 1024;
+    }
+});
 
 
 // App Class Definition

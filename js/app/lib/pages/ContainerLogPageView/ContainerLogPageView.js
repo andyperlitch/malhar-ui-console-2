@@ -25,6 +25,14 @@ var ContainerLogPageView = BaseView.extend({
         this.listenTo(this.model, 'change:content', function() {
             this.updateLogContent();
         });
+        this.listenTo(this.model.get('parameters'), 'change:grep', _.debounce(function() {
+            this.updateLogContent();
+        }, settings.GREP_DEBOUNCE_WAIT));
+        this.listenTo(this.model.get('parameters'), 'change:start', function(parameters, start) {
+            if (start*1 < 0) {
+                parameters.set('end', '');
+            }
+        });
     },
 
     defaultParams: {
@@ -101,12 +109,12 @@ var ContainerLogPageView = BaseView.extend({
         var flag;
         var method;
         var self = this;
-        if ( hitBottom && direction < 0 ) {
+        if ( hitBottom && direction < 0) {
             selector = 'append';
             method = 'appendToLogContent';
             flag = '_appendingContent';
         }
-        else if (hitTop && direction > 0) {
+        else if (hitTop && direction > 0 && this.model.get('parameters').get('start') > 0) {
             selector = 'prepend';
             method = 'prependToLogContent';
             flag = '_prependingContent';
@@ -121,24 +129,58 @@ var ContainerLogPageView = BaseView.extend({
 
         self[flag] = true;
         var $msg = self.$('.loading-msg.' + selector);
-        $msg.show();
+        $msg.removeClass('alert-danger alert-success').addClass('alert-info').text('loading...').show();
         promise = this.model[method](1024 * settings.DEFAULT_SCROLL_REQUEST_KB);
-        promise.always(function() {
-            var newHeight = $content.height();
-            
-            if (hitTop) {
-                $contentWrapper.scrollTop(newHeight - curHeight - $msg.height() - paddingTop);
-            }
+        promise.then(
+            // success
+            function() {
+                var newHeight = $content.height();
+                
+                if (hitTop) {
+                    $contentWrapper.scrollTop(newHeight - curHeight - $msg.height() - paddingTop);
+                }
 
+                $msg.hide();
+            },
+            // error
+            function(xhr) {
+                switch(xhr.status) {
+                    case 404:
+                        if (hitBottom) {
+                            $msg.removeClass('alert-info').addClass('alert-success').text('Reached the end of the log');
+                        } else {
+                            $msg.hide();
+                        }
+                    break;
+                    default:
+                        $msg.removeClass('alert-info').addClass('alert-danger').text('An error occurred!');
+                    break;
+                }
+                
+            }
+        );
+        promise.always(function() {
             setTimeout(function() {
                 self[flag] = false;
             }, settings.UNSET_REQUEST_FLAG_WAIT);
-            $msg.hide();
         });
     },
 
     updateLogContent: function(data) {
-        this.$('.log-content').html(data || this.model.get('content'));
+        var display = data || this.model.get('content');
+        var grep = this.model.get('parameters').get('grep');
+        if (grep) {
+            var lines = display.split('\n');
+            console.log('lines', lines);
+            var filtered_lines = _.filter(lines, function(line) {
+                return line.indexOf(grep) > -1;
+            });
+            console.log(filtered_lines);
+            display = filtered_lines.join('\n');
+        }
+
+        this.$('.loading-msg').hide();
+        this.$('.log-content').html(display);
     },
 
     jumpToLog: function(e) {
