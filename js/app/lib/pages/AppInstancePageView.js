@@ -106,7 +106,7 @@ var AppInstancePageView = BasePageView.extend({
         // on whether an app is running or not.
         var defaultDashId, excludeDashId, widgetsToDefine, dashExt, currentState = this.model.get('state');
         
-        if (currentState === 'RUNNING' || currentState === 'ACCEPTED') {
+        if (currentState === 'RUNNING' || currentState === 'ACCEPTED' || currentState === 'SUBMITTED') {
             dashExt = ':RUNNING',
             widgetsToDefine = [
                 {
