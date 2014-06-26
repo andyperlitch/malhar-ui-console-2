@@ -46,6 +46,7 @@ require('../vendor/pnotify/jquery.pnotify.min');
 require('../vendor/jsplumb/jquery.jsPlumb-1.5.2-min.js');
 require('../vendor/jquery-ui/ui/minified/jquery-ui.min.js');
 require('../vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker');
+require('../vendor/jquery.mousewheel.js')($);
 
 // Models
 var DataSource   = require('./DataSource');

@@ -15,10 +15,17 @@
     </h1>
     <hr>
 
-    
+    <div class="parameter-inputs">
+        <label for="start">start offset:</label> <input type="text" name="start" data-bind="value:start" placeholder="start offset" title="starting byte offset">
+        <label for="end">end offset:</label> <input type="text" name="end" data-bind="value:end" placeholder="end offset" title="ending byte offset">
+        <!-- <input type="text" name="grep" placeholder="grep string"> -->
+        <input type="submit" class="btn btn-primary">
+    </div>
 
-    <pre class="well">
-        <%= log.content %>
-    </pre>
+    <div class="well log-content-wrapper">
+        <div class="loading-msg prepend alert alert-info" style="display:none;">loading...</div>
+        <pre class="log-content"><%= log.content || 'loading...' %></pre>
+        <div class="loading-msg append alert alert-info" style="display:none;">loading...</div>
+    </div>
 </form>
 

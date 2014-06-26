@@ -6,6 +6,20 @@
         display: inline-block;
         vertical-align: middle;
     }
+    .log-content-wrapper {
+        max-height: 600px;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: auto;
+
+        .loading-msg {
+            margin: 0;
+        }
+        .log-content {
+            white-space: pre;
+            word-wrap: normal;
+        }
+    }
 }
 .jump-to-container-wrapper {
     padding: 0;
@@ -19,5 +33,15 @@
     }
     label {
         font-size: 12px;
+    }
+}
+.parameter-inputs {
+    margin-bottom: 10px;
+
+    label {
+        display: inline;
+    }
+    input {
+        margin-bottom: 0;
     }
 }

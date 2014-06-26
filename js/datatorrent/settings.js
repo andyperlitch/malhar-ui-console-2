@@ -113,6 +113,12 @@ exports = module.exports = {
         ANIMATE_SCROLL_TIME: 500
     },
 
+    containerLogs: {
+        DEFAULT_START_OFFSET: -4096,
+        DEFAULT_SCROLL_REQUEST_KB: 16,
+        UNSET_REQUEST_FLAG_WAIT: 300
+    },
+
     interpolateParams: function(string, params) {
         return string.replace(/:(\w+)/g, function(match, paramName) {
             return encodeURIComponent(params[paramName]);
