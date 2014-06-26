@@ -308,6 +308,47 @@ exports = module.exports = [
             }
         ]
     },
+
+    /** Container Log View */
+    {
+        name: 'ContainerLogPageView',
+        routes: ['ops/apps/:appId/containers/:containerId/logs(/:logName(?:params))'],
+        view: require('./lib/pages/ContainerLogPageView'),
+        paramList: ['appId', 'containerId', 'logName', 'parameters'],
+        mode: 'ops',
+        breadcrumbs: [
+            {
+                name: text('ops_main_breadcrumb'),
+                // HCURL
+                href: '#ops'
+            },
+            
+            {
+                name: function(page, appId, ctnrid) {
+                    return appId;
+                },
+                href: function(page, appId, ctnrid) {
+                    // HCURL
+                    return '#ops/apps/' + appId;
+                }
+            },
+            
+            {
+                name: function(page, appId, containerId) {
+                    return containerId;
+                },
+                href: function(page, appId, containerId) {
+                    // HCURL
+                    return '#ops/apps/' + appId + '/containers/' + containerId;
+                }
+            },
+            {
+                name: function(page, appId, containerId, logName) {
+                    return logName;
+                }
+            }
+        ]
+    },
     
     /** Recording View */
     {

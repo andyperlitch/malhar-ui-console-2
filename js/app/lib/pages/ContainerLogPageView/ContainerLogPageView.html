@@ -1,0 +1,45 @@
+<form class="container-log-page">
+    <h1>
+        <span><%= log.name %></span>
+        <span class="muted">(<%= DT.formatters.byteFormatter(log.length) %>)</span>
+        <span class="jump-to-container-wrapper">
+            <% if (logs && logs.length) { %>
+            <label>jump to:</label>
+            <select class="logName">
+                <% _.each( logs, function(choice) { %>
+                    <option value="<%= choice.name %>" <% if (choice.name === log.name) { print('selected="selected"'); } %>>
+                        <%= choice.name %>
+                    </option>
+                <% }) %>
+            </select>
+            <% } %>            
+        </span>
+    </h1>
+    <hr>
+
+    <div class="parameter-inputs">
+
+        <div class="input-prepend input-append">
+            <span class="add-on">start at:</span>
+            <input class="input-small" type="text" name="start" data-bind="value:kb2bytes(start)" placeholder="start offset" title="starting byte offset">
+            <span class="add-on">KB</span>
+        </div>
+        <div class="input-prepend input-append">
+            <span class="add-on">end at:</span>
+            <input class="input-small" type="text" name="end" data-bind="value:kb2bytes(end)" placeholder="end offset" title="ending byte offset">
+            <span class="add-on">KB</span>
+        </div>
+        <div class="input-prepend">
+            <span class="add-on">grep:</span>
+            <input type="text" name="grep" data-bind="value:grep,events:['keyup']" placeholder="search string">
+        </div>
+        <input type="submit" class="btn btn-primary">
+    </div>
+
+    <div class="well log-content-wrapper">
+        <div class="loading-msg prepend alert alert-info" style="display:none;">loading...</div>
+        <pre class="log-content"><%= log.content || 'loading...' %></pre>
+        <div class="loading-msg append alert alert-info" style="display:none;">loading...</div>
+    </div>
+</form>
+

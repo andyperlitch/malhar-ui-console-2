@@ -22,6 +22,27 @@ var _ = require('underscore');
 var kt = require('knights-templar');
 var Palette = BaseView.extend({
     
+    initialize: function(options) {
+        this.listenTo(this.collection, 'change_selected', function() {
+            var selected = this.getSelected();
+            if (selected.length === 1) {
+                _.each(selected, function(ctnr) {
+                    ctnr.logs.appId = this.model.get('id');
+                    ctnr.logs.fetch().then(this.render.bind(this));
+                }, this);
+            }
+        });
+        BaseView.prototype.initialize.call(this, options);
+
+    },
+
+    getTemplateData: function() {
+        return {
+            selected: this.getSelected(true),
+            appId: this.model.get('id')
+        }
+    },
+
     events: {
         'click .inspectItem' : 'inspectContainer',
         'click .killCtnrs': 'killContainers',

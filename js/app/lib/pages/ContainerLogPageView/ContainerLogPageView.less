@@ -1,0 +1,52 @@
+.container-log-page {
+    padding: 20px;
+    background-color: #FEFEFE;
+
+    h1 > span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .log-content-wrapper {
+        max-height: 600px;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: auto;
+
+        .loading-msg {
+            margin: 0;
+        }
+        .log-content {
+            white-space: pre;
+            word-wrap: normal;
+        }
+    }
+}
+.jump-to-container-wrapper {
+    padding: 0;
+    margin: 0;
+    line-height: 0.8;
+
+    label, select {
+        margin-bottom: 0;
+        display: inline-block;
+        vertical-align: middle;   
+    }
+    label {
+        font-size: 12px;
+    }
+}
+.parameter-inputs {
+    margin-bottom: 10px;
+
+    .input-prepend, .input-append {
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+
+    label {
+        display: inline;
+    }
+    input {
+        margin-bottom: 0;
+    }
+}

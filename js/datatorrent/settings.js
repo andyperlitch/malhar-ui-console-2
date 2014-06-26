@@ -32,6 +32,7 @@ exports = module.exports = {
         ConfigIssue              :'/ws/:v/config/issues',
         ConfigProperty           :'/ws/:v/config/properties',
         Container                :'/ws/:v/applications/:appId/physicalPlan/containers',
+        ContainerLog             :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/logs',
         DependencyJar            :'/ws/:v/dependencyJars',
         GatewayInfo              :'/ws/:v/about',
         GatewayRestart           :'/ws/:v/config/restart',
@@ -110,6 +111,13 @@ exports = module.exports = {
     stramEvents: {
         TAIL_INIT_OFFSET: 50,
         ANIMATE_SCROLL_TIME: 500
+    },
+
+    containerLogs: {
+        DEFAULT_START_OFFSET: -4096,
+        DEFAULT_SCROLL_REQUEST_KB: 16,
+        UNSET_REQUEST_FLAG_WAIT: 100,
+        GREP_DEBOUNCE_WAIT: 500
     },
 
     interpolateParams: function(string, params) {

@@ -30,9 +30,11 @@ var CtnrInfoWidget = BaseView.extend({
         
         // The container
         this.model = options.model;
+        this.model.logs.fetch();
 
         // Listen for changes on elapsed time
         this.listenTo(this.model, "change:containerLogsUrl change:host change:jvmName", this.render);
+        this.listenTo(this.model.logs, 'sync', this.render);
     },
 
     className: 'visible-overflow',

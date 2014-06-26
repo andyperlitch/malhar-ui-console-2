@@ -18,6 +18,7 @@ var _ = require('underscore');
 var BaseModel = require('./BaseModel');
 var BigInteger = require('jsbn');
 var PhysicalOperatorCollection = require('./PhysicalOperatorCollection');
+var ContainerLogCollection = require('./ContainerLogCollection');
 var bormat = require('bormat');
 var WindowId = require('./WindowId');
 var Notifier = require('./Notifier');
@@ -64,6 +65,14 @@ var ContainerModel = BaseModel.extend({
             currentWindowId_f: new WindowId('0')
         }
     },
+
+    initialize: function(attrs, options) {
+        BaseModel.prototype.initialize.call(this, attrs, options);
+        this.logs = new ContainerLogCollection([], {
+            appId: attrs.appId,
+            containerId: attrs.id
+        });
+    },
     
     urlRoot: function() {
         return this.resourceURL('Container', {
@@ -84,7 +93,13 @@ var ContainerModel = BaseModel.extend({
         if (!json.containerLogsUrl) {
             json.containerLogsUrl = false;
         }
-        
+        json.isAppMaster = this.isAppMaster();
+        return json;
+    },
+
+    toJSON: function() {
+        var json = BaseModel.prototype.toJSON.call(this);
+        json.logs = this.logs.toJSON();
         return json;
     },
     
@@ -209,7 +224,7 @@ var ContainerModel = BaseModel.extend({
             return;
         }
 
-        if (/0001$/.test(containerId)) {
+        if (this.isAppMaster()) {
             // app master
             var modal = new KillContainerModal();
             var promise = modal.promise();
