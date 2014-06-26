@@ -37,7 +37,7 @@ var ContainerPageView = BasePageView.extend({
     
     pageName: 'ContainerPageView',
     
-    storageHash: 'asd4fw84efw415',
+    storageHash: 'sdfas098d976fasd',
 
     useDashMgr: true,
     
@@ -55,40 +55,60 @@ var ContainerPageView = BasePageView.extend({
             dataSource: this.dataSource
         });
         this.model.setOperators([]);
-        this.model.fetch();
-        this.model.operators.fetch();
-        this.model.subscribe();
+        this.model.fetch().then(this.onContainerFetch.bind(this));
+    },
 
-        // Define widgets
-        if (!this.model.isAppMaster()) {
-            this.defineWidgets([
-                { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
-                    model: this.model, 
-                    nav: this.app.nav
-                }},
-                { name: 'actions', defaultId: 'actions', view: CtnrActionWidget, limit: 0, inject: {
-                    model: this.model
-                }},
-                { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
-                    model: this.model
-                }},
-                { name: 'cpuGauge', defaultId: 'CPU gauge', view: GaugeWidget, limit: 0, inject: {
-                    label: 'CPU',
-                    model: function() { return new CpuGaugeModel(null, { operators: this.model.operators }); }
-                }},
-                { name: 'operatorList', defaultId: 'operator list', view: OpListWidget, limit: 1, inject: {
-                    dataSource:this.dataSource,
-                    operators: this.model.operators, 
-                    appId: this.model.get('appId'), 
-                    nav: this.app.nav
-                }},
-                { name: 'containerMetrics', defaultId: 'metrics', view: CtnrMetricsWidget, limit: 0, inject: {
-                    dataSource:this.dataSource,
-                    model: this.model
-                }}
-            ]);
-            this.loadDashboards('default', ['master']);
+    onContainerFetch: function() {
+        if (this.model.get('state') === 'ACTIVE') {
+            this.model.operators.fetch();
+            this.model.subscribe();
+            // Define widgets
+            if (!this.model.isAppMaster()) {
+                this.setLocalKey(':APPMASTER');
+                this.defineWidgets([
+                    { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
+                        model: this.model, 
+                        nav: this.app.nav
+                    }},
+                    { name: 'actions', defaultId: 'actions', view: CtnrActionWidget, limit: 0, inject: {
+                        model: this.model
+                    }},
+                    { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
+                        model: this.model
+                    }},
+                    { name: 'cpuGauge', defaultId: 'CPU gauge', view: GaugeWidget, limit: 0, inject: {
+                        label: 'CPU',
+                        model: function() { return new CpuGaugeModel(null, { operators: this.model.operators }); }
+                    }},
+                    { name: 'operatorList', defaultId: 'operator list', view: OpListWidget, limit: 1, inject: {
+                        dataSource:this.dataSource,
+                        operators: this.model.operators, 
+                        appId: this.model.get('appId'), 
+                        nav: this.app.nav
+                    }},
+                    { name: 'containerMetrics', defaultId: 'metrics', view: CtnrMetricsWidget, limit: 0, inject: {
+                        dataSource:this.dataSource,
+                        model: this.model
+                    }}
+                ]);
+                this.loadDashboards('default', ['master', 'killed']);
+            } else {
+                this.defineWidgets([
+                    { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
+                        model: this.model, 
+                        nav: this.app.nav
+                    }},
+                    { name: 'actions', defaultId: 'actions', view: CtnrActionWidget, limit: 0, inject: {
+                        model: this.model
+                    }},
+                    { name: 'overview', defaultId: 'overview', view: CtnrOverviewWidget, limit: 0, inject: {
+                        model: this.model
+                    }}
+                ]);
+                this.loadDashboards('master', ['default', 'killed']);
+            }
         } else {
+            this.setLocalKey(':KILLED');
             this.defineWidgets([
                 { name: 'info', defaultId: 'container info', view: CtnrInfoWidget, limit: 0, inject: {
                     model: this.model, 
@@ -101,10 +121,20 @@ var ContainerPageView = BasePageView.extend({
                     model: this.model
                 }}
             ]);
-            this.loadDashboards('master', ['default']);
+            this.loadDashboards('killed', ['default', 'master']);
         }
-        
-        
+
+        this.containerHasLoaded = true;
+        this.render();
+    },
+
+    render: function() {
+        if (!this.containerHasLoaded) {
+            var html = '<div class="well" style="margin-bottom:0px">Container Loading...</div>';
+            this.$el.html(html);
+            return this;
+        }
+        return BasePageView.prototype.render.apply(this, arguments);
     },
     
     defaultDashes: [
@@ -126,6 +156,13 @@ var ContainerPageView = BasePageView.extend({
                 { widget: 'actions', id: 'actions', width: 20 },
                 { widget: 'overview', id: 'overview' }
             ]
+        },
+        {
+            dash_id: 'killed',
+            widgets: [
+                { widget: 'info', id: 'container info', width: 100 },
+                { widget: 'overview', id: 'overview' }
+            ]  
         }
     ],
     

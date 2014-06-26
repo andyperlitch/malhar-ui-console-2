@@ -50,7 +50,7 @@ var ContainerLogPageView = BaseView.extend({
                 stripped += '&grep=' + grep;
             }
 
-            this.nav.go(stripped, { trigger: false });
+            this.nav.go(stripped, { trigger: false, replace: true });
         });
     },
 
