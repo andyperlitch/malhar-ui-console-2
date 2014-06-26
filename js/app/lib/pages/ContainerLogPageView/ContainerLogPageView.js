@@ -14,6 +14,7 @@ var ContainerLogPageView = BaseView.extend({
         var initParams = this.parseParameters(this.params.parameters);
         delete this.params.parameters;
         this.model = new ContainerLogModel(this.params);
+        var parameters = this.model.get('parameters');
         this.model.fetch()
             .then(_.bind(function() {
                 this.model.set('parameters', initParams);
@@ -25,13 +26,31 @@ var ContainerLogPageView = BaseView.extend({
         this.listenTo(this.model, 'change:content', function() {
             this.updateLogContent();
         });
-        this.listenTo(this.model.get('parameters'), 'change:grep', _.debounce(function() {
+        this.listenTo(parameters, 'change:grep', _.debounce(function() {
             this.updateLogContent();
         }, settings.GREP_DEBOUNCE_WAIT));
-        this.listenTo(this.model.get('parameters'), 'change:start', function(parameters, start) {
+        this.listenTo(parameters, 'change:start', function(model, start) {
             if (start*1 < 0) {
-                parameters.set('end', '');
+                model.set('end', '');
             }
+        });
+        this.listenTo(parameters, 'change:start change:end change:grep', function(model) {
+            var curHash = this.nav.getHash();
+            var stripped = curHash.replace(/\?.*$/, '') + '?';
+            var start = model.get('start');
+            var end = model.get('end');
+            var grep = model.get('grep');
+            stripped += 'start=' + start;
+
+            if (end !== '') {
+                stripped += '&end=' + end;
+            }
+
+            if (grep !== '') {
+                stripped += '&grep=' + grep;
+            }
+
+            this.nav.go(stripped, { trigger: false });
         });
     },
 
@@ -171,14 +190,11 @@ var ContainerLogPageView = BaseView.extend({
         var grep = this.model.get('parameters').get('grep');
         if (grep) {
             var lines = display.split('\n');
-            console.log('lines', lines);
             var filtered_lines = _.filter(lines, function(line) {
                 return line.indexOf(grep) > -1;
             });
-            console.log(filtered_lines);
             display = filtered_lines.join('\n');
         }
-
         this.$('.loading-msg').hide();
         this.$('.log-content').html(display);
     },
