@@ -20,6 +20,8 @@ var BaseView = DT.lib.WidgetView;
 var settings = DT.settings;
 var Notifier = DT.lib.Notifier;
 var text = DT.text;
+var ModalView = DT.lib.ModalView;
+var BaseCollection = DT.lib.BaseCollection;
 
 /**
  * LogLevelWidget
@@ -28,19 +30,52 @@ var text = DT.text;
  *
 */
 
+var LoggerSearch = BaseCollection.extend({
+    debugName: 'logger search',
+    initialize: function(models, options) {
+        this.appId = options.appId;
+    },
+    responseTransform: function(data) {
+        var loggers = data.loggers;
+        return _.filter(loggers, function(d) {
+            return !! d.level;
+        });
+    },
+    url: function() {
+        return this.resourceAction('loggerSearch', {
+            appId: this.appId
+        });
+    }
+});
+
+var SearchResultModal = ModalView.extend({
+    title: 'Logger Level Search Results',
+    body: function() {
+        var results = this.collection.map(function(result) {
+            return '<tr><td>' + result.attributes.name + '</td><td>' + result.attributes.level + '</td></tr>';
+        });
+        return '<table class="table"><thead><tr><th>class</th><th>level</th></tr></thead>' + results.join('') + '</table>';
+    },
+    confirmText: text('close'),
+});
+
 var LogLevelWidget = BaseView.extend({
 
     initialize: function(options) {
         BaseView.prototype.initialize.apply(this, arguments);
         this.appId = options.appId;
-        this.loggers = [{}];
+        this.loggers = [];
+        this.addLogger();
+        this.loggerSearch = new LoggerSearch([], options);
     },
 
     events: {
         'change .logger-input': 'updateLogger',
-        'click .addLogger': 'addLogger',
+        'keyup .logger-input': 'getLogLevels',
+        'click .addLogger': 'onAddClick',
         'submit .log-level-form': 'submitLogLevels',
-        'click .remove-log-level-item': 'removeLogLevel'
+        'click .remove-log-level-item': 'removeLogLevel',
+        'click .viewSearchResults': 'showSearchModal'
     },
 
     removeLogLevel: function(e) {
@@ -50,10 +85,14 @@ var LogLevelWidget = BaseView.extend({
         this.renderContent();
     },
 
-    addLogger: function(e) {
+    onAddClick: function(e) {
         e.preventDefault();
-        this.loggers.push({ target: '', logLevel: '' });
+        this.addLogger();
         this.renderContent();
+    },
+
+    addLogger: function(e) {
+        this.loggers.push({ target: '', logLevel: '' });
     },
 
     updateLogger: function(e) {
@@ -108,6 +147,47 @@ var LogLevelWidget = BaseView.extend({
                     text: text('The log levels of the specified targets could not be set do to a server error.')
                 });
             }
+        });
+    },
+
+    getLogLevels: _.debounce(function(e) {
+        
+        var $input = $(e.target);
+        var expr = $input.val();
+        var search = this.loggerSearch;
+        var defaultText = text('log_level_target_desc');
+        this.$('p.log-level-help-text').text(defaultText);
+        var helpBlock = $input.next('p.log-level-help-text');
+        helpBlock.text('searching...');
+        search.fetch({ data: { pattern: expr }})
+        .then(function() {
+            if (search.length) {
+                var html;
+                var results = search.map(function(result) {
+                    return result.get('name') + ': ' + result.get('level');
+                });
+                if (results.length > settings.loggerLevel.MAX_TEASER_RESULTS) {
+                    var others = results.length - settings.loggerLevel.MAX_TEASER_RESULTS;
+                    results = results.slice(0, settings.loggerLevel.MAX_TEASER_RESULTS);
+                    results.push('<a href="#" class="viewSearchResults">' + others + ' more results...</a>');
+                }
+                helpBlock.html(results.join('<br>'));
+            }
+            else {
+                helpBlock.text(defaultText);
+            }
+        });
+
+    }, settings.loggerLevel.GET_LEVEL_DEBOUNCE_WAIT),
+
+    showSearchModal: function(e) {
+        e.preventDefault();
+        var modal = new SearchResultModal({
+            collection: this.loggerSearch
+        }).addToDOM().launch();
+
+        modal.promise().always(function() {
+            modal.destroy();
         });
     },
 

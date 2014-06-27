@@ -7,7 +7,7 @@
         <div class="row-fluid log-level-item">
             <div class="control-group span6">
                 <input type="text" class="logger-input" data-index="<%= i %>" data-attr="target" id="target-<%= i %>" placeholder="<%= DT.text('log_level_target_label') %>" value="<%= logger.target || '' %>">
-                <p class="help-block"><%= DT.text('log_level_target_desc') %></p>
+                <p class="help-block log-level-help-text"><%= DT.text('log_level_target_desc') %></p>
             </div>
             <div class="control-group span6">
                 <select id="logLevel-<%= i %>" class="logger-input" data-index="<%= i %>" data-attr="logLevel">

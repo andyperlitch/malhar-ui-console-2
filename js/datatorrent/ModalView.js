@@ -93,6 +93,7 @@ var ModalView = BaseView.extend({
 		options = _.defaults(options, this.launchOptions);
 		this.$el.modal(options);
 		this.delegateEvents();
+		return this;
 	},
 
 	close: function(e) {

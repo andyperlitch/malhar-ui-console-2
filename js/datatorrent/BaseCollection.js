@@ -24,6 +24,8 @@ var BaseCollection = Backbone.Collection.extend({
     debugName: 'collection',
     
     settings: settings,
+
+    resourceAction: util.resourceAction,
     
     resourceURL: util.resourceURL,
     
