@@ -66,6 +66,7 @@ exports = module.exports = {
         killApp                  :'/ws/:v/applications/:appId/kill',
         killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
         launchApp                :'/ws/:v/jars/:fileName/applications/:appName/launch',
+        loggerSearch             :'/ws/v1/applications/:appId/loggers/search',
         setLogLevel              :'/ws/:v/applications/:appId/loggers',
         specifyDepJars           :'/ws/:v/jars/:fileName/dependencyJars',
         restartGateway           :'/ws/:v/config/restart',
@@ -118,6 +119,11 @@ exports = module.exports = {
         DEFAULT_SCROLL_REQUEST_KB: 16,
         UNSET_REQUEST_FLAG_WAIT: 100,
         GREP_DEBOUNCE_WAIT: 500
+    },
+
+    loggerLevel: {
+        GET_LEVEL_DEBOUNCE_WAIT: 500,
+        MAX_TEASER_RESULTS: 3
     },
 
     interpolateParams: function(string, params) {
