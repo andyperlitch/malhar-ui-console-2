@@ -212,7 +212,7 @@ module.exports = function (grunt) {
       theme: theme,
       local: {
         options: {
-          paths: ['<%= yeoman.app %>/styles'],
+          paths: ['<%= yeoman.app %>/styles', '<%= yeoman.app %>/bower_components'],
           sourceMap: true
         },
         files: {
