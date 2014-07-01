@@ -7,10 +7,12 @@ angular.module('dtConsoleApp')
   }
   
   AbstractPubSub.prototype = {
+
     subscribe: function(fn) {
       webSocket.subscribe(this.topic, fn);
       this.handlers.push(fn);
     },
+
     unsubscribe: function(fn) {
       var topic = this.topic;
       if (typeof fn === 'function') {
@@ -27,6 +29,7 @@ angular.module('dtConsoleApp')
       });
       this.handlers = [];
     }
+    
   };
 
   return AbstractPubSub;

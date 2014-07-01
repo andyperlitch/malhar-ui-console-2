@@ -26,7 +26,10 @@ angular.module('dtConsoleApp')
           name: 'AppList',
           title: 'Application List',
           templateUrl: 'scripts/widgets/dt-table/app-list.tpl.html',
-          dataModelType: AppListDataModel
+          dataModelType: AppListDataModel,
+          style: {
+            width: '100%'
+          }
         }
       ];
 
