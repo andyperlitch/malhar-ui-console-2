@@ -1,9 +1,7 @@
 'use strict';
 
-angular.module('dtConsoleApp', [
-  'dtConsoleApp.websocket',
-  'dtConsoleApp.formatters',
-  'templates-main',
+angular.module('dtConsole', [
+  // bower components
   'ngCookies',
   'ngResource',
   'ngSanitize',
@@ -15,6 +13,16 @@ angular.module('dtConsoleApp', [
   'ng-breadcrumbs',
   'restangular',
   'datatorrent.mlhrTable'
+
+  // app components
+  'dtConsole.byteFilter',
+  'dtConsole.commaGroupsFilter',
+  'dtConsole.cpuFilter',
+  'dtConsole.webSocket',
+  
+  'templates-main',
+
+  // app subsections
 ])
 .config(function (webSocketProvider, $routeProvider) {
   webSocketProvider.setWebSocketURL('ws://node0.morado.com:9090/pubsub');
