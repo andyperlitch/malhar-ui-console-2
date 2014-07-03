@@ -21,21 +21,21 @@ angular.module('dtConsole.cpuFilter', [])
 
     if (percent === '' || percent === false || percent === undefined) {
       return '-';
-  }
-  
-  if (isNumerator) {
+    }
+    
+    if (isNumerator) {
       percent /= 100;
-  } else {
+    } else {
       percent *= 1;
-  }
-  
-  if (isNaN(percent)) {
+    }
+    
+    if (isNaN(percent)) {
       return '-';
-  }
-  
-  percent = percent.toFixed(2);
-  return $filter('dtCommaGroups')(percent + '');
+    }
+    
+    percent = percent.toFixed(2);
+    return $filter('dtCommaGroups')(percent + '');
 
-}
-return cpusFormatter;
+  }
+  return cpusFormatter;
 }]);

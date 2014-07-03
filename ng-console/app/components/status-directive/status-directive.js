@@ -17,53 +17,15 @@
 'use strict';
 
 angular.module('dtConsoleApp')
-  .directive('dtState', function () {
-    return {
-      restrict: 'A',
-      template: '<span class="status-running">{{value}}</span>',
-      scope: {
-        value: '='
-      },
-      link: function postLink(scope, element) {
-        //element.text(DtText.get(scope.key));
-        //scope.value = 'abc';
-        function stateFormatter(value, row) {
-          if (!value) {
-            return '-';
-          }
-          var finalStatus = row.finalStatus;
-          var html = '<span class="status-' + value.replace(' ', '-').toLowerCase() + '">' + value + '</span>';
-          if (typeof finalStatus === 'string' && finalStatus.toLowerCase() !== 'undefined') {
-            html += ' <small class="final-status" title="Final Status">(' + finalStatus + ')</small>';
-          }
-          return html;
-        }
-      }
-    };
-  });
+.directive('dtState', function () {
+  return {
+    restrict: 'A',
+    template: '<span class="status-running">{{value}}</span>',
+    scope: {
+      value: '='
+    },
+    link: function postLink() {
 
-
-/*
- angular.module('dtConsoleApp')
- .directive('compile', ['$compile', function ($compile) {
- return function(scope, element, attrs) {
- scope.$watch(
- function(scope) {
- // watch the 'compile' expression for changes
- return scope.$eval(attrs.compile);
- },
- function(value) {
- // when the 'compile' expression changes
- // assign it into the current DOM
- element.html(value);
-
- // compile the new DOM and link it to the current
- // scope.
- // NOTE: we only compile .childNodes so that
- // we don't get into infinite loop compiling ourselves
- $compile(element.contents())(scope);
- }
- );
- };
- }]);
- */
+    }
+  };
+});

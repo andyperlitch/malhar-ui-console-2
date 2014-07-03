@@ -16,18 +16,22 @@
 'use strict';
 
 angular.module('dtConsole.BaseResource', [
-  'dtConsole.webSocket', 
+  'dtConsole.webSocket',
   'Restangular'
 ])
 .factory('BaseResource', function(getUri, webSocket, Restangular) {
 
   function BaseResource(url, topic) {
+    this.url = getUri.url(url);
+    this.topic = getUri.topic(topic);
 
+    console.log(webSocket);
+    console.log(Restangular);
   }
 
   BaseResource.prototype = {
     
-  }
+  };
 
   return BaseResource;
 

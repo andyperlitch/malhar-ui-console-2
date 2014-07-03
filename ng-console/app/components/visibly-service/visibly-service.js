@@ -8,7 +8,7 @@
 'use strict';
 
 angular.module('dtConsoleApp.visibly', [])
-.factory('visibly', function ($document, $window) {
+ .factory('visibly', function ($document, $window) {
 
   var visibly = {
     q: $document,
@@ -36,12 +36,13 @@ angular.module('dtConsoleApp.visibly', [])
     getPrefix:function(){
       if(!this.cachedPrefix){
         var b;
-        for(var l=0;b=this.prefixes[l++];){
+        for(var l=0; this.prefixes.indexOf(l) > -1; l++){
+          b = this.prefixes[l];
           if(b + this.props[2] in this.q){
             this.cachedPrefix =  b;
             return this.cachedPrefix;
           }
-        }    
+        }
       }
     },
 
@@ -52,33 +53,33 @@ angular.module('dtConsoleApp.visibly', [])
       return this._getProp(2);
     },
     visibilitychange:function(fn){
-      if(typeof fn == 'function' ){
+      if(typeof fn === 'function' ){
         this.genericCallbacks.push(fn);
       }
 
       var n =  this.genericCallbacks.length;
       if(n){
         if(this.cachedPrefix){
-         while(n--){
-          this.genericCallbacks[n].call(this, this.visibilityState());
-        }
-      }else{
-        while(n--){
-          this.genericCallbacks[n].call(this, arguments[0]);
+          while(n--){
+            this.genericCallbacks[n].call(this, this.visibilityState());
+          }
+        }else{
+          while(n--){
+            this.genericCallbacks[n].call(this, arguments[0]);
+          }
         }
       }
-    }
 
     },
-    isSupported: function (index) {
+    isSupported: function () {
       return ((this.cachedPrefix + this.props[2]) in this.q);
     },
     _getProp:function(index){
-      return this.q[this.cachedPrefix + this.props[index]]; 
+      return this.q[this.cachedPrefix + this.props[index]];
     },
     _execute: function (index) {
       if (index) {
-        this._callbacks = (index == 1) ? this.visibleCallbacks : this.hiddenCallbacks;
+        this._callbacks = (index === 1) ? this.visibleCallbacks : this.hiddenCallbacks;
         var n =  this._callbacks.length;
         while(n--){
           this._callbacks[n]();
@@ -119,7 +120,7 @@ angular.module('dtConsoleApp.visibly', [])
       this.getPrefix();
       this._listen();
     }
-  }
+  };
 
   visibly.init();
 
