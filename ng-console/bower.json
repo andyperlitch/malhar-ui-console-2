@@ -1,8 +1,9 @@
 {
   "name": "dt-console",
   "version": "0.0.0",
-  "dependencies": {},
-  "devDependencies": {
-    "angular-mocks": "1.2.6"
-  }
+  "dependencies": {
+    "angular": "~1.2.19",
+    "angular-route": "~1.2.19"
+  },
+  "devDependencies": {}
 }
