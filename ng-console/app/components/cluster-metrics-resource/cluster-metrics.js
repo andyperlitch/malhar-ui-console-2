@@ -24,5 +24,15 @@ angular.module('dtConsole.resources.ClusterMetrics', ['dtConsole.resources.Base'
 
   ClusterMetrics.prototype = Object.create( BaseModel.prototype );
 
+  
+
+  // var ClusterMetrics = BaseModel.extend({
+
+  //   urlKey: 'ClusterMetrics',
+    
+  //   topicKey: 'ClusterMetrics'
+
+  // });
+
   return ClusterMetrics;
 });

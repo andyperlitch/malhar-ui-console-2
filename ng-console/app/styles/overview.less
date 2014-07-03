@@ -11,4 +11,12 @@
     .value {
         font-size: @font-size-large;   
     }
+    .overview-subitem {
+        display: inline-block;
+        border-right: thin solid @panel-inner-border;
+        padding: 0 0.5em;
+        &:last-child {
+            border-right: none;
+        }
+    }
 }

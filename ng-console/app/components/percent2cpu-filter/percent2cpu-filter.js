@@ -17,17 +17,13 @@
 
 angular.module('dtConsole.percent2cpuFilter', ['dtConsole.commaGroupsFilter'])
 .filter('percent2cpu', ['$filter', function($filter) {
-  function cpusFormatter(percent, isNumerator) {
+  function percent2cpu(percent) {
 
     if (percent === '' || percent === false || percent === undefined) {
       return '-';
     }
     
-    if (isNumerator) {
-      percent /= 100;
-    } else {
-      percent *= 1;
-    }
+    percent /= 100;
     
     if (isNaN(percent)) {
       return '-';
@@ -37,5 +33,5 @@ angular.module('dtConsole.percent2cpuFilter', ['dtConsole.commaGroupsFilter'])
     return $filter('commaGroups')(percent + '');
 
   }
-  return cpusFormatter;
+  return percent2cpu;
 }]);

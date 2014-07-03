@@ -1,4 +1,66 @@
 <div class="overview-item">
-  <div class="key">cores</div>
+  <div class="key" dt-text="cores_label"></div>
   <div class="value">{{ data.cpuPercentage | percent2cpu }}</div>
+</div>
+
+<div class="overview-item">
+  <div class="key" dt-text="current alloc mem"></div>
+  <div class="value">{{ data.currentMemoryAllocatedMB | byte:'mb' }}</div>
+</div>
+
+<div class="overview-item">
+  <div class="key" dt-text="peak alloc mem"></div>
+  <div class="value">{{ data.maxMemoryAllocatedMB | byte:'mb' }}</div>
+</div>
+
+<div class="overview-item">
+  <div class="overview-subitem">
+    <div class="key" dt-text="running_label"></div>
+    <div class="value status-running">{{ data.numAppsRunning | commaGroups }}</div>
+  </div>
+
+  <div class="overview-subitem">
+    <div class="key" dt-text="pending_label"></div>
+    <div class="value status-pending-deploy">{{ data.numAppsPending | commaGroups }}</div>
+  </div>
+
+  <div class="overview-subitem">
+    <div class="key" dt-text="failed_label"></div>
+    <div class="value status-failed">{{ data.numAppsFailed | commaGroups }}</div>
+  </div>
+
+  <div class="overview-subitem">
+    <div class="key" dt-text="finished_label"></div>
+    <div class="value status-finished">{{ data.numAppsFinished | commaGroups }}</div>
+  </div>
+
+  <div class="overview-subitem">
+    <div class="key" dt-text="killed_label"></div>
+    <div class="value status-killed">{{ data.numAppsKilled | commaGroups }}</div>
+  </div>
+
+  <div class="overview-subitem">
+    <div class="key" dt-text="submitted_label"></div>
+    <div class="value status-submitted">{{ data.numAppsSubmitted | commaGroups }}</div>
+  </div>
+</div>
+
+<div class="overview-item">
+  <div class="key" dt-text="num_containers_label"></div>
+  <div class="value">{{ data.numContainers | commaGroups }}</div>
+</div>
+
+<div class="overview-item">
+  <div class="key" dt-text="num_operators_label"></div>
+  <div class="value">{{ data.numOperators | commaGroups }}</div>
+</div>
+
+<div class="overview-item">
+  <div class="key" dt-text="tuples_per_sec"></div>
+  <div class="value">{{ data.tuplesProcessedPSMA | commaGroups }}</div>
+</div>
+
+<div class="overview-item">
+  <div class="key" dt-text="emitted_per_sec"></div>
+  <div class="value">{{ data.tuplesEmittedPSMA | commaGroups }}</div>
 </div>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dtConsoleApp')
+angular.module('dtConsole.textDirective', ['dtConsole.textService'])
   .directive('dtText', function (DtText) {
     return {
       restrict: 'A',
@@ -8,7 +8,6 @@ angular.module('dtConsoleApp')
         key: '@dtText'
       },
       link: function postLink(scope, element) {
-        console.log(scope.key);
         element.text(DtText.get(scope.key));
       }
     };

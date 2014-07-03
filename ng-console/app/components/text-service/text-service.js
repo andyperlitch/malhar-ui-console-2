@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dtConsoleApp')
+angular.module('dtConsole.textService', [])
   /**
    * DataTorrent text package
    *
@@ -13,7 +13,6 @@ angular.module('dtConsoleApp')
       'alert_label'                :  'alert',
       'alloc_mem_mb_label'         :  'allocated mem. (mb)',
       'alloc_mem_label'            :  'allocated mem.',
-      'planned_alloc_ctnrs_label'  :  'planned/alloc. ctnrs',
       'as_of_label'                :  'as of',
       'buffer_server_reads_label'  :  'buffer server reads',
       'buffer_server_writes_label' :  'buffer server writes',
@@ -27,13 +26,16 @@ angular.module('dtConsoleApp')
       'current_wid_label'          :  'current wID',
       'ended_at_label'             :  'ended at',
       'ended_label'                :  'ended',
+      'failed_label'               :  'failed',
       'failure_count_label'        :  'failures',
       'filename_label'             :  'file name',
       'filesize_label'             :  'file size',
+      'finished_label'             :  'finished',
       'free_mem_mb_label'          :  'free memory (mb)',
       'host_label'                 :  'host',
       'id_label'                   :  'id',
       'jvm_name_label'             :  'jvm name',
+      'killed_label'               :  'killed',
       'latency_ms_label'           :  'latency (ms)',
       'last_heartbeat_label'       :  'last heartbeat',
       'last_triggered'             :  'last triggered',
@@ -50,16 +52,20 @@ angular.module('dtConsoleApp')
       'operator_id_label'          :  'operator id',
       'operator_label'             :  'operator',
       'owner_label'                :  'owner',
+      'pending_label'              :  'pending',
+      'planned_alloc_ctnrs_label'  :  'planned/alloc. ctnrs',
       'port_label'                 :  'port',
       'ports_label'                :  'ports',
       'process_id_label'           :  'process id',
       'recovery_wid_label'         :  'recovery wID',
       'remaining_licensed_mem'     :  'remaining licensed mem.',
+      'running_label'              :  'running',
       'source_label'               :  'source',
       'sinks_label'                :  'sinks',
       'started_label'              :  'started',
       'state_label'                :  'state',
       'status_label'               :  'status',
+      'submitted_label'            :  'submitted',
       'total_tuples_label'         :  'total tuples',
       'up_for_label'               :  'up for',
       'user_label'                 :  'user',

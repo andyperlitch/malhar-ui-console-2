@@ -13,6 +13,10 @@ angular.module('dtConsole', [
   'dtConsole.webSocket',
   'dtConsole.percent2cpuFilter',
   'dtConsole.commaGroupsFilter',
+  'dtConsole.byteFilter',
+  'dtConsole.textDirective',
+  'dtConsole.textService',
+
 
   // pages
   'dtConsole.pages.ops',
