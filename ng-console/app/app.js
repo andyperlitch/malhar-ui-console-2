@@ -7,6 +7,7 @@ angular.module('dtConsole', [
   'ng-breadcrumbs',
   'mgcrea.ngStrap.navbar',
   'mgcrea.ngStrap.dropdown',
+  'ui.dashboard',
 
   // components
   'dtConsole.webSocket',

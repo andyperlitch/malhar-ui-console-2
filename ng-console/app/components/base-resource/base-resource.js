@@ -15,24 +15,95 @@
 */
 'use strict';
 
-angular.module('dtConsole.BaseResource', [
+angular.module('dtConsole.resources.Base', [
+  'underscore',
   'dtConsole.webSocket',
-  'Restangular'
+  'restangular',
+  'dtConsole.getUri'
 ])
-.factory('BaseResource', function(getUri, webSocket, Restangular) {
+.factory('BaseModel', function(_, getUri, webSocket, Restangular) {
 
-  function BaseResource(url, topic) {
-    this.url = getUri.url(url);
-    this.topic = getUri.topic(topic);
 
-    console.log(webSocket);
-    console.log(Restangular);
+  /**
+   * Base model for resources
+   * 
+   *   ## Usage 1: When url takes 0 parameters
+   *      
+   *       new BaseModel('UrlKey', 'TopicKey');
+   *     
+   *   ## Usage 2: When the url requires parameters
+   *   
+   *       new BaseModel('UrlKey', { param1: 'url-param' }, 'TopicKey');
+   *
+   *   ## Usage 3: When the url and topic need params
+   *     
+   *       new BaseModel('UrlKey', { param1: 'url-param' }, 'TopicKey', {param1: 'topic-param' });
+   *     
+   * @param {String} url    The key that corresponds to the resource url in app/settings.js, i.e. settings.urls[url]
+   * @param {Object} params (Optional) An object containing parameters to be used in the resource url
+   * @param {String} topic  (Optional) The key that corresponds to the resource topic in app/settings.js, i.e. settings.topics[topic]
+   */
+  function BaseModel(url, urlParams, topic, topicParams) {
+    if (typeof urlParams === 'string') {
+      topicParams = topic;
+      topic = urlParams;
+      urlParams = undefined;
+    }
+    this.resource = Restangular.one(getUri.url(url), urlParams);
+    this.data = {};
+    this.topic = getUri.topic(topic, topicParams);
   }
 
-  BaseResource.prototype = {
-    
+  BaseModel.prototype = {
+    fetch: function() {
+      this.data = this.resource.get().$object;
+    },
+    subscribe: function() {
+      if (!this.topic) {
+        return;
+      }
+      var subscribeFn = this.onUpdate || function(data) { this.data = data; };
+      this._subscribeFn = _.bind(subscribeFn, this);
+      webSocket.subscribe(this.topic, this._subscribeFn);
+    },
+    unsubscribe: function() {
+      webSocket.unsubscribe(this.topic, this._subscribeFn);
+    }
   };
 
-  return BaseResource;
+  return BaseModel;
+
+})
+.factory('BaseCollection', function(getUri, webSocket, Restangular) {
+
+  function BaseCollection(url, urlParams, topic, topicParams) {
+    if (typeof urlParams === 'string') {
+      topicParams = topic;
+      topic = urlParams;
+      urlParams = undefined;
+    }
+    this.resource = Restangular.all(getUri.url(url), urlParams);
+    this.data = [];
+    this.topic = getUri.topic(topic, topicParams);
+  }
+
+  BaseCollection.prototype = {
+    fetch: function() {
+      this.data = this.resource.getList().$object;
+    },
+    subscribe: function() {
+      if (!this.topic) {
+        return;
+      }
+      var subscribeFn = this.onUpdate || function(data) { this.data = data; };
+      this._subscribeFn = _.bind(subscribeFn, this);
+      webSocket.subscribe(this.topic, this._subscribeFn);
+    },
+    unsubscribe: function() {
+      webSocket.unsubscribe(this.topic, this._subscribeFn);
+    }
+  };
+
+  return BaseCollection;
 
 });

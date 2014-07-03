@@ -8,11 +8,15 @@
     "malhar-angular-dashboard": "~0.3.2",
     "angular-pines-notify": "~1.0.0",
     "ng-breadcrumbs": "~0.1.0",
-    "angular-strap": "~2.0.3"
+    "angular-strap": "~2.0.3",
+    "underscore": "~1.6.0",
+    "angular-underscore-module": "*",
+    "restangular": "~1.4.0"
   },
   "devDependencies": {},
   "resolutions": {
     "angular": "1.2.19",
-    "bootstrap": "~3.2.0"
+    "bootstrap": "~3.2.0",
+    "underscore": "~1.6.0"
   }
 }

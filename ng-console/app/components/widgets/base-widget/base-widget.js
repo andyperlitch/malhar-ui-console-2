@@ -15,18 +15,29 @@
 */
 'use strict';
 
-angular.module('dtConsole.ApplicationsResource', [
-  'dtConsole.getUri',
-  'dtConsole.BaseResource'
-])
-.factory('ApplicationsResource', function(BaseResource) {
+angular.module('dtConsole.widgets.Base', [])
+.factory('BaseWidget', function(_) {
 
-  function ApplicationsResource () {
-    BaseResource.call(this, 'Application', 'Applications');
+  function BaseWidget(attrs) {
+    
+    // Set defaults
+    _.defaults(attrs, this.defaults);
+
+    // Extend this object
+    _.extend(this, attrs);
+
   }
 
-  ApplicationsResource.prototype = Object.create( BaseResource.prototype );
+  BaseWidget.prototype = {
 
-  return ApplicationsResource;
+    defaults: {
+      style: {
+        width: '100%'
+      }
+    }
+
+  };
+
+  return BaseWidget;
 
 });

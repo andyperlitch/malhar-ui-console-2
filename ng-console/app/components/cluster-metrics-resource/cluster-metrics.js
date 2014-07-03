@@ -15,18 +15,14 @@
 */
 'use strict';
 
-angular.module('dtConsole.ApplicationsResource', [
-  'dtConsole.getUri',
-  'dtConsole.BaseResource'
-])
-.factory('ApplicationsResource', function(BaseResource) {
-
-  function ApplicationsResource () {
-    BaseResource.call(this, 'Application', 'Applications');
+angular.module('dtConsole.resources.ClusterMetrics', ['dtConsole.resources.Base'])
+.factory('ClusterMetrics', function(BaseModel) {
+  
+  function ClusterMetrics() {
+    BaseModel.call(this, 'ClusterMetrics', 'ClusterMetrics');
   }
 
-  ApplicationsResource.prototype = Object.create( BaseResource.prototype );
+  ClusterMetrics.prototype = Object.create( BaseModel.prototype );
 
-  return ApplicationsResource;
-
+  return ClusterMetrics;
 });

@@ -19,7 +19,9 @@
  * Operations page module
  */
 
-angular.module('dtConsole.pages.ops', [])
+angular.module('dtConsole.pages.ops', [
+  'dtConsole.widgets.ClusterMetrics'
+])
 
 // Route
 .config(function($routeProvider) {
@@ -32,45 +34,23 @@ angular.module('dtConsole.pages.ops', [])
 })
 
 // Controller
-.controller('OpsCtrl', function (){
-  // var widgetDefinitions = [
-  //   {
-  //     name: 'ClusterMetrics',
-  //     title: 'Cluster Info',
-  //     template: '<div dt-overview fields="fields" data="widgetData"></div>',
-  //     dataModelType: OverviewDataModel,
-  //     dataAttrName: 'data',
-  //     dataModelOptions: {
-  //       topic: 'ClusterMetrics',
-  //       resource: ClusterMetrics,
-  //       fields: clusterMetricsOverviewFields
-  //     },
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   {
-  //     name: 'AppList',
-  //     title: 'Application List',
-  //     templateUrl: 'scripts/widgets/dt-table/app-list.tpl.html',
-  //     dataModelType: AppListDataModel,
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   }
-  // ];
+.controller('OpsCtrl', function ($scope, ClusterMetricsWidget, _){
+  var widgetDefinitions = [
+    new ClusterMetricsWidget({ name: 'ClusterMetrics' })
+    // , new AppsListWidget({ name: 'AppList', title: 'Application List'})
+  ];
 
-  // var defaultWidgets = _.clone(widgetDefinitions);
+  var defaultWidgets = _.clone(widgetDefinitions);
 
-  // $scope.dashboardOptions = {
-  //   storage: localStorage,
-  //   storageKey: 'dashboard.ops',
-  //   widgetButtons: false,
-  //   widgetDefinitions: widgetDefinitions,
-  //   defaultWidgets: defaultWidgets,
-  //   defaultLayouts: [
-  //     { title: 'default', active: true , defaultWidgets: defaultWidgets },
-  //   ]
-  // };
+  $scope.dashboardOptions = {
+    storage: localStorage,
+    storageKey: 'dashboard.ops',
+    widgetButtons: false,
+    widgetDefinitions: widgetDefinitions,
+    defaultWidgets: defaultWidgets,
+    defaultLayouts: [
+      { title: 'default', active: true , defaultWidgets: defaultWidgets },
+    ]
+  };
 
 });
