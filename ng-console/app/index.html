@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="dtConsoleApp" ng-controller="MainCtrl">
+  <body ng-app="dtConsole" ng-controller="AppCtrl">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -62,6 +62,18 @@
       </div>
     </div>
 
+    <!-- breadcrumbs -->
+    <div class="container-fluid">
+      <div class="row">
+        <ol class="ab-nav breadcrumb" id="breadcrumbs-top">
+          <li ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path" ng-class="{ active: $last }">
+            <a ng-if="!$last" ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label" class="margin-right-xs"></a>
+            <span ng-if="$last" ng-bind="breadcrumb.label"></span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
     <!-- main view area -->
     <div class="container-fluid" ng-view=""></div>
     <script>
@@ -88,12 +100,41 @@
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="bower_components/angular-ui-sortable/sortable.js"></script>
+    <script src="bower_components/malhar-angular-dashboard/dist/angular-ui-dashboard.js"></script>
+    <script src="bower_components/pines-notify/pnotify.core.js"></script>
+    <script src="bower_components/pines-notify/pnotify.buttons.js"></script>
+    <script src="bower_components/pines-notify/pnotify.callbacks.js"></script>
+    <script src="bower_components/pines-notify/pnotify.confirm.js"></script>
+    <script src="bower_components/pines-notify/pnotify.desktop.js"></script>
+    <script src="bower_components/pines-notify/pnotify.history.js"></script>
+    <script src="bower_components/pines-notify/pnotify.nonblock.js"></script>
+    <script src="bower_components/angular-pines-notify/src/pnotify.js"></script>
+    <script src="bower_components/ng-breadcrumbs/dist/ng-breadcrumbs.min.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="app.js"></script>
+    <script src="app-controller.js"></script>
+    <script src="templates.js"></script>
+
+    <!-- components -->
+    <script src="components/web-socket-service/web-socket-service.js"></script>
+
+    <!-- pages -->
+    <script src="pages/ops/ops.js"></script>
+
+
     <!-- endbuild -->
   </body>
 </html>

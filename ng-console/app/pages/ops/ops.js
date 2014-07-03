@@ -21,12 +21,12 @@
 
 angular.module('dtConsole.pages.ops', [])
 
-// Routing
+// Route
 .config(function($routeProvider) {
   $routeProvider
     .when('/ops', {
       controller: 'OpsCtrl',
-      templateUrl: 'ops.html',
+      templateUrl: 'pages/ops/ops.html',
       label: 'Operations'
     });
 })
