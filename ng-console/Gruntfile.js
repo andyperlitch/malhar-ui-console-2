@@ -35,7 +35,12 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: [
+          '<%= yeoman.app %>/components/{,*/}*.js',
+          '<%= yeoman.app %>/pages/{,*/}*.js',
+          '<%= yeoman.app %>/app.js',
+          '<%= yeoman.app %>/app-controller.js'
+        ],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: true
@@ -46,11 +51,19 @@ module.exports = function (grunt) {
       //   tasks: ['karma']
       // },
       less: {
-        files: ['<%= yeoman.app %>/styles/{,*/}{,*/}*.less'],
+        files: [
+          '<%= yeoman.app %>/styles/*.less',
+          '<%= yeoman.app %>/styles/themes/*.less',
+          '<%= yeoman.app %>/components/**/*.less',
+          '<%= yeoman.app %>/pages/**/*.less'
+        ],
         tasks: ['concat:less','less:development']
       },
       html2js: {
-        files: ['<%= yeoman.app %>/scripts/directives/*.tpl.html'],
+        files: [
+          '<%= yeoman.app %>/components/{,*/}*.html',
+          '<%= yeoman.app %>/pages/{,*/}*.html'
+        ],
         tasks: ['html2js:development']
       },
       gruntfile: {
@@ -63,7 +76,7 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/main.css',
-          '.tmp/scripts/templates.js',
+          '.tmp/templates.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
@@ -77,8 +90,11 @@ module.exports = function (grunt) {
         options: {
           module: 'templates-main'
         },
-        src: ['app/**/*.tpl.html'],
-        dest: '.tmp/scripts/templates.js'
+        src: [
+          '<%= yeoman.app %>/components/{,*/}*.html',
+          '<%= yeoman.app %>/pages/{,*/}*.html'
+        ],
+        dest: '.tmp/templates.js'
       },
     },
 
@@ -157,7 +173,8 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js'
+        '<%= yeoman.app %>/components/{,*/}*.js',
+      '<%= yeoman.app %>/pages/{,*/}*.js'
       ],
       test: {
         options: {
