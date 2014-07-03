@@ -11,12 +11,18 @@ angular.module('dtConsole', [
 
   // components
   'dtConsole.webSocket',
+  'dtConsole.percent2cpuFilter',
+  'dtConsole.commaGroupsFilter',
 
   // pages
-  'dtConsole.pages.ops'
+  'dtConsole.pages.ops',
+
+  // misc
+  'dtConsole.settings'
 ])
-.config(function (webSocketProvider, $routeProvider) {
+.config(function (settings, webSocketProvider, $routeProvider, RestangularProvider) {
   webSocketProvider.setWebSocketURL('ws://node0.morado.com:9090/pubsub');
+  RestangularProvider.setBaseUrl('/ws/' + settings.GATEWAY_API_VERSION);
   $routeProvider
     .otherwise({
       redirectTo: '/ops'

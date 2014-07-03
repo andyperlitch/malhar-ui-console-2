@@ -58,16 +58,22 @@ angular.module('dtConsole.resources.Base', [
     fetch: function() {
       this.data = this.resource.get().$object;
     },
-    subscribe: function() {
+    subscribe: function(scope) {
       if (!this.topic) {
         return;
       }
-      var subscribeFn = this.onUpdate || function(data) { this.data = data; };
+      var subscribeFn = this.onUpdate;
       this._subscribeFn = _.bind(subscribeFn, this);
+      this.updateScope = scope;
       webSocket.subscribe(this.topic, this._subscribeFn);
     },
     unsubscribe: function() {
       webSocket.unsubscribe(this.topic, this._subscribeFn);
+      this.updateScope = null;
+    },
+    onUpdate: function(data) {
+      _.extend(this.data, data);
+      this.updateScope.$apply();
     }
   };
 

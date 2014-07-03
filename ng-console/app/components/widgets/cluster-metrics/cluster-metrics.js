@@ -30,7 +30,7 @@ angular.module('dtConsole.widgets.ClusterMetrics', [
 
     this.resource = new ClusterMetrics();
     this.resource.fetch();
-    this.resource.subscribe();
+    this.resource.subscribe(this.widgetScope);
 
     this.widgetScope.data = this.resource.data;
 
@@ -52,7 +52,8 @@ angular.module('dtConsole.widgets.ClusterMetrics', [
   
   ClusterMetricsWidget.prototype.defaults = _.defaults({
 
-    dataModelType: DataModel
+    dataModelType: DataModel,
+    templateUrl: 'components/widgets/cluster-metrics/cluster-metrics.html'
 
   }, Base.prototype);
 

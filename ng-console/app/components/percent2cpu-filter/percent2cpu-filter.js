@@ -15,8 +15,8 @@
 */
 'use strict';
 
-angular.module('dtConsole.cpuFilter', [])
-.filter('dtCpuFilter', ['$filter', function($filter) {
+angular.module('dtConsole.percent2cpuFilter', ['dtConsole.commaGroupsFilter'])
+.filter('percent2cpu', ['$filter', function($filter) {
   function cpusFormatter(percent, isNumerator) {
 
     if (percent === '' || percent === false || percent === undefined) {
@@ -34,7 +34,7 @@ angular.module('dtConsole.cpuFilter', [])
     }
     
     percent = percent.toFixed(2);
-    return $filter('dtCommaGroups')(percent + '');
+    return $filter('commaGroups')(percent + '');
 
   }
   return cpusFormatter;
