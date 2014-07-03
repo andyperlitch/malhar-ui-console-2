@@ -15,14 +15,12 @@
 */
 'use strict';
 
-angular.module('dtConsole.resources.ClusterMetrics', ['dtConsole.resources.Base'])
-.factory('ClusterMetrics', function(BaseModel) {
+angular.module('dtConsole.widgets.AppsList', ['datatorrent.mlhrTable'])
+
+.factory('AppsListWidget', function() {
   
-  function ClusterMetrics() {
-    BaseModel.call(this, 'ClusterMetrics', 'ClusterMetrics');
-  }
+})
 
-  ClusterMetrics.prototype = Object.create( BaseModel.prototype );
+.factory('AppsListDataModel', function() {
 
-  return ClusterMetrics;
 });

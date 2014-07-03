@@ -15,8 +15,15 @@
 */
 'use strict';
 
-angular.module('dtConsole.widgets.Base', [])
-.factory('BaseWidget', function(_) {
+angular.module('dtConsole.widgets.Base', [
+  'dtConsole.extendService',
+  'ui.dashboard'
+])
+.factory('BaseDataModel', function(_, WidgetDataModel, extend) {
+  var BaseDataModel = extend.call(WidgetDataModel, {}, { extend: extend });
+  return BaseDataModel;
+})
+.factory('BaseWidget', function(_, extend) {
 
   function BaseWidget(attrs) {
     
@@ -36,6 +43,13 @@ angular.module('dtConsole.widgets.Base', [])
       }
     }
 
+  };
+
+  BaseWidget.extend = function(protoProps) {
+    if (protoProps.hasOwnProperty('defaults') && typeof protoProps.defaults === 'object') {
+      _.defaults(protoProps.defaults, BaseWidget.prototype.defaults);
+    }
+    return extend.call(this, protoProps);
   };
 
   return BaseWidget;

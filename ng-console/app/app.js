@@ -16,7 +16,7 @@ angular.module('dtConsole', [
   'dtConsole.byteFilter',
   'dtConsole.textDirective',
   'dtConsole.textService',
-
+  'dtConsole.extendService',
 
   // pages
   'dtConsole.pages.ops',
@@ -27,6 +27,8 @@ angular.module('dtConsole', [
 .config(function (settings, webSocketProvider, $routeProvider, RestangularProvider) {
   webSocketProvider.setWebSocketURL('ws://node0.morado.com:9090/pubsub');
   RestangularProvider.setBaseUrl('/ws/' + settings.GATEWAY_API_VERSION);
+
+  // Catchall route
   $routeProvider
     .otherwise({
       redirectTo: '/ops'

@@ -19,9 +19,10 @@ angular.module('dtConsole.resources.Base', [
   'underscore',
   'dtConsole.webSocket',
   'restangular',
-  'dtConsole.getUri'
+  'dtConsole.getUri',
+  'dtConsole.extendService'
 ])
-.factory('BaseModel', function(_, getUri, webSocket, Restangular) {
+.factory('BaseModel', function(_, getUri, webSocket, Restangular, extend) {
 
 
   /**
@@ -77,10 +78,12 @@ angular.module('dtConsole.resources.Base', [
     }
   };
 
+  BaseModel.extend = extend;
+
   return BaseModel;
 
 })
-.factory('BaseCollection', function(getUri, webSocket, Restangular) {
+.factory('BaseCollection', function(getUri, webSocket, Restangular, extend) {
 
   function BaseCollection(url, urlParams, topic, topicParams) {
     if (typeof urlParams === 'string') {
@@ -101,14 +104,19 @@ angular.module('dtConsole.resources.Base', [
       if (!this.topic) {
         return;
       }
-      var subscribeFn = this.onUpdate || function(data) { this.data = data; };
+      var subscribeFn = this.onUpdate;
       this._subscribeFn = _.bind(subscribeFn, this);
       webSocket.subscribe(this.topic, this._subscribeFn);
     },
     unsubscribe: function() {
       webSocket.unsubscribe(this.topic, this._subscribeFn);
+    },
+    onUpdate: function(data) {
+      this.data = data;
     }
   };
+
+  BaseCollection.extend = extend;
 
   return BaseCollection;
 

@@ -18,44 +18,37 @@
 angular.module('dtConsole.widgets.ClusterMetrics', [
   'dtConsole.widgets.Base',
   'underscore',
-  'ui.dashboard',
   'dtConsole.resources.ClusterMetrics'
 ])
-.factory('ClusterMetricsDataModel', function(WidgetDataModel, ClusterMetrics) {
-  function DataModel() {
+.factory('ClusterMetricsDataModel', function(BaseDataModel, ClusterMetrics) {
 
-  }
-  DataModel.prototype = Object.create( WidgetDataModel.prototype );
-  DataModel.prototype.init = function() {
+  var DataModel = BaseDataModel.extend({
+    
+    init: function() {
+      this.resource = new ClusterMetrics();
+      this.resource.fetch();
+      this.resource.subscribe(this.widgetScope);
+      this.widgetScope.data = this.resource.data;
+    },
 
-    this.resource = new ClusterMetrics();
-    this.resource.fetch();
-    this.resource.subscribe(this.widgetScope);
+    destroy: function() {
+      this.resource.unsubscribe();
+    }
 
-    this.widgetScope.data = this.resource.data;
+  });
 
-  };
-  DataModel.prototype.destroy = function() {
-
-    this.resource.unsubscribe();
-
-  };
   return DataModel;
 })
 .factory('ClusterMetricsWidget', ['BaseWidget', '_', 'ClusterMetricsDataModel', function(Base, _, DataModel) {
 
-  function ClusterMetricsWidget() {
-    Base.apply(this, arguments);
-  }
+  var ClusterMetricsWidget = Base.extend({
 
-  ClusterMetricsWidget.prototype = Object.create( Base.prototype );
-  
-  ClusterMetricsWidget.prototype.defaults = _.defaults({
-
-    dataModelType: DataModel,
-    templateUrl: 'components/widgets/cluster-metrics/cluster-metrics.html'
-
-  }, Base.prototype);
+    defaults: {
+      dataModelType: DataModel,
+      templateUrl: 'components/widgets/cluster-metrics/cluster-metrics.html'
+    }
+    
+  });
 
   return ClusterMetricsWidget;
 

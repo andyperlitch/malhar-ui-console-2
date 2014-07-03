@@ -20,7 +20,8 @@
  */
 
 angular.module('dtConsole.pages.ops', [
-  'dtConsole.widgets.ClusterMetrics'
+  'dtConsole.widgets.ClusterMetrics',
+  // 'dtConsole.widgets.AppsList'
 ])
 
 // Route
@@ -34,10 +35,10 @@ angular.module('dtConsole.pages.ops', [
 })
 
 // Controller
-.controller('OpsCtrl', function ($scope, ClusterMetricsWidget, _){
+.controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget){
   var widgetDefinitions = [
-    new ClusterMetricsWidget({ name: 'ClusterMetrics' })
-    // , new AppsListWidget({ name: 'AppList', title: 'Application List'})
+    new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+    // new AppsListWidget({ name: 'AppList' })
   ];
 
   var defaultWidgets = _.clone(widgetDefinitions);
