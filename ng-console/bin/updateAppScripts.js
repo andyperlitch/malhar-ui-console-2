@@ -51,5 +51,14 @@ walker.on('file', function(root, filestats, next) {
 });
 
 walker.on('end', function() {
+  scriptsrcs.sort(function(a,b){
+    if (a === 'app.js') {
+      return -1;
+    }
+    if (b === 'app.js') {
+      return 1;
+    }
+    return 0;
+  }); 
   fillTags(scriptsrcs);
 });
