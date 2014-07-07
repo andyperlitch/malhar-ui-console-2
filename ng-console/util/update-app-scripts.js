@@ -39,26 +39,30 @@ function fillTags(scripts) {
   fs.writeFileSync(indexfile, newMarkup);
 }
 
-walker = walk.walk(basedir, options);
+function updateAppScripts() {
+  walker = walk.walk(basedir, options);
 
-walker.on('file', function(root, filestats, next) {
-  var fullpath = root + '/' + filestats.name;
-  var scriptsrc = fullpath.replace(basedir + '/', '');
-  if (/\.js$/.test(scriptsrc) && shouldNotIgnore(scriptsrc)) {
-    scriptsrcs.push(scriptsrc);
-  }
-  next();
-});
+  walker.on('file', function(root, filestats, next) {
+    var fullpath = root + '/' + filestats.name;
+    var scriptsrc = fullpath.replace(basedir + '/', '');
+    if (/\.js$/.test(scriptsrc) && shouldNotIgnore(scriptsrc)) {
+      scriptsrcs.push(scriptsrc);
+    }
+    next();
+  });
 
-walker.on('end', function() {
-  scriptsrcs.sort(function(a,b){
-    if (a === 'app.js') {
-      return -1;
-    }
-    if (b === 'app.js') {
-      return 1;
-    }
-    return 0;
-  }); 
-  fillTags(scriptsrcs);
-});
+  walker.on('end', function() {
+    scriptsrcs.sort(function(a,b){
+      if (a === 'app.js') {
+        return -1;
+      }
+      if (b === 'app.js') {
+        return 1;
+      }
+      return 0;
+    }); 
+    fillTags(scriptsrcs);
+  });
+}
+
+exports = module.exports = updateAppScripts;
