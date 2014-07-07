@@ -17,13 +17,13 @@
 
 angular.module('dtConsole.ApplicationsCollection', [
   'dtConsole.getUri',
-  'dtConsole.BaseResource'
+  'dtConsole.resources.Base'
 ])
-.factory('Applications', function(BaseCollection) {
+.factory('ApplicationsCollection', function(BaseCollection) {
 
   var ApplicationsCollection = BaseCollection.extend({
-    urlKey: 'Applications',
-    topicKey: 'Applications'
+    urlKey: 'Application',
+    topicKey: 'Application'
   });
 
   return ApplicationsCollection;

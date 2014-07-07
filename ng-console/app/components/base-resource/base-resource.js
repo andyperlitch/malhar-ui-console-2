@@ -73,7 +73,7 @@ angular.module('dtConsole.resources.Base', [
 
   function BaseCollection(params) {
     this.resource = Restangular.all(getUri.url(this.urlKey), params);
-    this.data = {};
+    this.data = [];
     if (this.topicKey) {
       this.topic = getUri.topic(this.topicKey, params);
     }

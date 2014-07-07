@@ -17,7 +17,7 @@
 
 angular.module('dtConsole.widgets.AppsList', [
   'dtConsole.widgets.Base',
-  'datatorrent.mlhrTable',
+  // 'datatorrent.mlhrTable',
   'dtConsole.ApplicationsCollection'
 ])
 
@@ -40,6 +40,7 @@ angular.module('dtConsole.widgets.AppsList', [
       this.resource = new ApplicationsCollection();
       this.resource.fetch();
       this.resource.subscribe(this.widgetScope);
+      this.widgetScope.data = this.resource.data;
     },
 
     destroy: function() {
