@@ -18,11 +18,10 @@
 angular.module('dtConsole.resources.ClusterMetrics', ['dtConsole.resources.Base'])
 .factory('ClusterMetrics', function(BaseModel) {
   
-  function ClusterMetrics() {
-    BaseModel.call(this, 'ClusterMetrics', 'ClusterMetrics');
-  }
-
-  ClusterMetrics.prototype = Object.create( BaseModel.prototype );
+  var ClusterMetrics = BaseModel.extend({
+    urlKey: 'ClusterMetrics',
+    topicKey: 'ClusterMetrics'
+  });
 
   return ClusterMetrics;
 });

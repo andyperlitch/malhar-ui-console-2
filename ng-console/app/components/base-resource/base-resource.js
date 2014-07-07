@@ -26,33 +26,19 @@ angular.module('dtConsole.resources.Base', [
 
 
   /**
-   * Base model for resources
-   * 
-   *   ## Usage 1: When url takes 0 parameters
-   *      
-   *       new BaseModel('UrlKey', 'TopicKey');
-   *     
-   *   ## Usage 2: When the url requires parameters
-   *   
-   *       new BaseModel('UrlKey', { param1: 'url-param' }, 'TopicKey');
+   * Abstract base model for resources
    *
-   *   ## Usage 3: When the url and topic need params
+   *   Inherited classes must provide a urlKey and/or a topicKey.
+   *   These keys correspond to keys of URIs located in settings.
    *     
-   *       new BaseModel('UrlKey', { param1: 'url-param' }, 'TopicKey', {param1: 'topic-param' });
-   *     
-   * @param {String} url    The key that corresponds to the resource url in app/settings.js, i.e. settings.urls[url]
    * @param {Object} params (Optional) An object containing parameters to be used in the resource url
-   * @param {String} topic  (Optional) The key that corresponds to the resource topic in app/settings.js, i.e. settings.topics[topic]
    */
-  function BaseModel(url, urlParams, topic, topicParams) {
-    if (typeof urlParams === 'string') {
-      topicParams = topic;
-      topic = urlParams;
-      urlParams = undefined;
-    }
-    this.resource = Restangular.one(getUri.url(url), urlParams);
+  function BaseModel(params) {
+    this.resource = Restangular.one(getUri.url(this.urlKey), params);
     this.data = {};
-    this.topic = getUri.topic(topic, topicParams);
+    if (this.topicKey) {
+      this.topic = getUri.topic(this.topicKey, params);
+    }
   }
 
   BaseModel.prototype = {
