@@ -15,18 +15,18 @@
 */
 'use strict';
 
-angular.module('dtConsole.ApplicationsCollection', [
+angular.module('dtConsole.ApplicationCollection', [
   'dtConsole.getUri',
   'dtConsole.resources.Base'
 ])
-.factory('ApplicationsCollection', function(BaseCollection) {
+.factory('ApplicationCollection', function(BaseCollection) {
 
-  var ApplicationsCollection = BaseCollection.extend({
+  var ApplicationCollection = BaseCollection.extend({
     urlKey: 'Application',
     topicKey: 'Applications',
     transformResponse: 'apps'
   });
 
-  return ApplicationsCollection;
+  return ApplicationCollection;
 
 });

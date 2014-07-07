@@ -18,7 +18,7 @@
 angular.module('dtConsole.widgets.AppsList', [
   'dtConsole.widgets.Base',
   // 'datatorrent.mlhrTable',
-  'dtConsole.ApplicationsCollection'
+  'dtConsole.ApplicationCollection'
 ])
 
 .factory('AppsListWidget', function(BaseWidget, AppsListDataModel) {
@@ -32,12 +32,12 @@ angular.module('dtConsole.widgets.AppsList', [
   return AppsListWidget;
 })
 
-.factory('AppsListDataModel', function(BaseDataModel, ApplicationsCollection) {
+.factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection) {
 
   var AppsListDataModel = BaseDataModel.extend({
 
     init: function() {
-      this.resource = new ApplicationsCollection();
+      this.resource = new ApplicationCollection();
       this.resource.fetch();
       this.resource.subscribe(this.widgetScope);
       this.widgetScope.data = this.resource.data;
