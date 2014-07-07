@@ -5,7 +5,7 @@ var walk = require('walk');
 var walker;
 var basedir = process.cwd() + '/app';
 var options;
-var skipDirectories = ['bower_components'];
+var skipDirectories = ['bower_components', 'scripts'];
 var scriptsrcs = [];
 var ignorePatterns = [
   /_test\.js$/
