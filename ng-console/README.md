@@ -13,16 +13,14 @@ Uses the `bower.json` and `package.json` files:
     npm install .
     bower install .
 
-### Spin up dev server
+### Spin up node and grunt servers
 Use the `serve` grunt task:
 
     grunt serve
 
-Add the `--force` flag to this command to prevent jshint errors and other failures from stopping the watch commands:
+Also start the node server as a separate process:
 
-    grunt serve --force
-
-
+    node server
 
 ## Working with Dependencies
 
@@ -45,36 +43,11 @@ Then, use grunt to automatically inject this package into index.html:
 
 
 
-## Creating custom components
-One of the goals of this project is to use as many open-source components as possible, however the need for some custom components may be unavoidable at times. Even then, it may be prudent to publish a custom component to bower separately and then use it as a dependency in this project. Barring that, the easiest way to create custom components is via the yeoman-angular generator. This requires the `yo` executable, installed by running the following (may need to run as root):
+## App components & sections
+The files in this project are organized into feature/component directories, rather than `controllers`, `directives`, `services` folders, etc. Components that are used in multiple locations of the dashboard should be placed in the `app/components` directory. Specific page code (e.g. templates and controllers for specific pages) should be placed in the `app/pages` folder, or one of its subfolders. For more info on this type of organization, read [Best Practice Recommendations for Angular App Structure](https://docs.google.com/document/d/1XXMvReO8-Awi1EZXAXS4PzDzdNvV6pGcuaF4Q9821Es/pub).
 
-    npm install yo -g
-
-To install the yeoman-angular generator, run:
-
-    npm install -g generator-angular
-
-
-### Controllers
-To create a custom controller, run:
-
-    yo angular:controller controller-name
-
-This will create `/app/scripts/controllers/controller-name.js` and `/test/spec/controllers/controller-name.js`. Note that the actual name of the injectable will be converted to CamelCase and will add "Ctrl" at the end, so `my-controller-name` will become `MyControllerNameCtrl` in the code.
-
-### Directives
-To create a custom directive, run:
-
-    yo angular:directive DIRECTIVE-NAME
-
-By convention, names should be all lower-case with dashes, eg. ng-navbar. This will place a new file into `/app/scripts/directives/` and will also add the appropriate script to `/app/index.html`.
-
-#### Widgets
-Widgets are the most common directive that gets created in this project. To create a new one, run the following command:
-
-    yo angular:directive widgets/dt-widget-name/dt-widget-name
-
-This will correctly create a separate folder for the widget so that all files relating to this widget are located in there.
+### Updating `index.html` with app scripts
+The script located at `bin/updateAppScripts.js` walks the `app` directory and updates `app/index.html` with all the `.js` files. This script excludes files that end in `_test.js` and all `js` files inside of `bower_components`.
 
 ## Styles
 This project uses the [LESS CSS pre-processor](http://lesscss.org/) to organize its styling. A "manifest" file is located at `app/styles/main.less`, which @imports all style dependencies (eg. from a bower component) and custom DataTorrent UI component styles (eg. `/app/styles/navbar.less`).
