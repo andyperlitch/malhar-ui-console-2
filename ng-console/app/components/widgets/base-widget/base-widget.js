@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('dtConsole.widgets.Base', [
+  'underscore',
   'dtConsole.extendService',
   'ui.dashboard'
 ])
