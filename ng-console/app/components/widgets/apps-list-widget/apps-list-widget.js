@@ -15,12 +15,39 @@
 */
 'use strict';
 
-angular.module('dtConsole.widgets.AppsList', ['datatorrent.mlhrTable'])
+angular.module('dtConsole.widgets.AppsList', [
+  'dtConsole.widgets.Base',
+  'datatorrent.mlhrTable',
+  'dtConsole.ApplicationsCollection'
+])
 
-.factory('AppsListWidget', function() {
-  
+.factory('AppsListWidget', function(BaseWidget, AppsListDataModel) {
+  var AppsListWidget = BaseWidget.extend({
+    defaults: {
+      dataModelType: AppsListDataModel,
+      templateUrl: 'components/widgets/apps-list/apps-list.html'
+    }
+  });
+
+  return AppsListWidget;
 })
 
-.factory('AppsListDataModel', function() {
+.factory('AppsListDataModel', function(BaseDataModel, ApplicationsCollection) {
+
+  var AppsListDataModel = BaseDataModel.extend({
+
+    init: function() {
+      this.resource = new ApplicationsCollection();
+      this.resource.fetch();
+      this.resource.subscribe(this.widgetScope);
+    },
+
+    destroy: function() {
+      this.resource.unsubscribe();
+    }
+
+  });
+
+  return AppsListDataModel;
 
 });
