@@ -15,18 +15,17 @@
 */
 'use strict';
 
-angular.module('dtConsole.ApplicationsResource', [
+angular.module('dtConsole.ApplicationsCollection', [
   'dtConsole.getUri',
   'dtConsole.BaseResource'
 ])
-.factory('ApplicationsResource', function(BaseResource) {
+.factory('Applications', function(BaseCollection) {
 
-  function ApplicationsResource () {
-    BaseResource.call(this, 'Application', 'Applications');
-  }
+  var ApplicationsCollection = BaseCollection.extend({
+    urlKey: 'Applications',
+    topicKey: 'Applications'
+  });
 
-  ApplicationsResource.prototype = Object.create( BaseResource.prototype );
-
-  return ApplicationsResource;
+  return ApplicationsCollection;
 
 });
