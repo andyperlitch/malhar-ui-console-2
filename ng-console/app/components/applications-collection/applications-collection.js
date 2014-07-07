@@ -23,7 +23,8 @@ angular.module('dtConsole.ApplicationsCollection', [
 
   var ApplicationsCollection = BaseCollection.extend({
     urlKey: 'Application',
-    topicKey: 'Application'
+    topicKey: 'Applications',
+    transformResponse: 'apps'
   });
 
   return ApplicationsCollection;
