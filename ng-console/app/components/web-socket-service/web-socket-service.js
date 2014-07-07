@@ -91,7 +91,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtCons
 
           if (topicMap.hasOwnProperty(topic)) {
             if ($window.WS_DEBUG) {
-              $log.debug('WebSocket Message: ' + topic + '=> ' + message);
+              $log.debug('WebSocket ', topic, ' => ', message.data);
             }
             topicMap[topic].fire(message.data);
           }
