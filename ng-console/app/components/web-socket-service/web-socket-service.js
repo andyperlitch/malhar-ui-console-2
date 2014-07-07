@@ -15,7 +15,7 @@
 */
 'use strict';
 
-angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsoleApp.visibly'])
+angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
   .factory('$WebSocket', function ($window) {
     return $window.WebSocket;
   })

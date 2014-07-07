@@ -7,7 +7,7 @@
  */
 'use strict';
 
-angular.module('dtConsoleApp.visibly', [])
+angular.module('dtConsole.visibly', [])
  .factory('visibly', function ($document, $window) {
 
   var visibly = {

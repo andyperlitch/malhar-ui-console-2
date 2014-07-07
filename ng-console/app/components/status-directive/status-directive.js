@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsoleApp')
+angular.module('dtConsole')
 .directive('dtState', function () {
   return {
     restrict: 'A',
