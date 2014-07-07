@@ -25,7 +25,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtCons
     var webSocketObject; // for testing only
 
     return {
-      $get: function ($q,  $rootScope, $timeout, notificationService, $WebSocket, visibly, $log, settings) {
+      $get: function ($q,  $rootScope, $timeout, notificationService, $WebSocket, visibly, $log, settings, $window) {
         if (!webSocketURL && !webSocketObject) {
           throw 'WebSocket URL is not defined';
         }
@@ -90,6 +90,9 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtCons
           var topic = message.topic;
 
           if (topicMap.hasOwnProperty(topic)) {
+            if ($window.WS_DEBUG) {
+              $log.debug('WebSocket Message: ' + topic + '=> ' + message);
+            }
             topicMap[topic].fire(message.data);
           }
         };
