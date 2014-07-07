@@ -22,7 +22,7 @@ angular.module('dtConsole.settings', [])
     GATEWAY_API_VERSION: 'v1',
     maxAlertActions: 3,
     statusOrder: ['RUNNING','FAILED','FINISHED','KILLED'],
-    visibility_timeout: 20000,
+    VISIBILITY_TIMEOUT: 20000,
     urls: {
 
       Application              :'/ws/:v/applications',

@@ -15,7 +15,7 @@
 */
 'use strict';
 
-angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
+angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtConsole.settings'])
   .factory('$WebSocket', function ($window) {
     return $window.WebSocket;
   })
@@ -25,7 +25,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
     var webSocketObject; // for testing only
 
     return {
-      $get: function ($q,  $rootScope, $timeout, notificationService, $WebSocket, visibly, $log) {
+      $get: function ($q,  $rootScope, $timeout, notificationService, $WebSocket, visibly, $log, settings) {
         if (!webSocketURL && !webSocketObject) {
           throw 'WebSocket URL is not defined';
         }
@@ -100,7 +100,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
           timeoutPromise = $timeout(function () {
             stopUpdates = true;
             timeoutPromise = null;
-          }, 60000);
+          }, settings.VISIBILITY_TIMEOUT);
         });
 
         visibly.onVisible(function () {
