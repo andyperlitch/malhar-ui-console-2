@@ -22,85 +22,203 @@ angular.module('dtConsole.resources.Base', [
   'dtConsole.getUri',
   'dtConsole.extendService'
 ])
-.factory('BaseModel', function(_, getUri, webSocket, Restangular, extend) {
-
+.factory('BaseResource', function($http, webSocket, extend, $log) {
 
   /**
-   * Abstract base model for resources
-   *
-   *   Inherited classes must provide a urlKey and/or a topicKey.
-   *   These keys correspond to keys of URIs located in settings.
-   *     
-   * @param {Object} params (Optional) An object containing parameters to be used in the resource url
+   * Abstract class for all resources (models and collections).
+   * Contains shared logic for subscribe/unsubscribe, fetching,
+   * transforming server response, etc.
    */
-  function BaseModel(params) {
-    this.resource = Restangular.one(getUri.url(this.urlKey), params);
-    this.data = {};
-    if (this.topicKey) {
-      this.topic = getUri.topic(this.topicKey, params);
-    }
-  }
+  function BaseResource() {}
+  BaseResource.prototype = {
 
-  BaseModel.prototype = {
-    fetch: function() {
-      this.data = this.resource.get().$object;
+    /**
+     * Uses this.url to retrieve info from the server.
+     * 
+     * @param  {object} options   (optional) The config object to be past to $http.get().
+     * @return {Promise}          The original $http promise.
+     */
+    fetch: function(options) {
+      
+      // Initialize GET
+      var promise = $http.get(this.url, options);
+
+      // Reference to this
+      var self = this;
+
+      // Store in data on return
+      promise.then(
+        function(data) {
+          self.onUpdate.call(self, self._getTransformed(data));
+        },
+        this.onFetchError.bind(this)
+      );
+
+      // Return the promise
+      return promise;
+
     },
+
+    /**
+     * Subscribes to this.topic for updates. If a `scope` is
+     * supplied to this function, $apply will be called on it
+     * each time a websocket message comes in.
+     * 
+     * @param  {Object} scope   (optional) An angular scope to call $apply on for each update
+     */
     subscribe: function(scope) {
+      // Ensure there is a topic to subscribe to
+      // before continuing
       if (!this.topic) {
         return;
       }
-      var subscribeFn = this.onUpdate;
-      this._subscribeFn = _.bind(subscribeFn, this);
-      this.updateScope = scope;
-      webSocket.subscribe(this.topic, this._subscribeFn);
+
+      // Creating a newly-bound function. This is so 
+      // unsubscribe can reference this unique function
+      // as the second argument.
+      this.__subscribeFn__ = _.bind(function(data) {
+        this.onUpdate(this._getTransformed(data));
+        if (scope) {
+          scope.$apply();
+        }
+      }, this);
+
+      // Use the webSocket service to subscribe to the topic
+      webSocket.subscribe(this.topic, this.__subscribeFn__);
     },
+
+    /**
+     * Unsubscribes to this.topic. Should only be called after
+     * this.subscribe has been called at least once.
+     */
     unsubscribe: function() {
-      webSocket.unsubscribe(this.topic, this._subscribeFn);
-      this.updateScope = null;
+      webSocket.unsubscribe(this.topic, this.__subscribeFn__);
     },
-    onUpdate: function(data) {
-      _.extend(this.data, data);
-      this.updateScope.$apply();
-    }
+
+    /**
+     * The function that actually updates this.data. Since this
+     * is different for models and collections, it must be
+     * implemented in child classes.
+     */
+    onUpdate: function() {
+      throw new TypeError('The onUpdate method must be implemented in a child class of BaseResource!');
+    },
+
+    onFetchError: function() {
+      $log.error(this.debugName + ' failed to load from the server!');
+    },
+
+    /**
+     * (private method) Takes the raw data returned from
+     * the server (either via REST or WebSocket) and looks
+     * at this.transfr
+     * @param  {Object} raw   Raw response from the server.
+     * @return {Object}       The transformed data, to be passed to this.onUpdate
+     */
+    _getTransformed: function(raw) {
+      // Will hold transformed data
+      var data;
+      // Check for transformResponse
+      var transform = this.transformResponse;
+      switch (typeof transform) {
+
+        // String implies a key on an object
+        case 'string':
+          data = raw[transform];
+          break;
+
+        // Function means fully-custom transformation
+        case 'function':
+          data = transform.call(this, raw);
+          break;
+
+        // Otherwise, assume the raw data does 
+        // not need to be transformed
+        default:
+          data = raw;
+          break;
+
+      }
+      return data;
+    },
+
+    // Used for logging statements
+    debugName: 'resource'
+
   };
 
-  BaseModel.extend = extend;
+  // Add the convenience method for creating sub classes
+  BaseResource.extend = extend;
+
+  return BaseResource;
+
+})
+.factory('BaseModel', function(_, getUri, BaseResource) {
+
+  // Abstract BaseModel class
+  var BaseModel = BaseResource.extend({
+
+    /**
+     * Constructor for models. Expects this.urlKey and/or this.topicKey
+     * to be defined in a subclass.
+     * 
+     * @param  {object} params  Parameters to be used when interpolating url or topic URIs
+     */
+    constructor: function (params) {
+      this.url = getUri.url(this.urlKey, params);
+      this.data = {};
+      if (this.topicKey) {
+        this.topic = getUri.topic(this.topicKey, params);
+      }
+    },
+
+    /**
+     * Called when new data from the server comes in, e.g. from fetch or webSocket.
+     * If this is a websocket message and a scope was supplied to the subscribe
+     * function, scope.$apply() will be called AFTER this function is executed.
+     * 
+     * @param  {object} data  The transformed data from the server.
+     */
+    onUpdate: function(data) {
+      _.extend(this.data, data);
+    },
+
+    debugName: 'model'
+
+  });
 
   return BaseModel;
 
 })
-.factory('BaseCollection', function(getUri, webSocket, Restangular, extend) {
+.factory('BaseCollection', function(getUri, BaseResource) {
 
-  function BaseCollection(params) {
-    this.resource = Restangular.all(getUri.url(this.urlKey), params);
-    this.data = [];
-    if (this.topicKey) {
-      this.topic = getUri.topic(this.topicKey, params);
-    }
-  }
-
-  BaseCollection.prototype = {
-    fetch: function() {
-      this.data = this.resource.getList().$object;
-    },
-    subscribe: function() {
-      if (!this.topic) {
-        return;
+  var BaseCollection = BaseResource.extend({
+    /**
+     * Constructor for collections. Expects this.urlKey and/or this.topicKey
+     * to be defined in a subclass.
+     * 
+     * @param  {object} params  Parameters to be used when interpolating url or topic URIs
+     */
+    constructor: function(params) {
+      this.url = getUri.url(this.urlKey, params);
+      this.data = [];
+      if (this.topicKey) {
+        this.topic = getUri.topic(this.topicKey, params);
       }
-      var subscribeFn = this.onUpdate;
-      this._subscribeFn = _.bind(subscribeFn, this);
-      webSocket.subscribe(this.topic, this._subscribeFn);
     },
-    unsubscribe: function() {
-      webSocket.unsubscribe(this.topic, this._subscribeFn);
-    },
+    /**
+     * Called when new data from the server comes in, e.g. from fetch or webSocket.
+     * 
+     * @param  {object} data  The transformed data from the server.
+     */
     onUpdate: function(data) {
       // TODO: merge collection
       this.data = data;
-    }
-  };
+    },
 
-  BaseCollection.extend = extend;
+    debugName: 'collection'
+
+  });
 
   return BaseCollection;
 
