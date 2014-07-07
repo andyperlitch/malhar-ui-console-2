@@ -71,15 +71,12 @@ angular.module('dtConsole.resources.Base', [
 })
 .factory('BaseCollection', function(getUri, webSocket, Restangular, extend) {
 
-  function BaseCollection(url, urlParams, topic, topicParams) {
-    if (typeof urlParams === 'string') {
-      topicParams = topic;
-      topic = urlParams;
-      urlParams = undefined;
+  function BaseCollection(params) {
+    this.resource = Restangular.all(getUri.url(this.urlKey), params);
+    this.data = {};
+    if (this.topicKey) {
+      this.topic = getUri.topic(this.topicKey, params);
     }
-    this.resource = Restangular.all(getUri.url(url), urlParams);
-    this.data = [];
-    this.topic = getUri.topic(topic, topicParams);
   }
 
   BaseCollection.prototype = {
@@ -98,6 +95,7 @@ angular.module('dtConsole.resources.Base', [
       webSocket.unsubscribe(this.topic, this._subscribeFn);
     },
     onUpdate: function(data) {
+      // TODO: merge collection
       this.data = data;
     }
   };
