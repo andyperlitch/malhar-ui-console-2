@@ -25,7 +25,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
     var webSocketObject; // for testing only
 
     return {
-      $get: function ($q,  $rootScope, $timeout, notificationService, $WebSocket, visibly) {
+      $get: function ($q,  $rootScope, $timeout, notificationService, $WebSocket, visibly, $log) {
         if (!webSocketURL && !webSocketObject) {
           throw 'WebSocket URL is not defined';
         }
@@ -122,7 +122,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
             $timeout.cancel(timeoutPromise);
           }
 
-          console.log('visible');
+          $log.debug('visible');
         });
 
         return {
@@ -130,7 +130,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly'])
             var msg = JSON.stringify(message);
 
             deferred.promise.then(function () {
-              console.log('send ' + msg);
+              $log.debug('send ' + msg);
               socket.send(msg);
             });
           },
