@@ -10,6 +10,9 @@
 // Get config file
 var config = require('./config');
 
+// Update app scripts file
+var updateAppScripts = require('./util/update-app-scripts');
+
 module.exports = function (grunt) {
 
   // Load grunt tasks automatically
@@ -498,6 +501,11 @@ module.exports = function (grunt) {
   grunt.registerTask('server', function () {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
+  });
+
+  grunt.registerTask('appscripts', 'Updates index.html with application scripts', function() {
+    var done = this.async();
+    updateAppScripts(done);
   });
 
   grunt.registerTask('test', [

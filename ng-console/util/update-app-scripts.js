@@ -39,7 +39,7 @@ function fillTags(scripts) {
   fs.writeFileSync(indexfile, newMarkup);
 }
 
-function updateAppScripts() {
+function updateAppScripts(done) {
   walker = walk.walk(basedir, options);
 
   walker.on('file', function(root, filestats, next) {
@@ -62,6 +62,7 @@ function updateAppScripts() {
       return 0;
     }); 
     fillTags(scriptsrcs);
+    done();
   });
 }
 
