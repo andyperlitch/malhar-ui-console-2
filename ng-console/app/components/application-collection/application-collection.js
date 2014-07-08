@@ -15,7 +15,7 @@
 */
 'use strict';
 
-angular.module('dtConsole.ApplicationCollection', [
+angular.module('dtConsole.resources.ApplicationCollection', [
   'dtConsole.getUri',
   'dtConsole.resources.Base'
 ])

@@ -18,7 +18,7 @@
 angular.module('dtConsole.widgets.AppsList', [
   'dtConsole.widgets.Base',
   // 'datatorrent.mlhrTable',
-  'dtConsole.ApplicationCollection'
+  'dtConsole.resources.ApplicationCollection'
 ])
 
 .factory('AppsListWidget', function(BaseWidget, AppsListDataModel) {
