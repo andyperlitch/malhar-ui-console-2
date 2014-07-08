@@ -94,7 +94,6 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtCons
               $log.debug('WebSocket ', topic, ' => ', message.data);
             }
             topicMap[topic].fire(message.data);
-            $rootScope.$apply();
           }
         };
 
@@ -142,20 +141,41 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtCons
           subscribe: function (topic, callback, $scope) {
             var callbacks = topicMap[topic];
 
+            // If a $.Callbacks object has not been created for this
+            // topic, one should be created and a "subscribe" message 
+            // should be sent.
             if (!callbacks) {
-              var message = { type: 'subscribe', topic: topic }; // subscribe message
+
+              // send the subscribe message
+              var message = { type: 'subscribe', topic: topic };
               this.send(message);
 
+              // create the Callbacks object
               callbacks = $.Callbacks();
               topicMap[topic] = callbacks;
             }
 
-            callbacks.add(callback);
-
+            // When scope is provided...
             if ($scope) {
+              
+              // ...it's $digest method should be called
+              // after the callback has been triggered, so
+              // we have to wrap the function.
+              var wrappedCallback = function() {
+                callback.apply({}, arguments);
+                $scope.$digest();
+              };
+              callbacks.add(wrappedCallback);
+
+              // We should also be listening for the destroy
+              // event so we can automatically unsubscribe.
               $scope.$on('$destroy', function () {
-                this.unsubscribe(topic, callback);
+                this.unsubscribe(topic, wrappedCallback);
               }.bind(this));
+
+            }
+            else {
+              callbacks.add(callback);
             }
           },
 

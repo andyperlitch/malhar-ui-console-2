@@ -61,8 +61,10 @@ angular.module('dtConsole.resources.Base', [
 
     /**
      * Subscribes to this.topic for updates.
+     * A scope can optionally be passed in order
+     * to call $digest on updates. Highly recommended.
      */
-    subscribe: function() {
+    subscribe: function(scope) {
       // Ensure there is a topic to subscribe to
       // before continuing
       if (!this.topic) {
@@ -78,7 +80,7 @@ angular.module('dtConsole.resources.Base', [
       }, this);
 
       // Use the webSocket service to subscribe to the topic
-      webSocket.subscribe(this.topic, this.__subscribeFn__);
+      webSocket.subscribe(this.topic, this.__subscribeFn__, scope);
     },
 
     /**
