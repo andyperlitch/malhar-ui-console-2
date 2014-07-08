@@ -94,6 +94,7 @@ angular.module('dtConsole.webSocket', ['ui.notify', 'dtConsole.visibly', 'dtCons
               $log.debug('WebSocket ', topic, ' => ', message.data);
             }
             topicMap[topic].fire(message.data);
+            $rootScope.$apply();
           }
         };
 

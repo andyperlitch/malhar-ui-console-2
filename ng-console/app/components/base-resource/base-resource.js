@@ -22,7 +22,7 @@ angular.module('dtConsole.resources.Base', [
   'dtConsole.getUri',
   'dtConsole.extendService'
 ])
-.factory('BaseResource', function($http, webSocket, extend, $log) {
+.factory('BaseResource', function(_, $http, webSocket, extend, $log) {
 
   /**
    * Abstract class for all resources (models and collections).
@@ -39,7 +39,7 @@ angular.module('dtConsole.resources.Base', [
      * @return {Promise}          The original $http promise.
      */
     fetch: function(options) {
-      
+
       // Initialize GET
       var promise = $http.get(this.url, options);
 
@@ -48,8 +48,8 @@ angular.module('dtConsole.resources.Base', [
 
       // Store in data on return
       promise.then(
-        function(data) {
-          self.onUpdate.call(self, self._getTransformed(data));
+        function(response) {
+          self.onUpdate( self._getTransformed(response.data) );
         },
         this.onFetchError.bind(this)
       );
@@ -60,13 +60,9 @@ angular.module('dtConsole.resources.Base', [
     },
 
     /**
-     * Subscribes to this.topic for updates. If a `scope` is
-     * supplied to this function, $apply will be called on it
-     * each time a websocket message comes in.
-     * 
-     * @param  {Object} scope   (optional) An angular scope to call $apply on for each update
+     * Subscribes to this.topic for updates.
      */
-    subscribe: function(scope) {
+    subscribe: function() {
       // Ensure there is a topic to subscribe to
       // before continuing
       if (!this.topic) {
@@ -75,12 +71,10 @@ angular.module('dtConsole.resources.Base', [
 
       // Creating a newly-bound function. This is so 
       // unsubscribe can reference this unique function
-      // as the second argument.
+      // as the second argument. Otherwise multiple instances
+      // will share the same handler function.
       this.__subscribeFn__ = _.bind(function(data) {
         this.onUpdate(this._getTransformed(data));
-        if (scope) {
-          scope.$apply();
-        }
       }, this);
 
       // Use the webSocket service to subscribe to the topic
@@ -183,14 +177,16 @@ angular.module('dtConsole.resources.Base', [
       _.extend(this.data, data);
     },
 
-    debugName: 'model'
+    debugName: 'model',
+
+    idAttribute: 'id'
 
   });
 
   return BaseModel;
 
 })
-.factory('BaseCollection', function(getUri, BaseResource) {
+.factory('BaseCollection', function(getUri, BaseResource, BaseModel) {
 
   var BaseCollection = BaseResource.extend({
     /**
@@ -216,7 +212,9 @@ angular.module('dtConsole.resources.Base', [
       this.data = data;
     },
 
-    debugName: 'collection'
+    debugName: 'collection',
+
+    model: BaseModel
 
   });
 
