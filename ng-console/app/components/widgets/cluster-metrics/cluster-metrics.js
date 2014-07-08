@@ -44,6 +44,7 @@ angular.module('dtConsole.widgets.ClusterMetrics', [
   var ClusterMetricsWidget = Base.extend({
 
     defaults: {
+      title: 'Cluster Metrics',
       dataModelType: DataModel,
       templateUrl: 'components/widgets/cluster-metrics/cluster-metrics.html'
     }
