@@ -21,7 +21,7 @@
 
 var sharedConfig = require('./karma-shared.conf');
 
-module.exports = function(config) {
+module.exports = function(config, chain) {
   var conf = sharedConfig();
 
   conf.files = conf.files.concat([
@@ -53,5 +53,8 @@ module.exports = function(config) {
     moduleName: 'templates-main'
   };
 
+  if (chain) {
+    return conf;
+  }
   config.set(conf);
 };

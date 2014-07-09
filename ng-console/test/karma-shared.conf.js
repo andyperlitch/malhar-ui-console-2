@@ -59,10 +59,8 @@ module.exports = function() {
     files : script_srcs.concat([
       
       // test framework-related code
-      'node_modules/chai/chai.js',
-      'node_modules/sinon/pkg/sinon.js',
-      'test/lib/chai-should.js',
-      'test/lib/chai-expect.js'
+      'bower_components/angular-mocks/angular-mocks.js'
+
     ])
   };
 };
