@@ -49,7 +49,7 @@ angular.module('dtConsole.resources.Base', [
       // Store in data on return
       promise.then(
         function(response) {
-          self.onUpdate( self._getTransformed(response.data) );
+          self.set( self._getTransformed(response.data) );
         },
         this.onFetchError.bind(this)
       );
@@ -76,7 +76,7 @@ angular.module('dtConsole.resources.Base', [
       // as the second argument. Otherwise multiple instances
       // will share the same handler function.
       this.__subscribeFn__ = _.bind(function(data) {
-        this.onUpdate(this._getTransformed(data));
+        this.set(this._getTransformed(data));
       }, this);
 
       // Use the webSocket service to subscribe to the topic
@@ -96,8 +96,8 @@ angular.module('dtConsole.resources.Base', [
      * is different for models and collections, it must be
      * implemented in child classes.
      */
-    onUpdate: function() {
-      throw new TypeError('The onUpdate method must be implemented in a child class of BaseResource!');
+    set: function() {
+      throw new TypeError('The set method must be implemented in a child class of BaseResource!');
     },
 
     onFetchError: function() {
@@ -109,7 +109,7 @@ angular.module('dtConsole.resources.Base', [
      * the server (either via REST or WebSocket) and looks
      * at this.transfr
      * @param  {Object} raw   Raw response from the server.
-     * @return {Object}       The transformed data, to be passed to this.onUpdate
+     * @return {Object}       The transformed data, to be passed to this.set
      */
     _getTransformed: function(raw) {
       // Will hold transformed data
@@ -175,7 +175,7 @@ angular.module('dtConsole.resources.Base', [
      * 
      * @param  {object} data  The transformed data from the server.
      */
-    onUpdate: function(data) {
+    set: function(data) {
       _.extend(this.data, data);
     },
 
@@ -188,7 +188,7 @@ angular.module('dtConsole.resources.Base', [
   return BaseModel;
 
 })
-.factory('BaseCollection', function(getUri, BaseResource, BaseModel) {
+.factory('BaseCollection', function(_, getUri, BaseResource, BaseModel) {
 
   var BaseCollection = BaseResource.extend({
     /**
@@ -200,6 +200,7 @@ angular.module('dtConsole.resources.Base', [
     constructor: function(params) {
       this.url = getUri.url(this.urlKey, params);
       this.data = [];
+      this._idAttribute_ = this.model.prototype.idAttribute;
       if (this.topicKey) {
         this.topic = getUri.topic(this.topicKey, params);
       }
@@ -209,9 +210,32 @@ angular.module('dtConsole.resources.Base', [
      * 
      * @param  {object} data  The transformed data from the server.
      */
-    onUpdate: function(data) {
-      // TODO: merge collection
-      this.data = data;
+    set: function(updates) {
+
+      // References to data and context
+      var data = this.data;
+      var self = this;
+
+      _.each(updates, function(m) {
+
+        // Look for existent model
+        var current = self.get(m[self._idAttribute_]);
+        if (current) {
+          _.extend(current, m);
+        }
+        // Otherwise just add to collection
+        else {
+          data.push(m);
+        }
+
+      });
+    },
+
+    get: function(id) {
+      var idAttribute = this._idAttribute_;
+      return _.find(this.data, function(model) {
+        return model[idAttribute] === id;
+      });
     },
 
     debugName: 'collection',
