@@ -13,6 +13,19 @@ var config = require('./config');
 // Update app scripts file
 var updateAppScripts = require('./util/update-app-scripts');
 
+// App code, used for jshint and watch
+var appCodeFiles = [
+  '<%= yeoman.app %>/components/**/!(*_test)+(.js)',
+  '<%= yeoman.app %>/pages/**/!(*_test)+(.js)',
+  '<%= yeoman.app %>/app.js',
+  '<%= yeoman.app %>/app-controller.js'
+];
+
+var testCodeFiles = [
+  '<%= yeoman.app %>/components/**/*_test.js',
+  '<%= yeoman.app %>/pages/**/*_test.js'
+];
+
 module.exports = function (grunt) {
 
   // Load grunt tasks automatically
@@ -38,12 +51,7 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       js: {
-        files: [
-          '<%= yeoman.app %>/components/{,*/}*.js',
-          '<%= yeoman.app %>/pages/{,*/}*.js',
-          '<%= yeoman.app %>/app.js',
-          '<%= yeoman.app %>/app-controller.js'
-        ],
+        files: appCodeFiles,
         tasks: ['newer:jshint:all'],
         options: {
           livereload: true
@@ -174,19 +182,12 @@ module.exports = function (grunt) {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
-      all: [
-        'Gruntfile.js',
-        '<%= yeoman.app %>/components/**/!(*_test)+(.js)',
-        '<%= yeoman.app %>/pages/**/!(*_test)+(.js)'
-      ],
+      all: appCodeFiles.concat('Gruntfile.js'),
       test: {
         options: {
           jshintrc: 'test/.jshintrc'
         },
-        src: [
-          '<%= yeoman.app %>/components/**/*_test.js',
-          '<%= yeoman.app %>/pages/**/*_test.js'
-        ]
+        src: testCodeFiles
       }
     },
 
