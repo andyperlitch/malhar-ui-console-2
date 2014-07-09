@@ -231,9 +231,16 @@ angular.module('dtConsole.resources.Base', [
       });
     },
 
+    /**
+     * Gets the model by model.prototype.idAttribute
+     * @param  {Mixed} id  The id value to compare to idAttribute of current models
+     * @return {Object}    Object in collection, if found. If not, will return undefined.
+     */
     get: function(id) {
+      // Keep reference of idAttribute
       var idAttribute = this._idAttribute_;
       return _.find(this.data, function(model) {
+        // Check against each model
         return model[idAttribute] === id;
       });
     },
