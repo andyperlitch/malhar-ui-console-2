@@ -38,6 +38,7 @@
     "karma-ng-html2js-preprocessor": "~0.1",
     "karma-phantomjs-launcher": "^0.1.2",
     "load-grunt-tasks": "~0.2.0",
+    "minimatch": "^0.3.0",
     "time-grunt": "~0.2.1",
     "walk": "^2.3.3"
   },
