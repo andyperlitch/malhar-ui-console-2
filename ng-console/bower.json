@@ -11,7 +11,9 @@
     "angular-strap": "~2.0.3",
     "underscore": "~1.6.0",
     "angular-underscore-module": "*",
-    "restangular": "~1.4.0"
+    "restangular": "~1.4.0",
+    "angular-sanitize": "~1.2.19",
+    "angular-mousewheel": "~1.0.4"
   },
   "devDependencies": {},
   "resolutions": {
