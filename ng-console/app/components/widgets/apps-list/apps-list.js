@@ -57,6 +57,10 @@ angular.module('dtConsole.widgets.AppsList', [
     return state1 - state2;
   }
 
+  function startedTimeFormatter(value) {
+    return $filter('timeSince')(value) + ' ago';
+  }
+
   function lifetimeFormatter(value, row) {
     var finishedTime = row.finishedTime * 1 || +new Date() ;
     var startedTime = row.startedTime * 1 ;
@@ -95,7 +99,7 @@ angular.module('dtConsole.widgets.AppsList', [
     { id: 'name', key: 'name', label: DtText.get('name_label'), sort: 'string', filter: 'like' },
     { id: 'state', label: DtText.get('state_label'), key: 'state', format: stateFormatter, sort: stateSorter, filter:'like' },
     { id: 'user', key: 'user', label: DtText.get('user_label'), sort: 'string', filter:'like' },
-    { id: 'startedTime', label: DtText.get('started_label'), key: 'startedTime', sort: 'number', filter: 'date', format: $filter('timeSince') },
+    { id: 'startedTime', label: DtText.get('started_label'), key: 'startedTime', sort: 'number', filter: 'date', format: startedTimeFormatter },
     { id: 'lifetime', label: DtText.get('lifetime_label'), key: 'startedTime', filter: 'date', format: lifetimeFormatter  },
     { id: 'allocatedMB', label: DtText.get('memory_label'), key: 'allocatedMB', sort: memorySorter, filter: 'number', format: memoryFormatter }
   ];
@@ -106,6 +110,13 @@ angular.module('dtConsole.widgets.AppsList', [
       
       this.widgetScope.columns = columns;
       this.widgetScope.selected = [];
+      this.widgetScope.options = {
+        row_limit: 10,
+        initial_sorts: [
+          { id: 'state', dir: '+' },
+          { id: 'id', dir: '-' }
+        ]
+      };
 
       this.resource = new ApplicationCollection();
       this.resource.fetch();
