@@ -15,7 +15,9 @@
     "angular-sanitize": "~1.2.19",
     "angular-mousewheel": "~1.0.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "angular-mocks": "~1.2.19"
+  },
   "resolutions": {
     "angular": "1.2.19",
     "bootstrap": "~3.2.0",

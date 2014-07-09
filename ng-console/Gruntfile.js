@@ -176,14 +176,17 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/components/{,*/}*.js',
-        '<%= yeoman.app %>/pages/{,*/}*.js'
+        '<%= yeoman.app %>/components/**/!(*_test)+(.js)',
+        '<%= yeoman.app %>/pages/**/!(*_test)+(.js)'
       ],
       test: {
         options: {
           jshintrc: 'test/.jshintrc'
         },
-        src: ['test/spec/{,*/}*.js']
+        src: [
+          '<%= yeoman.app %>/components/**/*_test.js',
+          '<%= yeoman.app %>/pages/**/*_test.js'
+        ]
       }
     },
 
@@ -437,6 +440,9 @@ module.exports = function (grunt) {
         configFile: './test/karma-coverage.conf.js',
         autoWatch: false,
         singleRun: true
+      },
+      coverage_auto: {
+        configFile: './test/karma-coverage.conf.js'
       },
       unit_auto: {
         configFile: './test/karma-unit.conf.js'

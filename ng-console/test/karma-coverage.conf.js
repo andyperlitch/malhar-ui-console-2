@@ -20,8 +20,8 @@
  */
 var sharedConfig = require('./karma-unit.conf');
 
-module.exports = function(config) {
-  var conf = sharedConfig();
+module.exports = function(config, chain) {
+  var conf = sharedConfig(config, true);
 
   if (conf.reporters.indexOf('coverage') === -1) {
     conf.reporters.push('coverage');  
@@ -35,8 +35,12 @@ module.exports = function(config) {
   };
 
   // here we specify which of the files we want to appear in the coverage report
-  conf.preprocessors['app/components/**/*.js'] = ['coverage'];
-  conf.preprocessors['app/pages/**/*.js'] = ['coverage'];
+  conf.preprocessors['app/components/**/!(*_test)+(.js)'] = ['coverage'];
+  conf.preprocessors['app/pages/**/!(*_test)+(.js)'] = ['coverage'];
+
+  if (chain) {
+    return conf;
+  }
 
   config.set(conf);
 };
