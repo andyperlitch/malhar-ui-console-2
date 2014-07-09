@@ -67,7 +67,7 @@ angular.module('dtConsole.widgets.AppsList', [
     });
   }
 
-  function memoryFormatter(value, row) {
+  function memoryFormatter(value) {
     if (!value) {
       return '-';
     }
@@ -90,14 +90,14 @@ angular.module('dtConsole.widgets.AppsList', [
   }
 
   var columns = [
-      { id: 'selector', key: 'id', label: '', format: 'selector', width: '40px', lock_width: true },
-      { id: 'id', label: DtText.get('id_label'), key: 'id', sort: 'string', filter: 'like', format: $filter('appIdLink'), trustFormat: true },
-      { id: 'name', key: 'name', label: DtText.get('name_label'), sort: 'string', filter: 'like' },
-      { id: 'state', label: DtText.get('state_label'), key: 'state', format: stateFormatter, sort: stateSorter, filter:'like' },
-      { id: 'user', key: 'user', label: DtText.get('user_label'), sort: 'string', filter:'like' },
-      { id: 'startedTime', label: DtText.get('started_label'), key: 'startedTime', sort: 'number', filter: 'date', format: $filter('timeSince') },
-      { id: 'lifetime', label: DtText.get('lifetime_label'), key: 'startedTime', filter: 'date', format: lifetimeFormatter  },
-      { id: 'allocatedMB', label: DtText.get('memory_label'), key: 'allocatedMB', sort: memorySorter, filter: 'number', format: memoryFormatter }
+    { id: 'selector', key: 'id', label: '', format: 'selector', width: '40px', lock_width: true },
+    { id: 'id', label: DtText.get('id_label'), key: 'id', sort: 'string', filter: 'like', format: $filter('appIdLink'), trustFormat: true },
+    { id: 'name', key: 'name', label: DtText.get('name_label'), sort: 'string', filter: 'like' },
+    { id: 'state', label: DtText.get('state_label'), key: 'state', format: stateFormatter, sort: stateSorter, filter:'like' },
+    { id: 'user', key: 'user', label: DtText.get('user_label'), sort: 'string', filter:'like' },
+    { id: 'startedTime', label: DtText.get('started_label'), key: 'startedTime', sort: 'number', filter: 'date', format: $filter('timeSince') },
+    { id: 'lifetime', label: DtText.get('lifetime_label'), key: 'startedTime', filter: 'date', format: lifetimeFormatter  },
+    { id: 'allocatedMB', label: DtText.get('memory_label'), key: 'allocatedMB', sort: memorySorter, filter: 'number', format: memoryFormatter }
   ];
 
   var AppsListDataModel = BaseDataModel.extend({
