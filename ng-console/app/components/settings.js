@@ -21,7 +21,8 @@ angular.module('dtConsole.settings', [])
     alertUrlRoot: '/alerts',
     GATEWAY_API_VERSION: 'v1',
     maxAlertActions: 3,
-    statusOrder: ['RUNNING','FAILED','FINISHED','KILLED'],
+    statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],
+    NONENDED_APP_STATES: ['SUBMITTED','ACCEPTED','RUNNING'],
     VISIBILITY_TIMEOUT: 20000,
     urls: {
 

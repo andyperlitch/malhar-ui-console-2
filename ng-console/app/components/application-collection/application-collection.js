@@ -17,14 +17,30 @@
 
 angular.module('dtConsole.resources.ApplicationCollection', [
   'dtConsole.getUri',
-  'dtConsole.resources.Base'
+  'dtConsole.resources.Base',
+  'dtConsole.settings'
 ])
-.factory('ApplicationCollection', function(BaseCollection) {
+.factory('ApplicationCollection', function(BaseCollection, settings) {
 
   var ApplicationCollection = BaseCollection.extend({
     urlKey: 'Application',
     topicKey: 'Applications',
-    transformResponse: 'apps'
+    transformResponse: 'apps',
+    fetch: function(options) {
+      // If options.params is not specified, only fetch
+      // non-ended applications
+      if (!options) {
+        options = {};
+      }
+      if (!options.params) {
+        options.params = {
+          states: settings.NONENDED_APP_STATES.join(',')
+        };
+      }
+
+      // Call super's as usual
+      BaseCollection.prototype.fetch.call(this, options);
+    }
   });
 
   return ApplicationCollection;
