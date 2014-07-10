@@ -27,8 +27,17 @@ angular.module('dtConsole.getUri', ['dtConsole.settings'])
 
   // Public API here
   return {
-    url: function(key, params) {
+    url: function(key, params, id) {
+      if (typeof params === 'string' || typeof params === 'number') {
+        id = params;
+        params = {};
+      }
       var template = settings.urls[key];
+
+      if (id) {
+        template += '/' + id;
+      }
+
       return interpolateParams(template, angular.extend({v: settings.GATEWAY_API_VERSION}, params));
     },
     action: function(key, params) {

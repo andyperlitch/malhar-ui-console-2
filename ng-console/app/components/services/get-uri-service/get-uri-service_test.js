@@ -69,6 +69,11 @@ describe('Service: getUri', function () {
       expect(getUri.url('Test2', { 'with': 'these', params: 'parameters'}) === '/ws/v8/testing/these/parameters').toEqual(true);
     });
 
+    it('should append the third argument (or second if it is a string) to the end of the url', function() {
+      expect(getUri.url('Test', '123')).toEqual('/ws/v8/testing/url/123');
+      expect(getUri.url('Test2', { 'with': 'these', params: 'parameters'}, '123')).toEqual('/ws/v8/testing/these/parameters/123');
+    });
+
   });
 
   describe('the action method', function() {
