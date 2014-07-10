@@ -4,11 +4,11 @@
             <span class="glyphicon glyphicon-eye-open"></span>
             <span dt-text="inspect"></span>
         </a>
-        <button class="btn btn-warning" ng-click="endApp('shutdown', selected[0])">
+        <button class="btn btn-warning" ng-click="endApp('shutdown', { id: selected[0] })">
             <span class="glyphicon glyphicon-remove"></span>
             <span dt-text="shutdown"></span>
         </button>
-        <button class="btn btn-danger" ng-click="endApp('kill', selected[0])">
+        <button class="btn btn-danger" ng-click="endApp('kill', { id: selected[0] })">
             <span class="glyphicon glyphicon-ban-circle"></span>
             <span dt-text="kill"></span>
         </button>

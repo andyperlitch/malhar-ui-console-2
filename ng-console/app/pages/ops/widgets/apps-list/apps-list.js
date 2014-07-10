@@ -21,6 +21,7 @@ angular.module('dtConsole.widgets.AppsList', [
   'dtConsole.settings',
   'dtConsole.byteFilter',
   'dtConsole.textService',
+  'dtConsole.appManagerService',
   'datatorrent.mlhrTable',
   'dtConsole.resources.ApplicationCollection'
 ])
@@ -37,7 +38,7 @@ angular.module('dtConsole.widgets.AppsList', [
   return AppsListWidget;
 })
 
-.factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, DtText, $filter) {
+.factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, DtText, $filter, appManager) {
 
   function stateFormatter(value,row) {
     if (!value) {
@@ -123,6 +124,7 @@ angular.module('dtConsole.widgets.AppsList', [
       this.resource.fetch();
       this.resource.subscribe(this.widgetScope);
       this.widgetScope.resource = this.resource;
+      this.widgetScope.endApp = appManager.endApp;
     },
 
     destroy: function() {
