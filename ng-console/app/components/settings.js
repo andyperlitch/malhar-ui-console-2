@@ -58,16 +58,16 @@ angular.module('dtConsole.settings', [])
     },
     
     actions: {
-      startOpRecording         :'applications/:appId/physicalPlan/operators/:operatorId/recordings/start',
-      stopOpRecording          :'applications/:appId/physicalPlan/operators/:operatorId/recordings/stop',
-      startPortRecording       :'applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/start',
-      stopPortRecording        :'applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop',
-      shutdownApp              :'applications/:appId/shutdown',
-      killApp                  :'applications/:appId/kill',
-      killContainer            :'applications/:appId/physicalPlan/containers/:containerId/kill',
-      launchApp                :'jars/:fileName/applications/:appName/launch',
-      specifyDepJars           :'jars/:fileName/dependencyJars',
-      restartGateway           :'config/restart'
+      startOpRecording         :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/start',
+      stopOpRecording          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/stop',
+      startPortRecording       :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/start',
+      stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop',
+      shutdownApp              :'/ws/:v/applications/:appId/shutdown',
+      killApp                  :'/ws/:v/applications/:appId/kill',
+      killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
+      launchApp                :'/ws/:v/jars/:fileName/applications/:appName/launch',
+      specifyDepJars           :'/ws/:v/jars/:fileName/dependencyJars',
+      restartGateway           :'/ws/:v/config/restart'
     },
     
     topics: {

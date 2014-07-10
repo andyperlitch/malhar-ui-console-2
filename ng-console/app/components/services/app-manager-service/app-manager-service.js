@@ -19,6 +19,21 @@
 angular.module('dtConsole.appManagerService', [
   'dtConsole.getUri'
 ])
-.service('appManager', function() {
-  return {};
+.service('appManager', function($http, getUri) {
+  return {
+
+    /**
+     * Ends an application with either a "kill"
+     * signal or a "shutdown" signal
+     * 
+     * @param  {String} signal The end signal, either "kill" or "shutdown"
+     * @param  {Object} app    POJO object of application
+     * @return {Promise}       Returns the promise from the post request.
+     */
+    endApp: function(signal, app) {
+      var url = getUri.action(signal + 'App', { appId: app.id });
+      return $http.post(url);
+    }
+    
+  };
 });
