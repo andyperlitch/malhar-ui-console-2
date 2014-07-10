@@ -29,7 +29,7 @@ angular.module('dtConsole.widgets.AppsList', [
   var AppsListWidget = BaseWidget.extend({
     defaults: {
       dataModelType: AppsListDataModel,
-      templateUrl: 'components/widgets/apps-list/apps-list.html',
+      templateUrl: 'pages/ops/widgets/apps-list/apps-list.html',
       title: 'Applications'
     }
   });
