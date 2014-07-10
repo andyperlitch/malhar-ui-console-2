@@ -47,7 +47,7 @@ angular.module('dtConsole.widgets.ClusterMetrics', [
     defaults: {
       title: 'Cluster Metrics',
       dataModelType: DataModel,
-      templateUrl: 'components/widgets/cluster-metrics/cluster-metrics.html'
+      templateUrl: 'pages/ops/widgets/cluster-metrics/cluster-metrics.html'
     }
     
   });
