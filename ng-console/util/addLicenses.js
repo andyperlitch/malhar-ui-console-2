@@ -61,13 +61,13 @@ function addLicenseHeaders(options) {
     var include = options.include;
     var exclude = options.exclude;
     var year = (new Date()).getFullYear();
-  var license_re = require('./bin/license_regex');
-    var license_string = require('./bin/license_header')();
+  var license_re = require('./license_regex');
+    var license_string = require('./license_header')();
 
   function doneFn (err, list) {
 
     if (err) {
-      console.log('An error occurred');
+      console.log('An error occurred: ', err);
     } else {
       var included = _.filter(list, function(item) {
             
@@ -128,7 +128,7 @@ function addLicenseHeaders(options) {
 
 addLicenseHeaders({
     include: [
-      '/app'
+      '/../app'
     ],
     exclude: [
         /app\/bower_components\//
