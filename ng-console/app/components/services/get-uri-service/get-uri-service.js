@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.getUri', ['dtConsole.settings'])
+angular.module('app.components.services.getUri', ['app.settings'])
 .factory('getUri', function (settings) {
 
   function interpolateParams(string, params) {

@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.resources.ClusterMetrics', ['dtConsole.resources.Base'])
+angular.module('app.components.resources.ClusterMetrics', ['app.components.resources.Base'])
 .factory('ClusterMetrics', function(BaseModel) {
   
   var ClusterMetrics = BaseModel.extend({

@@ -16,14 +16,14 @@
 
 'use strict';
 
-angular.module('dtConsole.widgets.AppsList', [
-  'dtConsole.widgets.Base',
-  'dtConsole.settings',
-  'dtConsole.byteFilter',
-  'dtConsole.textService',
-  'dtConsole.appManagerService',
+angular.module('app.pages.ops.widgets.AppsList', [
+  'app.widgets.Base',
+  'app.settings',
+  'app.components.filters.byte',
+  'app.components.services.text',
+  'app.components.services.appManager',
   'datatorrent.mlhrTable',
-  'dtConsole.resources.ApplicationCollection'
+  'app.components.resources.ApplicationCollection'
 ])
 
 .factory('AppsListWidget', function(BaseWidget, AppsListDataModel) {

@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole')
+angular.module('app')
   .filter('timeSince', function () {
     return function timeSince(timeStamp, options) {
       if (typeof timeStamp === 'object') {

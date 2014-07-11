@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole', [
+angular.module('app', [
   // bower components
   'ngRoute',
   'ui.notify',
@@ -26,19 +26,19 @@ angular.module('dtConsole', [
   'ui.dashboard',
 
   // components
-  'dtConsole.webSocket',
-  'dtConsole.percent2cpuFilter',
-  'dtConsole.commaGroupsFilter',
-  'dtConsole.byteFilter',
-  'dtConsole.textDirective',
-  'dtConsole.textService',
-  'dtConsole.extendService',
+  'app.components.services.webSocket',
+  'app.components.filters.percent2cpu',
+  'app.components.filters.commaGroups',
+  'app.components.filters.byte',
+  'app.components.directives.text',
+  'app.components.services.text',
+  'app.components.services.extend',
 
   // pages
-  'dtConsole.pages.ops',
+  'app.pages.ops',
 
   // misc
-  'dtConsole.settings'
+  'app.settings'
 ])
 .config(function (settings, webSocketProvider, $routeProvider, RestangularProvider) {
   webSocketProvider.setWebSocketURL('ws://node0.morado.com:9090/pubsub');

@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.byteFilter', [])
+angular.module('app.components.filters.byte', [])
 .filter('byte', function() {
   // holds number of bytes per level
   var levels = { b: 1 };

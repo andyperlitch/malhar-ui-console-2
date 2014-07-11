@@ -16,12 +16,12 @@
 
 'use strict';
 
-angular.module('dtConsole.resources.Base', [
+angular.module('app.components.resources.Base', [
   'underscore',
-  'dtConsole.webSocket',
+  'app.components.services.webSocket',
   'restangular',
-  'dtConsole.getUri',
-  'dtConsole.extendService'
+  'app.components.services.getUri',
+  'app.components.services.extend'
 ])
 .factory('BaseResource', function(_, $http, webSocket, extend, $log) {
 

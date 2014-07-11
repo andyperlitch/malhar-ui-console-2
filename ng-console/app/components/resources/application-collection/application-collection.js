@@ -16,10 +16,10 @@
 
 'use strict';
 
-angular.module('dtConsole.resources.ApplicationCollection', [
-  'dtConsole.getUri',
-  'dtConsole.resources.Base',
-  'dtConsole.settings'
+angular.module('app.components.resources.ApplicationCollection', [
+  'app.components.services.getUri',
+  'app.components.resources.Base',
+  'app.settings'
 ])
 .factory('ApplicationCollection', function(BaseCollection, settings) {
 

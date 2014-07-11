@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsoleApp')
+angular.module('appApp')
   .controller('ApplicationCtrl', function ($scope, $routeParams, $resource, OverviewDataModel, appMetricsOverviewFields) {
     var appId = $routeParams.appId;
 

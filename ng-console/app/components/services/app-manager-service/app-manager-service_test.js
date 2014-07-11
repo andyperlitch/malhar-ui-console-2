@@ -19,7 +19,7 @@
 describe('Service: appManager', function () {
 
   // load the service's module
-  beforeEach(module('dtConsole.appManagerService'));
+  beforeEach(module('app.components.services.appManager'));
 
   // instantiate service
   var appManager;

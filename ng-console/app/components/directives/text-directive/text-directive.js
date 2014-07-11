@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.textDirective', ['dtConsole.textService'])
+angular.module('app.components.directives.text', ['app.components.services.text'])
   .directive('dtText', function (DtText) {
     return {
       restrict: 'A',

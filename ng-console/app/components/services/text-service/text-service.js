@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.textService', [])
+angular.module('app.components.services.text', [])
   /**
    * DataTorrent text package
    *

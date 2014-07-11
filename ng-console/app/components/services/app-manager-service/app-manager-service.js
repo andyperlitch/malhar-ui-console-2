@@ -16,8 +16,8 @@
 
 'use strict';
 
-angular.module('dtConsole.appManagerService', [
-  'dtConsole.getUri'
+angular.module('app.components.services.appManager', [
+  'app.components.services.getUri'
 ])
 .service('appManager', function($http, getUri) {
   return {

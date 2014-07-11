@@ -29,7 +29,7 @@
 
 'use strict';
 
-angular.module('dtConsole.extendService', [])
+angular.module('app.components.services.extend', [])
 .factory('extend', function() {
   var extend = function(protoProps, staticProps) {
     var parent = this;

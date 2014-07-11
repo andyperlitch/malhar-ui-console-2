@@ -19,7 +19,7 @@
 describe('Service: getUri', function () {
 
   // load the service's module
-  beforeEach(module('dtConsole.getUri', function($provide) {
+  beforeEach(module('app.components.services.getUri', function($provide) {
     // Mock DtSettings
     $provide.constant('settings', {
       GATEWAY_API_VERSION: 'v8',

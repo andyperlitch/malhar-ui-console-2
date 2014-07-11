@@ -16,10 +16,10 @@
 
 'use strict';
 
-angular.module('dtConsole.widgets.ClusterMetrics', [
-  'dtConsole.widgets.Base',
+angular.module('app.pages.ops.widgets.ClusterMetrics', [
+  'app.widgets.Base',
   'underscore',
-  'dtConsole.resources.ClusterMetrics'
+  'app.components.resources.ClusterMetrics'
 ])
 .factory('ClusterMetricsDataModel', function(BaseDataModel, ClusterMetrics) {
 

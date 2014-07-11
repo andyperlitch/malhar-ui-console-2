@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole')
+angular.module('app')
 .filter('unsafe', function($sce) {
   return function(val) {
     return $sce.trustAsHtml(val);

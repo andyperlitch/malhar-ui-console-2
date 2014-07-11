@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole')
+angular.module('app')
   .filter('appIdLink', function () {
     return function (appId) {
       var shortId = appId;

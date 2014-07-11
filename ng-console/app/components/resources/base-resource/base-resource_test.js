@@ -37,7 +37,7 @@ describe('Service: BaseResource', function () {
   });
 
   // load the service's module
-  beforeEach(module('dtConsole.resources.Base', function($provide) {
+  beforeEach(module('app.components.resources.Base', function($provide) {
     $provide.value('webSocket', mockWebSocket);
     $provide.value('getUri', mockGetUri);
   }));

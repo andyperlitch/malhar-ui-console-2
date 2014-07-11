@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.commaGroupsFilter', [])
+angular.module('app.components.filters.commaGroups', [])
 .filter('commaGroups', function() {
     function commaGroups(value) {
       if (typeof value === 'undefined') {

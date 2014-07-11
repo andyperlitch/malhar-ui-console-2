@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole')
+angular.module('app')
   
   .controller('EtlEditSourceCtrl', function($scope, $modalInstance, source, sources, sourceTypes) {
 

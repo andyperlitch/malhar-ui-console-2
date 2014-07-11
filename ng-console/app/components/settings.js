@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('dtConsole.settings', [])
+angular.module('app.settings', [])
   .constant('settings', {
     //wsRoot: 'http://localhost:3000',
     alertUrlRoot: '/alerts',

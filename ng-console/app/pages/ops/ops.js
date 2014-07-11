@@ -20,9 +20,9 @@
  * Operations page module
  */
 
-angular.module('dtConsole.pages.ops', [
-  'dtConsole.widgets.ClusterMetrics',
-  'dtConsole.widgets.AppsList'
+angular.module('app.pages.ops', [
+  'app.pages.ops.widgets.ClusterMetrics',
+  'app.pages.ops.widgets.AppsList'
 ])
 
 // Route

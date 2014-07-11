@@ -16,9 +16,9 @@
 
 'use strict';
 
-angular.module('dtConsole.widgets.Base', [
+angular.module('app.widgets.Base', [
   'underscore',
-  'dtConsole.extendService',
+  'app.components.services.extend',
   'ui.dashboard'
 ])
 .factory('BaseDataModel', function(_, WidgetDataModel, extend) {
