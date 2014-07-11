@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app.components.filters.percent2cpuFilter', ['app.commaGroups'])
+angular.module('app.components.filters.percent2cpu', ['app.components.filters.commaGroups'])
 .filter('percent2cpu', ['$filter', function($filter) {
   function percent2cpu(percent) {
 
