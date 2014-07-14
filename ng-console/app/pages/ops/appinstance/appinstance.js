@@ -37,7 +37,15 @@ angular.module('app.pages.ops.appinstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, _, LogicalDagWidgetDefinition, ClusterMetricsWidget, AppsListWidget) {
+  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, ClusterMetricsWidget, AppsListWidget) {
+    $scope.appId = $routeParams.appId;
+
+    //webSocket.subscribe('applications.' + appId, function (data) {
+    //  console.log(data);
+    //  $scope.fields = data;
+    //  $scope.$apply();
+    //}, $scope);
+
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
       new LogicalDagWidgetDefinition({ name: 'LogicalDAG' }),

@@ -16,24 +16,15 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
-  'app.widgets.Base',
-  'app.settings',
-  'app.components.directives.logical-dag'
-])
-
-  .factory('LogicalDagWidgetDefinition', function(BaseWidget, AppsListDataModel) {
-    var LogicalDagWidgetDefinition = BaseWidget.extend({
-      defaults: {
-        title: 'Logical DAG',
-        directive: 'dt-logical-dag',
-        dataModelType: AppsListDataModel,
-        //templateUrl: 'pages/ops/appinstance/widgets/logical-dag/logical-dag.html',
-        attrs: {
-          'app-id': 'appId'
-        }
+angular.module('app.components.directives.logical-dag', [])
+  .directive('dtLogicalDag', function () {
+    return {
+      restrict: 'A',
+      templateUrl: 'pages/ops/appinstance/widgets/logical-dag/logical-dag-directive.html',
+      scope: {
+        appId: '='
+      },
+      link: function postLink(scope, element, attrs) {
       }
-    });
-
-    return LogicalDagWidgetDefinition;
+    };
   });
