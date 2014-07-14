@@ -36,6 +36,7 @@ angular.module('app', [
 
   // pages
   'app.pages.ops',
+  'app.pages.ops.appinstance',
 
   // misc
   'app.settings'
