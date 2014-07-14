@@ -17,9 +17,11 @@
 'use strict';
 
 angular.module('app.components.services.appManager', [
-  'app.components.services.getUri'
+  'app.components.services.getUri',
+  'app.components.services.text',
+  'ui.bootstrap.modal'
 ])
-.service('appManager', function($http, getUri) {
+.service('appManager', function($http, getUri, $modal, DtText) {
   return {
 
     /**
@@ -31,8 +33,27 @@ angular.module('app.components.services.appManager', [
      * @return {Promise}       Returns the promise from the post request.
      */
     endApp: function(signal, app) {
-      var url = getUri.action(signal + 'App', { appId: app.id });
-      return $http.post(url);
+      
+      // Open a modal confirming the command
+      return $modal.open({
+        controller: function($scope, params) {
+          $scope.params = params;
+        },
+        templateUrl: 'components/services/app-manager-service/confirm-end-app-modal.html',
+        resolve: {
+          params: function() {
+            return {
+              title: DtText.get('End this application?'),
+              body: DtText.get('Are you sure you want to ' + signal + ' this application?')
+            };
+          }
+        }
+      }).result
+      // Listen for the confirm/cancel promise
+      .then(function() {
+        var url = getUri.action(signal + 'App', { appId: app.id });
+        return $http.post(url);
+      });
     }
     
   };

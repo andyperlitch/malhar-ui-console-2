@@ -18,13 +18,31 @@
 
 describe('Service: appManager', function () {
 
+  var $q, openDeferred, $modal = {};
+
   // load the service's module
-  beforeEach(module('app.components.services.appManager'));
+  beforeEach(module('app.components.services.appManager', function($provide) {
+    $provide.value('$modal', $modal);
+  }));
 
   // instantiate service
   var appManager;
-  beforeEach(inject(function (_appManager_) {
+  beforeEach(inject(function (_$q_, _appManager_) {
+    
+    // Store $q
+    $q = _$q_;
+
+    // store the actual service
     appManager = _appManager_;
+
+
+
+    // set up mock open method for modal
+    $modal.open = function(option) {
+      openDeferred = $q.defer();
+      return { result: openDeferred.promise };
+    };
+
   }));
 
   var $httpBackend;
@@ -44,12 +62,20 @@ describe('Service: appManager', function () {
 
   describe('the endApp method', function() {
 
-    it('should issue a post request with id of app object passed to it', inject(function(getUri) {
+    it('should issue a post request with id of app object passed to it if the modal promise is resolved', inject(function(getUri) {
       var expected = getUri.action('killApp', { appId: 'application_101010101_0001' })
       $httpBackend.whenPOST(expected).respond({});
       $httpBackend.expectPOST(expected);
       appManager.endApp('kill', { id: 'application_101010101_0001' });
+      openDeferred.resolve();
       $httpBackend.flush();
+    }));
+
+    it('should do nothing if modal promise is rejected', inject(function(getUri) {
+      var expected = getUri.action('killApp', { appId: 'application_101010101_0001' })
+      appManager.endApp('kill', { id: 'application_101010101_0001' });
+      openDeferred.reject();
+      $httpBackend.verifyNoOutstandingRequest();
     }));
 
   });
