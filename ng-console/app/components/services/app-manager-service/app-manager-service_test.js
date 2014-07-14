@@ -18,11 +18,14 @@
 
 describe('Service: appManager', function () {
 
-  var $q, openDeferred, $modal = {};
+  var $q, openDeferred, confirm = function(option) {
+    openDeferred = $q.defer();
+    return openDeferred.promise;
+  };
 
   // load the service's module
   beforeEach(module('app.components.services.appManager', function($provide) {
-    $provide.value('$modal', $modal);
+    $provide.value('confirm', confirm);
   }));
 
   // instantiate service
@@ -34,14 +37,6 @@ describe('Service: appManager', function () {
 
     // store the actual service
     appManager = _appManager_;
-
-
-
-    // set up mock open method for modal
-    $modal.open = function(option) {
-      openDeferred = $q.defer();
-      return { result: openDeferred.promise };
-    };
 
   }));
 

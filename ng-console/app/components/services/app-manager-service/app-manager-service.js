@@ -19,9 +19,9 @@
 angular.module('app.components.services.appManager', [
   'app.components.services.getUri',
   'app.components.services.text',
-  'ui.bootstrap.modal'
+  'app.components.services.confirm'
 ])
-.service('appManager', function($http, getUri, $modal, DtText) {
+.service('appManager', function($http, getUri, $modal, DtText, confirm) {
   return {
 
     /**
@@ -35,20 +35,10 @@ angular.module('app.components.services.appManager', [
     endApp: function(signal, app) {
       
       // Open a modal confirming the command
-      return $modal.open({
-        controller: function($scope, params) {
-          $scope.params = params;
-        },
-        templateUrl: 'components/services/app-manager-service/confirm-end-app-modal.html',
-        resolve: {
-          params: function() {
-            return {
-              title: DtText.get('End this application?'),
-              body: DtText.get('Are you sure you want to ' + signal + ' this application?')
-            };
-          }
-        }
-      }).result
+      return confirm({
+        title: DtText.get('End this application?'),
+        body: DtText.get('Are you sure you want to ' + signal + ' this application?')
+      })
       // Listen for the confirm/cancel promise
       .then(function() {
         var url = getUri.action(signal + 'App', { appId: app.id });
