@@ -20,22 +20,18 @@ angular.module('app.components.directives.text', ['app.components.services.text'
   .directive('dtText', function (DtText) {
     return {
       restrict: 'A',
-      scope: {
-        key: '@dtText'
-      },
-      link: function postLink(scope, element) {
-        element.text(DtText.get(scope.key));
+      scope: false,
+      link: function postLink(scope, element, attrs) {
+        element.text(DtText.get(attrs.dtText));
       }
     };
   })
   .directive('dtTextTitle', function(DtText) {
     return {
       restrict: 'A',
-      scope: {
-        key: '@dtTextTitle'
-      },
-      link: function postLink(scope, element) {
-        element.attr('title', DtText.get(scope.key));
+      scope: false,
+      link: function postLink(scope, element, attrs) {
+        element.attr('title', DtText.get(attrs.dtTextTitle));
       }
     };
   });

@@ -55,6 +55,10 @@ describe('Module: text-directives', function () {
       expect(element.text()).toEqual('this is some text');
     });
 
+    it('should not have an isoScope', function() {
+      expect(isoScope).toBeUndefined();
+    });
+
   });
 
   describe('Directive: dtTextTitle', function () {
@@ -78,6 +82,10 @@ describe('Module: text-directives', function () {
 
     it('should fill the title attribute of the element with the text returned by the get function', function() {
       expect(element.attr('title')).toEqual('how about some text');
+    });
+
+    it('should not have an isoScope', function() {
+      expect(isoScope).toBeUndefined();
     });
 
   });

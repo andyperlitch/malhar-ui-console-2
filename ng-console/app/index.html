@@ -30,7 +30,7 @@
             <a class="navbar-brand" href="#">DataTorrent</a>
           </div>
           <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-left">
+            <ul class="nav navbar-nav navbar-left visible-xs-block">
               <li class="dropdown">
                 <a data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -47,9 +47,9 @@
                 </ul>
 
               </li>
-              <li data-match-route="/config"><a href="#/config">Configuration</a></li>
-              <li data-match-route="/dev"><a href="#/dev">Development</a></li>
-              <li data-match-route="/ops"><a href="#/ops">Operations</a></li>
+              <li data-match-route="/config"><a href="#/config" dt-text-title="Configuration" dt-text="Configuration"></a></li>
+              <li data-match-route="/dev"><a href="#/dev" dt-text-title="Development" dt-text="Development"></a></li>
+              <li data-match-route="/ops"><a href="#/ops" dt-text-title="Operations" dt-text="Operations"></a></li>
             </ul>
             <!-- <form class="navbar-form navbar-right">
               <input type="text" class="form-control" placeholder="Search...">
@@ -58,21 +58,50 @@
         </div>
       </div>
     </div>
+    <table class="main-console-layout">
+      <tr>
+        <!-- main side nav -->
+        <td class="main-side-nav" bs-navbar>
+          <ul>
+            <li data-match-route="/config">
+              <a href="#/config">
+                <span class="nav-text">Configuration</span>
+                <span class="glyphicon nav-icon glyphicon-check"></span>
+              </a>
+            </li>
+            <li data-match-route="/dev">
+              <a href="#/dev">
+                <span class="nav-text">Development</span>
+                <span class="glyphicon nav-icon glyphicon-wrench"></span>
+              </a>
+            </li>
+            <li data-match-route="/ops">
+              <a href="#/ops">
+                <span class="nav-text">Operations</span>
+                <span class="glyphicon nav-icon glyphicon-cog"></span>
+              </a>
+            </li>
+          </ul>
+        </td>
 
-    <!-- breadcrumbs -->
-    <div class="container-fluid">
-      <div class="row">
-        <ol class="ab-nav breadcrumb" id="breadcrumbs-top">
-          <li ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path" ng-class="{ active: $last }">
-            <a ng-if="!$last" ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label" class="margin-right-xs"></a>
-            <span ng-if="$last" ng-bind="breadcrumb.label"></span>
-          </li>
-        </ol>
-      </div>
-    </div>
+        <td class="main-body-content">
+          <!-- breadcrumbs -->
+          <div class="container-fluid">
+            <div class="row">
+              <ol class="ab-nav breadcrumb" id="breadcrumbs-top">
+                <li ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path" ng-class="{ active: $last }">
+                  <a ng-if="!$last" ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label" class="margin-right-xs"></a>
+                  <span ng-if="$last" ng-bind="breadcrumb.label"></span>
+                </li>
+              </ol>
+            </div>
+          </div>
 
-    <!-- main view area -->
-    <div class="container-fluid" ng-view=""></div>
+          <!-- main view area -->
+          <div class="container-fluid" ng-view=""></div>
+        </td>
+      </tr>
+    </table>
     <script>
 
     // @see http://stackoverflow.com/questions/22199564/chrome-truncates-error-messages-and-adds-omitted-in-window-onerror/22218280#22218280
