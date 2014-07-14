@@ -19,7 +19,6 @@
 angular.module('app.components.resources.Base', [
   'underscore',
   'app.components.services.webSocket',
-  'restangular',
   'app.components.services.getUri',
   'app.components.services.extend'
 ])

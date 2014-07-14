@@ -41,9 +41,8 @@ angular.module('app', [
   // misc
   'app.settings'
 ])
-.config(function (settings, webSocketProvider, $routeProvider, RestangularProvider) {
+.config(function (settings, webSocketProvider, $routeProvider) {
   webSocketProvider.setWebSocketURL('ws://node0.morado.com:9090/pubsub');
-  RestangularProvider.setBaseUrl('/ws/' + settings.GATEWAY_API_VERSION);
 
   // Catchall route
   $routeProvider
