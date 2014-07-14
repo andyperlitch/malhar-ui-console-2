@@ -36,6 +36,7 @@ angular.module('app.components.filters.byte', [])
     }
     var precision = 1;
     level = level || 'b';
+    level = (level + '').toLowerCase();
     if (!levels.hasOwnProperty(level)) {
       throw new TypeError('byteFormatter 2nd argument must be one of the following: "b","kb","mb","gb","tb"');
     }
