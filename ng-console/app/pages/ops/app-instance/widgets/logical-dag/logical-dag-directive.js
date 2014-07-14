@@ -20,7 +20,7 @@ angular.module('app.components.directives.logical-dag', [])
   .directive('dtLogicalDag', function () {
     return {
       restrict: 'A',
-      templateUrl: 'pages/ops/appinstance/widgets/logical-dag/logical-dag-directive.html',
+      templateUrl: 'pages/ops/app-instance/widgets/logical-dag/logical-dag-directive.html',
       scope: {
         appId: '='
       },

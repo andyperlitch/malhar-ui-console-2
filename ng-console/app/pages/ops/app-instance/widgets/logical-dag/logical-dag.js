@@ -28,7 +28,6 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
         title: 'Logical DAG',
         directive: 'dt-logical-dag',
         dataModelType: AppsListDataModel,
-        //templateUrl: 'pages/ops/appinstance/widgets/logical-dag/logical-dag.html',
         attrs: {
           'app-id': 'appId'
         }

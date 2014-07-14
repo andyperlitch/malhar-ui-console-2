@@ -48,8 +48,7 @@ angular.module('app.pages.ops.appinstance', [
 
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
-      new LogicalDagWidgetDefinition({ name: 'LogicalDAG' }),
-      new AppsListWidget({ name: 'AppList' })
+      new LogicalDagWidgetDefinition({ name: 'LogicalDAG' })
     ];
 
     var defaultWidgets = _.clone(widgetDefinitions);
