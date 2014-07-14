@@ -17,7 +17,7 @@
 
 describe('Factory: confirm', function () {
 
-  var deferred, $modal = {};
+  var deferred, $modal = {}, options;
 
   // load the service's module
   beforeEach(module('app.components.services.confirm', function($provide) {
@@ -29,7 +29,8 @@ describe('Factory: confirm', function () {
   beforeEach(inject(function (_confirm_, $q) {
     confirm = _confirm_;
 
-    $modal.open = function(options) {
+    $modal.open = function(o) {
+      options = o;
       deferred = $q.defer();
       return { result: deferred.promise };
     };
@@ -47,6 +48,13 @@ describe('Factory: confirm', function () {
     expect(res === deferred.promise).toEqual(true);
   });
 
+  it('should set params as the passed parameters', function() {
+    var params = {
+      title: 'test'
+    };
+    confirm(params);
+    expect(options.resolve.params()).toEqual(params);
+  });
 
 });
 
