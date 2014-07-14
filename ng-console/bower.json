@@ -20,9 +20,10 @@
     "angular-mocks": "~1.2.19"
   },
   "resolutions": {
-    "angular": "~1.2.19",
     "bootstrap": "~3.2.0",
     "underscore": "~1.6.0",
-    "jquery-ui": ">=1.11.0"
+    "jquery-ui": ">=1.11.0",
+    "angular": "~1.2.19",
+    "jquery": "~2.0.3"
   }
 }
