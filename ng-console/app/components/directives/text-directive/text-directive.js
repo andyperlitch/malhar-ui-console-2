@@ -27,4 +27,15 @@ angular.module('app.components.directives.text', ['app.components.services.text'
         element.text(DtText.get(scope.key));
       }
     };
+  })
+  .directive('dtTextTitle', function(DtText) {
+    return {
+      restrict: 'A',
+      scope: {
+        key: '@dtTextTitle'
+      },
+      link: function postLink(scope, element) {
+        element.attr('title', DtText.get(scope.key));
+      }
+    };
   });

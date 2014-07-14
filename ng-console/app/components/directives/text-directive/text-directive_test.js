@@ -14,3 +14,72 @@
  * limitations under the License.
  */
 
+'use strict';
+
+describe('Module: text-directives', function () {
+
+  var element, scope, rootScope, isoScope, compile, mockText;
+
+  // load the directive's module
+  beforeEach(module('app.components.directives.text', function($provide) {
+
+    mockText = {
+      get: function(key) {
+        return key + ' some text';
+      }
+    };
+
+    // Inject dependencies like this:
+    $provide.value('DtText', mockText);
+
+  }));
+
+  describe('Directive: dtText', function() {
+
+    beforeEach(inject(function ($compile, $rootScope) {
+      // Cache these for reuse    
+      rootScope = $rootScope;
+      compile = $compile;
+
+      // Set up the outer scope
+      scope = $rootScope.$new();
+
+      // Define and compile the element
+      element = angular.element('<div dt-text="this is"></div>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();
+    }));
+
+    it('should fill the text of the element with what is returned by the get function', function() {
+      expect(element.text()).toEqual('this is some text');
+    });
+
+  });
+
+  describe('Directive: dtTextTitle', function () {
+
+    beforeEach(inject(function ($compile, $rootScope) {
+      // Cache these for reuse    
+      rootScope = $rootScope;
+      compile = $compile;
+
+      // Other setup, e.g. helper functions, etc.
+
+      // Set up the outer scope
+      scope = $rootScope.$new();
+
+      // Define and compile the element
+      element = angular.element('<div dt-text-title="how about"></div>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();
+    }));
+
+    it('should fill the title attribute of the element with the text returned by the get function', function() {
+      expect(element.attr('title')).toEqual('how about some text');
+    });
+
+  });
+
+});
