@@ -18,6 +18,7 @@
 .dt-table .table {
     line-height: 1;
     font-size: @dt-table-font-size;
+    margin-bottom: 0;
 }
 .dt-table .table th, .dt-table .table td {
     padding: 3px;
@@ -38,11 +39,7 @@
     border-width: 1px;
 }
 .scroller-width-transition() {
-    -webkit-transition: width 200ms linear;
-    -moz-transition: width 200ms linear;
-    -ms-transition: width 200ms linear;
-    -o-transition: width 200ms linear;
-    transition: width 200ms linear;
+    .transition(width 200ms linear);
 }
 .mlhr-table-scroller-wrapper {
     .scroller-width-transition();
