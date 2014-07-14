@@ -22,7 +22,8 @@
 
 angular.module('app.pages.ops.appinstance', [
   'app.pages.ops.widgets.ClusterMetrics',
-  'app.pages.ops.widgets.AppsList'
+  'app.pages.ops.widgets.AppsList',
+  'app.pages.ops.appinstance.widgets.LogicalDag'
 ])
 
 // Route
@@ -36,22 +37,23 @@ angular.module('app.pages.ops.appinstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget) {
+  .controller('AppInstanceCtrl', function ($scope, _, LogicalDagWidgetDefinition, ClusterMetricsWidget, AppsListWidget) {
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+      new LogicalDagWidgetDefinition({ name: 'LogicalDAG' }),
       new AppsListWidget({ name: 'AppList' })
     ];
 
     var defaultWidgets = _.clone(widgetDefinitions);
 
     $scope.dashboardOptions = {
-      storage: localStorage,
+      //storage: localStorage,
       storageKey: 'dashboard.ops',
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
-        { title: 'default', active: true , defaultWidgets: defaultWidgets },
+        { title: 'default', active: true , defaultWidgets: defaultWidgets }
       ]
     };
 
