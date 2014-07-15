@@ -41,72 +41,73 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
-    // Project settings
-    yeoman: {
-      // configurable paths
-      app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
+    // Add vendor prefixed styles
+    autoprefixer: {
+      options: {
+        browsers: ['last 1 version']
+      },
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '.tmp/styles/',
+          src: '{,*/}*.css',
+          dest: '.tmp/styles/'
+        }]
+      }
+    },
+    
+    // Automatically inject Bower components into the app
+    'bower-install': {
+      app: {
+        html: '<%= yeoman.app %>/index.html',
+        ignorePath: '<%= yeoman.app %>/',
+        // Exclude css files when included with less
+        exclude: ['bower_components/bootstrap/dist/css/bootstrap.css']
+      },
     },
 
-    // Watches files for changes and runs tasks based on the changed files
-    watch: {
-      js: {
-        files: appCodeFiles,
-        tasks: ['newer:jshint:all'],
-        options: {
-          livereload: true
-        }
-      },
-      // jsTest: {
-      //   files: ['test/spec/{,*/}*.js'],
-      //   tasks: ['karma']
-      // },
-      less: {
-        files: [
-          '<%= yeoman.app %>/styles/*.less',
-          '<%= yeoman.app %>/styles/themes/*.less',
-          '<%= yeoman.app %>/components/**/*.less',
-          '<%= yeoman.app %>/pages/**/*.less'
-        ],
-        tasks: ['concat:less','less:development']
-      },
-      html2js: {
-        files: [
-          '<%= yeoman.app %>/components/**/*.html',
-          '<%= yeoman.app %>/pages/**/*.html'
-        ],
-        tasks: ['html2js:development']
-      },
-      gruntfile: {
-        files: ['Gruntfile.js']
-      },
-      livereload: {
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        },
-        files: [
-          '<%= yeoman.app %>/{,*/}*.html',
-          '.tmp/styles/main.css',
-          '.tmp/templates.js',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
+    // Replace Google CDN references
+    cdnify: {
+      dist: {
+        html: ['<%= yeoman.dist %>/*.html']
       }
     },
 
-    html2js: {
-      options: {
-        base: 'app'
+    // Empties folders to start fresh
+    clean: {
+      dist: {
+        files: [{
+          dot: true,
+          src: [
+            '.tmp',
+            '<%= yeoman.dist %>/*',
+            '!<%= yeoman.dist %>/.git*'
+          ]
+        }]
       },
-      development: {
-        options: {
-          module: 'templates-main'
-        },
-        src: [
-          '<%= yeoman.app %>/components/{,*/}*.html',
-          '<%= yeoman.app %>/pages/{,*/}*.html'
-        ],
-        dest: '.tmp/templates.js'
-      },
+      server: '.tmp'
+    },
+
+    concat: {
+      less: {
+        src: ['<%= yeoman.app %>/styles/main.less', '<%= yeoman.app %>/styles/themes/<%= less.theme %>.less', '<%= yeoman.app %>/styles/theme-overrides.less'],
+        dest: '.tmp/styles/main.less'
+      }
+    },
+
+    // Run some tasks in parallel to speed up the build process
+    concurrent: {
+      server: [
+        // 'less:dev'
+      ],
+      test: [
+        // 'compass'
+      ],
+      dist: [
+        // 'compass:dist',
+        'imagemin',
+        'svgmin'
+      ]
     },
 
     // The actual grunt server settings
@@ -152,204 +153,10 @@ module.exports = function (grunt) {
           ]
         }
       },
-      test: {
-        options: {
-          port: 9001,
-          base: [
-            '.tmp',
-            'test',
-            '<%= yeoman.app %>'
-          ]
-        }
-      },
       dist: {
         options: {
           base: '<%= yeoman.dist %>'
         }
-      },
-      coverage: {
-        options: {
-          base: 'coverage/',
-          port: 5555,
-          keepalive: true
-        }
-      }
-    },
-
-    // Make sure code styles are up to par and there are no obvious mistakes
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
-      },
-      all: appCodeFiles.concat('Gruntfile.js'),
-      test: {
-        options: {
-          jshintrc: 'test/.jshintrc'
-        },
-        src: testCodeFiles
-      }
-    },
-
-    // Empties folders to start fresh
-    clean: {
-      dist: {
-        files: [{
-          dot: true,
-          src: [
-            '.tmp',
-            '<%= yeoman.dist %>/*',
-            '!<%= yeoman.dist %>/.git*'
-          ]
-        }]
-      },
-      server: '.tmp'
-    },
-
-    // Add vendor prefixed styles
-    autoprefixer: {
-      options: {
-        browsers: ['last 1 version']
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
-      }
-    },
-
-    // Automatically inject Bower components into the app
-    'bower-install': {
-      app: {
-        html: '<%= yeoman.app %>/index.html',
-        ignorePath: '<%= yeoman.app %>/',
-        // Exclude css files when included with less
-        exclude: ['bower_components/bootstrap/dist/css/bootstrap.css']
-      },
-    },
-
-    // Compile less commands
-    less: {
-      theme: theme,
-      local: {
-        options: {
-          paths: ['<%= yeoman.app %>/styles', '<%= yeoman.app %>/bower_components'],
-          sourceMap: true
-        },
-        files: {
-          '<%= yeoman.app %>/styles/main.css': ['.tmp/styles/main.less']
-        }
-      },
-      development: {
-        options: {
-          paths: ['<%= yeoman.app %>/styles'],
-          sourceMap: true
-        },
-        files: {
-          '.tmp/styles/main.css': ['.tmp/styles/main.less']
-        }
-      },
-      production: {
-        options: {
-          paths: ['<%= yeoman.app %>/styles']
-        },
-        files: {
-          '.tmp/styles/main.css': ['.tmp/styles/main.less']
-        }
-      }
-    },
-
-    // Renames files for browser caching purposes
-    rev: {
-      dist: {
-        files: {
-          src: [
-            '<%= yeoman.dist %>/scripts/{,*/}*.js',
-            '<%= yeoman.dist %>/styles/{,*/}*.css',
-            '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.dist %>/styles/fonts/*'
-          ]
-        }
-      }
-    },
-
-    // Reads HTML for usemin blocks to enable smart builds that automatically
-    // concat, minify and revision files. Creates configurations in memory so
-    // additional tasks can operate on them
-    useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
-      options: {
-        dest: '<%= yeoman.dist %>'
-      }
-    },
-
-    // Performs rewrites based on rev and the useminPrepare configuration
-    usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-      options: {
-        assetsDirs: ['<%= yeoman.dist %>']
-      }
-    },
-
-    // The following *-min tasks produce minified files in the dist folder
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.{png,jpg,jpeg,gif}',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.svg',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
-    htmlmin: {
-      dist: {
-        options: {
-          collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          removeCommentsFromCDATA: true,
-          removeOptionalTags: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>',
-          src: ['*.html', 'views/{,*/}*.html'],
-          dest: '<%= yeoman.dist %>'
-        }]
-      }
-    },
-
-    // Allow the use of non-minsafe AngularJS files. Automatically makes it
-    // minsafe compatible so Uglify does not destroy the ng references
-    ngmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/concat/scripts',
-          src: '*.js',
-          dest: '.tmp/concat/scripts'
-        }]
-      }
-    },
-
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
       }
     },
 
@@ -385,21 +192,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Run some tasks in parallel to speed up the build process
-    concurrent: {
-      server: [
-        // 'less:development'
-      ],
-      test: [
-        // 'compass'
-      ],
-      dist: [
-        // 'compass:dist',
-        'imagemin',
-        'svgmin'
-      ]
-    },
-
     // By default, your `index.html`'s <!-- Usemin block --> will take care of
     // minification. These next options are pre-configured if you do not wish
     // to use the Usemin blocks.
@@ -422,20 +214,84 @@ module.exports = function (grunt) {
     //     }
     //   }
     // },
-    concat: {
-      less: {
-        src: ['<%= yeoman.app %>/styles/main.less', '<%= yeoman.app %>/styles/themes/<%= less.theme %>.less', '<%= yeoman.app %>/styles/theme-overrides.less'],
-        dest: '.tmp/styles/main.less'
+
+    html2js: {
+      options: {
+        base: 'app'
+      },
+      dev: {
+        options: {
+          module: 'templates-main'
+        },
+        src: [
+          '<%= yeoman.app %>/components/{,*/}*.html',
+          '<%= yeoman.app %>/pages/{,*/}*.html'
+        ],
+        dest: '.tmp/templates.js'
+      },
+      dist: {
+        options: {
+          module: 'templates-main'
+        },
+        src: [
+          '<%= yeoman.app %>/components/{,*/}*.html',
+          '<%= yeoman.app %>/pages/{,*/}*.html'
+        ],
+        dest: '.tmp/templates.js'
+      },
+    },
+
+    htmlmin: {
+      dist: {
+        options: {
+          collapseWhitespace: true,
+          collapseBooleanAttributes: true,
+          removeCommentsFromCDATA: true,
+          removeOptionalTags: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.dist %>',
+          src: ['*.html', 'views/{,*/}*.html'],
+          dest: '<%= yeoman.dist %>'
+        }]
       }
     },
 
-    // Test settings
+    // The following *-min tasks produce minified files in the dist folder
+    imagemin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/images',
+          src: '{,*/}*.{png,jpg,jpeg,gif}',
+          dest: '<%= yeoman.dist %>/images'
+        }]
+      }
+    },
+
+    // Make sure code styles are up to par and there are no obvious mistakes
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc',
+        reporter: require('jshint-stylish')
+      },
+      all: appCodeFiles.concat('Gruntfile.js'),
+      test: {
+        options: {
+          jshintrc: 'test/.jshintrc'
+        },
+        src: testCodeFiles
+      }
+    },
+
     // Test settings
     karma: {
       unit: {
         configFile: './test/karma-unit.conf.js',
         autoWatch: false,
-        singleRun: true
+        singleRun: true,
+        browsers: ['PhantomJS', 'Firefox']
       },
       coverage: {
         configFile: './test/karma-coverage.conf.js',
@@ -464,7 +320,149 @@ module.exports = function (grunt) {
       e2e_auto: {
         configFile: './test/karma-e2e.conf.js'
       }
+    },
+
+    
+    // Compile less commands
+    less: {
+      theme: theme,
+      local: {
+        options: {
+          paths: ['<%= yeoman.app %>/styles', '<%= yeoman.app %>/bower_components'],
+          sourceMap: true
+        },
+        files: {
+          '<%= yeoman.app %>/styles/main.css': ['.tmp/styles/main.less']
+        }
+      },
+      dev: {
+        options: {
+          paths: ['<%= yeoman.app %>/styles'],
+          sourceMap: true
+        },
+        files: {
+          '.tmp/styles/main.css': ['.tmp/styles/main.less']
+        }
+      },
+      dist: {
+        options: {
+          paths: ['<%= yeoman.app %>/styles']
+        },
+        files: {
+          '.tmp/styles/main.css': ['.tmp/styles/main.less']
+        }
+      }
+    },
+
+    // Allow the use of non-minsafe AngularJS files. Automatically makes it
+    // minsafe compatible so Uglify does not destroy the ng references
+    ngmin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '.tmp/concat/scripts',
+          src: '*.js',
+          dest: '.tmp/concat/scripts'
+        }]
+      }
+    },
+
+    // Renames files for browser caching purposes
+    rev: {
+      dist: {
+        files: {
+          src: [
+            '<%= yeoman.dist %>/scripts/{,*/}*.js',
+            '<%= yeoman.dist %>/styles/{,*/}*.css',
+            '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+            '<%= yeoman.dist %>/styles/fonts/*'
+          ]
+        }
+      }
+    },
+
+    svgmin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/images',
+          src: '{,*/}*.svg',
+          dest: '<%= yeoman.dist %>/images'
+        }]
+      }
+    },
+
+    // Reads HTML for usemin blocks to enable smart builds that automatically
+    // concat, minify and revision files. Creates configurations in memory so
+    // additional tasks can operate on them
+    useminPrepare: {
+      html: '<%= yeoman.app %>/index.html',
+      options: {
+        dest: '<%= yeoman.dist %>'
+      }
+    },
+
+    // Performs rewrites based on rev and the useminPrepare configuration
+    usemin: {
+      html: ['<%= yeoman.dist %>/{,*/}*.html'],
+      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+      options: {
+        assetsDirs: ['<%= yeoman.dist %>']
+      }
+    },
+
+    // Watches files for changes and runs tasks based on the changed files
+    watch: {
+      js: {
+        files: appCodeFiles,
+        tasks: ['newer:jshint:all'],
+        options: {
+          livereload: true
+        }
+      },
+      // jsTest: {
+      //   files: ['test/spec/{,*/}*.js'],
+      //   tasks: ['karma']
+      // },
+      less: {
+        files: [
+          '<%= yeoman.app %>/styles/*.less',
+          '<%= yeoman.app %>/styles/themes/*.less',
+          '<%= yeoman.app %>/components/**/*.less',
+          '<%= yeoman.app %>/pages/**/*.less'
+        ],
+        tasks: ['concat:less','less:dev']
+      },
+      html2js: {
+        files: [
+          '<%= yeoman.app %>/components/**/*.html',
+          '<%= yeoman.app %>/pages/**/*.html'
+        ],
+        tasks: ['html2js:dev']
+      },
+      gruntfile: {
+        files: ['Gruntfile.js']
+      },
+      livereload: {
+        options: {
+          livereload: '<%= connect.options.livereload %>'
+        },
+        files: [
+          '<%= yeoman.app %>/{,*/}*.html',
+          '.tmp/styles/main.css',
+          '.tmp/templates.js',
+          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+        ]
+      }
+    },
+
+    // Project settings
+    yeoman: {
+      // configurable paths
+      app: require('./bower.json').appPath || 'app',
+      dist: 'dist'
     }
+
   });
 
   
@@ -484,10 +482,10 @@ module.exports = function (grunt) {
       'concat:less',
 
       // compiles .tmp/styles/main.less, with debug enabled
-      'less:development',
+      'less:dev',
 
       // converts template files to .tmp/scripts/templates.js, angular.module('templates-main')
-      'html2js:development',
+      'html2js:dev',
 
       // COMMENTED OUT UNTIL PROXY CONFIG CAN BE WORKED OUT
       // --------------------------------------------------
@@ -516,31 +514,40 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', [
-    'clean:server',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma:unit',
-    'karma:midway',
-    'karma:e2e'
+    'karma:unit'
   ]);
 
   grunt.registerTask('build', [
+    // Remove everything from .tmp folder and dist folder
     'clean:dist',
-    'bower-install',
-    'useminPrepare',
-    'concurrent:dist',
-    // Add vendor prefixes to css properties
+
+    // concatenates main and theme less files, outputs to .tmp/styles/main.less
+    'concat:less',
+
+    // compiles .tmp/styles/main.less into .tmp/styles/main.css, with debug enabled
+    'less:dist',
+
+    // Add vendor prefixes to css properties (.css files in .tmp/styles/)
     'autoprefixer',
-    'concat',
-    'ngmin',
-    'copy:dist',
-    'cdnify',
-    'cssmin',
-    'uglify',
-    'rev',
+
+    // converts template files to .tmp/scripts/templates.js, angular.module('templates-main')
+    'html2js:dist',
+
+    // Prepares usemin blocks
+    'useminPrepare',
     'usemin',
-    'htmlmin'
+
+    // Compresses images/svg
+    'concurrent:dist',
+
+    // 'ngmin',
+    // 'copy:dist',
+    // 'cdnify',
+    // 'cssmin',
+    // 'uglify',
+    // 'rev',
+    
+    // 'htmlmin'
   ]);
 
   grunt.registerTask('default', [
