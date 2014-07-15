@@ -16,8 +16,17 @@
 
 'use strict';
 
-angular.module('app')
+angular.module('app.components.filters.timeSince', [])
   .filter('timeSince', function () {
+
+    var milli_per_second = 1000;
+    var milli_per_minute = milli_per_second * 60;
+    var milli_per_hour = milli_per_minute * 60;
+    var milli_per_day = milli_per_hour * 24;
+    var milli_per_week = milli_per_day * 7;
+    var milli_per_month = milli_per_week * 4;
+    var milli_per_year = milli_per_day * 365;
+
     return function timeSince(timeStamp, options) {
       if (typeof timeStamp === 'object') {
         options = timeStamp;
@@ -37,13 +46,6 @@ angular.module('app')
       var separator = ', ';
       var level = 0;
       var max_levels = options.max_levels;
-      var milli_per_second = 1000;
-      var milli_per_minute = milli_per_second * 60;
-      var milli_per_hour = milli_per_minute * 60;
-      var milli_per_day = milli_per_hour * 24;
-      var milli_per_week = milli_per_day * 7;
-      var milli_per_month = milli_per_week * 4;
-      var milli_per_year = milli_per_day * 365;
 
       if (options.unixUptime) {
         var days = Math.floor(remaining / milli_per_day);

@@ -14,3 +14,35 @@
  * limitations under the License.
  */
 
+'use strict';
+
+describe('Filter: percent2cpu', function() {
+
+  var f;
+
+  beforeEach(module('app.components.filters.percent2cpu'));
+
+  beforeEach(inject(function(percent2cpuFilter) {
+    f = percent2cpuFilter;
+  }));
+
+  it('should take a percentage as a first argument and return a string', function() {
+    expect(typeof f(0.1)).toEqual('string');
+  });
+
+  it('should convert to CPU count to .01 precision', function() {
+    expect(f(110)).toEqual('1.10');
+  });
+
+  it('should be able to take a string', function() {
+    expect(f('126.1')).toEqual('1.26');
+    expect(f('110')).toEqual('1.10');
+  });
+
+  it('should return "-" if the value passed is not a parseable number', function() {
+    expect(f('not_number') === '-').toEqual(true);
+    expect(f('') === '-').toEqual(true);
+    expect(f() === '-').toEqual(true);
+  });
+
+});

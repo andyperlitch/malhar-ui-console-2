@@ -14,3 +14,36 @@
  * limitations under the License.
  */
 
+'use strict';
+
+describe('Filter: commaGroups', function() {
+  
+  var f;
+
+  beforeEach(module('app.components.filters.commaGroups'));
+
+  beforeEach(inject(function(commaGroupsFilter) {
+    f = commaGroupsFilter;
+  }));
+
+  it('should exist', function() {
+    expect(typeof f).toEqual('function');
+  });
+
+  it('should format number strings with commas every three places', function(){
+    expect( f('1000000000')  === '1,000,000,000').toEqual(true);
+  });
+
+  it('should accept a number as an argument', function() {
+    expect( f(1000000000)  === '1,000,000,000').toEqual(true);
+  });
+
+  it('should not format numbers less than 1000', function() {
+    expect( f('893')  === '893').toEqual(true);
+  });
+
+  it('should return "-" if nothing is passed to it', function() {
+    expect( f()  === '-').toEqual(true);
+  });
+
+});
