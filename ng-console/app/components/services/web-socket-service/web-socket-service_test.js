@@ -17,7 +17,7 @@
 
 describe('Service: webSocket', function () {
 
-  var webSocket, webSocketObject;
+  var webSocket, webSocketObject, notificationService;
 
   beforeEach(module('app.components.services.webSocket', function(webSocketProvider) {
     webSocketObject = {
@@ -27,8 +27,9 @@ describe('Service: webSocket', function () {
     webSocketProvider.setWebSocketObject(webSocketObject);
   }));
 
-  beforeEach(inject(function (_webSocket_) {
+  beforeEach(inject(function (_webSocket_, _notificationService_) {
     webSocket = _webSocket_;
+    notificationService = _notificationService_;
   }));
 
   it('should send message when WebSocket connection is opened', inject(function () {
@@ -89,6 +90,31 @@ describe('Service: webSocket', function () {
 
     expect(listener1.callCount).toEqual(1);
     expect(listener2.callCount).toEqual(2);
+  });
+
+  it('should notify on WebSocket onopen', function () {
+    expect(webSocketObject.onopen).toBeDefined();
+    spyOn(notificationService, 'notify');
+    webSocketObject.onopen();
+    expect(notificationService.notify).toHaveBeenCalled();
+  });
+
+  it('should notify on WebSocket onclose', function () {
+    expect(webSocketObject.onclose).toBeDefined();
+    spyOn(notificationService, 'notify');
+    webSocketObject.onclose();
+    expect(notificationService.notify).toHaveBeenCalled();
+  });
+
+  it('should notify on WebSocket onerror', function () {
+    expect(webSocketObject.onerror).toBeDefined();
+    spyOn(notificationService, 'notify');
+    webSocketObject.onerror();
+    expect(notificationService.notify).toHaveBeenCalled();
+  });
+
+  it('should unsubscribe on scope destroy', function () {
+    //TODO
   });
 
 });
