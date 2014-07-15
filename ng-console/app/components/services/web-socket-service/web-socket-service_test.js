@@ -53,4 +53,19 @@ describe('Service: webSocket', function () {
     expect(listener2).toHaveBeenCalledWith({ value: 50 });
   });
 
+  it('should send message when WebSocket connection is opened', inject(function ($rootScope) {
+    expect(webSocketObject.onopen).toBeDefined();
+
+    spyOn(webSocketObject, 'send');
+
+    webSocket.send({ value: 100 });
+
+    expect(webSocketObject.send).not.toHaveBeenCalled(); // no connection yet
+
+    webSocketObject.onopen();
+    $rootScope.$apply(); // required for AngularJS promise resolution
+
+    expect(webSocketObject.send).toHaveBeenCalled();
+  }));
+
 });
