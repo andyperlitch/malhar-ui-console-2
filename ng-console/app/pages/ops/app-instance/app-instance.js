@@ -37,7 +37,7 @@ angular.module('app.pages.ops.appinstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, ClusterMetricsWidget, AppsListWidget, breadcrumbs) {
+  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, AppInstanceOverviewWidget, AppsListWidget, breadcrumbs) {
 
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
@@ -50,7 +50,7 @@ angular.module('app.pages.ops.appinstance', [
     //}, $scope);
 
     var widgetDefinitions = [
-      new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+      new AppInstanceOverviewWidget({ name: 'Application Overview' }),
       new LogicalDagWidgetDefinition({ name: 'LogicalDAG' })
     ];
 
