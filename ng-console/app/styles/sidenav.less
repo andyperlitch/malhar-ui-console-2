@@ -7,13 +7,14 @@
 .main-side-nav {
 
   .transition(width 300ms ease-in);
-  .transition-delay(1000ms);
   border-right: 1px solid @gray-lighter;
   width: 2em;
 
   &:hover {
+    .transition(width 300ms ease-in @side-nav-open-delay);
     width: @main-side-nav-width;
     > ul > li > a > .nav-text {
+      .transition(left 300ms ease-in @side-nav-open-delay);
       left: 0.5em;
     }
   }
@@ -56,7 +57,6 @@
       left: -13em;
       font-size: @main-side-nav-font-size;
       .transition(left 300ms ease-in);
-      .transition-delay(1000ms);
     }
     .nav-icon {
       position: absolute;
