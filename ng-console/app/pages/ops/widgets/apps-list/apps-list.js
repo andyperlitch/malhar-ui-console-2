@@ -20,6 +20,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
   'app.widgets.Base',
   'app.settings',
   'app.components.filters.byte',
+  'app.components.filters.timeSince',
   'app.components.services.text',
   'app.components.services.appManager',
   'datatorrent.mlhrTable',
