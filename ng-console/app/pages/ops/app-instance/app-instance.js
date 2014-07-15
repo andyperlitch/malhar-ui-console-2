@@ -32,12 +32,15 @@ angular.module('app.pages.ops.appinstance', [
       .when('/ops/apps/:appId', {
         controller: 'AppInstanceCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'Applications'
+        label: 'App Instance'
       });
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, ClusterMetricsWidget, AppsListWidget) {
+  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, ClusterMetricsWidget, AppsListWidget, breadcrumbs) {
+
+    // Set up breadcrumb label
+    breadcrumbs.options['App Instance'] = $routeParams.appId;
     $scope.appId = $routeParams.appId;
 
     //webSocket.subscribe('applications.' + appId, function (data) {

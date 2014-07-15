@@ -31,7 +31,7 @@ angular.module('app.pages.ops', [
     .when('/ops', {
       controller: 'OpsCtrl',
       templateUrl: 'pages/ops/ops.html',
-      label: 'Operations'
+      label: 'operations'
     });
 })
 

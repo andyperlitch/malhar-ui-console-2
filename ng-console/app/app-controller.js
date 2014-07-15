@@ -19,5 +19,9 @@
 angular.module('app')
 
 .controller('AppCtrl', function ($scope,breadcrumbs) {
+  // Initialize options
+  breadcrumbs.options = {};
+
+  // Set to scope
   $scope.breadcrumbs = breadcrumbs;
 });
