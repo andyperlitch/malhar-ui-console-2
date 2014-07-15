@@ -36,7 +36,7 @@ describe('Service: webSocket', function () {
 
     spyOn(webSocketObject, 'send');
 
-    webSocket.send({ value: 100 });
+    webSocket.send({});
 
     expect(webSocketObject.send).not.toHaveBeenCalled(); // no connection yet
 
