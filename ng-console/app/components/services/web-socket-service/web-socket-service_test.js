@@ -31,6 +31,20 @@ describe('Service: webSocket', function () {
     webSocket = _webSocket_;
   }));
 
+  it('should send message when WebSocket connection is opened', inject(function () {
+    expect(webSocketObject.onopen).toBeDefined();
+
+    spyOn(webSocketObject, 'send');
+
+    webSocket.send({});
+
+    expect(webSocketObject.send).not.toHaveBeenCalled(); // no connection yet
+
+    webSocketObject.onopen();
+
+    expect(webSocketObject.send).toHaveBeenCalled();
+  }));
+
   it('should notify subscribers', function () {
     expect(webSocketObject.onmessage).toBeDefined();
 
@@ -53,18 +67,28 @@ describe('Service: webSocket', function () {
     expect(listener2).toHaveBeenCalledWith({ value: 50 });
   });
 
-  it('should send message when WebSocket connection is opened', inject(function () {
-    expect(webSocketObject.onopen).toBeDefined();
+  it('should unsubscribe', function () {
+    expect(webSocketObject.onmessage).toBeDefined();
 
-    spyOn(webSocketObject, 'send');
+    var listener1 = jasmine.createSpy();
+    var listener2 = jasmine.createSpy();
 
-    webSocket.send({ value: 100 });
+    webSocket.subscribe('test', listener1);
+    webSocket.subscribe('test', listener2);
 
-    expect(webSocketObject.send).not.toHaveBeenCalled(); // no connection yet
+    var message = { topic: 'test', data: {} };
+    var event = { data: JSON.stringify(message) };
+    webSocketObject.onmessage(event);
 
-    webSocketObject.onopen();
+    expect(listener1).toHaveBeenCalled();
+    expect(listener2).toHaveBeenCalled();
 
-    expect(webSocketObject.send).toHaveBeenCalled();
-  }));
+    webSocket.unsubscribe('test', listener1);
+
+    webSocketObject.onmessage(event);
+
+    expect(listener1.callCount).toEqual(1);
+    expect(listener2.callCount).toEqual(2);
+  });
 
 });
