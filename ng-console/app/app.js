@@ -30,6 +30,7 @@ angular.module('app', [
   'app.components.filters.percent2cpu',
   'app.components.filters.commaGroups',
   'app.components.filters.byte',
+  'app.components.filters.timeSince',
   'app.components.directives.text',
   'app.components.services.text',
   'app.components.services.extend',
