@@ -31,13 +31,13 @@ angular.module('app', [
   'app.components.filters.commaGroups',
   'app.components.filters.byte',
   'app.components.filters.timeSince',
-  'app.components.directives.text',
-  'app.components.services.text',
+  'app.components.directives.dtText',
+  'app.components.services.dtText',
   'app.components.services.extend',
 
   // pages
   'app.pages.ops',
-  'app.pages.ops.appinstance',
+  'app.pages.ops.appInstance',
 
   // misc
   'app.settings'
