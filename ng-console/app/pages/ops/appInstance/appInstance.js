@@ -36,7 +36,7 @@ angular.module('app.pages.ops.appInstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, AppInstanceOverviewWidget, AppsListWidget, breadcrumbs) {
+  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, AppInstanceOverviewWidgetDef, AppsListWidget, breadcrumbs) {
 
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
@@ -49,7 +49,7 @@ angular.module('app.pages.ops.appInstance', [
     //}, $scope);
 
     var widgetDefinitions = [
-      new AppInstanceOverviewWidget({ name: 'Application Overview' }),
+      new AppInstanceOverviewWidgetDef({ name: 'Application Overview' }),
       new LogicalDagWidgetDefinition({ name: 'LogicalDAG' })
     ];
 

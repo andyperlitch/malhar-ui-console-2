@@ -24,28 +24,40 @@
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
   'app.components.widgets.Base',
+  'app.components.resources.ApplicationModel',
   'app.settings'
 ])
 
 // Widget Data Model
-.factory('AppInstanceOverviewDataModel', function(BaseDataModel) {
+.factory('AppInstanceOverviewDataModel', function(BaseDataModel, ApplicationModel) {
   var AppInstanceOverviewDataModel = BaseDataModel.extend({
+
+    init: function() {
+      this.resource = new ApplicationModel({
+        id: this.widgetScope.appId
+      });
+      this.resource.fetch();
+      this.resource.subscribe(this.widgetScope);
+      this.widgetScope.data = this.resource.data;
+    },
+
+    destroy: function() {
+      this.resource.unsubscribe();
+    }
 
   });
   return AppInstanceOverviewDataModel;
 })
 
 // Widget Definition
-.factory('AppInstanceOverviewWidget', function(BaseWidget, AppInstanceOverviewDataModel) {
-  var AppInstanceOverviewWidget = BaseWidget.extend({
+.factory('AppInstanceOverviewWidgetDef', function(BaseWidget, AppInstanceOverviewDataModel) {
+  var AppInstanceOverviewWidgetDef = BaseWidget.extend({
     defaults: {
       dataModelType: AppInstanceOverviewDataModel,
-      title: 'Application Overview' // default display name (editable by user)
-
-      // templateUrl: 'path/to/template',
-      // directive: 'name-of-directive'
+      title: 'Application Overview',
+      templateUrl: 'pages/ops/appInstance/widgets/AppInstanceOverview/AppInstanceOverview.html'
     }
   });
 
-  return AppInstanceOverviewWidget;
+  return AppInstanceOverviewWidgetDef;
 });
