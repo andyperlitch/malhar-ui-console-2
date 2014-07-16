@@ -14,3 +14,62 @@
  * limitations under the License.
  */
 
+'use strict';
+
+describe('Directive: appIdLink', function () {
+
+  var element, shortElement, scope, rootScope, isoScope, compile;
+
+  beforeEach(function() {
+    // define mock objects here
+  });
+
+  // load the directive's module
+  beforeEach(module('app.components.directives.appIdLink', function($provide) {
+    // Inject dependencies like this:
+    $provide.constant('settings', {
+      pages: {
+        AppInstance: '/app/:appId'
+      }
+    });
+
+  }));
+
+  beforeEach(inject(function ($compile, $rootScope) {
+    // Cache these for reuse    
+    rootScope = $rootScope;
+    compile = $compile;
+
+    // Other setup, e.g. helper functions, etc.
+
+    // Set up the outer scope
+    scope = $rootScope.$new();
+    scope.id = 'application_001_0001';
+
+    // Define and compile the element
+    element = angular.element('<a app-id-link="id"></a>');
+    shortElement = angular.element('<a app-id-link="id" short="true"></a>');
+    element = compile(element)(scope);
+    shortElement = compile(shortElement)(scope);
+    scope.$digest();
+    isoScope = element.isolateScope();
+  }));
+
+  afterEach(function() {
+    // tear down here
+  });
+
+  it('should interpolate AppInstance page route for the href', function() {
+    expect(element.attr('href')).toEqual('#/app/' + scope.id);
+    expect(shortElement.attr('href')).toEqual('#/app/' + scope.id);
+  });
+
+  it('should put the full id in the <a> tag by default', function() {
+    expect(element.text()).toEqual(scope.id);
+  });
+
+  it('should put a shortened id in the <a> tag if short="true"', function() {
+    expect(shortElement.text()).toEqual('0001');
+  });
+
+});

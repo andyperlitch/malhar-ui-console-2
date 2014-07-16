@@ -16,16 +16,27 @@
 
 'use strict';
 
-angular.module('app.components.directives.appIdLink', [])
-  .filter('appIdLink', function () {
-    return function (appId) {
-      var shortId = appId;
-      var parts = appId.split('_');
-      if (parts.length) {
-        shortId = parts[parts.length - 1];
-      }
-      
-      var link = '<a href="#ops/apps/' + appId + '" title="' + appId + '">' + shortId + '</a>';
-      return link;
-    };
-  });
+angular.module('app.components.directives.appIdLink', [
+  'app.components.services.getUri'
+])
+.directive('appIdLink', function (getUri) {
+
+  function link(scope, element) {
+    element.attr('href', getUri.page('AppInstance', { appId: scope.id }) );
+    var display = scope.id;
+    if (scope.short) {
+      var parts = scope.id.split('_');
+      display = parts[parts.length - 1];
+    }
+    element.text(display);
+  }
+
+  return {
+    restrict: 'A',
+    scope: {
+      id: '=appIdLink',
+      short: '=?'
+    },
+    link: link
+  };
+});
