@@ -47,6 +47,10 @@ angular.module('app.components.services.getUri', ['app.settings'])
     topic: function(key, params) {
       var template = settings.topics[key];
       return interpolateParams(template, angular.extend({v: settings.GATEWAY_API_VERSION}, params));
+    },
+    page: function(key, params) {
+      var template = settings.pages[key];
+      return '#' + interpolateParams(template, angular.extend({}, params));
     }
   };
 });

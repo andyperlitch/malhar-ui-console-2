@@ -81,6 +81,10 @@ angular.module('app.settings', [])
 
     },
 
+    pages: {
+      AppInstance              :'/ops/apps/:appId'
+    },
+
     dag: {
       edges: {
         NONE: {

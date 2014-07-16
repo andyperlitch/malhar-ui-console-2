@@ -26,9 +26,9 @@ angular.module('app.pages.ops.appInstance', [
 ])
 
 // Route
-  .config(function($routeProvider) {
+  .config(function($routeProvider, settings) {
     $routeProvider
-      .when('/ops/apps/:appId', {
+      .when(settings.pages.AppInstance, {
         controller: 'AppInstanceCtrl',
         templateUrl: 'pages/ops/ops.html',
         label: 'App Instance'

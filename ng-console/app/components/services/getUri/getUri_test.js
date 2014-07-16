@@ -34,6 +34,10 @@ describe('Service: getUri', function () {
       topics: {
         Test: 'some.topic',
         Test2: 'some.:param.topic'
+      },
+      pages: {
+        Test: '/some/page',
+        Test2: '/some/:param/page'
       }
     });
 
@@ -111,6 +115,22 @@ describe('Service: getUri', function () {
       expect(getUri.topic('Test2', {param: 'xyz'}) === 'some.xyz.topic').toEqual(true);
     });
 
+  });
+
+  describe('the page method', function() {
+    // Test: '/some/page',
+    // Test2: '/some/:param/page'
+    it('should return a string', function() {
+      expect(typeof getUri.page('Test')).toEqual('string');
+    });
+
+    it('should return the page specified, prefixed with a #', function() {
+      expect(getUri.page('Test') === '#/some/page').toEqual(true);
+    });
+
+    it('should interpolate given parameters', function() {
+      expect(getUri.page('Test2', {param: 'xyz'}) === '#/some/xyz/page').toEqual(true);
+    });      
   });
 
 });
