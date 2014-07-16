@@ -19,7 +19,8 @@
 angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
   'app.components.widgets.Base',
   'app.settings',
-  'app.components.directives.logicalDag'
+  'app.components.directives.logicalDag',
+  'app.components.directives.dtSelect'
 ])
 
   .factory('LogicalDagWidgetDefinition', function(BaseWidget, AppsListDataModel) {
