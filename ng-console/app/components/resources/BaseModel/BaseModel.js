@@ -15,6 +15,29 @@
 */
 'use strict';
 
+/**
+ * Base Model
+ *
+ * The base model class for other model resources.
+ * Subclasses can be created with the following:
+ *
+ * ```
+ * angular.module('app.components.resources.MySubModel')
+ * .factory('MySubModel', function(BaseModel) {
+ *   var MySubModel = BaseModel.extend({
+ *   
+ *     urlKey: '[URL_KEY_IN_SETTINGS]',
+ *     
+ *     topicKey: '[TOPIC_KEY_IN_SETTINGS]', // optional
+ *     
+ *     idAttribute: 'myId' // optional: only necessary if resource is  
+ *                         // identified by a key other than "id"
+ *   });
+ *   return MySubModel;
+ * })
+ * ```
+ */
+
 angular.module('app.components.resources.BaseModel', [
   'underscore',
   'app.components.services.getUri',
@@ -32,7 +55,21 @@ angular.module('app.components.resources.BaseModel', [
      * @param  {object} params  Parameters to be used when interpolating url or topic URIs
      */
     constructor: function (params) {
-      this.url = getUri.url(this.urlKey, params);
+
+      var id;
+
+      var argType = typeof params;
+
+      if (argType === 'string' || argType === 'number') {
+        id = params;
+        params = {};
+      }
+
+      if ( typeof params === 'object' && params.hasOwnProperty(this.idAttribute) ) {
+        id = params[this.idAttribute];
+      }
+
+      this.url = getUri.url(this.urlKey, params, id);
       this.data = {};
       if (this.topicKey) {
         this.topic = getUri.topic(this.topicKey, params);
@@ -58,4 +95,4 @@ angular.module('app.components.resources.BaseModel', [
 
   return BaseModel;
 
-})
+});
