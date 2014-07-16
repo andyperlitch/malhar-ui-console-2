@@ -77,4 +77,17 @@ describe('Directive: appState', function () {
     });
   });
 
+  describe('when no state is present', function() {
+    beforeEach(function() {
+      // Define and compile the element
+      element = angular.element('<span app-state></span>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();
+    });
+    it('should put a hyphen in the element', function() {
+      expect(element.html()).toEqual('-');
+    });
+  });
+
 });
