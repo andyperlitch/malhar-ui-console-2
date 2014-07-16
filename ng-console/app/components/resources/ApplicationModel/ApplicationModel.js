@@ -22,15 +22,43 @@
  */
 
 angular.module('app.components.resources.ApplicationModel', [
+  'underscore',
   'app.components.resources.BaseModel'
 ])
-.factory('ApplicationModel', function(BaseModel) {
+.factory('ApplicationModel', function(_, BaseModel) {
 
   var ApplicationModel = BaseModel.extend({
 
     urlKey: 'Application',
     
-    topicKey: 'Application'
+    topicKey: 'Application',
+
+    transformResponse: function(raw, type) {
+      switch(type) {
+
+        case 'subscribe':
+
+          var updates = {};
+
+          // Move attributes to main object where applicable
+          _.each(['recoveryWindowId', 'currentWindowId', 'state'], function(key) {
+              updates[key] = raw[key];
+              delete raw[key];
+          }, this);
+          
+          updates.stats = raw;
+          // var lcState = updates.state.toLowerCase();
+          // if ( lcState === 'running' || lcState === 'accepted' ) {
+          //     updates.elapsedTime = +new Date() - 1 * this.get('startedTime');
+          // }
+          return updates;
+
+        default: 
+          
+          return raw;
+
+      }
+    }
 
   });
 

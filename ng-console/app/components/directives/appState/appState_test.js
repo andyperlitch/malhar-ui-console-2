@@ -20,6 +20,8 @@ describe('Directive: appState', function () {
 
   var element, scope, rootScope, isoScope, compile;
 
+  beforeEach(module('templates-main'));
+
   beforeEach(function() {
     // define mock objects here
   });
@@ -31,7 +33,7 @@ describe('Directive: appState', function () {
 
   }));
 
-  beforeEach(inject(function ($compile, $rootScope) {
+  beforeEach(inject(function ($compile, $rootScope, $templateCache) {
     // Cache these for reuse    
     rootScope = $rootScope;
     compile = $compile;
@@ -73,8 +75,56 @@ describe('Directive: appState', function () {
     });
     it('should add a <small> with the final status', function() {
       expect(element.find('small').length).toEqual(1);
-      expect(element.find('small').text()).toEqual('FAILED');
+      expect(element.find('small').text()).toEqual('(FAILED)');
     });
+  });
+
+  describe('when no state is present', function() {
+    beforeEach(function() {
+      // Define and compile the element
+      element = angular.element('<span app-state></span>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();
+    });
+    it('should put a hyphen in the element', function() {
+      expect($.trim(element.text())).toEqual('-');
+    });
+  });
+
+  describe('when the data is bound from an outside scope', function() {
+    
+    beforeEach(function() {
+      scope.data = {
+        state: 'RUNNING',
+        finalStatus: 'UNDEFINED'
+      };
+
+      // Define and compile the element
+      element = angular.element('<span app-state="data.state" final-status="data.finalStatus"></span>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();
+    });
+
+    it('should add a span with a status-* class', function() {
+      expect(element.find('span.status-running').length).toEqual(1);
+    });
+
+    it('should not add a <small> with the final status if it is UNDEFINED', function() {
+      expect(element.find('small').length).toEqual(0);
+    });
+
+    it('should update the html when the data changes', function() {
+      scope.data.state = 'FINISHED';
+      scope.data.finalStatus = 'FAILED';
+      scope.$digest();
+      expect(element.find('span.status-finished').length).toEqual(1);
+      expect(element.find('span.status-finished').text()).toEqual('FINISHED');
+      expect(element.find('small.final-status').length).toEqual(1);
+      expect(element.find('small.final-status').text()).toEqual('(FAILED)');
+    });
+
   });
 
 });

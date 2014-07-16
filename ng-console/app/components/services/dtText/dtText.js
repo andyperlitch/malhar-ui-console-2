@@ -100,6 +100,7 @@ angular.module('app.components.services.dtText', [])
       'dt_log'                     :  'datatorrent log',
       'emitted_per_sec'            :  'emitted/s',
       'emitted_total'              :  'total emitted',
+      'final_status_title'         :  'Final status of application',
       'gc_log'                     :  'GC log',
       'inspect'                    :  'inspect',
       'kill'                       :  'kill',
