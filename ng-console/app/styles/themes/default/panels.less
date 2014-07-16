@@ -1,5 +1,8 @@
 @panel-default-border: #E5E5E5;
 @panel-border-radius: 2px;
+@panel-hover-delay: 1s;
+@panel-hover-in-time: 500ms;
+@panel-hover-out-time: 200ms;
 
 // panels
 .panel {
@@ -9,14 +12,33 @@
     background-color: #FFF;
     background-image: none;
     border: none;
-    padding: 5px;
+    padding: 0 5px;
     cursor: -webkit-grab; 
     cursor: -moz-grab;
-    .transition(background-color 200ms linear);
-    .transition-delay(1000ms);
+    .transition(background-color @panel-hover-out-time linear);
     &:hover {
+      .transition(background-color @panel-hover-in-time ease-out @panel-hover-delay);
       background-color: #F7F7F7;
+      .panel-title > .label {
+        opacity: 1;
+        .transition(opacity @panel-hover-in-time ease-out @panel-hover-delay);
+      }      
     }
+
+}
+.widget-header .widget-title {
+  font-size: 75%;
+}
+.widget-header .panel-title > .label {
+  opacity: 0;
+  font-size: 70%;
+  top: 0;
+  .transition(opacity @panel-hover-out-time ease-in);
+}
+.widget-header form.widget-title input.form-control {
+  padding: 0;
+  height: auto;
+  font-size: inherit;
 }
 .ui-sortable-helper .panel-default > .panel-heading {
   cursor: -webkit-grabbing; 
