@@ -20,6 +20,7 @@ describe('Service: BaseResource', function () {
 
   var mockWebSocket, mockGetUri;
 
+  // set up mock services
   beforeEach(function() {
     mockWebSocket = {
       send: function() {},
@@ -37,20 +38,62 @@ describe('Service: BaseResource', function () {
   });
 
   // load the service's module
-  beforeEach(module('app.components.resources.Base', function($provide) {
+  beforeEach(module('app.components.resources.BaseResource', function($provide) {
     $provide.value('webSocket', mockWebSocket);
     $provide.value('getUri', mockGetUri);
   }));
 
   // instantiate service
   var BaseResource, BaseModel, BaseCollection;
-  beforeEach(inject(function (_BaseResource_, _BaseModel_, _BaseCollection_) {
+  beforeEach(inject(function (_BaseResource_) {
     BaseResource = _BaseResource_;
-    BaseModel = _BaseModel_;
-    BaseCollection = _BaseCollection_;
   }));
 
-  describe('BaseResource', function () {
+  // test backend
+  var $httpBackend;
+
+  beforeEach(inject(function(_$httpBackend_) {
+    $httpBackend = _$httpBackend_;
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should be a function', function() {
+    expect(typeof BaseResource).toEqual('function');
+  });
+
+  describe('the fetch method', function() {
+      
+    var C, r;
+
+    beforeEach(function() {
+      C = BaseResource.extend({
+        set: function(data) {
+          this.data = data;
+        }
+      });
+      r = new C();
+    });
+
+    it('should make a GET request to this.url with any passed options', function() {
+
+      $httpBackend.whenGET('/my-url?key=value').respond({});
+
+      r.url = '/my-url';
+      r.fetch({ params: { key: 'value' }});
+
+      $httpBackend.expectGET('/my-url?key=value');
+      $httpBackend.flush();
+    });
+
+    it('should return a promise', function() {
+      
+      
+      
+    });
 
   });
 
