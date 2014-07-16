@@ -14,3 +14,22 @@
  * limitations under the License.
  */
 
+'use strict';
+
+angular.module('app.components.directives.appState', [])
+.directive('appState', function () {
+  return {
+    restrict: 'A',
+    scope: {
+      state: '=appState',
+      finalStatus: '='
+    },
+    link: function postLink(scope, element) {
+      var html = '<span class="status-' + scope.state.toLowerCase() + '">' + scope.state + '</span>';
+      if (scope.finalStatus && scope.finalStatus !== 'UNDEFINED') {
+        html += ' <small class="final-status" title="Final Status">' + scope.finalStatus + '</small>';
+      }
+      element.html(html);
+    }
+  };
+});

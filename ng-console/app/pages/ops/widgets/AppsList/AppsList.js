@@ -24,6 +24,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
   'app.components.services.dtText',
   'app.components.services.appManager',
   'app.components.directives.appIdLink',
+  'app.components.directives.appState',
   'datatorrent.mlhrTable',
   'app.components.resources.ApplicationCollection'
 ])
@@ -41,18 +42,6 @@ angular.module('app.pages.ops.widgets.AppsList', [
 })
 
 .factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, dtText, $filter, appManager) {
-
-  function stateFormatter(value,row) {
-    if (!value) {
-      return '-';
-    }
-    var finalStatus = row.finalStatus;
-    var html = '<span class="status-' + value.replace(' ','-').toLowerCase() + '">' + value + '</span>';
-    if ( typeof finalStatus === 'string' && finalStatus.toLowerCase() !== 'undefined' ) {
-      html += ' <small class="final-status" title="Final Status">(' + finalStatus + ')</small>';
-    }
-    return html;
-  }
 
   function stateSorter(row1,row2) {
     var state1 = settings.statusOrder.indexOf(row1.state);
@@ -118,7 +107,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
       id: 'state',
       label: dtText.get('state_label'),
       key: 'state',
-      format: stateFormatter,
+      template: '<span app-state="row.state" final-status="row.finalStatus"></span>',
       sort: stateSorter,
       filter:'like'
     },
