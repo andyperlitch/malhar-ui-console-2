@@ -2,26 +2,8 @@
     <p>Application ID: {{appId}}</p>
 
     <div class="form-inline">
-        <span dt-select label="Top:" value="value" options="values"></span>
-        <span dt-select label="Bottom:" value="value" options="values"></span>
-
-        <!--
-        <label class="metric-select-label">Top:</label>
-        <select class="form-control metric-select">
-            <% _.each(metrics, function (metric, index) { %>
-            <option value="<%= metric.value %>"><%= metric.label %></option>
-            <% }) %>
-        </select>
-        -->
-
-        <!--
-        <label class="metric2-select-label">Bottom:</label>
-        <select class="form-control metric2-select">
-            <% _.each(metrics, function (metric, index) { %>
-            <option value="<%= metric.value %>"><%= metric.label %></option>
-            <% }) %>
-        </select>
-        -->
+        <span dt-select="" label="Top:" class="metric-select" value="value" options="values"></span>
+        <span dt-select="" label="Bottom:" class="metric2-select" value="value" options="values"></span>
 
         <div class="options-controls">
             <a href="#" class="btn btn-link toggle-locality">Show Stream Locality</a>
