@@ -74,7 +74,7 @@ angular.module('app.settings', [])
 
       ClusterMetrics           :'cluster.metrics',
       Applications             :'applications',
-      Application              :'applications.:appId',
+      Application              :'applications.:id',
       Operators                :'applications.:appId.operators',
       Containers               :'applications.:appId.containers',
       TupleRecorder            :'tupleRecorder.:startTime'

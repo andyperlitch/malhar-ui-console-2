@@ -21,29 +21,9 @@ angular.module('app.components.directives.appState', [])
   return {
     restrict: 'A',
     scope: {
-      state: '=appState',
+      appState: '=',
       finalStatus: '='
     },
-    link: function postLink(scope, element, attrs) {
-
-      console.log("scope.state", scope.state);
-      console.log("attrs.state", attrs.state);
-      console.log("element.attr('state')", element.attr('state'));
-      console.log("scope.finalStatus", scope.finalStatus);
-      console.log("attrs.finalStatus", attrs.finalStatus);
-      console.log("element.attr('finalStatus')", element.attr('final-status'));
-      
-
-      if (!scope.state) {
-        element.html('-');
-        return;
-      }
-
-      var html = '<span class="status-' + scope.state.toLowerCase() + '">' + scope.state + '</span>';
-      if (scope.finalStatus && scope.finalStatus !== 'UNDEFINED') {
-        html += ' <small class="final-status" title="Final Status">' + scope.finalStatus + '</small>';
-      }
-      element.html(html);
-    }
+    templateUrl: 'components/directives/appState/appState.html'
   };
 });
