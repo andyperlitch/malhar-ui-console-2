@@ -2,7 +2,12 @@
 @side-nav-in-time: 500ms;
 @side-nav-out-time: 300ms;
 @side-nav-open-delay: 1s;
+@main-body-content-bg-color: #F7F7F7;
+@side-nav-bg-color: #FFF;
 
+.main-body-content {
+  background-color: @main-body-content-bg-color;
+}
 
 .main-console-layout {
   width: 100%;
@@ -12,8 +17,11 @@
 }
 .main-side-nav {
 
+  background-color: @side-nav-bg-color;
+
   .transition(width @side-nav-out-time ease-out);
   border-right: 1px solid @gray-lighter;
+  border-bottom: 1px solid @gray-lighter;
   width: 2em;
 
   &:hover {
