@@ -25,6 +25,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
   'app.components.services.appManager',
   'app.components.directives.appIdLink',
   'app.components.directives.appState',
+  'app.components.directives.dtPageHref',
   'datatorrent.mlhrTable',
   'app.components.resources.ApplicationCollection'
 ])

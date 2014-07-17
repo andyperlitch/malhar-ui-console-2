@@ -1,6 +1,6 @@
 <p class="palette">
     <span ng-show="selected.length === 1">
-        <a href="#ops/applications/{{selected[0]}}" class="btn btn-primary">
+        <a dt-page-href="AppInstance" params="{ appId: selected[0] }" class="btn btn-primary">
             <span class="glyphicon glyphicon-eye-open"></span>
             <span dt-text="inspect"></span>
         </a>
