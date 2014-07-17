@@ -50,7 +50,7 @@ angular.module('app.components.resources.BaseResource', [
         function(response) {
           self.set( self._getTransformed(response.data, 'fetch') );
         },
-        this.onFetchError.bind(this)
+        _.bind(this.onFetchError,this)
       );
 
       // Return the promise

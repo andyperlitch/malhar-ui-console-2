@@ -25,8 +25,8 @@ describe('Filter: relativeTimestamp', function() {
     f = $filter('relativeTimestamp');
     now = new Date();
     dayStart = +new Date(now.toDateString());
-    fullDateExpr = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2} [AP]M$/;
-    timeExpr = /^\d{1,2}:\d{2}:\d{2} [AP]M$/;
+    fullDateExpr = /^\d{1,2}\/\d{1,2}\/\d{4},? \d{1,2}:\d{2}:\d{2}(\s[AP]M)?(\s[A-Z]+)?$/;
+    timeExpr = /^\d{1,2}:\d{2}:\d{2}(\s[AP]M)?(\s[A-Z]+)?$/;
   }));
 
   describe('when a Date is passed', function() {
@@ -34,14 +34,14 @@ describe('Filter: relativeTimestamp', function() {
     it('should return just the time if the day is the same', function() {
 
       var d = new Date( dayStart + 1000 * 60 * 60 * 3 );
-      expect(f(d)).toMatch(timeExpr);
+      expect(f(d)).toEqual(d.toLocaleTimeString());
 
     });
 
     it('should return the day and the time if the day is different', function() {
 
       var d = new Date( dayStart - 1000 * 60 * 60 * 8 );
-      expect(f(d)).toMatch(fullDateExpr);
+      expect(f(d)).toEqual(d.toLocaleString());
       
     });
 
@@ -57,12 +57,12 @@ describe('Filter: relativeTimestamp', function() {
     
     it('should return just the time if the day is the same', function() {
       var d = dayStart + 1000 * 60 * 60 * 3;
-      expect(f(d)).toMatch(timeExpr);
+      expect(f(d)).toEqual(new Date(d).toLocaleTimeString());
     });
 
     it('should return the day and the time if the day is different', function() {
       var d = dayStart - 1000 * 60 * 60 * 8;
-      expect(f(d)).toMatch(fullDateExpr);
+      expect(f(d)).toEqual(new Date(d).toLocaleString());
     });
 
   });
@@ -82,12 +82,12 @@ describe('Filter: relativeTimestamp', function() {
     
     it('should return just the time if the day is the same', function() {
       var d = dayStart + 1000 * 60 * 60 * 3;
-      expect(f(d + '')).toMatch(timeExpr);
+      expect(f(d + '')).toEqual(new Date(d).toLocaleTimeString());
     });
 
     it('should return the day and the time if the day is different', function() {
       var d = dayStart - 1000 * 60 * 60 * 8;
-      expect(f(d + '')).toMatch(fullDateExpr);
+      expect(f(d + '')).toEqual(new Date(d).toLocaleString());
     });
 
     it('should return a hyphen if an invalid date was passed', function() {

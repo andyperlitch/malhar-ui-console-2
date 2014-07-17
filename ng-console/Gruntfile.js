@@ -291,7 +291,7 @@ module.exports = function (grunt) {
         configFile: './test/karma-unit.conf.js',
         autoWatch: false,
         singleRun: true,
-        browsers: ['PhantomJS', 'Firefox']
+        browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
       },
       coverage: {
         configFile: './test/karma-coverage.conf.js',
