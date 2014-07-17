@@ -55,6 +55,6 @@ angular.module('app.components.filters.relativeTimestamp', [])
 
     return nowDay === date.toDateString() ? date.toLocaleTimeString() : date.toLocaleString();
 
-  }
+  };
 
 });
