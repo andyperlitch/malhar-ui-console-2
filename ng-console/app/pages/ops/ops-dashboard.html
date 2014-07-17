@@ -1,7 +1,7 @@
 <div>
     <div class="btn-toolbar main-dash-btn-toolbar" ng-if="!options.hideToolbar">
         <div class="btn-group btn-group-xs" ng-if="!options.widgetButtons">
-            <button type="button" class="dropdown-toggle btn btn-primary" data-toggle="dropdown" dt-text-title="add a widget">
+            <button type="button" class="dropdown-toggle btn btn-primary" data-toggle="dropdown" dt-text-tooltip="add a widget">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
@@ -11,9 +11,9 @@
             </ul>
         </div>
 
-        <button class="btn btn-xs btn-warning" ng-click="resetWidgetsToDefault()" dt-text-title="reset to default widgets"><span class="glyphicon glyphicon-refresh"></span></button
+        <button class="btn btn-xs btn-warning" ng-click="resetWidgetsToDefault()" dt-text-tooltip="reset to default widgets"><span class="glyphicon glyphicon-refresh"></span></button
         ><button ng-if="options.storage && options.explicitSave" ng-click="options.saveDashboard()" class="btn btn-success" ng-disabled="!options.unsavedChangeCount">{{ !options.unsavedChangeCount ? "all saved" : "save changes (" + options.unsavedChangeCount + ")" }}</button
-        ><button ng-click="clear();" type="button" class="btn btn-xs btn-info" dt-text-title="clear all widgets"><span class="glyphicon glyphicon-trash"></span></button>
+        ><button ng-click="clear();" type="button" class="btn btn-xs btn-info" dt-text-tooltip="clear all widgets"><span class="glyphicon glyphicon-trash"></span></button>
     </div>
 
     <div ui-sortable="sortableOptions" ng-model="widgets" class="dashboard-widget-area">

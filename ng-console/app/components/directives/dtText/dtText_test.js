@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* global describe, before, beforeEach, after, afterEach, inject, it, expect, module */
+
 'use strict';
 
 describe('Module: text-directives', function () {
@@ -86,6 +88,35 @@ describe('Module: text-directives', function () {
 
     it('should not have an isoScope', function() {
       expect(isoScope).toBeUndefined();
+    });
+
+  });
+
+  describe('Directive: dtTextTooltip', function() {
+    
+    beforeEach(inject(function ($compile, $rootScope) {
+      // Cache these for reuse    
+      rootScope = $rootScope;
+      compile = $compile;
+
+      // Other setup, e.g. helper functions, etc.
+
+      // Set up the outer scope
+      scope = $rootScope.$new();
+
+      // Define and compile the element
+      element = angular.element('<div dt-text-tooltip="how about"></div>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();
+    }));
+
+    it('should remove the dt-text-tooltip attribute', function() {
+      expect(element.attr('dt-text-tooltip')).toBeFalsy();
+    });
+
+    it('should add the tooltip directive', function() {
+      expect(element.attr('tooltip')).toBeTruthy();
     });
 
   });
