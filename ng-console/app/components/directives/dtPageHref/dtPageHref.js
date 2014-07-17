@@ -35,11 +35,11 @@ angular.module('app.components.directives.dtPageHref', [
       pageKey: '@dtPageHref',
       params: '='
     },
-    link: function(scope, element, attrs) {
+    link: function(scope, element) {
       element.attr('href', getUri.page(scope.pageKey, scope.params));
       scope.$watchCollection('params', function() {
         element.attr('href', getUri.page(scope.pageKey, scope.params));
       });
     }
   };
-})
+});

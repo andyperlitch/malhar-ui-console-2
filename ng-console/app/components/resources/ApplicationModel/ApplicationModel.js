@@ -25,10 +25,9 @@ angular.module('app.components.resources.ApplicationModel', [
   'underscore',
   'app.components.resources.BaseModel',
   'app.components.filters.relativeTimestamp',
-  'app.components.filters.commaGroups',
-  'app.settings'
+  'app.components.filters.commaGroups'
 ])
-.factory('ApplicationModel', function(_, BaseModel, settings) {
+.factory('ApplicationModel', function(_, BaseModel) {
 
   var ApplicationModel = BaseModel.extend({
 
@@ -45,8 +44,8 @@ angular.module('app.components.resources.ApplicationModel', [
 
           // Move attributes to main object where applicable
           _.each(['recoveryWindowId', 'currentWindowId', 'state'], function(key) {
-              updates[key] = raw[key];
-              delete raw[key];
+            updates[key] = raw[key];
+            delete raw[key];
           }, this);
           
           updates.stats = raw;
@@ -55,7 +54,7 @@ angular.module('app.components.resources.ApplicationModel', [
 
           return updates;
 
-        default: 
+        default:
           
           raw.as_of = new Date();
 
