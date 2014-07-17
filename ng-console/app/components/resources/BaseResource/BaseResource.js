@@ -48,7 +48,7 @@ angular.module('app.components.resources.BaseResource', [
       // Store in data on return
       promise.then(
         function(response) {
-          self.set( self._getTransformed(response.data) );
+          self.set( self._getTransformed(response.data, 'fetch') );
         },
         this.onFetchError.bind(this)
       );
@@ -75,7 +75,7 @@ angular.module('app.components.resources.BaseResource', [
       // as the second argument. Otherwise multiple instances
       // will share the same handler function.
       this.__subscribeFn__ = _.bind(function(data) {
-        this.set(this._getTransformed(data));
+        this.set(this._getTransformed(data, 'subscribe'));
       }, this);
 
       // Use the webSocket service to subscribe to the topic
@@ -110,7 +110,7 @@ angular.module('app.components.resources.BaseResource', [
      * @param  {Object} raw   Raw response from the server.
      * @return {Object}       The transformed data, to be passed to this.set
      */
-    _getTransformed: function(raw) {
+    _getTransformed: function(raw, type) {
       // Will hold transformed data
       var data;
       // Check for transformResponse
@@ -124,7 +124,7 @@ angular.module('app.components.resources.BaseResource', [
 
         // Function means fully-custom transformation
         case 'function':
-          data = transform.call(this, raw);
+          data = transform.call(this, raw, type);
           break;
 
         // Otherwise, assume the raw data does 

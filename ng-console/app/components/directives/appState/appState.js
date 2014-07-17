@@ -14,3 +14,16 @@
  * limitations under the License.
  */
 
+'use strict';
+
+angular.module('app.components.directives.appState', [])
+.directive('appState', function () {
+  return {
+    restrict: 'A',
+    scope: {
+      appState: '=',
+      finalStatus: '='
+    },
+    templateUrl: 'components/directives/appState/appState.html'
+  };
+});
