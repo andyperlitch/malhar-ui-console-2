@@ -1,7 +1,73 @@
-<h1>{{data.id}}</h1>
-<div class="overview-item">
-  <div class="key">state</div>
-  <div class="value">
-    <span app-state="data.state" final-status="data.finalStatus"></span>
+<div class="overview-container">
+  <h2>
+    {{data.name || 'Loading...'}}
+    <small>{{ data.id }}</small>
+  </h2>
+  <h4 ng-if="data.user">
+    <small>user:</small> {{data.user}}
+    <small>version:</small> <span ng-bind="data.version.split(' ')[0]" ng-attr-title=" {{data.version}} " ></span>
+  </h4>
+
+  <div class="overview-item">
+    <div class="key" dt-text="state_label"></div>
+    <div class="value">
+      <span app-state="data.state" final-status="data.finalStatus"></span>
+    </div>
   </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="as_of_label"></div>
+    <div class="value">{{ data.as_of | relativeTimestamp }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="current_wid_label"></div>
+    <div class="value">{{ data.currentWindowId || '-' }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="recovery_wid_label"></div>
+    <div class="value">{{ data.recoveryWindowId || '-' }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="processed_per_sec"></div>
+    <div class="value">{{ data.stats.tuplesProcessedPSMA | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="emitted_per_sec"></div>
+    <div class="value">{{ data.stats.tuplesEmittedPSMA | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="processed_total"></div>
+    <div class="value">{{ data.stats.totalTuplesProcessed | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="emitted_total"></div>
+    <div class="value">{{ data.stats.totalTuplesEmitted | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="num_operators_label"></div>
+    <div class="value">{{ data.stats.numOperators | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="planned_alloc_ctnrs_label"></div>
+    <div class="value">{{ data.stats.plannedContainers | commaGroups }} / {{ data.stats.allocatedContainers | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="latency_ms_label"></div>
+    <div class="value">{{ data.stats.latency | commaGroups }}</div>
+  </div>
+
+  <div class="overview-item">
+    <div class="key" dt-text="alloc_mem_label"></div>
+    <div class="value">{{ data.stats.totalMemoryAllocated | byte:'mb' }}</div>
+  </div>
+
 </div>

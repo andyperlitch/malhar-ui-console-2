@@ -40,6 +40,8 @@ angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
       this.resource.fetch();
       this.resource.subscribe(this.widgetScope);
       this.widgetScope.data = this.resource.data;
+      this.widgetScope.appIdPrefixRegExp = new RegExp('.*(?=_(\\d+))');
+      this.widgetScope.appIdSuffixRegExp = new RegExp('_\\d+$');
     },
 
     destroy: function() {

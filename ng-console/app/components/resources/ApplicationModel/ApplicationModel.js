@@ -23,9 +23,12 @@
 
 angular.module('app.components.resources.ApplicationModel', [
   'underscore',
-  'app.components.resources.BaseModel'
+  'app.components.resources.BaseModel',
+  'app.components.filters.relativeTimestamp',
+  'app.components.filters.commaGroups',
+  'app.settings'
 ])
-.factory('ApplicationModel', function(_, BaseModel) {
+.factory('ApplicationModel', function(_, BaseModel, settings) {
 
   var ApplicationModel = BaseModel.extend({
 
@@ -47,14 +50,15 @@ angular.module('app.components.resources.ApplicationModel', [
           }, this);
           
           updates.stats = raw;
-          // var lcState = updates.state.toLowerCase();
-          // if ( lcState === 'running' || lcState === 'accepted' ) {
-          //     updates.elapsedTime = +new Date() - 1 * this.get('startedTime');
-          // }
+
+          updates.as_of = new Date();
+
           return updates;
 
         default: 
           
+          raw.as_of = new Date();
+
           return raw;
 
       }
