@@ -19,6 +19,7 @@
 angular.module('app', [
   // bower components
   'ngRoute',
+  'ngAnimate',
   'ui.notify',
   'ng-breadcrumbs',
   'mgcrea.ngStrap.navbar',
