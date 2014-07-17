@@ -2,10 +2,20 @@
   <h2>
     {{data.name || 'Loading...'}}
     <small>{{ data.id }}</small>
+    <button class="btn btn-xs btn-warning" ng-click="endApp('shutdown')">
+      <span class="glyphicon glyphicon-off"></span>
+      <span dt-text="shutdown"></span>
+    </button>
+    <button class="btn btn-xs btn-danger" ng-click="endApp('kill')">
+      <span class="glyphicon glyphicon-ban-circle"></span>
+      <span dt-text="kill"></span>
+    </button>
   </h2>
   <h4 ng-if="data.user">
+
     <small>user:</small> {{data.user}}
     <small>version:</small> <span ng-bind="data.version.split(' ')[0]" ng-attr-title=" {{data.version}} " ></span>
+    
   </h4>
 
   <div class="overview-item">

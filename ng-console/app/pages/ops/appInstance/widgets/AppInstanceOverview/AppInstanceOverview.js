@@ -30,18 +30,23 @@ angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
 ])
 
 // Widget Data Model
-.factory('AppInstanceOverviewDataModel', function(BaseDataModel, ApplicationModel) {
+.factory('AppInstanceOverviewDataModel', function(BaseDataModel, ApplicationModel, appManager) {
   var AppInstanceOverviewDataModel = BaseDataModel.extend({
 
     init: function() {
-      this.resource = new ApplicationModel({
+      var resource = this.resource = new ApplicationModel({
         id: this.widgetScope.appId
       });
-      this.resource.fetch();
-      this.resource.subscribe(this.widgetScope);
-      this.widgetScope.data = this.resource.data;
+      resource.fetch();
+      resource.subscribe(this.widgetScope);
+      this.widgetScope.data = resource.data;
       this.widgetScope.appIdPrefixRegExp = new RegExp('.*(?=_(\\d+))');
       this.widgetScope.appIdSuffixRegExp = new RegExp('_\\d+$');
+
+      // methods
+      this.widgetScope.endApp = function(signal) {
+        appManager.endApp(signal, resource.data);
+      };
     },
 
     destroy: function() {
