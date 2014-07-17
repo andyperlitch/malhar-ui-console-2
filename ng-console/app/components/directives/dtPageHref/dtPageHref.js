@@ -37,7 +37,7 @@ angular.module('app.components.directives.dtPageHref', [
     },
     link: function(scope, element, attrs) {
       element.attr('href', getUri.page(scope.pageKey, scope.params));
-      scope.$watch('params', function() {
+      scope.$watchCollection('params', function() {
         element.attr('href', getUri.page(scope.pageKey, scope.params));
       });
     }
