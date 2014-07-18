@@ -26,18 +26,13 @@
   </div>
 
   <div class="overview-item">
-    <div class="key" dt-text="as_of_label"></div>
-    <div class="value">{{ data.as_of | relativeTimestamp }}</div>
+    <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title" tooltip-popup-delay="0"></div>
+    <div class="value" window-id="data.currentWindowId"></div>
   </div>
 
   <div class="overview-item">
-    <div class="key" dt-text="current_wid_label"></div>
-    <div class="value">{{ data.currentWindowId || '-' }}</div>
-  </div>
-
-  <div class="overview-item">
-    <div class="key" dt-text="recovery_wid_label"></div>
-    <div class="value">{{ data.recoveryWindowId || '-' }}</div>
+    <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0"></div>
+    <div class="value" window-id="data.recoveryWindowId"></div>
   </div>
 
   <div class="overview-item">

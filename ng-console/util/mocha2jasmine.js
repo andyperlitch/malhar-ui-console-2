@@ -36,7 +36,7 @@ contents = contents.replace(/expect\((.*)\)\.to\.eql\((.*)\)/g, 'expect($1).toEq
 contents = contents.replace(/expect\((.*)\)\.to\.be\.an?\((.*)\)/g, 'expect(typeof $1).toEqual($2)');
 
 // to.throw
-contents = contents.replace(/expect\((.*)\)\.to\.throw\(\)/g, 'expect($1).toThrow()');
+contents = contents.replace(/expect\((.*)\)(\.not)?\.to\.throw\(\)/g, 'expect($1)$2.toThrow()');
 
 fs.writeFileSync(testFileName, contents);
 

@@ -25,9 +25,10 @@ angular.module('app.components.resources.ApplicationModel', [
   'underscore',
   'app.components.resources.BaseModel',
   'app.components.filters.relativeTimestamp',
-  'app.components.filters.commaGroups'
+  'app.components.filters.commaGroups',
+  'app.components.services.WindowId'
 ])
-.factory('ApplicationModel', function(_, BaseModel) {
+.factory('ApplicationModel', function(_, BaseModel, WindowId) {
 
   var ApplicationModel = BaseModel.extend({
 
@@ -36,11 +37,14 @@ angular.module('app.components.resources.ApplicationModel', [
     topicKey: 'Application',
 
     transformResponse: function(raw, type) {
+
+      var updates, STREAMING_WINDOW_SIZE_MILLIS;
+
       switch(type) {
 
         case 'subscribe':
 
-          var updates = {};
+          updates = {};
 
           // Move attributes to main object where applicable
           _.each(['recoveryWindowId', 'currentWindowId', 'state'], function(key) {
@@ -52,15 +56,33 @@ angular.module('app.components.resources.ApplicationModel', [
 
           updates.as_of = new Date();
 
-          return updates;
+        break;
 
         default:
           
           raw.as_of = new Date();
 
-          return raw;
+          updates = raw;
+
+        break;
 
       }
+
+      // Look for streaming millis
+      if (updates.attributes && updates.attributes.STREAMING_WINDOW_SIZE_MILLIS) {
+        STREAMING_WINDOW_SIZE_MILLIS = updates.attributes.STREAMING_WINDOW_SIZE_MILLIS;
+      }
+      else if (this.data.attributes && this.data.attributes.STREAMING_WINDOW_SIZE_MILLIS) {
+        STREAMING_WINDOW_SIZE_MILLIS = this.data.attributes.STREAMING_WINDOW_SIZE_MILLIS;
+      }
+
+      // Set window ids
+      _.each(['recoveryWindowId', 'currentWindowId'], function(key) {
+        updates[key] = new WindowId(updates[key], STREAMING_WINDOW_SIZE_MILLIS);
+      });
+
+      return updates;
+
     }
 
   });

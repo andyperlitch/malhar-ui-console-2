@@ -26,6 +26,7 @@ angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
   'app.components.widgets.Base',
   'app.components.resources.ApplicationModel',
   'app.components.directives.appState',
+  'app.components.directives.windowId',
   'app.settings'
 ])
 
