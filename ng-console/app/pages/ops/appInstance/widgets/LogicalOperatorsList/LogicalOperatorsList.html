@@ -1,0 +1,20 @@
+<p class="palette">
+    <span ng-if="!selected.length">
+      <button class="btn btn-default" disabled>select an operator</button>
+    </span>
+    <span ng-if="selected.length === 1">
+      <a class="btn btn-primary" dt-page-href="LogicalOperator" params="{ appId: appInstance.data.id, name: selected[0] }">
+        <span class="glyphicon glyphicon-eye-open"></span>
+        <span dt-text="inspect"></span>
+      </a>
+    </span>
+</p>
+<mlhr-table 
+    options="table_options"
+    columns="columns" 
+    rows="resource.data" 
+    track-by="name"
+    class="dt-table"
+    table-class="table" 
+    selected="selected">
+</mlhr-table>

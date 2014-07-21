@@ -22,6 +22,11 @@ describe('Directive: windowId', function () {
 
   var element, scope, rootScope, isoScope, compile, relativeTimestamp;
 
+  var windowValue = '5896637953039405386';
+  var windowOffset = 4426;
+  var windowBasetime = 1372918010000;
+  var STREAMING_WINDOW_SIZE_MILLIS = '500';
+
   beforeEach(module('templates-main'));
 
   beforeEach(function() {
@@ -41,25 +46,23 @@ describe('Directive: windowId', function () {
 
     // Set up the outer scope
     scope = $rootScope.$new();
-    scope.myWindowId = {
-      timestamp: new Date(),
-      offset: 1000
-    };
+    scope.myWindowId = windowValue;
+    scope.myWindowSize = STREAMING_WINDOW_SIZE_MILLIS;
 
     // Define and compile the element
-    element = angular.element('<div window-id="myWindowId"></div>');
+    element = angular.element('<div window-id="myWindowId" window-size="myWindowSize"></div>');
     element = compile(element)(scope);
     scope.$digest();
     isoScope = element.isolateScope();
   }));
 
   it('should put the offset in the element', function() {
-    expect( $.trim(element.text()) ).toEqual('1000');
+    expect( $.trim(element.text()) ).toEqual( windowOffset + '' );
   });
 
   it('should add a tooltip attribute when timestamp is defined', function() {
-    expect(element.find('span').attr('tooltip')).toEqual(relativeTimestamp(scope.myWindowId.timestamp));
-    delete scope.myWindowId.timestamp;
+    expect(element.find('span').attr('tooltip')).toEqual(relativeTimestamp(new Date(windowBasetime + (windowOffset * STREAMING_WINDOW_SIZE_MILLIS) ) ));
+    scope.myWindowSize = null;
     scope.$digest();
     expect(element.find('span').attr('tooltip')).toBeFalsy();
   });

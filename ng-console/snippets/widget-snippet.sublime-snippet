@@ -2,7 +2,7 @@
   <content><![CDATA[
 /*
 * Copyright (c) 2013 DataTorrent, Inc. ALL Rights Reserved.
-*
+* awesome
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -25,7 +25,7 @@
 
 // Module Definition
 angular.module('app.${10:path.to.widget.name}', [
-  'app.widgets.Base',
+  'app.components.widgets.Base',
   'app.settings'
 ])
 
@@ -38,10 +38,10 @@ angular.module('app.${10:path.to.widget.name}', [
 })
 
 // Widget Definition
-.factory('${1:NameOf}Widget', function(BaseWidget, ${1:NameOf}WidgetDataModel) {
-  var ${1:NameOf}Widget = BaseWidget.extend({
+.factory('${1:NameOf}WidgetDef', function(BaseWidget, ${1:NameOf}WidgetDataModel) {
+  var ${1:NameOf}WidgetDef = BaseWidget.extend({
     defaults: {
-      dataModelType: ${1:NameOf}DataModel,
+      dataModelType: ${1:NameOf}WidgetDataModel,
       title: '${20:${1:NameOf}}' // default display name (editable by user)
 
       // templateUrl: 'path/to/template',
@@ -49,7 +49,7 @@ angular.module('app.${10:path.to.widget.name}', [
     }
   });
 
-  return ${1:NameOf}Widget;
+  return ${1:NameOf}WidgetDef;
 });
 ]]></content>
   <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->

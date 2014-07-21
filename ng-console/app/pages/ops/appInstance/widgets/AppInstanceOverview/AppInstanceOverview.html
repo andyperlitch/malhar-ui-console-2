@@ -17,7 +17,7 @@
     <small>version:</small> <span ng-bind="data.version.split(' ')[0]" dt-text-tooltip=" {{data.version}} " ></span>
     
   </h4>
-
+  
   <div class="overview-item">
     <div class="key" dt-text="state_label"></div>
     <div class="value">
@@ -27,12 +27,12 @@
 
   <div class="overview-item">
     <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title" tooltip-popup-delay="0"></div>
-    <div class="value" window-id="data.currentWindowId"></div>
+    <div class="value" window-id="data.currentWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
   </div>
 
   <div class="overview-item">
     <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0"></div>
-    <div class="value" window-id="data.recoveryWindowId"></div>
+    <div class="value" window-id="data.recoveryWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
   </div>
 
   <div class="overview-item">

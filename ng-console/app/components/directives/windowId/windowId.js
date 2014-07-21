@@ -16,15 +16,50 @@
 'use strict';
 
 angular.module('app.components.directives.windowId', [
-  'app.components.filters.relativeTimestamp'
+  'app.components.filters.relativeTimestamp',
+  'jsbn.BigInteger'
 ])
-.directive('windowId', function() {
+.directive('windowId', function(BigInteger) {
 
   return {
     scope: {
-      windowId: '='
+      windowId: '=',
+      windowSize: '='
     },
-    templateUrl: 'components/directives/windowId/windowId.html'
+    templateUrl: 'components/directives/windowId/windowId.html',
+    link: function(scope) {
+
+      var watchHandler = function() {
+
+        var raw = scope.windowId;
+
+        // Convert to "long"
+        var value = new BigInteger(raw);
+
+        // Offset is lower 16 bits
+        scope.offset = value.and(new BigInteger('0x00000000ffffffff',16)).toString() * 1;
+
+        // Check if windowSize
+        if (scope.windowSize) {
+          
+          // Basetime is upper 16 bits, in seconds
+          var basetime = new Date((value.shiftRight(32).toString() + '000') * 1);
+
+          // Add offset * windowSize to basetime
+          scope.timestamp = (scope.windowSize * scope.offset) + basetime.valueOf();
+        }
+
+        // Otherwise unset
+        else {
+          scope.timestamp = null;
+        }
+
+      };
+
+      scope.$watch('windowId', watchHandler);
+      // TODO: only watch once
+      scope.$watch('windowSize', watchHandler);
+    }
   };
 
 });

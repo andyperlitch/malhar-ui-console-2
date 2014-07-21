@@ -21,7 +21,9 @@
  */
 
 angular.module('app.pages.ops.appInstance', [
+  'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
+  'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
   'app.pages.ops.appinstance.widgets.LogicalDag'
 ])
 
@@ -36,20 +38,34 @@ angular.module('app.pages.ops.appInstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, $routeParams, _, LogicalDagWidgetDefinition, AppInstanceOverviewWidgetDef, AppsListWidget, breadcrumbs) {
+  .controller('AppInstanceCtrl', function (
+    $scope,
+    $routeParams,
+    _,
+    ApplicationModel,
+    LogicalDagWidgetDefinition,
+    AppInstanceOverviewWidgetDef,
+    LogicalOperatorsListWidgetDef,
+    breadcrumbs) {
 
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
+
+    // Set appId on scope for use
     $scope.appId = $routeParams.appId;
 
-    //webSocket.subscribe('applications.' + appId, function (data) {
-    //  console.log(data);
-    //  $scope.fields = data;
-    //  $scope.$apply();
-    //}, $scope);
+    // Create new app instance on scope
+    $scope.appInstance = new ApplicationModel({ id: $routeParams.appId });
+    $scope.appInstance.fetch();
+    $scope.appInstance.subscribe($scope);
+    $scope.$on('$destroy', function() {
+      $scope.appInstance.unsubscribe();
+    });
+
 
     var widgetDefinitions = [
-      new AppInstanceOverviewWidgetDef({ name: 'Application Overview' }),
+      new AppInstanceOverviewWidgetDef({ name:  'Application Overview' }),
+      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
       new LogicalDagWidgetDefinition({ name: 'LogicalDAG' })
     ];
 
@@ -62,7 +78,7 @@ angular.module('app.pages.ops.appInstance', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
-        { title: 'default', active: true , defaultWidgets: defaultWidgets }
+        { title: 'logical', active: true , defaultWidgets: defaultWidgets }
       ]
     };
 

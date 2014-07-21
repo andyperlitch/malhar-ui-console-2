@@ -32,17 +32,26 @@ angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
 
 // Widget Data Model
 .factory('AppInstanceOverviewDataModel', function(BaseDataModel, ApplicationModel, appManager) {
+
   var AppInstanceOverviewDataModel = BaseDataModel.extend({
 
     init: function() {
-      var resource = this.resource = new ApplicationModel({
-        id: this.widgetScope.appId
-      });
-      resource.fetch();
-      resource.subscribe(this.widgetScope);
+
+      var resource;
+
+      if (this.widgetScope.appInstance && this.widgetScope.appInstance instanceof ApplicationModel) {
+        resource = this.resource = this.widgetScope.appInstance;
+      }
+      else {
+        this.unsubscribeOnDestroy = true;
+        resource = this.resource = new ApplicationModel({
+          id: this.widgetScope.appId
+        });
+        resource.fetch();
+        resource.subscribe(this.widgetScope);
+      }
+
       this.widgetScope.data = resource.data;
-      this.widgetScope.appIdPrefixRegExp = new RegExp('.*(?=_(\\d+))');
-      this.widgetScope.appIdSuffixRegExp = new RegExp('_\\d+$');
 
       // methods
       this.widgetScope.endApp = function(signal) {
@@ -51,11 +60,15 @@ angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
     },
 
     destroy: function() {
-      this.resource.unsubscribe();
+      if (this.unsubscribeOnDestroy) {
+        this.resource.unsubscribe();
+      }
     }
 
   });
+
   return AppInstanceOverviewDataModel;
+
 })
 
 // Widget Definition

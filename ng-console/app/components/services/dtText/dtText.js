@@ -39,6 +39,7 @@ angular.module('app.components.services.dtText', [])
       'container_label'            :  'container',
       'cores_label'                :  'cores',
       'cpu_percentage_label'       :  'cpu %',
+      'cpu_sum_label'              :  'total cpu',
       'current_wid_label'          :  'current wID',
       'ended_at_label'             :  'ended at',
       'ended_label'                :  'ended',

@@ -27,33 +27,38 @@ angular.module('app.settings', [])
     VISIBILITY_TIMEOUT: 20000,
     urls: {
 
-      Application              :'/ws/:v/applications',
-      ClusterMetrics           :'/ws/:v/cluster/metrics',
-      ConfigProperty           :'/ws/:v/config/properties',
-      ConfigIssue              :'/ws/:v/config/issues',
-      LogicalPlan              :'/ws/:v/applications/:appId/logicalPlan',
-      PhysicalPlan             :'/ws/:v/applications/:appId/physicalPlan',
-      Operator                 :'/ws/:v/applications/:appId/physicalPlan/operators',
-      Port                     :'/ws/:v/applications/:appid/physicalPlan/operators/:operatorId/ports',
-      Container                :'/ws/:v/applications/:appId/physicalPlan/containers',
       Alert                    :'/ws/:v/applications/:appId/alerts',
-      AppRecordings            :'/ws/:v/applications/:appId/recordings',
-      Recording                :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings',
-      RecordingTuples          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/:startTime/tuples',
       AlertTemplate            :'/ws/:v/alertTemplates',
-      OpProperties             :'/ws/:v/applications/:appId/logicalPlan/operators/:operatorName/properties',
+      Application              :'/ws/:v/applications',
+      AppRecordings            :'/ws/:v/applications/:appId/recordings',
+      ClusterMetrics           :'/ws/:v/cluster/metrics',
+      ConfigIPAddresses        :'/ws/:v/config/ipAddresses',
+      ConfigIssue              :'/ws/:v/config/issues',
+      ConfigProperty           :'/ws/:v/config/properties',
+      Container                :'/ws/:v/applications/:appId/physicalPlan/containers',
+      ContainerLog             :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/logs',
+      DependencyJar            :'/ws/:v/dependencyJars',
+      GatewayInfo              :'/ws/:v/about',
+      GatewayRestart           :'/ws/:v/config/restart',
+      HadoopLocation           :'/ws/:v/config/hadoopInstallDirectory',
       Jar                      :'/ws/:v/jars',
       JarApps                  :'/ws/:v/jars/:fileName/applications',
       JarDependencies          :'/ws/:v/jars/:fileName/dependencyJars',
-      DependencyJar            :'/ws/:v/dependencyJars',
       License                  :'/ws/:v/licenses/files/current',
       LicenseAgent             :'/ws/:v/licenses/agents',
       LicenseFiles             :'/ws/:v/licenses/files',
       LicenseRequest           :'/ws/:v/licenses/request',
       LicenseLastRequest       :'/ws/:v/licenses/lastRequest',
-      ConfigIPAddresses        :'/ws/:v/config/ipAddresses',
-      GatewayInfo              :'/ws/:v/about',
-      HadoopLocation           :'/ws/:v/config/hadoopInstallDirectory'
+      LogicalOperator          :'/ws/:v/applications/:appId/logicalPlan/operators',
+      LogicalPlan              :'/ws/:v/applications/:appId/logicalPlan',
+      OpProperties             :'/ws/:v/applications/:appId/logicalPlan/operators/:operatorName/properties',
+      PhysicalOperator         :'/ws/:v/applications/:appId/physicalPlan/operators',
+      PhysicalPlan             :'/ws/:v/applications/:appId/physicalPlan',
+      Port                     :'/ws/:v/applications/:appid/physicalPlan/operators/:operatorId/ports',
+      Recording                :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings',
+      RecordingTuples          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/:startTime/tuples',
+      StramEvent               :'/ws/:v/applications/:appId/events',
+      User                     :'/ws/:v/profile/user'
 
     },
     
@@ -71,18 +76,21 @@ angular.module('app.settings', [])
     },
     
     topics: {
-
+      
       ClusterMetrics           :'cluster.metrics',
       Applications             :'applications',
       Application              :'applications.:id',
-      Operators                :'applications.:appId.operators',
+      PhysicalOperators        :'applications.:appId.physicalOperators',
+      LogicalOperators         :'applications.:appId.logicalOperators',
       Containers               :'applications.:appId.containers',
+      StramEvents              :'applications.:appId.events',
       TupleRecorder            :'tupleRecorder.:startTime'
 
     },
 
     pages: {
-      AppInstance              :'/ops/apps/:appId'
+      AppInstance              :'/ops/apps/:appId',
+      LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:name'
     },
 
     dag: {

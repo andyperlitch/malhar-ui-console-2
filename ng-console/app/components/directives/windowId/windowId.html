@@ -1,2 +1,2 @@
-<span ng-if="windowId.timestamp" tooltip="{{ windowId.timestamp | relativeTimestamp }}" tooltip-popup-delay="0">{{ windowId.offset || '-' }}</span>
-<span ng-if="!windowId.timestamp">{{ windowId.offset || '-' }}</span>
+<span ng-if="timestamp" tooltip="{{ timestamp | relativeTimestamp }}" tooltip-popup-delay="0">{{ offset || '-' }}</span>
+<span ng-if="!timestamp">{{ offset || '-' }}</span>
