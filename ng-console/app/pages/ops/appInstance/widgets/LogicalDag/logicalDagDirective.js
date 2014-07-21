@@ -22,7 +22,8 @@ angular.module('app.components.directives.logicalDag', [])
       restrict: 'A',
       templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/logicalDagDirective.html',
       scope: {
-        appId: '='
+        appId: '=',
+        logicalPlan: '='
       },
       link: function postLink(scope, element, attrs) {
         scope.values = ['option1', 'option2', 'option3'];
@@ -31,6 +32,13 @@ angular.module('app.components.directives.logicalDag', [])
         //var renderer = new dagreD3.Renderer();
         //renderer.run(g, d3.select('.svg-main g'));
         LogicalDagRenderUtil.renderLegend(element);
+
+        //TODO unwatch
+        scope.$watch('logicalPlan', function (logicalPlan) {
+          if (logicalPlan) {
+            console.log(logicalPlan);
+          }
+        });
       }
     };
   })
