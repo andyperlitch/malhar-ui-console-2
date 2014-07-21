@@ -51,10 +51,11 @@ module.exports =  {
   Renderer: require('./lib/Renderer'),
   json: require('graphlib').converter.json,
   layout: require('dagre').layout,
-  version: require('./lib/version')
+  version: require('./lib/version'),
+  debug: require('dagre').debug
 };
 
-},{"./lib/Renderer":3,"./lib/version":4,"dagre":10,"graphlib":27}],3:[function(require,module,exports){
+},{"./lib/Renderer":3,"./lib/version":4,"dagre":11,"graphlib":28}],3:[function(require,module,exports){
 var layout = require('dagre').layout;
 
 var d3;
@@ -63,13 +64,23 @@ try { d3 = require('d3'); } catch (_) { d3 = window.d3; }
 module.exports = Renderer;
 
 function Renderer() {
+  // Set up defaults...
   this._layout = layout();
-  this._drawNode = defaultDrawNode;
-  this._drawEdgeLabel = defaultDrawEdgeLabel;
-  this._calculateEdgeDimensions = calculateDimensions;
-  this._drawEdge = defaultDrawEdge;
-  this._postLayout = defaultPostLayout;
-  this._postRender = defaultPostRender;
+
+  this.drawNodes(defaultDrawNodes);
+  this.drawEdgeLabels(defaultDrawEdgeLabels);
+  this.drawEdgePaths(defaultDrawEdgePaths);
+  this.positionNodes(defaultPositionNodes);
+  this.positionEdgeLabels(defaultPositionEdgeLabels);
+  this.positionEdgePaths(defaultPositionEdgePaths);
+  this.zoomSetup(defaultZoomSetup);
+  this.zoom(defaultZoom);
+  this.transition(defaultTransition);
+  this.postLayout(defaultPostLayout);
+  this.postRender(defaultPostRender);
+
+  this.edgeInterpolate('bundle');
+  this.edgeTension(0.95);
 }
 
 Renderer.prototype.layout = function(layout) {
@@ -78,33 +89,85 @@ Renderer.prototype.layout = function(layout) {
   return this;
 };
 
-Renderer.prototype.drawNode = function(drawNode) {
-  if (!arguments.length) { return this._drawNode; }
-  this._drawNode = drawNode;
+Renderer.prototype.drawNodes = function(drawNodes) {
+  if (!arguments.length) { return this._drawNodes; }
+  this._drawNodes = bind(drawNodes, this);
   return this;
 };
 
-Renderer.prototype.drawEdgeLabel = function(drawEdgeLabel) {
-  if (!arguments.length) { return this._drawEdgeLabel; }
-  this._drawEdgeLabel = drawEdgeLabel;
+Renderer.prototype.drawEdgeLabels = function(drawEdgeLabels) {
+  if (!arguments.length) { return this._drawEdgeLabels; }
+  this._drawEdgeLabels = bind(drawEdgeLabels, this);
   return this;
 };
 
-Renderer.prototype.drawEdge = function(drawEdge) {
-  if (!arguments.length) { return this._drawEdge; }
-  this._drawEdge = drawEdge;
+Renderer.prototype.drawEdgePaths = function(drawEdgePaths) {
+  if (!arguments.length) { return this._drawEdgePaths; }
+  this._drawEdgePaths = bind(drawEdgePaths, this);
+  return this;
+};
+
+Renderer.prototype.positionNodes = function(positionNodes) {
+  if (!arguments.length) { return this._positionNodes; }
+  this._positionNodes = bind(positionNodes, this);
+  return this;
+};
+
+Renderer.prototype.positionEdgeLabels = function(positionEdgeLabels) {
+  if (!arguments.length) { return this._positionEdgeLabels; }
+  this._positionEdgeLabels = bind(positionEdgeLabels, this);
+  return this;
+};
+
+Renderer.prototype.positionEdgePaths = function(positionEdgePaths) {
+  if (!arguments.length) { return this._positionEdgePaths; }
+  this._positionEdgePaths = bind(positionEdgePaths, this);
+  return this;
+};
+
+Renderer.prototype.transition = function(transition) {
+  if (!arguments.length) { return this._transition; }
+  this._transition = bind(transition, this);
+  return this;
+};
+
+Renderer.prototype.zoomSetup = function(zoomSetup) {
+  if (!arguments.length) { return this._zoomSetup; }
+  this._zoomSetup = bind(zoomSetup, this);
+  return this;
+};
+
+Renderer.prototype.zoom = function(zoom) {
+  if (!arguments.length) { return this._zoom; }
+  if (zoom) {
+    this._zoom = bind(zoom, this);
+  } else {
+    delete this._zoom;
+  }
   return this;
 };
 
 Renderer.prototype.postLayout = function(postLayout) {
   if (!arguments.length) { return this._postLayout; }
-  this._postLayout = postLayout;
+  this._postLayout = bind(postLayout, this);
   return this;
 };
 
 Renderer.prototype.postRender = function(postRender) {
   if (!arguments.length) { return this._postRender; }
-  this._postRender = postRender;
+  this._postRender = bind(postRender, this);
+  return this;
+};
+
+Renderer.prototype.edgeInterpolate = function(edgeInterpolate) {
+  if (!arguments.length) { return this._edgeInterpolate; }
+  this._edgeInterpolate = edgeInterpolate;
+  return this;
+};
+
+Renderer.prototype.edgeTension = function(edgeTension) {
+  if (!arguments.length) { return this._edgeTension; }
+  this._edgeTension = edgeTension;
   return this;
 };
 
@@ -113,24 +176,37 @@ Renderer.prototype.run = function(graph, svg) {
   // process.
   graph = copyAndInitGraph(graph);
 
+  // Create zoom elements
+  svg = this._zoomSetup(graph, svg);
+
+  // Create layers
+  svg
+    .selectAll('g.edgePaths, g.edgeLabels, g.nodes')
+    .data(['edgePaths', 'edgeLabels', 'nodes'])
+    .enter()
+      .append('g')
+      .attr('class', function(d) { return d; });
+
   // Create node and edge roots, attach labels, and capture dimension
   // information for use with layout.
-  var svgNodes = createNodeRoots(graph, svg);
-  var svgEdges = createEdgeRoots(graph, svg);
+  var svgNodes = this._drawNodes(graph, svg.select('g.nodes'));
+  var svgEdgeLabels = this._drawEdgeLabels(graph, svg.select('g.edgeLabels'));
 
-  drawNodes(graph, this._drawNode, svgNodes);
-  drawEdgeLabels(graph, this._drawEdgeLabel, this._calculateEdgeDimensions, svgEdges);
-  
+  svgNodes.each(function(u) { calculateDimensions(this, graph.node(u)); });
+  svgEdgeLabels.each(function(e) { calculateDimensions(this, graph.edge(e)); });
+
   // Now apply the layout function
   var result = runLayout(graph, this._layout);
 
   // Run any user-specified post layout processing
   this._postLayout(result, svg);
 
-  drawEdges(result, this._drawEdge, svgEdges);
+  var svgEdgePaths = this._drawEdgePaths(graph, svg.select('g.edgePaths'));
 
   // Apply the layout information to the graph
-  reposition(result, svgNodes, svgEdges);
+  this._positionNodes(result, svgNodes);
+  this._positionEdgeLabels(result, svgEdgeLabels);
+  this._positionEdgePaths(result, svgEdgePaths);
 
   this._postRender(result, svg);
 
@@ -162,42 +238,6 @@ function copyAndInitGraph(graph) {
   return copy;
 }
 
-function createNodeRoots(graph, svg) {
-  return svg
-    .selectAll('g .node')
-    // Only include non-subgraph nodes
-    .data(graph.nodes().filter(function(u) { return !isComposite(graph, u); }))
-    .enter()
-      .append('g')
-      .classed('node', true);
-}
-
-function createEdgeRoots(graph, svg) {
-  return svg
-    .selectAll('g .edge')
-    .data(graph.edges())
-    .enter()
-      .insert('g', '*')
-      .classed('edge', true);
-}
-
-function drawNodes(graph, drawNode, roots) {
-  roots
-    .each(function(u) { drawNode(graph, u, d3.select(this)); })
-    .each(function(u) { calculateDimensions(this, graph.node(u)); });
-}
-
-function drawEdgeLabels(graph, drawEdgeLabel, calculateDimensions, roots) {
-  roots
-    .append('g')
-      .each(function(e) { drawEdgeLabel(graph, e, d3.select(this)); })
-      .each(function(e) { calculateDimensions(this, graph.edge(e)); });
-}
-
-function drawEdges(graph, drawEdge, roots) {
-  roots.each(function(e) { drawEdge(graph, e, d3.select(this)); });
-}
-
 function calculateDimensions(group, value) {
   var bbox = group.getBBox();
   value.width = bbox.width;
@@ -214,60 +254,174 @@ function runLayout(graph, layout) {
   return result;
 }
 
-function reposition(graph, svgNodes, svgEdges) {
+function defaultDrawNodes(g, root) {
+  var nodes = g.nodes().filter(function(u) { return !isComposite(g, u); });
+
+  var svgNodes = root
+    .selectAll('g.node')
+    .classed('enter', false)
+    .data(nodes, function(u) { return u; });
+
+  svgNodes.selectAll('*').remove();
+
   svgNodes
-    .attr('transform', function(u) {
-      var value = graph.node(u);
-      return 'translate(' + value.x + ',' + value.y + ')';
-    });
+    .enter()
+      .append('g')
+        .style('opacity', 0)
+        .attr('class', 'node enter');
 
-  svgEdges
-    .selectAll('g .edge-label')
-    .attr('transform', function(e) {
-      var value = graph.edge(e);
-      var point = findMidPoint(value.points);
-      return 'translate(' + point.x + ',' + point.y + ')';
-    });
+  svgNodes.each(function(u) { addLabel(g.node(u), d3.select(this), true, 10, 10); });
+
+  this._transition(svgNodes.exit())
+      .style('opacity', 0)
+      .remove();
+
+  return svgNodes;
 }
 
-function defaultDrawNode(graph, u, root) {
-  // Rect has to be created before label so that it doesn't cover it!
-  var label = root.append('g')
-                  .attr('class', 'label');
-  addLabel(graph.node(u).label, label, 10, 10);
+function defaultDrawEdgeLabels(g, root) {
+  var svgEdgeLabels = root
+    .selectAll('g.edgeLabel')
+    .classed('enter', false)
+    .data(g.edges(), function (e) { return e; });
+
+  svgEdgeLabels.selectAll('*').remove();
+
+  svgEdgeLabels
+    .enter()
+      .append('g')
+        .style('opacity', 0)
+        .attr('class', 'edgeLabel enter');
+
+  svgEdgeLabels.each(function(e) { addLabel(g.edge(e), d3.select(this), false, 0, 0); });
+
+  this._transition(svgEdgeLabels.exit())
+      .style('opacity', 0)
+      .remove();
+
+  return svgEdgeLabels;
 }
 
-function defaultDrawEdgeLabel(graph, e, root) {
-  var label = root
-    .append('g')
-      .attr('class', 'edge-label');
-  addLabel(graph.edge(e).label, label, 0, 0);
+var defaultDrawEdgePaths = function(g, root) {
+  var svgEdgePaths = root
+    .selectAll('g.edgePath')
+    .classed('enter', false)
+    .data(g.edges(), function(e) { return e; });
+
+  svgEdgePaths
+    .enter()
+      .append('g')
+        .attr('class', 'edgePath enter')
+        .append('path')
+          .style('opacity', 0)
+          .attr('marker-end', 'url(#arrowhead)');
+
+  this._transition(svgEdgePaths.exit())
+      .style('opacity', 0)
+      .remove();
+
+  return svgEdgePaths;
+};
+
+function defaultPositionNodes(g, svgNodes) {
+  function transform(u) {
+    var value = g.node(u);
+    return 'translate(' + value.x + ',' + value.y + ')';
+  }
+
+  // For entering nodes, position immediately without transition
+  svgNodes.filter('.enter').attr('transform', transform);
+
+  this._transition(svgNodes)
+      .style('opacity', 1)
+      .attr('transform', transform);
 }
 
-function defaultDrawEdge(graph, e, root) {
-  root
-    .insert('path', '*')
-    .attr('marker-end', 'url(#arrowhead)')
-    .attr('d', function() {
-      var value = graph.edge(e);
-      var source = graph.node(graph.incidentNodes(e)[0]);
-      var target = graph.node(graph.incidentNodes(e)[1]);
-      var points = value.points;
+function defaultPositionEdgeLabels(g, svgEdgeLabels) {
+  function transform(e) {
+    var value = g.edge(e);
+    var point = findMidPoint(value.points);
+    return 'translate(' + point.x + ',' + point.y + ')';
+  }
 
-      var p0 = points.length === 0 ? target : points[0];
-      var p1 = points.length === 0 ? source : points[points.length - 1];
+  // For entering edge labels, position immediately without transition
+  svgEdgeLabels.filter('.enter').attr('transform', transform);
 
-      points.unshift(intersectRect(source, p0));
-      // TODO: use bpodgursky's shortening algorithm here
-      points.push(intersectRect(target, p1));
+  this._transition(svgEdgeLabels)
+    .style('opacity', 1)
+    .attr('transform', transform);
+}
 
-      return d3.svg.line()
-        .x(function(d) { return d.x; })
-        .y(function(d) { return d.y; })
-        .interpolate('bundle')
-        .tension(0.95)
-        (points);
-    });
+function defaultPositionEdgePaths(g, svgEdgePaths) {
+  var interpolate = this._edgeInterpolate,
+      tension = this._edgeTension;
+
+  function calcPoints(e) {
+    var value = g.edge(e);
+    var source = g.node(g.incidentNodes(e)[0]);
+    var target = g.node(g.incidentNodes(e)[1]);
+    var points = value.points.slice();
+
+    var p0 = points.length === 0 ? target : points[0];
+    var p1 = points.length === 0 ? source : points[points.length - 1];
+
+    points.unshift(intersectRect(source, p0));
+    // TODO: use bpodgursky's shortening algorithm here
+    points.push(intersectRect(target, p1));
+
+    return d3.svg.line()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; })
+      .interpolate(interpolate)
+      .tension(tension)
+      (points);
+  }
+
+  svgEdgePaths.filter('.enter').selectAll('path')
+      .attr('d', calcPoints);
+
+  this._transition(svgEdgePaths.selectAll('path'))
+      .attr('d', calcPoints)
+      .style('opacity', 1);
+}
+
+// By default we do not use transitions
+function defaultTransition(selection) {
+  return selection;
+}
+
+// Setup dom for zooming
+function defaultZoomSetup(graph, svg) {
+  var root = svg.property('ownerSVGElement');
+  // If the svg node is the root, we get null, so set to svg.
+  if (!root) { root = svg; }
+  root = d3.select(root);
+
+  if (root.select('rect.overlay').empty()) {
+    // Create an overlay for capturing mouse events that don't touch foreground
+    root.append('rect')
+      .attr('class', 'overlay')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('fill', 'none');
+
+    // Capture the zoom behaviour from the svg
+    svg = svg.append('g')
+      .attr('class', 'zoom');
+
+    if (this._zoom) {
+      root.call(this._zoom(graph, svg));
+    }
+  }
+
+  return svg;
+}
+
+// By default allow pan and zoom
+function defaultZoom(graph, svg) {
+  return d3.behavior.zoom().on('zoom', function() {
+    svg.attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+  });
 }
 
 function defaultPostLayout() {
@@ -283,7 +437,7 @@ function defaultPostRender(graph, root) {
           .attr('viewBox', '0 0 10 10')
           .attr('refX', 8)
           .attr('refY', 5)
-          .attr('markerUnits', 'strokewidth')
+          .attr('markerUnits', 'strokeWidth')
           .attr('markerWidth', 8)
           .attr('markerHeight', 5)
           .attr('orient', 'auto')
@@ -293,31 +447,70 @@ function defaultPostRender(graph, root) {
   }
 }
 
-function addLabel(label, root, marginX, marginY) {
+function addLabel(node, root, addingNode, marginX, marginY) {
   // Add the rect first so that it appears behind the label
+  var label = node.label;
   var rect = root.append('rect');
-  var labelSvg = root.append('g');
+  if (node.width) {
+      rect.attr('width', node.width);
+  }
+  if (node.height) {
+      rect.attr('height', node.height);
+  }
+  
+  var labelSvg = root.append('g').style('stroke', '#00');
 
   if (label[0] === '<') {
     addForeignObjectLabel(label, labelSvg);
     // No margin for HTML elements
     marginX = marginY = 0;
   } else {
-    addTextLabel(label, labelSvg);
+    addTextLabel(label,
+                 labelSvg,
+                 Math.floor(node.labelCols),
+                 node.labelCut);
   }
 
-  var bbox = root.node().getBBox();
-
+  var label_bbox = labelSvg.node().getBBox();
   labelSvg.attr('transform',
-             'translate(' + (-bbox.width / 2) + ',' + (-bbox.height / 2) + ')');
+                'translate(' + (-label_bbox.width / 2) + ',' + (- label_bbox.height / 2) + ')');
 
+  var bbox = root.node().getBBox();
+  
   rect
-    .attr('rx', 5)
-    .attr('ry', 5)
+    .attr('rx', node.rx ? node.rx : 5)
+    .attr('ry', node.ry ? node.ry : 5)
     .attr('x', -(bbox.width / 2 + marginX))
     .attr('y', -(bbox.height / 2 + marginY))
     .attr('width', bbox.width + 2 * marginX)
-    .attr('height', bbox.height + 2 * marginY);
+    .attr('height', bbox.height + 2 * marginY)
+    .attr('fill', '#fff');
+  
+  if (addingNode) {
+    if (node.fill) {
+      rect.style('fill', node.fill);
+    }
+
+    if (node.stroke) {
+      rect.style('stroke', node.stroke);
+    }
+
+    if (node['stroke-width']) {
+      rect.style('stroke-width', node['stroke-width'] + 'px');
+    }
+
+    if (node['stroke-dasharray']) {
+      rect.style('stroke-dasharray', node['stroke-dasharray']);
+    }
+
+    if (node.href) {
+     root
+        .attr('class', root.attr('class') + ' clickable')
+        .on('click', function() {
+             window.open(node.href);
+         });
+    }
+  }
 }
 
 function addForeignObjectLabel(label, root) {
@@ -341,13 +534,39 @@ function addForeignObjectLabel(label, root) {
     .attr('height', h);
 }
 
-function addTextLabel(label, root) {
-  root
+function addTextLabel(label, root, labelCols, labelCut) {
+  if (labelCut === undefined) labelCut = 'false';
+  labelCut = (labelCut.toString().toLowerCase() === 'true');
+
+  var node = root
     .append('text')
-    .attr('text-anchor', 'left')
-    .append('tspan')
-      .attr('dy', '1em')
-      .text(function() { return label; });
+    .attr('text-anchor', 'left');
+
+  label = label.replace(/\\n/g, '\n');
+
+  var arr = labelCols ? wordwrap(label, labelCols, labelCut) : label;
+  arr = arr.split('\n');
+  for (var i = 0; i < arr.length; i++) {
+    node
+      .append('tspan')
+        .attr('dy', '1em')
+        .attr('x', '1')
+        .text(arr[i]);
+  }
+}
+
+// Thanks to
+// http://james.padolsey.com/javascript/wordwrap-for-javascript/
+function wordwrap (str, width, cut, brk) {
+     brk = brk || '\n';
+     width = width || 75;
+     cut = cut || false;
+
+     if (!str) { return str; }
+
+     var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
+
+     return str.match( new RegExp(regex, 'g') ).join( brk );
 }
 
 function findMidPoint(points) {
@@ -398,15 +617,27 @@ function isComposite(g, u) {
   return 'children' in g && g.children(u).length;
 }
 
-},{"d3":9,"dagre":10}],4:[function(require,module,exports){
-module.exports = '0.0.9';
+function bind(func, thisArg) {
+  // For some reason PhantomJS occassionally fails when using the builtin bind,
+  // so we check if it is available and if not, use a degenerate polyfill.
+  if (func.bind) {
+    return func.bind(thisArg);
+  }
+
+  return function() {
+    return func.apply(thisArg, arguments);
+  };
+}
+
+},{"d3":10,"dagre":11}],4:[function(require,module,exports){
+module.exports = '0.2.3';
 
 },{}],5:[function(require,module,exports){
 exports.Set = require('./lib/Set');
 exports.PriorityQueue = require('./lib/PriorityQueue');
 exports.version = require('./lib/version');
 
-},{"./lib/PriorityQueue":6,"./lib/Set":7,"./lib/version":8}],6:[function(require,module,exports){
+},{"./lib/PriorityQueue":6,"./lib/Set":7,"./lib/version":9}],6:[function(require,module,exports){
 module.exports = PriorityQueue;
 
 /**
@@ -475,11 +706,12 @@ PriorityQueue.prototype.min = function() {
  * @param {Number} priority the initial priority for the key
  */
 PriorityQueue.prototype.add = function(key, priority) {
-  if (!(key in this._keyIndices)) {
-    var entry = {key: key, priority: priority};
-    var index = this._arr.length;
-    this._keyIndices[key] = index;
-    this._arr.push(entry);
+  var keyIndices = this._keyIndices;
+  if (!(key in keyIndices)) {
+    var arr = this._arr;
+    var index = arr.length;
+    keyIndices[key] = index;
+    arr.push({key: key, priority: priority});
     this._decrease(index);
     return true;
   }
@@ -535,7 +767,7 @@ PriorityQueue.prototype._decrease = function(index) {
   var arr = this._arr;
   var priority = arr[index].priority;
   var parent;
-  while (index > 0) {
+  while (index !== 0) {
     parent = index >> 1;
     if (arr[parent].priority < priority) {
       break;
@@ -548,14 +780,17 @@ PriorityQueue.prototype._decrease = function(index) {
 PriorityQueue.prototype._swap = function(i, j) {
   var arr = this._arr;
   var keyIndices = this._keyIndices;
-  var tmp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = tmp;
-  keyIndices[arr[i].key] = i;
-  keyIndices[arr[j].key] = j;
+  var origArrI = arr[i];
+  var origArrJ = arr[j];
+  arr[i] = origArrJ;
+  arr[j] = origArrI;
+  keyIndices[origArrJ.key] = i;
+  keyIndices[origArrI.key] = j;
 };
 
 },{}],7:[function(require,module,exports){
+var util = require('./util');
+
 module.exports = Set;
 
 /**
@@ -593,10 +828,10 @@ Set.intersect = function(sets) {
     return new Set();
   }
 
-  var result = new Set(sets[0].keys ? sets[0].keys() : sets[0]);
+  var result = new Set(!util.isArray(sets[0]) ? sets[0].keys() : sets[0]);
   for (var i = 1, il = sets.length; i < il; ++i) {
     var resultKeys = result.keys(),
-        other = sets[i].keys ? sets[i] : new Set(sets[i]);
+        other = !util.isArray(sets[i]) ? sets[i] : new Set(sets[i]);
     for (var j = 0, jl = resultKeys.length; j < jl; ++j) {
       var key = resultKeys[j];
       if (!other.has(key)) {
@@ -612,7 +847,7 @@ Set.intersect = function(sets) {
  * Returns a new Set that represents the set union of the array of given sets.
  */
 Set.union = function(sets) {
-  var totalElems = sets.reduce(function(lhs, rhs) {
+  var totalElems = util.reduce(sets, function(lhs, rhs) {
     return lhs + (rhs.size ? rhs.size() : rhs.length);
   }, 0);
   var arr = new Array(totalElems);
@@ -620,7 +855,7 @@ Set.union = function(sets) {
   var k = 0;
   for (var i = 0, il = sets.length; i < il; ++i) {
     var cur = sets[i],
-        keys = cur.keys ? cur.keys() : cur;
+        keys = !util.isArray(cur) ? cur.keys() : cur;
     for (var j = 0, jl = keys.length; j < jl; ++j) {
       arr[k++] = keys[j];
     }
@@ -691,14 +926,74 @@ function values(o) {
   return result;
 }
 
-},{}],8:[function(require,module,exports){
-module.exports = '1.1.0';
+},{"./util":8}],8:[function(require,module,exports){
+/*
+ * This polyfill comes from
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
+ */
+if(!Array.isArray) {
+  exports.isArray = function (vArg) {
+    return Object.prototype.toString.call(vArg) === '[object Array]';
+  };
+} else {
+  exports.isArray = Array.isArray;
+}
+
+/*
+ * Slightly adapted polyfill from
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+ */
+if ('function' !== typeof Array.prototype.reduce) {
+  exports.reduce = function(array, callback, opt_initialValue) {
+    'use strict';
+    if (null === array || 'undefined' === typeof array) {
+      // At the moment all modern browsers, that support strict mode, have
+      // native implementation of Array.prototype.reduce. For instance, IE8
+      // does not support strict mode, so this check is actually useless.
+      throw new TypeError(
+          'Array.prototype.reduce called on null or undefined');
+    }
+    if ('function' !== typeof callback) {
+      throw new TypeError(callback + ' is not a function');
+    }
+    var index, value,
+        length = array.length >>> 0,
+        isValueSet = false;
+    if (1 < arguments.length) {
+      value = opt_initialValue;
+      isValueSet = true;
+    }
+    for (index = 0; length > index; ++index) {
+      if (array.hasOwnProperty(index)) {
+        if (isValueSet) {
+          value = callback(value, array[index], index, array);
+        }
+        else {
+          value = array[index];
+          isValueSet = true;
+        }
+      }
+    }
+    if (!isValueSet) {
+      throw new TypeError('Reduce of empty array with no initial value');
+    }
+    return value;
+  };
+} else {
+  exports.reduce = function(array, callback, opt_initialValue) {
+    return array.reduce(callback, opt_initialValue);
+  };
+}
+
 },{}],9:[function(require,module,exports){
+module.exports = '1.1.3';
+
+},{}],10:[function(require,module,exports){
 require("./d3");
 module.exports = d3;
 (function () { delete this.d3; })(); // unset global
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*
 Copyright (c) 2012-2013 Chris Pettitt
 
@@ -725,7 +1020,7 @@ exports.Graph = require("graphlib").Graph;
 exports.layout = require("./lib/layout");
 exports.version = require("./lib/version");
 
-},{"./lib/layout":11,"./lib/version":26,"graphlib":27}],11:[function(require,module,exports){
+},{"./lib/layout":12,"./lib/version":27,"graphlib":28}],12:[function(require,module,exports){
 var util = require('./util'),
     rank = require('./rank'),
     order = require('./order'),
@@ -823,7 +1118,8 @@ module.exports = function() {
     // Initial graph attributes
     var graphValue = inputGraph.graph() || {};
     g.graph({
-      rankDir: graphValue.rankDir || config.rankDir
+      rankDir: graphValue.rankDir || config.rankDir,
+      orderRestarts: graphValue.orderRestarts
     });
 
     return g;
@@ -993,7 +1289,7 @@ module.exports = function() {
 };
 
 
-},{"./order":12,"./position":17,"./rank":18,"./util":25,"graphlib":27}],12:[function(require,module,exports){
+},{"./order":13,"./position":18,"./rank":19,"./util":26,"graphlib":28}],13:[function(require,module,exports){
 var util = require('./util'),
     crossCount = require('./order/crossCount'),
     initLayerGraphs = require('./order/initLayerGraphs'),
@@ -1016,28 +1312,53 @@ function order(g, maxSweeps) {
     maxSweeps = DEFAULT_MAX_SWEEPS;
   }
 
+  var restarts = g.graph().orderRestarts || 0;
+
   var layerGraphs = initLayerGraphs(g);
   // TODO: remove this when we add back support for ordering clusters
   layerGraphs.forEach(function(lg) {
     lg = lg.filterNodes(function(u) { return !g.children(u).length; });
   });
 
-  initOrder(g);
+  var iters = 0,
+      currentBestCC,
+      allTimeBestCC = Number.MAX_VALUE,
+      allTimeBest = {};
 
-  util.log(2, 'Order phase start cross count: ' + g.graph().orderInitCC);
-
-  var i, lastBest;
-  for (i = 0, lastBest = 0; lastBest < 4 && i < maxSweeps; ++i, ++lastBest) {
-    sweep(g, layerGraphs, i);
-    if (saveBest(g)) {
-      lastBest = 0;
-    }
-    util.log(3, 'Order phase iter ' + i + ' cross count: ' + g.graph().orderCC);
+  function saveAllTimeBest() {
+    g.eachNode(function(u, value) { allTimeBest[u] = value.order; });
   }
 
-  restoreBest(g);
+  for (var j = 0; j < Number(restarts) + 1 && allTimeBestCC !== 0; ++j) {
+    currentBestCC = Number.MAX_VALUE;
+    initOrder(g, restarts > 0);
 
-  util.log(2, 'Order iterations: ' + i);
+    util.log(2, 'Order phase start cross count: ' + g.graph().orderInitCC);
+
+    var i, lastBest, cc;
+    for (i = 0, lastBest = 0; lastBest < 4 && i < maxSweeps && currentBestCC > 0; ++i, ++lastBest, ++iters) {
+      sweep(g, layerGraphs, i);
+      cc = crossCount(g);
+      if (cc < currentBestCC) {
+        lastBest = 0;
+        currentBestCC = cc;
+        if (cc < allTimeBestCC) {
+          saveAllTimeBest();
+          allTimeBestCC = cc;
+        }
+      }
+      util.log(3, 'Order phase start ' + j + ' iter ' + i + ' cross count: ' + cc);
+    }
+  }
+
+  Object.keys(allTimeBest).forEach(function(u) {
+    if (!g.children || !g.children(u).length) {
+      g.node(u).order = allTimeBest[u];
+    }
+  });
+  g.graph().orderCC = allTimeBestCC;
+
+  util.log(2, 'Order iterations: ' + iters);
   util.log(2, 'Order phase best cross count: ' + g.graph().orderCC);
 }
 
@@ -1083,43 +1404,7 @@ function sweepUp(g, layerGraphs) {
   }
 }
 
-/*
- * Checks if the current ordering of the graph has a lower cross count than the
- * current best. If so, saves the ordering of the current nodes and the new
- * best cross count. This can be used with restoreBest to restore the last best
- * ordering.
- *
- * If this is the first time running the function the current ordering will be
- * assumed as the best.
- *
- * Returns `true` if this layout represents a new best.
- */
-function saveBest(g) {
-  var graph = g.graph();
-  var cc = crossCount(g);
-  if (!('orderCC' in graph) || graph.orderCC > cc) {
-    graph.orderCC = cc;
-    graph.order = {};
-    g.eachNode(function(u, value) {
-      if ('order' in value) {
-        graph.order[u] = value.order;
-      }
-    });
-    return true;
-  }
-  return false;
-}
-
-function restoreBest(g) {
-  var order = g.graph().order;
-  g.eachNode(function(u, value) {
-    if ('order' in value) {
-      value.order = order[u];
-    }
-  });
-}
-
-},{"./order/crossCount":13,"./order/initLayerGraphs":14,"./order/initOrder":15,"./order/sortLayer":16,"./util":25}],13:[function(require,module,exports){
+},{"./order/crossCount":14,"./order/initLayerGraphs":15,"./order/initOrder":16,"./order/sortLayer":17,"./util":26}],14:[function(require,module,exports){
 var util = require('../util');
 
 module.exports = crossCount;
@@ -1176,7 +1461,7 @@ function twoLayerCrossCount(g, layer1, layer2) {
   return cc;
 }
 
-},{"../util":25}],14:[function(require,module,exports){
+},{"../util":26}],15:[function(require,module,exports){
 var nodesFromList = require('graphlib').filter.nodesFromList,
     /* jshint -W079 */
     Set = require('cp-data').Set;
@@ -1227,8 +1512,9 @@ function initLayerGraphs(g) {
   return layerGraphs;
 }
 
-},{"cp-data":5,"graphlib":27}],15:[function(require,module,exports){
-var crossCount = require('./crossCount');
+},{"cp-data":5,"graphlib":28}],16:[function(require,module,exports){
+var crossCount = require('./crossCount'),
+    util = require('../util');
 
 module.exports = initOrder;
 
@@ -1238,25 +1524,33 @@ module.exports = initOrder;
  * arranges each node of each rank. If no constraint graph is provided the
  * order of the nodes in each rank is entirely arbitrary.
  */
-function initOrder(g) {
-  var orderCount = [];
+function initOrder(g, random) {
+  var layers = [];
 
-  function addNode(u, value) {
-    if ('order' in value) return;
+  g.eachNode(function(u, value) {
+    var layer = layers[value.rank];
     if (g.children && g.children(u).length > 0) return;
-    if (!(value.rank in orderCount)) {
-      orderCount[value.rank] = 0;
+    if (!layer) {
+      layer = layers[value.rank] = [];
     }
-    value.order = orderCount[value.rank]++;
-  }
+    layer.push(u);
+  });
 
-  g.eachNode(function(u, value) { addNode(u, value); });
+  layers.forEach(function(layer) {
+    if (random) {
+      util.shuffle(layer);
+    }
+    layer.forEach(function(u, i) {
+      g.node(u).order = i;
+    });
+  });
+
   var cc = crossCount(g);
   g.graph().orderInitCC = cc;
   g.graph().orderCC = Number.MAX_VALUE;
 }
 
-},{"./crossCount":13}],16:[function(require,module,exports){
+},{"../util":26,"./crossCount":14}],17:[function(require,module,exports){
 var util = require('../util');
 /*
     Digraph = require('graphlib').Digraph,
@@ -1421,7 +1715,7 @@ function findViolatedConstraint(cg, nodeData) {
 }
 */
 
-},{"../util":25}],17:[function(require,module,exports){
+},{"../util":26}],18:[function(require,module,exports){
 var util = require('./util');
 
 /*
@@ -1561,7 +1855,9 @@ module.exports = function() {
 
         if (g.node(u).dummy) {
           var uPred = g.predecessors(u)[0];
-          if (g.node(uPred).dummy)
+          // Note: In the case of self loops and sideways edges it is possible
+          // for a dummy not to have a predecessor.
+          if (uPred !== undefined && g.node(uPred).dummy)
             k1 = pos[uPred];
         }
         if (k1 === undefined && l1 === currLayer.length - 1)
@@ -1859,7 +2155,7 @@ module.exports = function() {
   }
 };
 
-},{"./util":25}],18:[function(require,module,exports){
+},{"./util":26}],19:[function(require,module,exports){
 var util = require('./util'),
     acyclic = require('./rank/acyclic'),
     initRank = require('./rank/initRank'),
@@ -1882,21 +2178,13 @@ exports.restoreEdges = restoreEdges;
  *  * Each edge in the input graph must have an assigned 'minLen' attribute
  */
 function run(g, useSimplex) {
-  var selfLoops = removeSelfLoops(g);
+  expandSelfLoops(g);
 
   // If there are rank constraints on nodes, then build a new graph that
   // encodes the constraints.
   util.time('constraints.apply', constraints.apply)(g);
 
-  // Since we already removed self loops before applying rank constraints we
-  // know that self loops indicate sideways edges induced by rank constraints.
-  // Currently we do not have any support for sideways edges, so we remove
-  // them. Since the edges we remove are between collapsed nodes, we need to
-  // take care to save the original edge information.
-  var sidewaysEdges = removeSelfLoops(g)
-    .map(function(edge) {
-      return edge.value.originalEdge;
-    });
+  expandSidewaysEdges(g);
 
   // Reverse edges to get an acyclic graph, we keep the graph in an acyclic
   // state until the very end.
@@ -1923,40 +2211,61 @@ function run(g, useSimplex) {
   // edges" and mark them as such. The acyclic algorithm will reverse them as a
   // post processing step.
   util.time('reorientEdges', reorientEdges)(g);
-
-  // Save removed edges so that they can be restored later
-  g.graph().rankRemovedEdges = selfLoops.concat(sidewaysEdges);
 }
 
 function restoreEdges(g) {
-  g.graph().rankRemovedEdges.forEach(function(edge) {
-    // It's possible that the removed edge collides with an auto-assigned id,
-    // so we check for and resolve such cases here.
-    if (g.hasEdge(edge.e)) {
-      g.addEdge(null, g.source(edge.e), g.target(edge.e), g.edge(edge.e));
-      g.delEdge(edge.e);
-    }
-    g.addEdge(edge.e, edge.u, edge.v, edge.value);
-  });
-
   acyclic.undo(g);
 }
 
 /*
- * Find any self loops and remove them from the input graph. Return the removed
- * edges in the form { e, u, v, value }.
+ * Expand self loops into three dummy nodes. One will sit above the incident
+ * node, one will be at the same level, and one below. The result looks like:
+ *
+ *         /--<--x--->--\
+ *     node              y
+ *         \--<--z--->--/
+ *
+ * Dummy nodes x, y, z give us the shape of a loop and node y is where we place
+ * the label.
+ *
+ * TODO: consolidate knowledge of dummy node construction.
+ * TODO: support minLen = 2
  */
-function removeSelfLoops(g) {
-  var selfLoops = [];
-
-  g.eachEdge(function(e, u, v, value) {
+function expandSelfLoops(g) {
+  g.eachEdge(function(e, u, v, a) {
     if (u === v) {
-      selfLoops.push({e: e, u: u, v: v, value: value});
+      var x = addDummyNode(g, e, u, v, a, 0, false),
+          y = addDummyNode(g, e, u, v, a, 1, true),
+          z = addDummyNode(g, e, u, v, a, 2, false);
+      g.addEdge(null, x, u, {minLen: 1, selfLoop: true});
+      g.addEdge(null, x, y, {minLen: 1, selfLoop: true});
+      g.addEdge(null, u, z, {minLen: 1, selfLoop: true});
+      g.addEdge(null, y, z, {minLen: 1, selfLoop: true});
       g.delEdge(e);
     }
   });
+}
 
-  return selfLoops;
+function expandSidewaysEdges(g) {
+  g.eachEdge(function(e, u, v, a) {
+    if (u === v) {
+      var origEdge = a.originalEdge,
+          dummy = addDummyNode(g, origEdge.e, origEdge.u, origEdge.v, origEdge.value, 0, true);
+      g.addEdge(null, u, dummy, {minLen: 1});
+      g.addEdge(null, dummy, v, {minLen: 1});
+      g.delEdge(e);
+    }
+  });
+}
+
+function addDummyNode(g, e, u, v, a, index, isLabel) {
+  return g.addNode(null, {
+    width: isLabel ? a.width : 0,
+    height: isLabel ? a.height : 0,
+    edge: { id: e, source: u, target: v, attrs: a },
+    dummy: true,
+    index: index
+  });
 }
 
 function reorientEdges(g) {
@@ -1984,7 +2293,7 @@ function normalize(g) {
   g.eachNode(function(u, node) { node.rank -= m; });
 }
 
-},{"./rank/acyclic":19,"./rank/constraints":20,"./rank/feasibleTree":21,"./rank/initRank":22,"./rank/simplex":24,"./util":25,"graphlib":27}],19:[function(require,module,exports){
+},{"./rank/acyclic":20,"./rank/constraints":21,"./rank/feasibleTree":22,"./rank/initRank":23,"./rank/simplex":25,"./util":26,"graphlib":28}],20:[function(require,module,exports){
 var util = require('../util');
 
 module.exports = acyclic;
@@ -2047,7 +2356,7 @@ function undo(g) {
   });
 }
 
-},{"../util":25}],20:[function(require,module,exports){
+},{"../util":26}],21:[function(require,module,exports){
 exports.apply = function(g) {
   function dfs(sg) {
     var rankSets = {};
@@ -2110,6 +2419,12 @@ function redirectInEdges(g, u, newU, reverse) {
         minLen: g.edge(e).minLen
       };
     }
+
+    // Do not reverse edges for self-loops.
+    if (origValue.selfLoop) {
+      reverse = false;
+    }
+
     if (reverse) {
       // Ensure that all edges to min are reversed
       g.addEdge(null, newU, g.source(e), value);
@@ -2132,6 +2447,12 @@ function redirectOutEdges(g, u, newU, reverse) {
         minLen: g.edge(e).minLen
       };
     }
+
+    // Do not reverse edges for self-loops.
+    if (origValue.selfLoop) {
+      reverse = false;
+    }
+
     if (reverse) {
       // Ensure that all edges from max are reversed
       g.addEdge(null, g.target(e), newU, value);
@@ -2145,7 +2466,9 @@ function redirectOutEdges(g, u, newU, reverse) {
 function addLightEdgesFromMinNode(g, sg, minNode) {
   if (minNode !== undefined) {
     g.children(sg).forEach(function(u) {
-      if (u !== minNode && !g.outEdges(minNode, u).length) {
+      // The dummy check ensures we don't add an edge if the node is involved
+      // in a self loop or sideways edge.
+      if (u !== minNode && !g.outEdges(minNode, u).length && !g.node(u).dummy) {
         g.addEdge(null, minNode, u, { minLen: 0 });
       }
     });
@@ -2155,7 +2478,9 @@ function addLightEdgesFromMinNode(g, sg, minNode) {
 function addLightEdgesToMaxNode(g, sg, maxNode) {
   if (maxNode !== undefined) {
     g.children(sg).forEach(function(u) {
-      if (u !== maxNode && !g.outEdges(u, maxNode).length) {
+      // The dummy check ensures we don't add an edge if the node is involved
+      // in a self loop or sideways edge.
+      if (u !== maxNode && !g.outEdges(u, maxNode).length && !g.node(u).dummy) {
         g.addEdge(null, u, maxNode, { minLen: 0 });
       }
     });
@@ -2200,12 +2525,12 @@ exports.relax = function(g) {
   });
 };
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /* jshint -W079 */
 var Set = require('cp-data').Set,
 /* jshint +W079 */
     Digraph = require('graphlib').Digraph,
-    rankUtil = require('./rankUtil');
+    util = require('../util');
 
 module.exports = feasibleTree;
 
@@ -2230,92 +2555,102 @@ module.exports = feasibleTree;
  * Nodes have the same id and value as that in the input graph.
  *
  * Edges in the tree have arbitrarily assigned ids. The attributes for edges
- * include `reversed` and `weight`. `reversed` indicates that the edge is a
- * back edge in the input graph. `weight` is used to indicate how many multi-
- * edges are represented by the tree edge.
+ * include `reversed`. `reversed` indicates that the edge is a
+ * back edge in the input graph.
  */
 function feasibleTree(g) {
   var remaining = new Set(g.nodes()),
-      minLen = [], // Array of {u, v, len}
       tree = new Digraph();
 
-  // Collapse multi-edges and precompute the minLen, which will be the
-  // max value of minLen for any edge in the multi-edge.
-  var minLenMap = {};
-  g.eachEdge(function(e, u, v, edge) {
-    var id = incidenceId(u, v);
-    if (!(id in minLenMap)) {
-      minLen.push(minLenMap[id] = { u: u, v: v, len: 0, weight: 0 });
-    }
-    var mle = minLenMap[id];
-    mle.len = Math.max(mle.len, edge.minLen);
-    mle.weight++;
-  });
+  if (remaining.size() === 1) {
+    var root = g.nodes()[0];
+    tree.addNode(root, {});
+    tree.graph({ root: root });
+    return tree;
+  }
 
-  // Remove arbitrary node - it is effectively the root of the spanning tree.
-  var root = g.nodes()[0];
-  remaining.remove(root);
-  var nodeVal = g.node(root);
-  tree.addNode(root, nodeVal);
-  tree.graph({root: root});
-
-  // Finds the next edge with the minimum slack.
-  function findMinSlack() {
-    var result,
-        eSlack = Number.POSITIVE_INFINITY;
-    minLen.forEach(function(mle /* minLen entry */) {
-      if (remaining.has(mle.u) !== remaining.has(mle.v)) {
-        var mleSlack = rankUtil.slack(g, mle.u, mle.v, mle.len);
-        if (mleSlack < eSlack) {
-          if (!remaining.has(mle.u)) {
-            result = {
-              treeNode: mle.u,
-              graphNode: mle.v,
-              len: mle.len,
-              reversed: false,
-              weight: mle.weight
-            };
-          } else {
-            result = {
-              treeNode: mle.v,
-              graphNode: mle.u,
-              len: -mle.len,
-              reversed: true,
-              weight: mle.weight
-            };
-          }
-          eSlack = mleSlack;
+  function addTightEdges(v) {
+    var continueToScan = true;
+    g.predecessors(v).forEach(function(u) {
+      if (remaining.has(u) && !slack(g, u, v)) {
+        if (remaining.has(v)) {
+          tree.addNode(v, {});
+          remaining.remove(v);
+          tree.graph({ root: v });
         }
+
+        tree.addNode(u, {});
+        tree.addEdge(null, u, v, { reversed: true });
+        remaining.remove(u);
+        addTightEdges(u);
+        continueToScan = false;
       }
     });
 
-    return result;
+    g.successors(v).forEach(function(w)  {
+      if (remaining.has(w) && !slack(g, v, w)) {
+        if (remaining.has(v)) {
+          tree.addNode(v, {});
+          remaining.remove(v);
+          tree.graph({ root: v });
+        }
+
+        tree.addNode(w, {});
+        tree.addEdge(null, v, w, {});
+        remaining.remove(w);
+        addTightEdges(w);
+        continueToScan = false;
+      }
+    });
+    return continueToScan;
   }
 
-  while (remaining.size() > 0) {
-    var result = findMinSlack();
-    nodeVal = g.node(result.graphNode);
-    remaining.remove(result.graphNode);
-    tree.addNode(result.graphNode, nodeVal);
-    tree.addEdge(null, result.treeNode, result.graphNode, {
-      reversed: result.reversed,
-      weight: result.weight
+  function createTightEdge() {
+    var minSlack = Number.MAX_VALUE;
+    remaining.keys().forEach(function(v) {
+      g.predecessors(v).forEach(function(u) {
+        if (!remaining.has(u)) {
+          var edgeSlack = slack(g, u, v);
+          if (Math.abs(edgeSlack) < Math.abs(minSlack)) {
+            minSlack = -edgeSlack;
+          }
+        }
+      });
+
+      g.successors(v).forEach(function(w) {
+        if (!remaining.has(w)) {
+          var edgeSlack = slack(g, v, w);
+          if (Math.abs(edgeSlack) < Math.abs(minSlack)) {
+            minSlack = edgeSlack;
+          }
+        }
+      });
     });
-    nodeVal.rank = g.node(result.treeNode).rank + result.len;
+
+    tree.eachNode(function(u) { g.node(u).rank -= minSlack; });
+  }
+
+  while (remaining.size()) {
+    var nodesToSearch = !tree.order() ? remaining.keys() : tree.nodes();
+    for (var i = 0, il = nodesToSearch.length;
+         i < il && addTightEdges(nodesToSearch[i]);
+         ++i);
+    if (remaining.size()) {
+      createTightEdge();
+    }
   }
 
   return tree;
 }
 
-/*
- * This id can be used to group (in an undirected manner) multi-edges
- * incident on the same two nodes.
- */
-function incidenceId(u, v) {
-  return u < v ?  u.length + ':' + u + '-' + v : v.length + ':' + v + '-' + u;
+function slack(g, u, v) {
+  var rankDiff = g.node(v).rank - g.node(u).rank;
+  var maxMinLen = util.max(g.outEdges(u, v)
+                            .map(function(e) { return g.edge(e).minLen; }));
+  return rankDiff - maxMinLen;
 }
 
-},{"./rankUtil":23,"cp-data":5,"graphlib":27}],22:[function(require,module,exports){
+},{"../util":26,"cp-data":5,"graphlib":28}],23:[function(require,module,exports){
 var util = require('../util'),
     topsort = require('graphlib').alg.topsort;
 
@@ -2347,7 +2682,7 @@ function initRank(g) {
   });
 }
 
-},{"../util":25,"graphlib":27}],23:[function(require,module,exports){
+},{"../util":26,"graphlib":28}],24:[function(require,module,exports){
 module.exports = {
   slack: slack
 };
@@ -2365,7 +2700,7 @@ function slack(graph, u, v, minLen) {
   return Math.abs(graph.node(u).rank - graph.node(v).rank) - minLen;
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var util = require('../util'),
     rankUtil = require('./rankUtil');
 
@@ -2675,7 +3010,7 @@ function minimumLength(graph, u, v) {
   }
 }
 
-},{"../util":25,"./rankUtil":23}],25:[function(require,module,exports){
+},{"../util":26,"./rankUtil":24}],26:[function(require,module,exports){
 /*
  * Returns the smallest value in the array.
  */
@@ -2716,6 +3051,15 @@ exports.sum = function(values) {
  */
 exports.values = function(obj) {
   return Object.keys(obj).map(function(k) { return obj[k]; });
+};
+
+exports.shuffle = function(array) {
+  for (i = array.length - 1; i > 0; --i) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var aj = array[j];
+    array[j] = array[i];
+    array[i] = aj;
+  }
 };
 
 exports.propertyAccessor = function(self, config, field, setHook) {
@@ -2785,10 +3129,10 @@ log.level = 0;
 
 exports.log = log;
 
-},{}],26:[function(require,module,exports){
-module.exports = '0.4.0';
-
 },{}],27:[function(require,module,exports){
+module.exports = '0.4.5';
+
+},{}],28:[function(require,module,exports){
 exports.Graph = require("./lib/Graph");
 exports.Digraph = require("./lib/Digraph");
 exports.CGraph = require("./lib/CGraph");
@@ -2821,8 +3165,10 @@ exports.filter = {
 
 exports.version = require("./lib/version");
 
-},{"./lib/CDigraph":29,"./lib/CGraph":30,"./lib/Digraph":31,"./lib/Graph":32,"./lib/alg/components":33,"./lib/alg/dijkstra":34,"./lib/alg/dijkstraAll":35,"./lib/alg/findCycles":36,"./lib/alg/floydWarshall":37,"./lib/alg/isAcyclic":38,"./lib/alg/postorder":39,"./lib/alg/preorder":40,"./lib/alg/prim":41,"./lib/alg/tarjan":42,"./lib/alg/topsort":43,"./lib/converter/json.js":45,"./lib/filter":46,"./lib/graph-converters":47,"./lib/version":49}],28:[function(require,module,exports){
+},{"./lib/CDigraph":30,"./lib/CGraph":31,"./lib/Digraph":32,"./lib/Graph":33,"./lib/alg/components":34,"./lib/alg/dijkstra":35,"./lib/alg/dijkstraAll":36,"./lib/alg/findCycles":37,"./lib/alg/floydWarshall":38,"./lib/alg/isAcyclic":39,"./lib/alg/postorder":40,"./lib/alg/preorder":41,"./lib/alg/prim":42,"./lib/alg/tarjan":43,"./lib/alg/topsort":44,"./lib/converter/json.js":46,"./lib/filter":47,"./lib/graph-converters":48,"./lib/version":50}],29:[function(require,module,exports){
+/* jshint -W079 */
 var Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = BaseGraph;
 
@@ -3016,7 +3362,7 @@ function delEdgeFromMap(map, v, e) {
 }
 
 
-},{"cp-data":5}],29:[function(require,module,exports){
+},{"cp-data":5}],30:[function(require,module,exports){
 var Digraph = require("./Digraph"),
     compoundify = require("./compoundify");
 
@@ -3053,7 +3399,7 @@ CDigraph.prototype.toString = function() {
   return "CDigraph " + JSON.stringify(this, null, 2);
 };
 
-},{"./Digraph":31,"./compoundify":44}],30:[function(require,module,exports){
+},{"./Digraph":32,"./compoundify":45}],31:[function(require,module,exports){
 var Graph = require("./Graph"),
     compoundify = require("./compoundify");
 
@@ -3090,7 +3436,7 @@ CGraph.prototype.toString = function() {
   return "CGraph " + JSON.stringify(this, null, 2);
 };
 
-},{"./Graph":32,"./compoundify":44}],31:[function(require,module,exports){
+},{"./Graph":33,"./compoundify":45}],32:[function(require,module,exports){
 /*
  * This file is organized with in the following order:
  *
@@ -3103,7 +3449,9 @@ CGraph.prototype.toString = function() {
 
 var util = require("./util"),
     BaseGraph = require("./BaseGraph"),
+/* jshint -W079 */
     Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = Digraph;
 
@@ -3356,7 +3704,7 @@ Digraph.prototype._filterNodes = function(pred) {
 };
 
 
-},{"./BaseGraph":28,"./util":48,"cp-data":5}],32:[function(require,module,exports){
+},{"./BaseGraph":29,"./util":49,"cp-data":5}],33:[function(require,module,exports){
 /*
  * This file is organized with in the following order:
  *
@@ -3369,7 +3717,9 @@ Digraph.prototype._filterNodes = function(pred) {
 
 var util = require("./util"),
     BaseGraph = require("./BaseGraph"),
+/* jshint -W079 */
     Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = Graph;
 
@@ -3489,8 +3839,10 @@ Graph.prototype.delEdge = function(e) {
 };
 
 
-},{"./BaseGraph":28,"./util":48,"cp-data":5}],33:[function(require,module,exports){
+},{"./BaseGraph":29,"./util":49,"cp-data":5}],34:[function(require,module,exports){
+/* jshint -W079 */
 var Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = components;
 
@@ -3530,7 +3882,7 @@ function components(g) {
   return results;
 }
 
-},{"cp-data":5}],34:[function(require,module,exports){
+},{"cp-data":5}],35:[function(require,module,exports){
 var PriorityQueue = require("cp-data").PriorityQueue;
 
 module.exports = dijkstra;
@@ -3590,7 +3942,7 @@ function dijkstra(g, source, weightFunc, incidentFunc) {
       ? function(u) { return g.outEdges(u); }
       : function(u) { return g.incidentEdges(u); });
 
-  g.nodes().forEach(function(u) {
+  g.eachNode(function(u) {
     var distance = u === source ? 0 : Number.POSITIVE_INFINITY;
     results[u] = { distance: distance };
     pq.add(u, distance);
@@ -3610,7 +3962,7 @@ function dijkstra(g, source, weightFunc, incidentFunc) {
   return results;
 }
 
-},{"cp-data":5}],35:[function(require,module,exports){
+},{"cp-data":5}],36:[function(require,module,exports){
 var dijkstra = require("./dijkstra");
 
 module.exports = dijkstraAll;
@@ -3641,13 +3993,13 @@ module.exports = dijkstraAll;
  */
 function dijkstraAll(g, weightFunc, incidentFunc) {
   var results = {};
-  g.nodes().forEach(function(u) {
+  g.eachNode(function(u) {
     results[u] = dijkstra(g, u, weightFunc, incidentFunc);
   });
   return results;
 }
 
-},{"./dijkstra":34}],36:[function(require,module,exports){
+},{"./dijkstra":35}],37:[function(require,module,exports){
 var tarjan = require("./tarjan");
 
 module.exports = findCycles;
@@ -3669,7 +4021,7 @@ function findCycles(g) {
   return tarjan(g).filter(function(cmpt) { return cmpt.length > 1; });
 }
 
-},{"./tarjan":42}],37:[function(require,module,exports){
+},{"./tarjan":43}],38:[function(require,module,exports){
 module.exports = floydWarshall;
 
 /**
@@ -3748,7 +4100,7 @@ function floydWarshall(g, weightFunc, incidentFunc) {
   return results;
 }
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var topsort = require("./topsort");
 
 module.exports = isAcyclic;
@@ -3774,8 +4126,10 @@ function isAcyclic(g) {
   return true;
 }
 
-},{"./topsort":43}],39:[function(require,module,exports){
+},{"./topsort":44}],40:[function(require,module,exports){
+/* jshint -W079 */
 var Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = postorder;
 
@@ -3799,8 +4153,10 @@ function postorder(g, root, f) {
   dfs(root);
 }
 
-},{"cp-data":5}],40:[function(require,module,exports){
+},{"cp-data":5}],41:[function(require,module,exports){
+/* jshint -W079 */
 var Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = preorder;
 
@@ -3824,7 +4180,7 @@ function preorder(g, root, f) {
   dfs(root);
 }
 
-},{"cp-data":5}],41:[function(require,module,exports){
+},{"cp-data":5}],42:[function(require,module,exports){
 var Graph = require("../Graph"),
     PriorityQueue = require("cp-data").PriorityQueue;
 
@@ -3895,7 +4251,7 @@ function prim(g, weightFunc) {
   return result;
 }
 
-},{"../Graph":32,"cp-data":5}],42:[function(require,module,exports){
+},{"../Graph":33,"cp-data":5}],43:[function(require,module,exports){
 module.exports = tarjan;
 
 /**
@@ -3963,7 +4319,7 @@ function tarjan(g) {
   return results;
 }
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = topsort;
 topsort.CycleException = CycleException;
 
@@ -4021,11 +4377,13 @@ CycleException.prototype.toString = function() {
   return "Graph has at least one cycle";
 };
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 // This file provides a helper function that mixes-in Dot behavior to an
 // existing graph prototype.
 
+/* jshint -W079 */
 var Set = require("cp-data").Set;
+/* jshint +W079 */
 
 module.exports = compoundify;
 
@@ -4039,7 +4397,8 @@ function compoundify(SuperConstructor) {
     this._parents = {};
 
     // Map of id (or null) -> children set
-    this._children = { null: new Set() };
+    this._children = {};
+    this._children[null] = new Set();
   }
 
   Constructor.prototype = new SuperConstructor();
@@ -4126,7 +4485,7 @@ function compoundify(SuperConstructor) {
   return Constructor;
 }
 
-},{"cp-data":5}],45:[function(require,module,exports){
+},{"cp-data":5}],46:[function(require,module,exports){
 var Graph = require("../Graph"),
     Digraph = require("../Digraph"),
     CGraph = require("../CGraph"),
@@ -4216,8 +4575,10 @@ function typeOf(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 }
 
-},{"../CDigraph":29,"../CGraph":30,"../Digraph":31,"../Graph":32}],46:[function(require,module,exports){
+},{"../CDigraph":30,"../CGraph":31,"../Digraph":32,"../Graph":33}],47:[function(require,module,exports){
+/* jshint -W079 */
 var Set = require("cp-data").Set;
+/* jshint +W079 */
 
 exports.all = function() {
   return function() { return true; };
@@ -4230,7 +4591,7 @@ exports.nodesFromList = function(nodes) {
   };
 };
 
-},{"cp-data":5}],47:[function(require,module,exports){
+},{"cp-data":5}],48:[function(require,module,exports){
 var Graph = require("./Graph"),
     Digraph = require("./Digraph");
 
@@ -4269,7 +4630,7 @@ Digraph.prototype.asUndirected = function() {
   return g;
 };
 
-},{"./Digraph":31,"./Graph":32}],48:[function(require,module,exports){
+},{"./Digraph":32,"./Graph":33}],49:[function(require,module,exports){
 // Returns an array of all values for properties of **o**.
 exports.values = function(o) {
   var ks = Object.keys(o),
@@ -4282,7 +4643,8 @@ exports.values = function(o) {
   return result;
 };
 
-},{}],49:[function(require,module,exports){
-module.exports = '0.7.0';
+},{}],50:[function(require,module,exports){
+module.exports = '0.7.4';
+
 },{}]},{},[1])
 ;
