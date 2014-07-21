@@ -20,15 +20,38 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
   'app.components.widgets.Base',
   'app.settings',
   'app.components.directives.logicalDag',
-  'app.components.directives.dtSelect'
+  'app.components.directives.dtSelect',
+  'app.components.resources.LogicalDag'
 ])
+  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag) {
 
-  .factory('LogicalDagWidgetDefinition', function(BaseWidget, AppsListDataModel) {
+    var LogicalDagDataModel = BaseDataModel.extend({
+
+      init: function() {
+        this.resource = new LogicalDag({
+          appId: this.dataModelOptions.appId
+        });
+        this.resource.fetch().then(function (response) {
+          console.log(response);
+        });
+        //this.resource.subscribe(this.widgetScope);
+        //this.widgetScope.data = this.resource.data;
+      },
+
+      destroy: function() {
+        this.resource.unsubscribe();
+      }
+
+    });
+
+    return LogicalDagDataModel;
+  })
+  .factory('LogicalDagWidgetDefinition', function(BaseWidget, LogicalDagDataModel) {
     var LogicalDagWidgetDefinition = BaseWidget.extend({
       defaults: {
         title: 'Logical DAG',
         directive: 'dt-logical-dag',
-        dataModelType: AppsListDataModel,
+        dataModelType: LogicalDagDataModel,
         attrs: {
           'app-id': 'appId'
         }
