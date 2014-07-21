@@ -24,6 +24,7 @@ angular.module('app.pages.ops.appInstance', [
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
+  'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appinstance.widgets.LogicalDag'
 ])
 
@@ -45,6 +46,7 @@ angular.module('app.pages.ops.appInstance', [
     ApplicationModel,
     LogicalDagWidgetDefinition,
     AppInstanceOverviewWidgetDef,
+    StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
     breadcrumbs) {
 
@@ -64,7 +66,8 @@ angular.module('app.pages.ops.appInstance', [
 
 
     var widgetDefinitions = [
-      new AppInstanceOverviewWidgetDef({ name:  'Application Overview' }),
+      new AppInstanceOverviewWidgetDef({ name:  'Application Overview', style: { width: '66%' } }),
+      new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float':'right' } }),
       new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
       new LogicalDagWidgetDefinition({ name: 'LogicalDAG' })
     ];
@@ -72,8 +75,8 @@ angular.module('app.pages.ops.appInstance', [
     var defaultWidgets = _.clone(widgetDefinitions);
 
     $scope.dashboardOptions = {
-      //storage: localStorage,
-      storageKey: 'dashboard.ops',
+      storage: localStorage,
+      storageId: 'dashboard.ops',
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
