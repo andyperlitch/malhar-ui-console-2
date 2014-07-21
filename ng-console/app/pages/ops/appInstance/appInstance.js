@@ -65,13 +65,13 @@ angular.module('app.pages.ops.appInstance', [
 
     var widgetDefinitions = [
       new AppInstanceOverviewWidgetDef({ name:  'Application Overview' }),
-      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
       new LogicalDagWidgetDefinition({
         name: 'LogicalDAG',
         dataModelOptions: {
           appId: $scope.appId
         }
-      })
+      }),
+      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' })
     ];
 
     var defaultWidgets = _.clone(widgetDefinitions);
