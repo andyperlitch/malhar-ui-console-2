@@ -22,10 +22,7 @@ angular.module('app.components.directives.logicalOperatorStatus', [])
     scope: {
       statuses: '=logicalOperatorStatus'
     },
-    templateUrl: 'components/directives/logicalOperatorStatus/logicalOperatorStatus.html',
-    link: function(scope) {
-      console.log(scope.statuses);
-    }
+    templateUrl: 'components/directives/logicalOperatorStatus/logicalOperatorStatus.html'
   };
 
 });

@@ -1,1 +1,1 @@
-<span ng-repeat="(status, count) in statuses" ng-class="'status-' + status.toLowerCase()">{{ count }} </span>
+<span ng-repeat="(status, count) in statuses"><span ng-class="'status-' + status.toLowerCase()">{{count}}</span><span ng-if="!$last">,</span></span>
