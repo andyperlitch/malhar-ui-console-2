@@ -287,6 +287,12 @@ module.exports = function (grunt) {
 
     // Test settings
     karma: {
+      phantomjs: {
+        configFile: './test/karma-unit.conf.js',
+        autoWatch: false,
+        singleRun: true,
+        browsers: ['PhantomJS']
+      },
       unit: {
         configFile: './test/karma-unit.conf.js',
         autoWatch: false,
@@ -517,6 +523,10 @@ module.exports = function (grunt) {
     'karma:unit'
   ]);
 
+  grunt.registerTask('travis', [
+    'karma:phantomjs'
+  ]);
+
   grunt.registerTask('build', [
     // Remove everything from .tmp folder and dist folder
     'clean:dist',
@@ -538,7 +548,7 @@ module.exports = function (grunt) {
     'usemin',
 
     // Compresses images/svg
-    'concurrent:dist',
+    'concurrent:dist'
 
     // 'ngmin',
     // 'copy:dist',
