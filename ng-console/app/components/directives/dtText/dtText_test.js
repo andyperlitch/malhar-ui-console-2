@@ -61,6 +61,17 @@ describe('Module: text-directives', function () {
       expect(isoScope).toBeUndefined();
     });
 
+    describe('when there is no value in the attribute', function() {
+      
+      it('should take the element.text() as the value', function() {
+        element = angular.element('<div dt-text>this is</div>');
+        element = compile(element)(scope);
+        scope.$digest();
+        expect(element.text()).toEqual('this is some text');
+      });
+
+    });
+
   });
 
   describe('Directive: dtTextTitle', function () {
