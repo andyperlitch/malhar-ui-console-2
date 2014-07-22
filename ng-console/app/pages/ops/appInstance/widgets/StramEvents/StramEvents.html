@@ -132,7 +132,9 @@
     <!-- reason -->
     <div ng-if="event.data.reason || event.data.errorMessage">
       <i class="reason-indicator icon-warning-sign" dt-text-tooltip="click to view additional details"></i>
-      <div class="event-item-reason" ng-show="event.selected">{{ event.data.reason }}</div>
+      <div class="event-item-reason" ng-show="event.selected">
+        <pre class="well">{{ event.data.reason }}</pre>
+      </div>
     </div>
 
   </div>
