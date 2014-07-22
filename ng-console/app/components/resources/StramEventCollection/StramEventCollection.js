@@ -27,8 +27,7 @@ angular.module('app.components.resources.StramEventCollection', [
     transformResponse: function(raw, type) {
 
       if (type === 'subscribe') {
-        console.log('test');
-        return raw;
+        return [raw];
       }
 
       return raw.events;
