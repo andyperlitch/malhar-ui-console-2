@@ -1,0 +1,127 @@
+<div class="event-list-container">
+  <button ng-class="{ btn: true, 'btn-default': !followEvents, 'follow-events-btn': true, 'btn-success': followEvents }" ng-click="followEvents = !followEvents" dt-text-tooltip="When enabled, this list will automatically scroll to the bottom when new events come in">
+    <span ng-class="{ 'glyphicon':true, 'glyphicon-eye-open': followEvents, 'glyphicon-eye-close': !followEvents }"></span>
+    <span>{{ followEvents ? "following" : "not following" }}</span>
+  </button>
+  <div class="event-list well" ng-keydown="onEventListKey($event)" tabindex="1">
+    <div ng-repeat="event in data" ng-mousedown="onEventClick($event, event)"  ng-class="getEventClasses(event)">
+      <small>{{ event.timestamp | relativeTimestamp }}</small>
+      <em>{{event.type}}</em>
+      
+
+      <span ng-switch="event.type">
+
+        <span ng-switch-when="ChangeLogicalPlan">
+          <span dt-text>click for request</span>
+          <span class="event-detail" ng-show="event.selected">
+            <pre class="well">{{ event.data.request }}</pre>
+          </span>
+        </span>
+
+        <span ng-switch-when="ContainerError">
+          <span dt-text>id</span>:&nbsp;<strong><a dt-page-href="Container" params="{ appId: appId, containerId: event.data.containerId }" dt-container-shorthand="event.data.containerId"></a></strong>
+          <span class="event-item-reason " ng-show="event.selected">
+            <pre class="well">{{ event.data.errorMessage }}</pre>
+          </span>
+        </span>
+        
+        <span ng-switch-when="CreateOperator">
+          <span class="event-item-info" dt-text-tooltip="operator name">
+            <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="{{ event.data.operatorName }}">{{ event.data.operatorName }}</a>
+          </span>
+          <span class="event-item-info" dt-text-tooltip="operator id">
+            <span class="event-item-info-label">id:</span>&nbsp;<a href="#" class="physOpLink" data-id="{{ event.data.operatorId }}">{{ event.data.operatorId }}</a>
+          </span>
+        </span>
+        
+        <span ng-switch-when="OperatorError">
+          <span dt-text>id</span>:&nbsp;{{ event.data.operatorId }}
+          <span dt-text>logical</span>:&nbsp;<a dt-page-href="LogicalOperator" params="{ appId: appId, operatorName: event.data.operatorName }">{{ event.data.operatorName }}</a>
+          <span dt-text>container</span>:&nbsp;<a dt-page-href="Container" params="{ appId: appId, containerId: event.data.containerId }" dt-container-shorthand="event.data.containerId"></a></strong>
+          <span class="event-item-reason" ng-show="event.selected">
+            <pre class="well">{{ event.data.errorMessage }}</pre>
+          </span>
+        </span>
+        
+        <span ng-switch-when="Partition">
+          <span class="event-item-info" dt-text-tooltip="operator name">
+            <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="{{ event.data.operatorName }}">{{ event.data.operatorName }}</a>
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">numOldPartitions:</span>&nbsp;{{ event.data.oldNumPartitions }}
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">numNewPartitions:</span>&nbsp;{{ event.data.newNumPartitions }}
+          </span>
+        </span>
+
+        <span ng-switch-when="RemoveOperator">
+          <span class="event-item-info" dt-text-tooltip="operator name">
+            <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="{{ event.data.operatorName }}">{{ event.data.operatorName }}</a>
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">id:</span>&nbsp;{{ event.data.operatorId }}
+          </span>
+        </span>
+
+        <span ng-switch-when="SetOperatorProperty">
+          <span class="event-item-info" dt-text-tooltip="operator name">
+            <span class="event-item-info-label">operator:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="{{ event.data.operatorName }}">{{ event.data.operatorName }}</a>
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">property:</span>&nbsp;{{ event.data.propertyName }}
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">value:</span> {{ event.data.propertyValue }}
+          </span>
+        </span>
+
+        <span ng-switch-when="SetPhysicalOperatorProperty">
+          <span class="event-item-info" dt-text-tooltip="operator id">
+            <span class="event-item-info-label">id:</span>&nbsp;<a href="#" class="physOpLink" data-id="{{ event.data.operatorId }}">{{ event.data.operatorId }}</a>
+          </span>
+          <span class="event-item-info" dt-text-tooltip="operator name">
+            <span class="event-item-info-label">name:</span>&nbsp;<a href="#" class="logicalOpLink" data-name="{{ event.data.operatorName }}">{{ event.data.operatorName }}</a>
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">property:</span>&nbsp;{{ event.data.propertyName }}
+          </span>
+          <span class="event-item-info">
+            <span class="event-item-info-label">value:</span> {{ event.data.propertyValue }}
+          </span>
+        </span>
+
+        <span ng-switch-when="StartContainer">
+          <span dt-text>id</span>:&nbsp;<strong><a dt-page-href="Container" params="{ appId: appId, containerId: event.data.containerId }" dt-container-shorthand="event.data.containerId"></a></strong>
+          <span dt-text>node</span>:&nbsp;<strong ng-bind="event.data.containerNodeId"></strong>
+        </span>
+
+        <span ng-switch-when="StartOperator">
+          <span dt-text>id</span>:&nbsp;<strong><a dt-page-href="PhysicalOperator" params="{ appId: appId, operatorId: event.data.operatorId }">{{ event.data.operatorId }}</a></strong>
+          <span dt-text>logical</span>:&nbsp;<strong><a dt-page-href="LogicalOperator" params="{ appId: appId, operatorName: event.data.operatorName }">{{ event.data.operatorName }}</a></strong>
+        </span>
+
+        <span ng-switch-when="StopContainer">
+          <span dt-text>id</span>:&nbsp;<strong><a dt-page-href="Container" params="{ appId: appId, containerId: event.data.containerId }" dt-container-shorthand="event.data.containerId"></a></strong>
+          <span dt-text>exitStatus</span>:&nbsp;{{ event.data.exitStatus }}
+        </span>
+
+        <span ng-switch-when="StopOperator">
+          <span dt-text>id</span>:&nbsp;<strong>{{ event.data.operatorId }}</strong>
+          <span dt-text>logical</span>:&nbsp;<strong><a dt-page-href="LogicalOperator" params="{ appId: appId, operatorName: event.data.operatorName }">{{ event.data.operatorName }}</a></strong>
+        </span>
+
+      </span>
+
+      <!-- reason -->
+      <div ng-if="event.data.reason || event.data.errorMessage">
+        <i class="reason-indicator icon-warning-sign" dt-text-tooltip="click to view additional details"></i>
+        <div class="event-item-reason" ng-show="event.selected && event.data.reason">
+          <pre class="well">{{ event.data.reason }}</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

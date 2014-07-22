@@ -20,6 +20,7 @@ angular.module('app.settings', [])
   .constant('settings', {
     //wsRoot: 'http://localhost:3000',
     alertUrlRoot: '/alerts',
+    GATEWAY_WEBSOCKET_HOST: 'localhost:3390',
     GATEWAY_API_VERSION: 'v1',
     maxAlertActions: 3,
     statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],

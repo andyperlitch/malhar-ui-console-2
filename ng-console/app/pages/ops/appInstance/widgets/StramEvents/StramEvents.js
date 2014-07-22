@@ -30,6 +30,114 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'app.components.widgets.Base',
   'app.settings'
 ])
+.controller('StramEventListCtrl', function($scope, $element) {
+
+  $scope.getEventClasses = function(evt) {
+    var classes = ['event-item'];
+    classes.push('event-' + evt.type.toLowerCase());
+    if (evt.selected) {
+      classes.push('selected');
+    }
+    return classes;
+  };
+
+  $scope.onEventClick = function($event, event) {
+    var shift = $event.shiftKey;
+    
+    if (!shift) {
+      _.each($scope.data, function(e) {
+        e.selected = false;
+        e.selected_anchor = false;
+      });
+
+      event.selected = true;
+      event.selected_anchor = true;
+    }
+
+    else {
+
+      var selecting = false;
+
+      for (var i = 0; i < $scope.data.length; i++) {
+        var e = $scope.data[i];
+
+        // Selecting in the loop
+        if (selecting) {
+          e.selected = true;
+          if (e === event || e.selected_anchor) {
+            selecting = false;
+          }
+        }
+
+        // Have not found start selection
+        else {
+          if (e.selected_anchor || e === event) {
+            selecting = true;
+            e.selected = true;
+          } else {
+            e.selected = false;
+          }
+        }
+
+      }
+
+    }
+
+  };
+
+  $scope.onEventListKey = function($event) {
+
+    var which = $event.which;
+
+    if (which !== 38 && which !== 40) {
+      return;
+    }
+
+    var curIndices = _.map($scope.data, function(evt, i) {
+      if (evt.selected) {
+        return i;
+      }
+      return false;
+    });
+    curIndices = _.filter(curIndices, function(i) {
+      return i !== false;
+    });
+
+    // Up
+    if (which === 38) {
+      
+    }
+    // Down
+    if (which === 40) {
+
+    }
+  };
+})
+.directive('stramEventList', function() {
+  return {
+    templateUrl: 'pages/ops/appInstance/widgets/StramEvents/stramEventList.html',
+    controller: 'StramEventListCtrl',
+    restrict: 'E',
+    scope: {
+      data: '='
+    },
+    link: function(scope, element) {
+      scope.followEvents = true;
+
+      var eventList = element.find('.event-list');
+      scope.$watchCollection('data', function() {
+        if (scope.followEvents) {
+          // stop any animation
+          eventList.stop();
+          // scroll to bottom
+          eventList.animate({
+            scrollTop: eventList[0].scrollHeight + 100
+          }, 'slow');
+        }
+      });
+    }
+  };
+})
 
 // Widget Data Model
 .factory('StramEventsWidgetDataModel', function(_, BaseDataModel, StramEventCollection, settings) {
@@ -47,87 +155,6 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       resource.subscribe(scope);
 
       scope.data = resource.data;
-
-      scope.getEventClasses = function(evt) {
-        var classes = ['event-item'];
-        classes.push('event-' + evt.type.toLowerCase());
-        if (evt.selected) {
-          classes.push('selected');
-        }
-        return classes;
-      };
-
-      scope.onEventClick = function($event, event) {
-        var shift = $event.shiftKey;
-        
-        if (!shift) {
-          _.each(resource.data, function(e) {
-            e.selected = false;
-            e.selected_anchor = false;
-          });
-
-          event.selected = true;
-          event.selected_anchor = true;
-        }
-
-        else {
-
-          var selecting = false;
-
-          for (var i = 0; i < resource.data.length; i++) {
-            var e = resource.data[i];
-
-            // Selecting in the loop
-            if (selecting) {
-              e.selected = true;
-              if (e === event || e.selected_anchor) {
-                selecting = false;
-              }
-            }
-
-            // Have not found start selection
-            else {
-              if (e.selected_anchor || e === event) {
-                selecting = true;
-                e.selected = true;
-              } else {
-                e.selected = false;
-              }
-            }
-
-          }
-
-        }
-
-      };
-
-      scope.onEventListKey = function($event) {
-
-        var which = $event.which;
-
-        if (which !== 38 && which !== 40) {
-          return;
-        }
-
-        var curIndices = _.map(scope.data, function(evt, i) {
-          if (evt.selected) {
-            return i;
-          }
-          return false;
-        });
-        curIndices = _.filter(curIndices, function(i) {
-          return i !== false;
-        });
-
-        // Up
-        if (which === 38) {
-          
-        }
-        // Down
-        if (which === 40) {
-
-        }
-      };
 
     },
 

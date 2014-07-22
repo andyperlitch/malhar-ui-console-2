@@ -18,8 +18,8 @@
 
 'use strict';
 
-describe('Factory: StramEventsWidgetDataModel', function () {
-
+describe('Module: StramEvents', function() {
+  
   var settings, MockStramEventCollection;
 
   beforeEach(function() {
@@ -42,126 +42,144 @@ describe('Factory: StramEventsWidgetDataModel', function () {
     $provide.value('StramEventCollection', MockStramEventCollection);
   }));
 
-  // instantiate service
-  var StramEventsWidgetDataModel;
-  beforeEach(inject(function (_StramEventsWidgetDataModel_) {
-    StramEventsWidgetDataModel = _StramEventsWidgetDataModel_;
-  }));
 
-  var dm, scope;
+  describe('Factory: StramEventsWidgetDataModel', function () {
 
-  beforeEach(inject(function($rootScope) {
-    dm = new StramEventsWidgetDataModel();
-    dm.widgetScope = scope = $rootScope.$new();
-  }));
+    // instantiate service
+    var StramEventsWidgetDataModel;
+    beforeEach(inject(function (_StramEventsWidgetDataModel_) {
+      StramEventsWidgetDataModel = _StramEventsWidgetDataModel_;
+    }));
 
-  it('should be a function', function() {
-    expect(typeof StramEventsWidgetDataModel).toEqual('function');
-  });
+    var dm, scope;
 
-  describe('the init method', function() {
+    beforeEach(inject(function($rootScope) {
+      dm = new StramEventsWidgetDataModel();
+      dm.widgetScope = scope = $rootScope.$new();
+    }));
 
-    it('should create a new StramEventCollection', function() {
-      dm.init();
-      expect(dm.resource instanceof MockStramEventCollection).toEqual(true);
+    it('should be a function', function() {
+      expect(typeof StramEventsWidgetDataModel).toEqual('function');
     });
 
-    it('should call fetch on the resource', function() {
-      spyOn(MockStramEventCollection.prototype, 'fetch');
-      dm.init();
-      expect(dm.resource.fetch).toHaveBeenCalled();
-    });
+    describe('the init method', function() {
 
-    it('should call resource.fetch with the default limit', function() {
-      spyOn(MockStramEventCollection.prototype, 'fetch');
-      dm.init();
-      expect(dm.resource.fetch).toHaveBeenCalledWith({
-        params: {
-          limit: settings.stramEvents.INITIAL_LIMIT
-        }
+      it('should create a new StramEventCollection', function() {
+        dm.init();
+        expect(dm.resource instanceof MockStramEventCollection).toEqual(true);
       });
-    });
 
-    it('should call subscribe with the widget scope', function() {
-      spyOn(MockStramEventCollection.prototype, 'subscribe');
-      dm.init();
-      expect(dm.resource.subscribe).toHaveBeenCalledWith(scope);
-    });
+      it('should call fetch on the resource', function() {
+        spyOn(MockStramEventCollection.prototype, 'fetch');
+        dm.init();
+        expect(dm.resource.fetch).toHaveBeenCalled();
+      });
 
-    it('should set scope.data to resource.data', function() {
-      dm.init();
-      expect(scope.data).toEqual(dm.resource.data);
-    });
+      it('should call resource.fetch with the default limit', function() {
+        spyOn(MockStramEventCollection.prototype, 'fetch');
+        dm.init();
+        expect(dm.resource.fetch).toHaveBeenCalledWith({
+          params: {
+            limit: settings.stramEvents.INITIAL_LIMIT
+          }
+        });
+      });
 
-  });
-  
-  describe('the getEventClasses method', function() {
+      it('should call subscribe with the widget scope', function() {
+        spyOn(MockStramEventCollection.prototype, 'subscribe');
+        dm.init();
+        expect(dm.resource.subscribe).toHaveBeenCalledWith(scope);
+      });
 
-    var result;
+      it('should set scope.data to resource.data', function() {
+        dm.init();
+        expect(scope.data).toEqual(dm.resource.data);
+      });
 
-    beforeEach(function() {
-      dm.init();
-      result = scope.getEventClasses({ type: 'ExampleEvent' });
-    });
-
-    it('should return an array', function() {
-      expect(result instanceof Array).toEqual(true);
-    });
-
-    it('should contain "event-item" as a class', function() {
-      expect(result).toContain('event-item');
-    });
-
-    it('should contain event-exampleevent (in this case)', function() {
-      expect(result).toContain('event-exampleevent');
-    });
-
-    it('should not have the class "selected" unless evt.selected == true', function() {
-      expect(result).not.toContain('selected');
-      result = scope.getEventClasses({ type: 'ExampleEvent', selected: true });
-      expect(result).toContain('selected');
     });
 
   });
 
-  describe('the onEventClick method', function() {
-    
-    beforeEach(function() {
-      dm.init();
+  describe('Controller: StramEventListCtrl', function() {
+
+    var $scope;
+
+    beforeEach(inject(function($rootScope, $controller){
+      $scope = $rootScope.$new();
+      $controller('StramEventListCtrl', {
+        $scope: $scope,
+        $element: []
+      });
+    }));
+
+    describe('the getEventClasses method', function() {
+
+      var result;
+
+      beforeEach(function() {
+        result = $scope.getEventClasses({ type: 'ExampleEvent' });
+      });
+
+      it('should return an array', function() {
+        expect(result instanceof Array).toEqual(true);
+      });
+
+      it('should contain "event-item" as a class', function() {
+        expect(result).toContain('event-item');
+      });
+
+      it('should contain event-exampleevent (in this case)', function() {
+        expect(result).toContain('event-exampleevent');
+      });
+
+      it('should not have the class "selected" unless evt.selected == true', function() {
+        expect(result).not.toContain('selected');
+        result = $scope.getEventClasses({ type: 'ExampleEvent', selected: true });
+        expect(result).toContain('selected');
+      });
+
     });
 
-    describe('when shift is off', function() {
+    describe('the onEventClick method', function() {
       
-      it('should deselect all other rows of resource.data', function() {
-        
+      beforeEach(function() {
+
       });
 
-      it('should clear rows where row.selected_anchor == true', function() {
+      describe('when shift is off', function() {
         
-      });
-
-      it('should make event.selected = true', function() {
-        
-      });
-
-      it('should make event.selected_anchor = true', function() {
+        it('should deselect all other rows of resource.data', function() {
           
+        });
+
+        it('should clear rows where row.selected_anchor == true', function() {
+          
+        });
+
+        it('should make event.selected = true', function() {
+          
+        });
+
+        it('should make event.selected_anchor = true', function() {
+            
+        });
+
+        it('should stay selected even if it is already selected', function() {
+          
+        });
+
       });
 
-      it('should stay selected even if it is already selected', function() {
+      describe('when shift is on', function() {
         
-      });
+        it('should select all rows between the one selected and the selected_anchor, if it is there', function() {
+          
+        });
 
-    });
+        it('should select just the one event if there is no selected_anchor', function() {
+          
+        });
 
-    describe('when shift is on', function() {
-      
-      it('should select all rows between the one selected and the selected_anchor, if it is there', function() {
-        
-      });
-
-      it('should select just the one event if there is no selected_anchor', function() {
-        
       });
 
     });

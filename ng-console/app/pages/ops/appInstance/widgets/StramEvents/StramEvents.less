@@ -41,6 +41,17 @@
 @stram-event-containererror-color: darken(@stram-event-operatorerror-color, 10%);
 @stram-event-containererror-color-active: darken(@stram-event-operatorerror-color-active, 10%);
 
+.event-list-container {
+  position: relative;
+}
+
+.follow-events-btn {
+  position: absolute;
+  top: 10px;
+  z-index: 5;
+  right: 25px;
+}
+
 .event-list {
   max-height: @stram-event-list-max-height;
   overflow: auto;
