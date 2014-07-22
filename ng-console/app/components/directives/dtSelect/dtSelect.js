@@ -24,6 +24,8 @@ angular.module('app.components.directives.dtSelect', [])
       templateUrl: 'components/directives/dtSelect/dtSelect.html',
       scope: {
         label: '@',
+        ngModel: '=',
+        ngOptions: '@',
         value: '=',
         options: '='
       },
