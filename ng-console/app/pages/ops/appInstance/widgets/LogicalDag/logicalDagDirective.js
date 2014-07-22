@@ -33,9 +33,8 @@ angular.module('app.components.directives.logicalDag',
         //TODO unwatch
         scope.$watch('logicalPlan', function (logicalPlan) {
           if (logicalPlan) {
-            console.log(logicalPlan);
-            var renderer = new LogicalDagRenderer(element);
-            renderer.displayGraph(logicalPlan);
+            scope.renderer = new LogicalDagRenderer(element, logicalPlan);
+            scope.renderer.displayGraph();
           }
         });
 
@@ -47,11 +46,13 @@ angular.module('app.components.directives.logicalDag',
 
           if (scope.showLocality) {
             //toggleLocalityLink.text('Hide Stream Locality');
-            //this.updateStreams(this.graph, this.svgRoot);
             //legend.show();
+            if (scope.renderer) {
+              //scope.renderer.updateStreams(); //TODO
+            }
           } else {
             //toggleLocalityLink.text('Show Stream Locality');
-            //this.clearStreamLocality(this.svgRoot);
+            //this.clearStreamLocality(this.svgRoot); //TODO
             //legend.hide();
           }
         }

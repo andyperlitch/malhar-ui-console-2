@@ -32,8 +32,7 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
           appId: this.dataModelOptions.appId
         });
         this.resource.fetch().then(function (response) {
-          console.log(response.data); //TODO
-          this.widgetScope.logicalPlan = response.data;
+          this.widgetScope.logicalPlan = response.data; //TODO
         }.bind(this));
         //this.resource.subscribe(this.widgetScope);
         //this.widgetScope.data = this.resource.data;

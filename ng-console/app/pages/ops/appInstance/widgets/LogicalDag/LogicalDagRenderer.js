@@ -18,20 +18,18 @@
 
 angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
   .factory('LogicalDagRenderer', function (settings) {
-    function LogicalDagRenderer(element) {
+    function LogicalDagRenderer(element, data) {
       this.element = element;
+      this.graph = this.buildGraph(data);
     }
 
     LogicalDagRenderer.prototype = {
-      displayGraph: function(data) {
+      displayGraph: function() {
         // render legend
         this.renderLegend(this.element);
 
-        // Implemented in child class
-        var graph = this.buildGraph(data);
-
         // Renders the main graph
-        this.renderGraph(graph, jQuery(this.element).find('.app-dag > .svg-main')[0]); //TODO no jQuery
+        this.renderGraph(this.graph, jQuery(this.element).find('.app-dag > .svg-main')[0]); //TODO no jQuery
       },
 
       /**
@@ -629,10 +627,11 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
         root.selectAll("g .edge > path").attr('stroke-dasharray', null);
       },
 
-      updateStreams: function (graph, root) {
+      updateStreams: function () {
         var streamLocality = this.createStreamLocalityMap();
+        var graph = this.graph;
 
-        root.selectAll("g .edgePath > path").each(function (d) {
+        this.svgRoot.selectAll("g .edgePath > path").each(function (d) {
           var value = graph.edge(d);
           var streamName = value.label;
 
