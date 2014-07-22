@@ -1,0 +1,24 @@
+<snippet>
+  <content><![CDATA[
+// test backend
+var \$httpBackend;
+
+beforeEach(inject(function(_\$httpBackend_) {
+  \$httpBackend = _\$httpBackend_;
+
+  // USAGE:
+  // \$httpBackend.whenGET('/my-url?key=value').respond({});
+  // \$httpBackend.expectGET('/my-url?key=value');
+  // \$httpBackend.flush();
+}));
+
+afterEach(function() {
+  \$httpBackend.verifyNoOutstandingExpectation();
+  \$httpBackend.verifyNoOutstandingRequest();
+});
+]]></content>
+  <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+  <tabTrigger>$httpBackend</tabTrigger>
+  <!-- Optional: Set a scope to limit where the snippet will trigger -->
+  <scope>source.js</scope>
+</snippet>
