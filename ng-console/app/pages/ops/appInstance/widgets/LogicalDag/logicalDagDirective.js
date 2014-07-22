@@ -55,6 +55,13 @@ angular.module('app.components.directives.logicalDag',
             //this.clearStreamLocality(this.svgRoot); //TODO
             //legend.hide();
           }
+        };
+
+        scope.resetPosition = function (event) {
+          event.preventDefault();
+          if (scope.renderer) {
+            scope.renderer.resetPosition();
+          }
         }
       }
     };

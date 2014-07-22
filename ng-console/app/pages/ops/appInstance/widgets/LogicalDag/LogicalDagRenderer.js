@@ -408,12 +408,11 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
         });
       },
 
-      resetPosition: function(e) {
-        e.preventDefault();
+      resetPosition: function() {
         this.zoomBehavior.scale(1).translate([0,0]);
         this.lastZoomLevel.scale = 1;
         this.lastZoomLevel.translate = [0,0];
-        this.$('svg.svg-main > g > g').attr("transform", null);
+        jQuery(this.element).find('svg.svg-main > g > g').attr("transform", null);
         this.updateMinimap($('svg.svg-main'), [0,0],1);
       },
 
