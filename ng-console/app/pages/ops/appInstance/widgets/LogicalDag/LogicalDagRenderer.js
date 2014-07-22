@@ -21,6 +21,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
     function LogicalDagRenderer(element, data) {
       this.element = element;
       this.graph = this.buildGraph(data);
+      this.streams = data.streams;
     }
 
     LogicalDagRenderer.prototype = {
@@ -613,24 +614,24 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
 
       createStreamLocalityMap: function () {
         var streamLocality = {};
-        this.streams.each(function (stream) {
-          if (stream.has('locality')) {
-            streamLocality[stream.get('name')] = stream.get('locality');
+        this.streams.forEach(function (stream) {
+          if (stream.locality) {
+            streamLocality[stream.name] = stream.locality;
           }
         });
 
         return streamLocality;
       },
 
-      clearStreamLocality: function (root) {
-        root.selectAll("g .edge > path").attr('stroke-dasharray', null);
+      clearStreamLocality: function () {
+        this.svgRoot.selectAll('g .edgePath > path').attr('stroke-dasharray', null);
       },
 
       updateStreams: function () {
         var streamLocality = this.createStreamLocalityMap();
         var graph = this.graph;
 
-        this.svgRoot.selectAll("g .edgePath > path").each(function (d) {
+        this.svgRoot.selectAll('g .edgePath > path').each(function (d) {
           var value = graph.edge(d);
           var streamName = value.label;
 

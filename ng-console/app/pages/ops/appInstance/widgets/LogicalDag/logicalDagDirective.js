@@ -48,11 +48,13 @@ angular.module('app.components.directives.logicalDag',
             //toggleLocalityLink.text('Hide Stream Locality');
             //legend.show();
             if (scope.renderer) {
-              //scope.renderer.updateStreams(); //TODO
+              scope.renderer.updateStreams();
             }
           } else {
             //toggleLocalityLink.text('Show Stream Locality');
-            //this.clearStreamLocality(this.svgRoot); //TODO
+            if (scope.renderer) {
+              scope.renderer.clearStreamLocality();
+            }
             //legend.hide();
           }
         };
