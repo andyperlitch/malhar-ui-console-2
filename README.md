@@ -1,12 +1,12 @@
-DataTorrent Console (Angular)
-=============================
+DataTorrent Console
+===================
 
 Open-source, web-based user interface for use with [DataTorrent](http://datatorrent.com), a stream-processing platform for developing real-time, big data applications in Hadoop.
 Built with Angular.
 
 
-## Setting up dev environment
-
+Setting up dev environment
+--------------------------
 ### Installing Current Dependencies
 Uses the `bower.json` and `package.json` files:
 
@@ -22,8 +22,8 @@ Also start the node server as a separate process:
 
     node server
 
-## Working with Dependencies
-
+Working with Dependencies
+-------------------------
 ### Installing a bower package
 To use a package from bower, first run the bower install command:
 
@@ -36,20 +36,27 @@ Then, use grunt to automatically inject this package into index.html:
 ### Updating packages
 
     bower update [PACKAGE_NAME]
+    grunt bower-install    
 
 ### Uninstalling a package
 
     bower uninstall [PACKAGE_NAME] --save
+    grunt bower-install
 
 
-
-## App components & sections
+App components & sections
+-------------------------
 The files in this project are organized into feature/component directories, rather than `controllers`, `directives`, `services` folders, etc. Components that are used in multiple locations of the dashboard should be placed in the `app/components` directory. Specific page code (e.g. templates and controllers for specific pages) should be placed in the `app/pages` folder, or one of its subfolders. For more info on this type of organization, read [Best Practice Recommendations for Angular App Structure](https://docs.google.com/document/d/1XXMvReO8-Awi1EZXAXS4PzDzdNvV6pGcuaF4Q9821Es/pub).
 
 ### Updating `index.html` with app scripts
-The script located at `bin/updateAppScripts.js` walks the `app` directory and updates `app/index.html` with all the `.js` files. This script excludes files that end in `_test.js` and all `js` files inside of `bower_components`.
+The following command walks the `app` directory and updates `app/index.html` with all the `.js` files:
+    
+    grunt appscripts
 
-## Styles
+This script excludes files that end in `_test.js` and all `js` files inside of `bower_components`.
+
+Stylesheets
+-----------
 This project uses the [LESS CSS pre-processor](http://lesscss.org/) to organize its styling. A "manifest" file is located at `app/styles/main.less`, which @imports all style dependencies (eg. from a bower component) and custom DataTorrent UI component styles (eg. `/app/styles/navbar.less`).
 
 ### Variables & Mixins
@@ -62,9 +69,3 @@ A "theme" is really just a file that overrides Twitter Bootstrap and other DataT
 
 ### Theme Overrides
 On rare occasion, it is useful to have a final theme-agnostic file to place important overrides. These should be placed into `/app/styles/theme-overrides.less`. The only use-case for this as of this writing is to override the path to Twitter Bootstrap fonts (`@icon-font-path`) from the theme file, which often has the default value set.
-
-
-
-
-
-
