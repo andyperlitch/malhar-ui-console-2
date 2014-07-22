@@ -93,16 +93,19 @@ angular.module('app.components.services.dtText', [])
       'clear all widgets'          :  'clear all widgets',
       'current alloc mem'          :  'current alloc mem',
       'current_wid_title'          :  'current window id',
+      'Configuration'              :  'Configuration',
       'delete_item'                :  'delete',
       'delete_jar_prompt'          :  'Are you sure you want to delete this jar file? This cannot be undone.',
       'delete_jars_prompt'         :  'Are you sure you want to delete multiple jar files at once? This cannot be undone.',
       'dep_options_title'          :  'Options',
       'dep_choices_title'          :  'Choices',
+      'Development'                :  'Development',
       'dt_log'                     :  'datatorrent log',
       'emitted_per_sec'            :  'emitted/s',
       'emitted_total'              :  'total emitted',
       'final_status_title'         :  'Final status of application',
       'gc_log'                     :  'GC log',
+      'id'                         :  'id',
       'inspect'                    :  'inspect',
       'kill'                       :  'kill',
       'kill_ctnr_sent_title'       :  'Kill Container Signal Sent',
@@ -124,6 +127,8 @@ angular.module('app.components.services.dtText', [])
       },
       'locality_not_assigned'      :  'AUTOMATIC',
       'no action available'        :  'no action available',
+      'node'                       :  'node',
+      'Operations'                 :  'Operations',
       'ops_main_breadcrumb'        :  'applications',
       'overwrite_file_warning'     :  'A file with this name already exists and will be overwritten.',
       'peak alloc mem'             :  'peak alloc mem',
@@ -153,7 +158,7 @@ angular.module('app.components.services.dtText', [])
       if (textHash.hasOwnProperty(key)) {
         return textHash[key];
       }
-      $log.warn('Text item with key="' + key + '" was not found in the text package!');
+      // $log.warn('Text item with key="' + key + '" was not found in the text package!');
       return key;
     };
 
