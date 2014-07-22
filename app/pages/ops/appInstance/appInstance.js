@@ -68,13 +68,16 @@ angular.module('app.pages.ops.appInstance', [
     var widgetDefinitions = [
       new AppInstanceOverviewWidgetDef({ name:  'Application Overview', style: { width: '66%' } }),
       new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float':'right' } }),
-      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
       new LogicalDagWidgetDefinition({
         name: 'LogicalDAG',
         dataModelOptions: {
           appId: $scope.appId
+        },
+        style: {
+          width: '66%'
         }
-      })
+      }),
+      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
     ];
 
     var defaultWidgets = _.clone(widgetDefinitions);
