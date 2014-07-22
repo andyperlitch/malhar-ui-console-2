@@ -24,8 +24,8 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
 
     LogicalDagRenderer.prototype = {
       displayGraph: function(data) {
-        // Does not necessarily do anything, only if implemented
-        this.renderLegend();
+        // render legend
+        this.renderLegend(this.element);
 
         // Implemented in child class
         var graph = this.buildGraph(data);

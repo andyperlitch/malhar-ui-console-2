@@ -38,6 +38,23 @@ angular.module('app.components.directives.logicalDag',
             renderer.displayGraph(logicalPlan);
           }
         });
+
+        scope.showLocality = false;
+        scope.toggleLocality = function (event) {
+          event.preventDefault();
+
+          scope.showLocality = !scope.showLocality;
+
+          if (scope.showLocality) {
+            //toggleLocalityLink.text('Hide Stream Locality');
+            //this.updateStreams(this.graph, this.svgRoot);
+            //legend.show();
+          } else {
+            //toggleLocalityLink.text('Show Stream Locality');
+            //this.clearStreamLocality(this.svgRoot);
+            //legend.hide();
+          }
+        }
       }
     };
   });
