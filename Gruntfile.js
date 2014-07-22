@@ -287,11 +287,11 @@ module.exports = function (grunt) {
 
     // Test settings
     karma: {
-      phantomjs: {
+      travis: {
         configFile: './test/karma-unit.conf.js',
         autoWatch: false,
         singleRun: true,
-        browsers: ['PhantomJS']
+        browsers: ['PhantomJS', 'Firefox']
       },
       unit: {
         configFile: './test/karma-unit.conf.js',
@@ -524,7 +524,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('travis', [
-    'karma:phantomjs'
+    'karma:travis'
   ]);
 
   grunt.registerTask('build', [
