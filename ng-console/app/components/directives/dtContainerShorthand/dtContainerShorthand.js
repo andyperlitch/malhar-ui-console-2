@@ -15,31 +15,16 @@
 */
 'use strict';
 
-/**
- * dt-page-href
- *
- * Looks up page url in settings
- * and interpolates params, then
- * sets the href of the element
- * to interpolated url.
- */
-
-angular.module('app.components.directives.dtPageHref', [
-  'app.components.services.getUri'
-])
-.directive('dtPageHref', function(getUri) {
-
+angular.module('app.components.directives.dtContainerShorthand', [])
+.directive('dtContainerShorthand', function() {
   return {
-    restrict: 'A',
-    link: function(scope, element, attrs) {
-
-      // set up pageKey and params
-      var pageKey = attrs.dtPageHref;
-      scope.params = scope.$eval(attrs.params);
-
-      scope.$watchCollection('params', function() {
-        element.attr('href', getUri.page(pageKey, scope.params));
-      });
+    scope: {
+      id: '=dtContainerShorthand'
+    },
+    link: function(scope, element) {
+      var parts = scope.id.split('_');
+      var shorthand = parts[parts.length -1];
+      element.text(shorthand);
     }
   };
 });

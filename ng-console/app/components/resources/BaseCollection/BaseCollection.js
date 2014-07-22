@@ -70,6 +70,11 @@ angular.module('app.components.resources.BaseCollection', [
      * @return {Object}    Object in collection, if found. If not, will return undefined.
      */
     get: function(id) {
+
+      if (typeof id === 'undefined') {
+        return false;
+      }
+
       // Keep reference of idAttribute
       var idAttribute = this._idAttribute_;
       return _.find(this.data, function(model) {

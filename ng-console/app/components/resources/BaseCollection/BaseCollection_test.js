@@ -13,6 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+  
+/* global describe, before, beforeEach, after, afterEach, inject, it, expect, module */
+
 'use strict';
 
 describe('Resource: BaseCollection', function () {
@@ -32,7 +35,7 @@ describe('Resource: BaseCollection', function () {
       topic: function() {
         return 'fake.topic';
       }
-    }
+    };
   });
 
   // load the service's module
@@ -103,6 +106,10 @@ describe('Resource: BaseCollection', function () {
         { id: '2' }
       ];
       expect(c.get('3')).toBeUndefined();
+    });
+
+    it('should return false if the id being looked for is undefined', function() {
+      expect(c.get()).toEqual(false);
     });
 
   });

@@ -66,7 +66,7 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           key: 'name',
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', name: row.name }">{{ row.name }}</a>'
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
         },
         {
           id: 'className',

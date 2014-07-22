@@ -15,31 +15,27 @@
 */
 'use strict';
 
-/**
- * dt-page-href
- *
- * Looks up page url in settings
- * and interpolates params, then
- * sets the href of the element
- * to interpolated url.
- */
-
-angular.module('app.components.directives.dtPageHref', [
-  'app.components.services.getUri'
+angular.module('app.components.resources.StramEventCollection', [
+  'app.components.resources.BaseCollection',
+  'app.components.resources.StramEventModel'
 ])
-.directive('dtPageHref', function(getUri) {
+.factory('StramEventCollection', function(BaseCollection, StramEventModel) {
 
-  return {
-    restrict: 'A',
-    link: function(scope, element, attrs) {
+  var StramEventCollection = BaseCollection.extend({
+    urlKey: 'StramEvent',
+    topicKey: 'StramEvents',
+    transformResponse: function(raw, type) {
 
-      // set up pageKey and params
-      var pageKey = attrs.dtPageHref;
-      scope.params = scope.$eval(attrs.params);
+      if (type === 'subscribe') {
+        debugger;
+        return [raw];
+      }
 
-      scope.$watchCollection('params', function() {
-        element.attr('href', getUri.page(pageKey, scope.params));
-      });
-    }
-  };
+      return raw.events;
+
+    },
+    model: StramEventModel
+  });
+  return StramEventCollection;
+
 });
