@@ -15,26 +15,15 @@
 */
 
 /* global describe, before, beforeEach, after, afterEach, inject, it, expect, module */
+
 'use strict';
 
-describe('Directive: dtPageHref', function () {
+describe('Directive: dtContainerShorthand', function () {
 
   var element, scope, rootScope, isoScope, compile;
 
-  beforeEach(function() {
-    // define mock objects here
-  });
-
   // load the directive's module
-  beforeEach(module('app.components.directives.dtPageHref', function($provide) {
-    // Inject dependencies like this:
-    $provide.constant('settings', {
-      pages: {
-        AppInstance: '/ws/v1/applications/:appId'
-      }
-    });
-
-  }));
+  beforeEach(module('app.components.directives.dtContainerShorthand'));
 
   beforeEach(inject(function ($compile, $rootScope) {
     // Cache these for reuse    
@@ -45,32 +34,17 @@ describe('Directive: dtPageHref', function () {
 
     // Set up the outer scope
     scope = $rootScope.$new();
-    scope.params = {
-      appId: 'application_0001'
-    };
+    scope.myId = 'container_148989829898_0001';
+
     // Define and compile the element
-    element = angular.element('<a dt-page-href="AppInstance" params="params"></a>');
+    element = angular.element('<div dt-container-shorthand="myId"></div>');
     element = compile(element)(scope);
     scope.$digest();
     isoScope = element.isolateScope();
   }));
 
-  afterEach(function() {
-    // tear down here
-  });
-
-  it('should add an href to the element', function() {
-    expect(element.attr('href')).toEqual('#/ws/v1/applications/application_0001');
-  });
-
-  it('should be able to be dynamic when params change', function() {
-    scope.params.appId = 'application_0002';
-    scope.$digest();
-    expect(element.attr('href')).toEqual('#/ws/v1/applications/application_0002');
-  });
-
-  it('should not create an isolate scope', function() {
-    expect(isoScope).toBeUndefined();
+  it('should only use the last part of the container id', function() {
+    expect(element.text()).toEqual('0001');
   });
 
 });

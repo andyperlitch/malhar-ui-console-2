@@ -1,0 +1,150 @@
+@stram-event-list-max-height: 400px;
+// stram event colors
+@stram-event-default-color: #CFCFCF;
+@stram-event-default-color-active: #AAA;
+
+@stram-event-changelogicalplan-color: #ffb756;
+@stram-event-changelogicalplan-color-active: #d2610a;
+
+// operators
+@stram-event-partition-color: #ae9dd4;
+@stram-event-partition-color-active: #656cd4;
+
+@stram-event-removeoperator-color: #a1d49f;
+@stram-event-removeoperator-color-active: #40bf5a;
+
+@stram-event-setoperatorproperty-color: #a1d49f;
+@stram-event-setoperatorproperty-color-active: #40bf5a;
+
+@stram-event-setphysicaloperatorproperty-color: #9ad4cb;
+@stram-event-setphysicaloperatorproperty-color-active: #3ead91;
+
+@stram-event-createoperator-color: @stram-event-default-color;
+@stram-event-createoperator-color-active: @stram-event-default-color-active;
+
+@stram-event-startoperator-color: #91CEDC;
+@stram-event-startoperator-color-active: #0986D4;
+
+@stram-event-stopoperator-color: #9dd27d;
+@stram-event-stopoperator-color-active: #0B8D1B;
+
+@stram-event-operatorerror-color: #d48e7e;
+@stram-event-operatorerror-color-active: #d44220;
+
+// container colors
+@stram-event-startcontainer-color: darken(@stram-event-startoperator-color, 15%);
+@stram-event-startcontainer-color-active: darken(@stram-event-startoperator-color-active, 15%);
+
+@stram-event-stopcontainer-color: darken(@stram-event-stopoperator-color, 15%);
+@stram-event-stopcontainer-color-active: darken(@stram-event-stopoperator-color-active, 15%);
+
+@stram-event-containererror-color: darken(@stram-event-operatorerror-color, 10%);
+@stram-event-containererror-color-active: darken(@stram-event-operatorerror-color-active, 10%);
+
+.event-list {
+  max-height: @stram-event-list-max-height;
+  overflow: auto;
+  padding: 3px;
+}
+
+.event-item {
+  position: relative;
+  cursor: pointer;
+  background-color: @stram-event-default-color;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 3px 10px;
+  margin: 1px;
+  border-bottom: 1px solid @gray-light;
+  em {
+    font-size: 110%;
+    font-weight: bold;
+  }
+
+  &.selected {
+    color: #FFF;
+    background-color: @stram-event-default-color-active;
+    .show-on-active {
+      display: inherit;
+    }
+    a {
+      color: #BBE8FD;
+    }
+  }
+
+  &.event-changelogicalplan {
+    background-color: @stram-event-changelogicalplan-color;
+    &.selected {
+      background-color: @stram-event-changelogicalplan-color-active;
+    }
+  }
+  &.event-containererror {
+    background-color: @stram-event-containererror-color;
+    &.selected {
+      background-color: @stram-event-containererror-color-active;
+    }
+  }
+  &.event-createoperator {
+    background-color: @stram-event-createoperator-color;
+    &.selected {
+      background-color: @stram-event-createoperator-color-active;
+    }
+  }
+  &.event-operatorerror {
+    background-color: @stram-event-operatorerror-color;
+    &.selected {
+      background-color: @stram-event-operatorerror-color-active;
+    }
+  }
+  &.event-partition {
+    background-color: @stram-event-partition-color;
+    &.selected {
+      background-color: @stram-event-partition-color-active;
+    }
+  }
+  &.event-removeoperator {
+    background-color: @stram-event-removeoperator-color;
+    &.selected {
+      background-color: @stram-event-removeoperator-color-active;
+    }
+  }
+  &.event-setoperatorproperty {
+    background-color: @stram-event-setoperatorproperty-color;
+    &.selected {
+      background-color: @stram-event-setoperatorproperty-color-active;
+    }
+  }
+  &.event-setphysicaloperatorproperty {
+    background-color: @stram-event-setphysicaloperatorproperty-color;
+    &.selected {
+      background-color: @stram-event-setphysicaloperatorproperty-color-active;
+    }
+  }
+  &.event-startcontainer {
+    background-color: @stram-event-startcontainer-color;
+    &.selected {
+      background-color: @stram-event-startcontainer-color-active;
+    }
+  }
+  &.event-startoperator {
+    background-color: @stram-event-startoperator-color;
+    &.selected {
+      background-color: @stram-event-startoperator-color-active;
+    }
+  }
+  &.event-stopcontainer {
+    background-color: @stram-event-stopcontainer-color;
+    &.selected {
+      background-color: @stram-event-stopcontainer-color-active;
+    }
+  }
+  &.event-stopoperator {
+    background-color: @stram-event-stopoperator-color;
+    &.selected {
+      background-color: @stram-event-stopoperator-color-active;
+    }
+  }
+}

@@ -90,7 +90,13 @@ angular.module('app.settings', [])
 
     pages: {
       AppInstance              :'/ops/apps/:appId',
-      LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:name'
+      LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
+      PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
+      Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId'
+    },
+
+    stram_events: {
+      INITIAL_OFFSET: -50
     },
 
     dag: {

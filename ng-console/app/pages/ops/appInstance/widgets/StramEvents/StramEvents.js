@@ -23,13 +23,91 @@
 
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
+  'underscore',
+  'app.components.filters.relativeTimestamp',
+  'app.components.resources.StramEventCollection',
+  'app.components.directives.dtContainerShorthand',
   'app.components.widgets.Base',
   'app.settings'
 ])
 
 // Widget Data Model
-.factory('StramEventsWidgetDataModel', function(BaseDataModel) {
+.factory('StramEventsWidgetDataModel', function(_, BaseDataModel, StramEventCollection, settings) {
   var StramEventsWidgetDataModel = BaseDataModel.extend({
+
+    init: function() {
+      var resource, scope = this.widgetScope;
+      resource = this.resource = new StramEventCollection({ appId: this.widgetScope.appId });
+      resource.fetch({
+        params: {
+          offset: settings.stram_events.INITIAL_OFFSET
+        }
+      });
+      resource.subscribe(scope);
+
+      scope.data = resource.data;
+
+      scope.getEventClasses = function(evt) {
+        var classes = ['event-item'];
+        classes.push('event-' + evt.type.toLowerCase());
+        if (evt.selected) {
+          classes.push('selected');
+        }
+        return classes;
+      };
+
+      scope.onEventClick = function($event, event) {
+        var shift = $event.shiftKey;
+        
+        if (!shift) {
+          _.each(resource.data, function(e) {
+            e.selected = false;
+            e.selected_anchor = false;
+          });
+
+          event.selected = !event.selected;
+          if (event.selected) {
+            event.selected_anchor = true;
+          }
+
+        }
+
+        else {
+
+          var selecting = false;
+
+          for (var i = 0; i < resource.data.length; i++) {
+            var e = resource.data[i];
+
+            // Selecting in the loop
+            if (selecting) {
+              e.selected = true;
+              if (e === event || e.selected_anchor) {
+                selecting = false;
+              }
+            }
+
+            // Have not found start selection
+            else {
+              if (e.selected_anchor || e === event) {
+                selecting = true;
+                e.selected = true;
+              } else {
+                e.selected = false;
+              }
+            }
+
+          }
+          
+        }
+
+      };
+
+    },
+
+    destroy: function() {
+      this.resource.unsubscribe();
+    }
 
   });
   return StramEventsWidgetDataModel;
@@ -40,9 +118,8 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   var StramEventsWidgetDef = BaseWidget.extend({
     defaults: {
       dataModelType: StramEventsWidgetDataModel,
-      title: 'StramEvents' // default display name (editable by user)
-
-      // templateUrl: 'path/to/template',
+      title: 'StramEvents',
+      templateUrl: 'pages/ops/appInstance/widgets/StramEvents/StramEvents.html',
       // directive: 'name-of-directive'
     }
   });

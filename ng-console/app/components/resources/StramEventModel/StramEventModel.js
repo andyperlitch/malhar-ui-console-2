@@ -13,29 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
-/* global describe, before, beforeEach, after, afterEach, inject, it, expect, module */
-
 'use strict';
 
-describe('Factory: StramEventsWidgetDataModel', function () {
-
-  // load the service's module
-  beforeEach(module('app.pages.ops.appInstance.widgets.StramEvents', function($provide) {
-    $provide.value('webSocket', {
-
-    });
-  }));
-
-  // instantiate service
-  var StramEventsWidgetDataModel;
-  beforeEach(inject(function (_StramEventsWidgetDataModel_) {
-    StramEventsWidgetDataModel = _StramEventsWidgetDataModel_;
-  }));
-
-  it('should be a function', function() {
-    expect(typeof StramEventsWidgetDataModel).toEqual('function');
+angular.module('app.components.resources.StramEventModel', [
+  'app.components.resources.BaseModel'
+])
+.factory('StramEventModel', function(BaseModel) {
+  var StramEventModel = BaseModel.extend({
+    urlKey: 'StramEvent'
   });
-
-
+  return StramEventModel;
 });
