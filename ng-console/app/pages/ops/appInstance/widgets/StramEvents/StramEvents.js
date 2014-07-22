@@ -40,9 +40,10 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       resource = this.resource = new StramEventCollection({ appId: this.widgetScope.appId });
       resource.fetch({
         params: {
-          offset: settings.stram_events.INITIAL_OFFSET
+          limit: settings.stramEvents.INITIAL_LIMIT
         }
       });
+
       resource.subscribe(scope);
 
       scope.data = resource.data;
@@ -65,11 +66,8 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
             e.selected_anchor = false;
           });
 
-          event.selected = !event.selected;
-          if (event.selected) {
-            event.selected_anchor = true;
-          }
-
+          event.selected = true;
+          event.selected_anchor = true;
         }
 
         else {
@@ -98,9 +96,37 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
             }
 
           }
-          
+
         }
 
+      };
+
+      scope.onEventListKey = function($event) {
+
+        var which = $event.which;
+
+        if (which !== 38 && which !== 40) {
+          return;
+        }
+
+        var curIndices = _.map(scope.data, function(evt, i) {
+          if (evt.selected) {
+            return i;
+          }
+          return false;
+        });
+        curIndices = _.filter(curIndices, function(i) {
+          return i !== false;
+        });
+
+        // Up
+        if (which === 38) {
+          
+        }
+        // Down
+        if (which === 40) {
+
+        }
       };
 
     },

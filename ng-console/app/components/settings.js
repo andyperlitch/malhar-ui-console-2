@@ -95,8 +95,8 @@ angular.module('app.settings', [])
       Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId'
     },
 
-    stram_events: {
-      INITIAL_OFFSET: -50
+    stramEvents: {
+      INITIAL_LIMIT: 50
     },
 
     dag: {
