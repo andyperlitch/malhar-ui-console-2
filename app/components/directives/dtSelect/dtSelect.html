@@ -1,6 +1,6 @@
 <span>
     <label>{{label}}</label>
-    <select ng-model="value" ng-options="opt for opt in options"
+    <select ng-model="value" ng-options="opt.label for opt in options"
                       class="form-control"></select>
     <button type="button" class="btn btn-default" ng-click="prevValue();">
         <span class="glyphicon glyphicon-chevron-left"></span>

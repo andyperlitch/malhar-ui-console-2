@@ -17,8 +17,8 @@
 'use strict';
 
 angular.module('app.components.directives.logicalDag',
-    ['app.components.directives.logicalDag.LogicalDagRenderer'])
-  .directive('dtLogicalDag', function (LogicalDagRenderer) {
+  ['app.components.directives.logicalDag.LogicalDagRenderer'])
+  .directive('dtLogicalDag', function (LogicalDagRenderer, dtText) {
     return {
       restrict: 'A',
       templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/logicalDagDirective.html',
@@ -48,11 +48,13 @@ angular.module('app.components.directives.logicalDag',
             //toggleLocalityLink.text('Hide Stream Locality');
             //legend.show();
             if (scope.renderer) {
-              //scope.renderer.updateStreams(); //TODO
+              scope.renderer.updateStreams();
             }
           } else {
             //toggleLocalityLink.text('Show Stream Locality');
-            //this.clearStreamLocality(this.svgRoot); //TODO
+            if (scope.renderer) {
+              scope.renderer.clearStreamLocality();
+            }
             //legend.hide();
           }
         };
@@ -62,7 +64,69 @@ angular.module('app.components.directives.logicalDag',
           if (scope.renderer) {
             scope.renderer.resetPosition();
           }
-        }
+        };
+
+        scope.metrics = [
+          {
+            value: 'none',
+            label: 'None'
+          },
+          {
+            value: 'tuplesProcessedPSMA',
+            label: dtText.get('processed_per_sec')
+          },
+          {
+            value: 'tuplesEmittedPSMA',
+            label: dtText.get('emitted_per_sec')
+          },
+          {
+            value: 'latencyMA',
+            label: dtText.get('max_latency_label')
+          },
+          {
+            value: 'partitionCount',
+            label: dtText.get('partitions_label')
+          },
+          {
+            value: 'containerCount',
+            label: dtText.get('containers_label')
+          },
+          {
+            value: 'cpuMin',
+            label: dtText.get('cpu_min_label')
+          },
+          {
+            value: 'cpuMax',
+            label: dtText.get('cpu_max_label')
+          },
+          {
+            value: 'cpuAvg',
+            label: dtText.get('cpu_avg_label')
+          },
+          {
+            value: 'lastHeartbeat',
+            label: dtText.get('last_heartbeat_label')
+          },
+          {
+            value: 'currentWindowId',
+            label: dtText.get('current_wid_title')
+          },
+          {
+            value: 'recoveryWindowId',
+            label: dtText.get('recovery_wid_title')
+          },
+          {
+            value: 'totalTuplesProcessed',
+            label: dtText.get('processed_total')
+          },
+          {
+            value: 'totalTuplesEmitted',
+            label: dtText.get('emitted_total')
+          }
+        ];
+
+        scope.metric1 = scope.metrics[1];
+        scope.metric2 = scope.metrics[2];
       }
     };
   });
