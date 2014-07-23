@@ -30,7 +30,7 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
       init: function() {
         this.resource = new LogicalDag({
           //appId: this.dataModelOptions.appId
-          appId: this.widgetScope.appId //TODO
+          appId: this.dataModelOptions.appId //TODO
         });
         this.resource.fetch().then(function (response) {
           this.widgetScope.logicalPlan = response.data; //TODO

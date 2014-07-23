@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('app.components.directives.logicalDag',
-    ['app.components.directives.logicalDag.LogicalDagRenderer'])
+  ['app.components.directives.logicalDag.LogicalDagRenderer'])
   .directive('dtLogicalDag', function (LogicalDagRenderer, dtText) {
     return {
       restrict: 'A',
