@@ -2,8 +2,8 @@
     <p>Application ID: {{appId}}</p>
 
     <div class="form-inline">
-        <span dt-select label="Top:" class="metric-select" value="metric1" options="metrics"></span>
-        <span dt-select label="Bottom:" class="metric2-select" value="metric2" options="metrics"></span>
+        <span dt-select label="Top:" ng-model="metric1" class="metric-select" value="metric1" options="metrics"></span>
+        <span dt-select label="Bottom:" ng-model="metric2" class="metric2-select" value="metric2" options="metrics"></span>
 
         <div class="options-controls">
             <a href="#" class="btn btn-link"
