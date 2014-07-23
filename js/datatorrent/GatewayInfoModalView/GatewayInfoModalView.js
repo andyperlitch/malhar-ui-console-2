@@ -27,7 +27,8 @@ var GatewayInfoModalView = BaseView.extend({
 
 	title: text('Gateway Information'),
 
-	initialize: function() {
+	initialize: function(options) {
+		BaseView.prototype.initialize.call(this, options);
 		this.model = new GatewayInfoModel({});
 		this.model.fetch();
 		this.listenTo(this.model, 'sync', this.renderBody);
