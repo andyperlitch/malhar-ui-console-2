@@ -30,7 +30,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'app.components.widgets.Base',
   'app.settings'
 ])
-.controller('StramEventListCtrl', function($scope, $element) {
+.controller('StramEventListCtrl', function($scope) {
 
   $scope.getEventClasses = function(evt) {
     var classes = ['event-item'];
@@ -119,7 +119,8 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
     controller: 'StramEventListCtrl',
     restrict: 'E',
     scope: {
-      data: '='
+      data: '=',
+      state: '='
     },
     link: function(scope, element) {
       scope.followEvents = true;
@@ -156,6 +157,9 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
 
       scope.data = resource.data;
 
+      scope.state = {
+        mode: 'tail'
+      };
     },
 
     destroy: function() {
