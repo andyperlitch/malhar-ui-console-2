@@ -1,7 +1,0 @@
-<div ng-repeat="field in fields" class="overview-item">
-
-    <div class="key">{{ printLabel(field) }}</div>
-    <div class="value" ng-if="field.trustAsHtml" ng-bind-html="printValue(field,data)"></div>
-    <div class="value" ng-if="!field.trustAsHtml">{{ printValue(field,data) }}</div>
-
-</div>
