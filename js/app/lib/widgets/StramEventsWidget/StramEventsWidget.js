@@ -159,7 +159,9 @@ var StramEventsWidget = BaseView.extend({
                 forceParse: 0,
                 minuteStep: 1,
                 showMeridian: 1,
-                pickerPosition: 'bottom-left'
+                pickerPosition: 'bottom-left',
+                format: 'yyyy-mm-ddThh:ii:ss',
+                linkFormat: 'yyyy-mm-ddThh:ii:ss'
             });
         }
     },
