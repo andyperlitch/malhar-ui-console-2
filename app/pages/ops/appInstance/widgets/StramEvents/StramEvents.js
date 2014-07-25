@@ -24,6 +24,7 @@
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'underscore',
+  'app.components.services.dtText',
   'app.components.filters.relativeTimestamp',
   'app.components.resources.StramEventCollection',
   'app.components.directives.dtContainerShorthand',
@@ -31,13 +32,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'app.settings',
   'ui.bootstrap'
 ])
-.controller('StramEventListCtrl', function($scope) {
-  
-  $scope.hstep = 1;
-  $scope.mstep = 1;
-  $scope.ismeridian = true;
-  
-
+.controller('StramEventListCtrl', function($scope, dtText) {
 
   $scope.getEventClasses = function(evt) {
     var classes = ['event-item'];
@@ -52,21 +47,29 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
     var shift = $event.shiftKey;
     
     if (!shift) {
-      _.each($scope.data, function(e) {
+      var wasSelected = event.selected;
+      _.each($scope.resource.data, function(e) {
         e.selected = false;
         e.selected_anchor = false;
       });
 
       event.selected = true;
       event.selected_anchor = true;
+
+      if (!wasSelected) {
+        
+      }
+      else {
+        event.selected = false;
+      }
     }
 
     else {
 
       var selecting = false;
 
-      for (var i = 0; i < $scope.data.length; i++) {
-        var e = $scope.data[i];
+      for (var i = 0; i < $scope.resource.data.length; i++) {
+        var e = $scope.resource.data[i];
 
         // Selecting in the loop
         if (selecting) {
@@ -89,7 +92,6 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       }
 
     }
-
   };
 
   $scope.onEventListKey = function($event) {
@@ -100,7 +102,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       return;
     }
 
-    var curIndices = _.map($scope.data, function(evt, i) {
+    var curIndices = _.map($scope.resource.data, function(evt, i) {
       if (evt.selected) {
         return i;
       }
@@ -119,8 +121,48 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
 
     }
   };
+
+  $scope.getEventRange = function(startDate, endDate, offset, limit) {
+    if (startDate >= endDate) {
+      $scope.rangeError = dtText.get('The end date must be after start date.');
+      $scope.$digest();
+      return;
+    }
+
+    if (typeof offset === 'undefined') {
+      offset = 0;
+    }
+
+    if (typeof limit === 'undefined') {
+      limit = 100;
+    }
+
+    $scope.rangeError = dtText.get('Fetching events...');
+    $scope.resource.data = [];
+    $scope.resource.fetch({
+      params: {
+        from: startDate.valueOf(),
+        to: endDate.valueOf(),
+        offset: offset,
+        limit: limit
+      }
+    })
+    .then(
+      function(data) {
+        if (data.length) {
+          $scope.rangeError = false;
+        }
+        else {
+          $scope.rangeError = dtText.get('No events found for the specified time range');
+        }
+      },
+      function() {
+        $scope.rangeError = dtText.get('An error occurred retrieving stram events!');
+      }
+    );
+  };
 })
-.run(['$templateCache', function($templateCache) {
+.run(function($templateCache) {
   $templateCache.put('template/timepicker/timepicker.html',
     '<table>\n' +
     ' <tbody>\n' +
@@ -149,22 +191,23 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
     ' </tbody>\n' +
     '</table>\n' +
     '');
-}])
+})
 .directive('stramEventList', function() {
   return {
     templateUrl: 'pages/ops/appInstance/widgets/StramEvents/stramEventList.html',
     controller: 'StramEventListCtrl',
     restrict: 'E',
     scope: {
-      data: '=',
+      resource: '=',
       state: '='
     },
     link: function(scope, element) {
       scope.followEvents = true;
 
+      // Sets up auto-follow incoming events
       var eventList = element.find('.event-list');
-      scope.$watchCollection('data', function() {
-        if (scope.followEvents) {
+      scope.$watchCollection('resource.data', function() {
+        if (scope.mode === 'tail' && scope.followEvents) {
           // stop any animation
           eventList.stop();
           // scroll to bottom
@@ -172,6 +215,35 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
             scrollTop: eventList[0].scrollHeight + 100
           }, 'slow');
         }
+      });
+
+      // Some setup for range selection
+      scope.hstep = 1;
+      scope.mstep = 1;
+      scope.ismeridian = true;
+
+      // Listen for changes to the mode
+      scope.$watch('state.mode', function(mode) {
+        
+        // clear the data
+        scope.resource.data = [];
+
+        if (mode === 'tail') {
+          // subscribe to updates
+          scope.resource.subscribe(scope);
+
+          // get the last n events
+          scope.resource.fetch({
+            params: {
+              limit: scope.state.tail.limit
+            }
+          });
+        } else if (mode === 'range') {
+          // unsubscribe to events
+          scope.resource.unsubscribe();
+          scope.getEventRange(scope.state.range.from, scope.state.range.to);
+        }
+        
       });
     }
   };
@@ -182,23 +254,17 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   var StramEventsWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
-      var resource, scope = this.widgetScope;
-      resource = this.resource = new StramEventCollection({ appId: this.widgetScope.appId });
-      resource.fetch({
-        params: {
-          limit: settings.stramEvents.INITIAL_LIMIT
-        }
-      });
-
-      resource.subscribe(scope);
-
-      scope.data = resource.data;
-
+      var scope = this.widgetScope;
+      this.resource = new StramEventCollection({ appId: this.widgetScope.appId });
+      scope.resource = this.resource;
       scope.state = {
         mode: 'range',
         range: {
           from: new Date(Date.now() - 10 * 60 * 1000), // 10 minutes ago
           to: new Date(Date.now())
+        },
+        tail: {
+          limit: settings.stramEvents.INITIAL_LIMIT
         }
       };
     },
