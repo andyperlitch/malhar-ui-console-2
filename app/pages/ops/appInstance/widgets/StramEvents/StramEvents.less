@@ -1,3 +1,4 @@
+@stram-event-list-min-height: 100px;
 @stram-event-list-max-height: 400px;
 // stram event colors
 @stram-event-default-color: #CFCFCF;
@@ -54,6 +55,7 @@
 
 .event-list {
   max-height: @stram-event-list-max-height;
+  min-height: @stram-event-list-min-height;
   overflow: auto;
   padding: 3px;
   margin-bottom: 0;
@@ -161,10 +163,30 @@
   }
 }
 
+.reason-indicator {
+  float: right;
+}
+
 .event-item-reason {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  cursor: default;
   .well {
     padding: 5px;
     white-space: pre-wrap;
     margin-bottom: 0;
+  }
+}
+.range-datetime-container {
+  padding: 5px;
+  margin-bottom: 3px;
+  h4 {
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+  }
+  .submit-event-range-btn {
+    margin-top: 2em;
   }
 }

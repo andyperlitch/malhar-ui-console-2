@@ -1,10 +1,96 @@
+<!-- widget controls form -->
+<form action="#" novalidate>
+  
+
+  <!-- mode select -->
+  <label class="control-label" dt-text>
+    mode:
+  </label>
+  &nbsp;&nbsp;
+  <label class="radio-inline">
+    <input type="radio" value="tail" ng-model="state.mode">
+    <span dt-text dt-text-tooltip="This mode allows you to see events as they come in.">tail</span>
+  </label>
+  <label class="radio-inline">
+    <input type="radio" value="range" ng-model="state.mode">
+    <span dt-text dt-text-tooltip="This mode allows you to search for events by a time range.">range</span>
+  </label>
+
+  <!-- range datetime pickers -->
+  <div ng-show="state.mode === 'range'" class="container-fluid alert alert-success range-datetime-container">
+    
+    <div class="row">
+
+      <!-- from -->
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-xs-6">
+            <h4>from</h4>
+            <input
+              type="text"
+              class="form-control input-sm"
+              datepicker-popup="dd-MMMM-yyyy"
+              ng-model="state.range.from"
+              ng-required="true"
+              close-text="Close"
+              is-open="state.range.fromOpen"
+              ng-focus="state.range.fromOpen = true"
+            />
+          </div>
+          <timepicker class="col-xs-6" ng-model="state.range.from" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+        </div>
+      </div>
+
+      <!-- to -->
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-xs-6">
+            <h4>to</h4>
+            <input
+              type="text"
+              class="form-control input-sm"
+              datepicker-popup="dd-MMMM-yyyy"
+              ng-model="state.range.to"
+              ng-required="true"
+              close-text="Close"
+              is-open="state.range.toOpen"
+              ng-focus="state.range.toOpen = true"
+            />
+          </div>
+          <timepicker ng-model="state.range.to" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-primary submit-event-range-btn" dt-text type="button" ng-click="getEventRange(state.range.from, state.range.to)">
+          search
+        </button>
+      </div>
+
+    </div><!-- end .row -->
+
+  </div><!-- end .container-fluid -->
+
+
+</form>
 <div class="event-list-container">
-  <button ng-class="{ btn: true, 'btn-default': !followEvents, 'follow-events-btn': true, 'btn-success': followEvents }" ng-click="followEvents = !followEvents" dt-text-tooltip="When enabled, this list will automatically scroll to the bottom when new events come in">
+  <button
+    ng-class="{ btn: true, 'btn-default': !followEvents, 'follow-events-btn': true, 'btn-success': followEvents }"
+    ng-click="followEvents = !followEvents"
+    dt-text-tooltip="When enabled, this list will automatically scroll to the bottom when new events come in"
+    ng-show="state.mode === 'tail'"
+  >
     <span ng-class="{ 'glyphicon':true, 'glyphicon-eye-open': followEvents, 'glyphicon-eye-close': !followEvents }"></span>
     <span>{{ followEvents ? "following" : "not following" }}</span>
   </button>
-  <div class="event-list well" ng-keydown="onEventListKey($event)" tabindex="1">
-    <div ng-repeat="event in data" ng-mousedown="onEventClick($event, event)"  ng-class="getEventClasses(event)">
+  <div class="event-list well well-sm" ng-keydown="onEventListKey($event)" tabindex="1">
+    <div ng-if="rangeError && state.mode === 'range'" class="text-muted">{{ rangeError }}</div>
+    <div ng-repeat="event in resource.data" ng-mousedown="onEventClick($event, event)"  ng-class="getEventClasses(event)">
+      <i 
+        ng-if="event.data.reason || event.data.errorMessage"
+        class="reason-indicator glyphicon glyphicon-info-sign"
+        dt-text-tooltip="click to view additional details"
+      ></i>
       <small>{{ event.timestamp | relativeTimestamp }}</small>
       <em>{{event.type}}</em>
       
@@ -114,8 +200,7 @@
       </span>
 
       <!-- reason -->
-      <div ng-if="event.data.reason || event.data.errorMessage">
-        <i class="reason-indicator icon-warning-sign" dt-text-tooltip="click to view additional details"></i>
+      <div ng-if="event.data.reason || event.data.errorMessage" ng-mousedown="$event.stopPropagation()">
         <div class="event-item-reason" ng-show="event.selected && event.data.reason">
           <pre class="well">{{ event.data.reason }}</pre>
         </div>
