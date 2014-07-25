@@ -28,9 +28,16 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'app.components.resources.StramEventCollection',
   'app.components.directives.dtContainerShorthand',
   'app.components.widgets.Base',
-  'app.settings'
+  'app.settings',
+  'ui.bootstrap'
 ])
 .controller('StramEventListCtrl', function($scope) {
+  
+  $scope.hstep = 1;
+  $scope.mstep = 1;
+  $scope.ismeridian = true;
+  
+
 
   $scope.getEventClasses = function(evt) {
     var classes = ['event-item'];
@@ -113,6 +120,36 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
     }
   };
 })
+.run(['$templateCache', function($templateCache) {
+  $templateCache.put('template/timepicker/timepicker.html',
+    '<table>\n' +
+    ' <tbody>\n' +
+    '   <tr class="text-center">\n' +
+    '     <td><a ng-click="incrementHours()" class="btn btn-link btn-sm"><span class="glyphicon glyphicon-chevron-up"></span></a></td>\n' +
+    '     <td>&nbsp;</td>\n' +
+    '     <td><a ng-click="incrementMinutes()" class="btn btn-link btn-sm"><span class="glyphicon glyphicon-chevron-up"></span></a></td>\n' +
+    '     <td ng-show="showMeridian"></td>\n' +
+    '   </tr>\n' +
+    '   <tr>\n' +
+    '     <td style="width:50px;" class="form-group" ng-class="{\'has-error\': invalidHours}">\n' +
+    '       <input type="text" dt-text-tooltip="Use your mousewheel to easily change this value." tooltip-placement="left" ng-model="hours" ng-change="updateHours()" class="form-control text-center input-sm" ng-mousewheel="incrementHours()" ng-readonly="readonlyInput" maxlength="2">\n' +
+    '     </td>\n' +
+    '     <td>:</td>\n' +
+    '     <td style="width:50px;" class="form-group" ng-class="{\'has-error\': invalidMinutes}">\n' +
+    '       <input type="text" dt-text-tooltip="Use your mousewheel to easily change this value." tooltip-placement="right" ng-model="minutes" ng-change="updateMinutes()" class="form-control text-center input-sm" ng-readonly="readonlyInput" maxlength="2">\n' +
+    '     </td>\n' +
+    '     <td ng-show="showMeridian"><button type="button" class="btn btn-info text-center btn-sm" ng-click="toggleMeridian()">{{meridian}}</button></td>\n' +
+    '   </tr>\n' +
+    '   <tr class="text-center">\n' +
+    '     <td><a ng-click="decrementHours()" class="btn btn-link btn-sm"><span class="glyphicon glyphicon-chevron-down"></span></a></td>\n' +
+    '     <td>&nbsp;</td>\n' +
+    '     <td><a ng-click="decrementMinutes()" class="btn btn-link btn-sm"><span class="glyphicon glyphicon-chevron-down"></span></a></td>\n' +
+    '     <td ng-show="showMeridian"></td>\n' +
+    '   </tr>\n' +
+    ' </tbody>\n' +
+    '</table>\n' +
+    '');
+}])
 .directive('stramEventList', function() {
   return {
     templateUrl: 'pages/ops/appInstance/widgets/StramEvents/stramEventList.html',
@@ -158,7 +195,11 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       scope.data = resource.data;
 
       scope.state = {
-        mode: 'tail'
+        mode: 'range',
+        range: {
+          from: new Date(Date.now() - 10 * 60 * 1000), // 10 minutes ago
+          to: new Date(Date.now())
+        }
       };
     },
 
