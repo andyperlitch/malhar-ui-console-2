@@ -524,7 +524,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('travis', [
-    'jshint:all',
+    'jshint',
     'karma:travis'
   ]);
 
