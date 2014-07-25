@@ -23,7 +23,7 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
   'app.components.directives.dtSelect',
   'app.components.resources.LogicalDag'
 ])
-  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag) {
+  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection, $http) {
 
     var LogicalDagDataModel = BaseDataModel.extend({
 
@@ -34,6 +34,15 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
         });
         this.resource.fetch().then(function (response) {
           this.widgetScope.logicalPlan = response.data; //TODO
+
+          var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
+          ops.fetch().then(function (response) {
+            this.widgetScope.$broadcast('updateMetrics', response.data.operators); //TODO
+          }.bind(this));
+          ops.subscribe(this.widgetScope, function (data) {
+            this.widgetScope.$broadcast('updateMetrics', data); //TODO
+          }.bind(this));
+
         }.bind(this));
         //this.resource.subscribe(this.widgetScope);
         //this.widgetScope.data = this.resource.data;

@@ -17,8 +17,11 @@
 'use strict';
 
 angular.module('app.components.directives.logicalDag',
-  ['app.components.directives.logicalDag.LogicalDagRenderer'])
-  .directive('dtLogicalDag', function (LogicalDagRenderer, dtText) {
+  [
+    'app.components.directives.logicalDag.LogicalDagRenderer',
+    'app.components.directives.logicalDag.MetricModelFactory'
+  ])
+  .directive('dtLogicalDag', function (LogicalDagRenderer, LogicalDagHelper) {
     return {
       restrict: 'A',
       templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/logicalDagDirective.html',
@@ -38,6 +41,14 @@ angular.module('app.components.directives.logicalDag',
           }
         });
 
+        LogicalDagHelper.setupActions(scope);
+        LogicalDagHelper.setupMetrics(scope);
+      }
+    };
+  })
+  .factory('LogicalDagHelper', function (dtText, MetricModelFactory) {
+    return {
+      setupActions: function (scope) {
         scope.showLocality = false;
         scope.toggleLocality = function (event) {
           event.preventDefault();
@@ -45,17 +56,13 @@ angular.module('app.components.directives.logicalDag',
           scope.showLocality = !scope.showLocality;
 
           if (scope.showLocality) {
-            //toggleLocalityLink.text('Hide Stream Locality');
-            //legend.show();
             if (scope.renderer) {
               scope.renderer.updateStreams();
             }
           } else {
-            //toggleLocalityLink.text('Show Stream Locality');
             if (scope.renderer) {
               scope.renderer.clearStreamLocality();
             }
-            //legend.hide();
           }
         };
 
@@ -65,7 +72,8 @@ angular.module('app.components.directives.logicalDag',
             scope.renderer.resetPosition();
           }
         };
-
+      },
+      setupMetrics: function (scope) {
         scope.metrics = [
           {
             value: 'none',
@@ -126,7 +134,36 @@ angular.module('app.components.directives.logicalDag',
         ];
 
         scope.metric1 = scope.metrics[1];
+        scope.metricModel = MetricModelFactory.getMetricModel(scope.metric1.value);
         scope.metric2 = scope.metrics[2];
+        scope.metricModel2 = MetricModelFactory.getMetricModel(scope.metric2.value);
+
+        //TODO use ng-model in select
+        scope.$watch('metric1', function (metric) {
+          console.log(metric);
+        });
+        scope.$watch('metric2', function (metric) {
+          console.log(metric);
+        });
+
+        scope.$on('updateMetrics', function (event, collection) {
+          //var changed = this.partitionsMetricModel.update(this.collection, true);
+
+          //if (changed) {
+          //  this.updatePartitions();
+          //}
+
+          if (!scope.metricModel.isNone()) {
+            scope.metricModel.update(collection);
+            //console.log(scope.renderer);
+            scope.renderer.updateMetricLabels(scope.metricModel);
+          }
+
+          if (!scope.metricModel2.isNone()) {
+            scope.metricModel2.update(collection);
+            scope.renderer.updateMetric2Labels(scope.metricModel2);
+          }
+        });
       }
-    };
+    }
   });
