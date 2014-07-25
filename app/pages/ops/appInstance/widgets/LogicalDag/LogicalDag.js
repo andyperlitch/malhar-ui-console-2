@@ -23,7 +23,7 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
   'app.components.directives.dtSelect',
   'app.components.resources.LogicalDag'
 ])
-  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection, $http) {
+  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection) {
 
     var LogicalDagDataModel = BaseDataModel.extend({
 

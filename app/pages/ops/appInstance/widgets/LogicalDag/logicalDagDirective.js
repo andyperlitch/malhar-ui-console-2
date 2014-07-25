@@ -29,7 +29,7 @@ angular.module('app.components.directives.logicalDag',
         appId: '=',
         logicalPlan: '='
       },
-      link: function postLink(scope, element, attrs) {
+      link: function postLink(scope, element) {
         scope.values = ['option1', 'option2', 'option3'];
         scope.value = scope.values[0];
 
@@ -165,5 +165,5 @@ angular.module('app.components.directives.logicalDag',
           }
         });
       }
-    }
+    };
   });
