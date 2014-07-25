@@ -43,7 +43,7 @@ angular.module('app.components.directives.logicalDag.MetricModel', [])
         var changed = true;
 
         if (checkChange) {
-          changed = !_.isEqual(newMap, this.map)
+          changed = !_.isEqual(newMap, this.map);
         }
 
         this.map = newMap;
