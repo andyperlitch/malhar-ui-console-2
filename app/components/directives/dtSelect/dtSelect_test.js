@@ -28,6 +28,10 @@ describe('Directive: dtSelect', function () {
   beforeEach(module('templates-main', function() {
   }));
 
+  beforeEach(module('app.components.directives.dtSelect', function() {
+    // Inject dependencies
+  }));
+
   beforeEach(inject(function ($compile, $rootScope) {
     // Cache these for reuse
     rootScope = $rootScope;
