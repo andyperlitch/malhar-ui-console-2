@@ -83,7 +83,7 @@ angular.module('app.components.directives.logicalDag',
           },
           {
             value: 'latencyMA',
-            label: dtText.get('max_latency_label')
+            label: dtText.get('latency_ms_label')
           },
           {
             value: 'partitionCount',

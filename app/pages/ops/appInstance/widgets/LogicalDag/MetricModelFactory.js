@@ -43,9 +43,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
 
         tuplesEmittedPSMA: {
@@ -54,29 +52,33 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
 
         latencyMA: {
           showMetric: function (id, map) {
             var value = map[id];
             return (map.hasOwnProperty(id) && value > 0);
-          }
+          },
+
+          ngFilter: 'number'
         },
 
         partitionCount: {
           showMetric: function (id, map) {
             var value = map[id];
             return (map.hasOwnProperty(id) && value > 1);
-          }
+          },
+
+          ngFilter: 'number'
         },
 
         containerCount: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
-          }
+          },
+
+          ngFilter: 'number'
         },
 
         cpuMin: {
@@ -85,7 +87,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
           },
 
           valueToString: function (value) {
-            return formatters.percentageFormatter(value, true);
+            return (value * 1).toFixed(2) + '%';
           }
         },
 
@@ -95,7 +97,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
           },
 
           valueToString: function (value) {
-            return formatters.percentageFormatter(value, true);
+            return (value * 1).toFixed(2) + '%';
           }
         },
 
@@ -105,7 +107,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
           },
 
           valueToString: function (value) {
-            return formatters.percentageFormatter(value, true);
+            return (value * 1).toFixed(2) + '%';
           }
         },
 
@@ -114,9 +116,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return map.hasOwnProperty(id);
           },
 
-          valueToString: function (value) {
-            return new Date(value).toLocaleTimeString();
-          }
+          ngFilter: 'relativeTimestamp'
         },
 
         currentWindowId: {
@@ -135,9 +135,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
 
         totalTuplesEmitted: {
@@ -146,10 +144,9 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
+
         recoveryWindowId: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
