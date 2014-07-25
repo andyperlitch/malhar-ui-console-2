@@ -32,12 +32,12 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
           //appId: this.dataModelOptions.appId
           appId: this.widgetScope.appId //TODO
         });
-        this.resource.fetch().then(function (response) {
-          this.widgetScope.logicalPlan = response.data; //TODO
+        this.resource.fetch().then(function (data) {
+          this.widgetScope.logicalPlan = data; //TODO
 
           var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
-          ops.fetch().then(function (response) {
-            this.widgetScope.$broadcast('updateMetrics', response.data.operators); //TODO
+          ops.fetch().then(function (data) {
+            this.widgetScope.$broadcast('updateMetrics', data); //TODO
           }.bind(this));
           ops.subscribe(this.widgetScope, function (data) {
             this.widgetScope.$broadcast('updateMetrics', data); //TODO
