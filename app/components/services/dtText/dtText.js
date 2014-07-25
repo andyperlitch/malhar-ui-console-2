@@ -22,7 +22,7 @@ angular.module('app.components.services.dtText', [])
    *
    * May be used in the future for i18n support
    */
-  .service('dtText', ['$filter', '$log', function dtText($filter, $log) {
+  .service('dtText', ['$filter', '$log', function dtText($filter) {
     
     var textHash = {
       // Labels

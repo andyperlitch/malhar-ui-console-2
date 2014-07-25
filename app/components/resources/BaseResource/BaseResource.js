@@ -63,7 +63,7 @@ angular.module('app.components.resources.BaseResource', [
      * A scope can optionally be passed in order
      * to call $digest on updates. Highly recommended.
      */
-    subscribe: function(scope) {
+    subscribe: function(scope, callback) {
       // Ensure there is a topic to subscribe to
       // before continuing
       if (!this.topic) {
@@ -75,7 +75,11 @@ angular.module('app.components.resources.BaseResource', [
       // as the second argument. Otherwise multiple instances
       // will share the same handler function.
       this.__subscribeFn__ = _.bind(function(data) {
-        this.set(this._getTransformed(data, 'subscribe'));
+        var transformed = this._getTransformed(data, 'subscribe');
+        this.set(transformed);
+        if (callback) {
+          callback(transformed);
+        }
       }, this);
 
       // Use the webSocket service to subscribe to the topic

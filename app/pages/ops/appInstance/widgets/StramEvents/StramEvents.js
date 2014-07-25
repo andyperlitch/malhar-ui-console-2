@@ -30,7 +30,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'app.components.widgets.Base',
   'app.settings'
 ])
-.controller('StramEventListCtrl', function($scope, $element) {
+.controller('StramEventListCtrl', function($scope) {
 
   $scope.getEventClasses = function(evt) {
     var classes = ['event-item'];

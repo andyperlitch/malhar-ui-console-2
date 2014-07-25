@@ -25,11 +25,10 @@ describe('Directive: dtSelect', function () {
   });
 
   // load templates
-  beforeEach(module('templates-main', function($provide) {
+  beforeEach(module('templates-main', function() {
   }));
 
-  // load the directive's module
-  beforeEach(module('app.components.directives.dtSelect', function($provide) {
+  beforeEach(module('app.components.directives.dtSelect', function() {
     // Inject dependencies
   }));
 
