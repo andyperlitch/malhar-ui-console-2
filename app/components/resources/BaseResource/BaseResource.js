@@ -21,7 +21,7 @@ angular.module('app.components.resources.BaseResource', [
   'app.components.services.webSocket',
   'app.components.services.extend'
 ])
-.factory('BaseResource', function(_, $http, webSocket, extend, $log) {
+.factory('BaseResource', function(_, $http, webSocket, extend, $log, $q) {
 
   /**
    * Abstract class for all resources (models and collections).
@@ -39,22 +39,30 @@ angular.module('app.components.resources.BaseResource', [
      */
     fetch: function(options) {
 
+      // Set up custom deferred
+      var deferred = $q.defer();
+
       // Initialize GET
-      var promise = $http.get(this.url, options);
+      var httpPromise = $http.get(this.url, options);
 
       // Reference to this
       var self = this;
 
       // Store in data on return
-      promise.then(
+      httpPromise.then(
         function(response) {
-          self.set( self._getTransformed(response.data, 'fetch') );
+          var transformed = self._getTransformed(response.data, 'fetch');
+          self.set(transformed);
+          deferred.resolve(transformed);
         },
-        _.bind(this.onFetchError,this)
+        _.bind(function(response) {
+          this.onFetchError(response);
+          deferred.reject(response);
+        },this)
       );
 
       // Return the promise
-      return promise;
+      return deferred.promise;
 
     },
 

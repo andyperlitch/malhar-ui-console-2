@@ -91,8 +91,15 @@ describe('Service: BaseResource', function () {
 
     it('should return a promise', function() {
       
+      $httpBackend.whenGET('/my-url?key=value').respond({});
+
+      r.url = '/my-url';
+      var result = r.fetch({ params: { key: 'value' }});
       
+      $httpBackend.flush();
       
+      expect(typeof result.then).toEqual('function');
+
     });
 
   });
