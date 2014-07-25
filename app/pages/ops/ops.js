@@ -22,7 +22,8 @@
 
 angular.module('app.pages.ops', [
   'app.pages.ops.widgets.ClusterMetrics',
-  'app.pages.ops.widgets.AppsList'
+  'app.pages.ops.widgets.AppsList',
+  'app.components.services.defaultWidgetSettings'
 ])
 
 // Route
@@ -36,7 +37,7 @@ angular.module('app.pages.ops', [
 })
 
 // Controller
-.controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget){
+.controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose){
   var widgetDefinitions = [
     new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
     new AppsListWidget({ name: 'AppList' })
@@ -52,7 +53,9 @@ angular.module('app.pages.ops', [
     defaultWidgets: defaultWidgets,
     defaultLayouts: [
       { title: 'default', active: true , defaultWidgets: defaultWidgets },
-    ]
+    ],
+    settingsModalOptions: defaultSettingsModalOptions,
+    onSettingsClose: defaultOnSettingsClose
   };
 
 });

@@ -21,6 +21,7 @@
  */
 
 angular.module('app.pages.ops.appInstance', [
+  'app.components.services.defaultWidgetSettings',
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
@@ -48,7 +49,10 @@ angular.module('app.pages.ops.appInstance', [
     AppInstanceOverviewWidgetDef,
     StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
-    breadcrumbs) {
+    breadcrumbs,
+    defaultSettingsModalOptions,
+    defaultOnSettingsClose
+  ) {
 
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
@@ -90,7 +94,9 @@ angular.module('app.pages.ops.appInstance', [
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
         { title: 'logical', active: true , defaultWidgets: defaultWidgets }
-      ]
+      ],
+      settingsModalOptions: defaultSettingsModalOptions,
+      onSettingsClose: defaultOnSettingsClose
     };
 
   });
