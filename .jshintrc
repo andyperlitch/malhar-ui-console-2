@@ -22,6 +22,8 @@
     "angular": false,
     "_": false,
     "$": false,
+    "d3": false,
+    "dagreD3": false,
     "jQuery": false
   }
 }

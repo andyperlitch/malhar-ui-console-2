@@ -25,7 +25,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
     }
 
     LogicalDagRenderer.prototype = {
-      displayGraph: function() {
+      displayGraph: function () {
         // render legend
         this.renderLegend(this.element);
 
@@ -39,19 +39,19 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
        * @param  {Object} data JSON-serialized POJO of logical plan
        * @return {Object}      Transformed object, compatible with dagre-d3.
        */
-      buildGraph: function(data) {
+      buildGraph: function (data) {
         var nodes = [];
 
-        _.each(data.operators, function(value, key) {
+        _.each(data.operators, function (value) {
           var node = { id: value.name, value: { label: value.name } };
           nodes.push(node);
         });
 
         var links = [];
 
-        _.each(data.streams, function(stream, key) {
+        _.each(data.streams, function (stream) {
           var source = stream.source.operatorName;
-          _.each(stream.sinks, function(sink) {
+          _.each(stream.sinks, function (sink) {
             var target = sink.operatorName;
             var link = { u: source, v: target, value: { label: stream.name } };
             links.push(link);
@@ -77,11 +77,11 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
 
         this.graph = graph;
         this.svgRoot = root;
-        this.svgNodes = root.selectAll("g .node");
+        this.svgNodes = root.selectAll('g .node');
 
         var that = this;
 
-        this.svgNodes.each(function (d, i) {
+        this.svgNodes.each(function (d) {
           var nodeSvg = d3.select(this);
           var height = graph.node(d).height;
 
@@ -99,7 +99,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
 
         // Create a data array from all dag edge types (in settings)
         // ['NOT ASSIGNED', 'THREAD_LOCAL', 'CONTAINER_LOCAL', 'NODE_LOCAL', 'RACK_LOCAL'];
-        var data = _.map( settings.dag.edges, function (displayProperties, locality) {
+        var data = _.map(settings.dag.edges, function (displayProperties, locality) {
           // Looks for a 'displayName' key in the properties first,
           // otherwise just makes the key the label.
           var label = displayProperties.displayName ? displayProperties.displayName : locality;
@@ -144,12 +144,12 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
           .attr('stroke-dasharray', function (d) {
             return d.dasharray;
           })
-          .attr('d', function(d, lineIndex) {
+          .attr('d', function (d, lineIndex) {
             return d3.svg.line()
-              .x(function(d, i) {
+              .x(function (d) {
                 return d.x;
               })
-              .y(function(d, i) {
+              .y(function () {
                 return lineBaseY + lineIndex * spaceY;
               })
             (points);
@@ -162,7 +162,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
        * @param  {Element} selector   The element that the graph should be added to
        * @return {void}
        */
-      renderGraph: function(graph, selector) {
+      renderGraph: function (graph, selector) {
         var svgParent = jQuery(selector);
         var nodes = graph.nodes;
         var links = graph.links;
@@ -171,7 +171,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
         var svg = d3.select(graphElem);
 
         // Remove all inner elements
-        svg.selectAll("*").remove();
+        svg.selectAll('*').remove();
 
         // Create renderer
         var renderer = new dagreD3.Renderer();
@@ -197,7 +197,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
           .rankDir('LR');
 
         // Run the renderer
-        var d3_graph = renderer.layout(layout).run(dagreD3.json.decode(nodes, links), svg.append("g"));
+        var d3_graph = renderer.layout(layout).run(dagreD3.json.decode(nodes, links), svg.append('g'));
 
         // Adjusting height to content
         var main = svgParent.find('g > g');
@@ -213,17 +213,17 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
         // Zoom
         var zoomBehavior = this.zoomBehavior = d3.behavior
           .zoom()
-          .scaleExtent([0.1,4]);
+          .scaleExtent([0.1, 4]);
 
         var lastZoomLevel = this.lastZoomLevel = {
           translate: zoomBehavior.translate(),
           scale: zoomBehavior.scale()
         };
 
-        zoomBehavior.on("zoom", function() {
+        zoomBehavior.on('zoom', function () {
           var ev = d3.event;
 
-          if (self.onlyScrollOnAlt && !ev.sourceEvent.altKey && ev.sourceEvent.type === "wheel") {
+          if (self.onlyScrollOnAlt && !ev.sourceEvent.altKey && ev.sourceEvent.type === 'wheel') {
             var sev = ev.sourceEvent;
             window.scrollBy(0, sev.deltaY);
             zoomBehavior.translate(lastZoomLevel.translate);
@@ -231,8 +231,8 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
           } else {
             lastZoomLevel.translate = ev.translate;
             lastZoomLevel.scale = ev.scale;
-            svg.select("g")
-              .attr("transform", "translate(" + ev.translate + ") scale(" + ev.scale + ")");
+            svg.select('g')
+              .attr('transform', 'translate(' + ev.translate + ') scale(' + ev.scale + ')');
             self.updateMinimap(svgParent, ev.translate, ev.scale);
           }
 
@@ -251,14 +251,14 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
        * @param  {jQuery}       root                Root svg element as a jquery element
        * @return {void}
        */
-      renderMinimap: function(graph, graph_dimensions, $root) {
+      renderMinimap: function (graph, graph_dimensions, $root) {
 
         // Reference to the group that gets transform attribute updated.
         var graphGroup = $root.find('g>g')[0];
 
         // Padding for the map
         var mapPadding = 10;
-        var halfMapPadding = mapPadding/2;
+        var halfMapPadding = mapPadding / 2;
 
         // Width and Height of root svg element in widget
         var rootWidth = $root.width();
@@ -279,7 +279,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
           .attr({
             'class': 'dag-minimap',
             // minus 1 to include bottom and right borders for minimap
-            'transform': 'translate(' + (rootWidth - minimapWidth - 1) + ',' + (rootHeight - minimapHeight -1) + ')'
+            'transform': 'translate(' + (rootWidth - minimapWidth - 1) + ',' + (rootHeight - minimapHeight - 1) + ')'
           });
 
         // backdrop
@@ -299,10 +299,10 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
           });
 
         // edges
-        graph.eachEdge(function(stream_id, source_name, sink_name, info) {
+        graph.eachEdge(function (stream_id, source_name, sink_name, info) {
           minimap.append('path')
             .attr('class', 'minimap-stream')
-            .attr('d', function() {
+            .attr('d', function () {
 
               var points;
               // var points = info.points; // uncomment if cpettit ever fixes this
@@ -310,28 +310,29 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
               // HACK: points no longer contain endpoints on nodes
               var src = graph.node(source_name);
               var dest = graph.node(sink_name);
-              points = [{x: src.x, y: src.y}].concat(info.points);
+              points = [
+                {x: src.x, y: src.y}
+              ].concat(info.points);
               points = points.concat({x: dest.x, y: dest.y});
 
-              var point_strings = _.map(points, function(point) {
+              var point_strings = _.map(points, function (point) {
                 return (point.x * mapMultiplier + halfMapPadding) +
-                  ',' +
-                  (point.y * mapMultiplier + halfMapPadding)
+                  ',' + (point.y * mapMultiplier + halfMapPadding);
               });
               return 'M' + point_strings.join('L');
             });
         });
 
         // nodes
-        graph.eachNode(function(nodeName, info) {
+        graph.eachNode(function (nodeName, info) {
           var width, height;
           minimap.append('rect')
             .attr({
               'class': 'minimap-operator',
               'width': width = info.width * mapMultiplier,
               'height': height = info.height * mapMultiplier,
-              'x': info.x * mapMultiplier - width/2 + halfMapPadding,
-              'y': info.y * mapMultiplier - height/2 + halfMapPadding
+              'x': info.x * mapMultiplier - width / 2 + halfMapPadding,
+              'y': info.y * mapMultiplier - height / 2 + halfMapPadding
             });
         });
 
@@ -354,7 +355,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
             'width': minimapWidth
           });
 
-        var updateGraphPosition = _.bind(function() {
+        var updateGraphPosition = _.bind(function () {
           // d3.event.preventDefault();
           // d3.event.stopPropagation(); // silence other listeners
           var scale = this.zoomBehavior.scale();
@@ -362,23 +363,21 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
           var y = ((d3.event.y - viewbox.attr('height') / 2) / mapMultiplier) * scale;
           graphGroup.setAttribute('transform', 'translate(' + -x + ',' + -y + ') scale(' + scale + ')');
           // console.log('scale: ', this.zoomBehavior.scale());
-          this.zoomBehavior.translate([-x,-y]);
-          this.updateMinimap($root,[-x,-y], scale);
+          this.zoomBehavior.translate([-x, -y]);
+          this.updateMinimap($root, [-x, -y], scale);
         }, this);
 
         var drag = d3.behavior.drag()
-          // .on('drag', updateGraphPosition)
-          // .on("dragstart", updateGraphPosition);
-          .on('drag', function() {
-            updateGraphPosition();
-          })
-          .on('dragstart', function() {
-            // console.log('drag starting');
-            // updateGraphPosition();
-          });
+        .on('drag', function () {
+          updateGraphPosition();
+        })
+        .on('dragstart', function () {
+          // console.log('drag starting');
+          // updateGraphPosition();
+        });
 
         interaction
-          .on('mousedown', function() {
+          .on('mousedown', function () {
             d3.event.preventDefault();
             d3.event.stopPropagation();
           })
@@ -393,7 +392,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
        * @param  {Number} scale     scale of the zoom
        * @return {void}
        */
-      updateMinimap: function($svg, translate, scale) {
+      updateMinimap: function ($svg, translate, scale) {
         var viewbox = this.minimap.select('.minimap-viewbox');
         var viewboxWidth = $svg.width() * this.minimapMultiplier / scale;
         var viewboxHeight = $svg.height() * this.minimapMultiplier / scale;
@@ -409,40 +408,40 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
         });
       },
 
-      resetPosition: function() {
-        this.zoomBehavior.scale(1).translate([0,0]);
+      resetPosition: function () {
+        this.zoomBehavior.scale(1).translate([0, 0]);
         this.lastZoomLevel.scale = 1;
-        this.lastZoomLevel.translate = [0,0];
-        jQuery(this.element).find('svg.svg-main > g > g').attr("transform", null);
-        this.updateMinimap($('svg.svg-main'), [0,0],1);
+        this.lastZoomLevel.translate = [0, 0];
+        jQuery(this.element).find('svg.svg-main > g > g').attr('transform', null);
+        this.updateMinimap($('svg.svg-main'), [0, 0], 1);
       },
 
       addMetricLabel: function (nodeSvg, height) {
-        var labelSvg = nodeSvg.append("g").attr('class', 'node-metric-label');
+        var labelSvg = nodeSvg.append('g').attr('class', 'node-metric-label');
         labelSvg
-          .append("text")
-          .attr("text-anchor", "left")
-          .append("tspan")
-          .attr("dy", "1em");
+          .append('text')
+          .attr('text-anchor', 'left')
+          .append('tspan')
+          .attr('dy', '1em');
 
         var bbox = labelSvg.node().getBBox();
 
-        labelSvg.attr("transform",
-            "translate(" + (-bbox.width / 2) + "," + (-bbox.height - height / 2 - 4) + ")");
+        labelSvg.attr('transform',
+            'translate(' + (-bbox.width / 2) + ',' + (-bbox.height - height / 2 - 4) + ')');
       },
 
       addMetricLabelDown: function (nodeSvg, height) {
-        var labelSvg = nodeSvg.append("g").attr('class', 'node-metric2-label');
+        var labelSvg = nodeSvg.append('g').attr('class', 'node-metric2-label');
         labelSvg
-          .append("text")
-          .attr("text-anchor", "left")
-          .append("tspan")
-          .attr("dy", "1em");
+          .append('text')
+          .attr('text-anchor', 'left')
+          .append('tspan')
+          .attr('dy', '1em');
 
         var bbox = labelSvg.node().getBBox();
 
-        labelSvg.attr("transform",
-            "translate(" + (-bbox.width / 2) + "," + (-bbox.height + height + 4) + ")");
+        labelSvg.attr('transform',
+            'translate(' + (-bbox.width / 2) + ',' + (-bbox.height + height + 4) + ')');
       },
 
       events: {
@@ -547,7 +546,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
 
       updatePartitions: function () {
         var that = this;
-        this.svgNodes.each(function (d, i) {
+        this.svgNodes.each(function (d) {
           var nodeSvg = d3.select(this);
 
           var multiple = that.partitionsMetricModel.showMetric(d);
@@ -564,7 +563,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
       updateMetricLabels: function (metric) {
         var that = this;
         var graph = this.graph;
-        this.svgNodes.each(function (d, i) {
+        this.svgNodes.each(function (d) {
           var nodeSvg = d3.select(this);
           that.updateMetricLabel(graph, metric, d, nodeSvg);
         });
@@ -573,7 +572,7 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
       updateMetric2Labels: function (metric) {
         var that = this;
         var graph = this.graph;
-        this.svgNodes.each(function (d, i) {
+        this.svgNodes.each(function (d) {
           var nodeSvg = d3.select(this);
           that.updateMetric2Label(graph, metric, d, nodeSvg);
         });
@@ -591,8 +590,8 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
 
         var bbox = metricLabel.node().getBBox();
         var height = graph.node(d).height;
-        metricLabel.attr("transform",
-            "translate(" + (-bbox.width / 2) + "," + (-bbox.height - height / 2 - 4) + ")");
+        metricLabel.attr('transform',
+            'translate(' + (-bbox.width / 2) + ',' + (-bbox.height - height / 2 - 4) + ')');
       },
 
       updateMetric2Label: function (graph, metric, d, nodeSvg) {
@@ -608,8 +607,8 @@ angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
         var bbox = metricLabel.node().getBBox();
         var height = graph.node(d).height;
 
-        metricLabel.attr("transform",
-            "translate(" + (-bbox.width / 2) + "," + (-bbox.height + height + 4) + ")");
+        metricLabel.attr('transform',
+            'translate(' + (-bbox.width / 2) + ',' + (-bbox.height + height + 4) + ')');
       },
 
       createStreamLocalityMap: function () {

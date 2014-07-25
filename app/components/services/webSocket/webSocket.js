@@ -93,12 +93,12 @@ angular.module('app.components.services.webSocket', ['ui.notify', 'app.component
           if (topicMap.hasOwnProperty(topic)) {
             if ($window.WS_DEBUG) {
               if ($window.WS_DEBUG === true) {
-                $log.debug('WebSocket ', topic, ' => ', message.data);  
+                $log.debug('WebSocket ', topic, ' => ', message.data);
               }
               else {
                 var search = new RegExp($window.WS_DEBUG + '');
                 if (search.test(topic)) {
-                  $log.debug('WebSocket ', topic, ' => ', message.data);     
+                  $log.debug('WebSocket ', topic, ' => ', message.data);
                 }
               }
             }
