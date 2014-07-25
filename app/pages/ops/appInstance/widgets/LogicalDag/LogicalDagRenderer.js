@@ -18,10 +18,10 @@
 
 angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
   .factory('LogicalDagRenderer', function (settings) {
-    function LogicalDagRenderer(element, data) {
+    function LogicalDagRenderer(element, logicalPlan) {
       this.element = element;
-      this.graph = this.buildGraph(data);
-      this.streams = data.streams;
+      this.graph = this.buildGraph(logicalPlan);
+      this.streams = logicalPlan.streams;
     }
 
     LogicalDagRenderer.prototype = {

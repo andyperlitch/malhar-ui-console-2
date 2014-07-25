@@ -33,7 +33,9 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
           appId: this.widgetScope.appId //TODO
         });
         this.resource.fetch().then(function (data) {
-          this.widgetScope.logicalPlan = data; //TODO
+          //this.widgetScope.logicalPlan = data; //TODO
+
+          this.widgetScope.$broadcast('logicalPlan', data); //TODO
 
           var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
           ops.fetch().then(function (data) {

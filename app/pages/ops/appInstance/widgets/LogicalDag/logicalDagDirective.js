@@ -25,20 +25,14 @@ angular.module('app.components.directives.logicalDag',
     return {
       restrict: 'A',
       templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/logicalDagDirective.html',
-      scope: {
-        appId: '=',
-        logicalPlan: '='
-      },
+      scope: true,
       link: function postLink(scope, element) {
         scope.values = ['option1', 'option2', 'option3'];
         scope.value = scope.values[0];
 
-        //TODO unwatch
-        scope.$watch('logicalPlan', function (logicalPlan) {
-          if (logicalPlan) {
-            scope.renderer = new LogicalDagRenderer(element, logicalPlan);
-            scope.renderer.displayGraph();
-          }
+        scope.$on('logicalPlan', function (event, logicalPlan) {
+          scope.renderer = new LogicalDagRenderer(element, logicalPlan);
+          scope.renderer.displayGraph();
         });
 
         LogicalDagHelper.setupActions(scope);
@@ -140,13 +134,22 @@ angular.module('app.components.directives.logicalDag',
 
         //TODO use ng-model in select
         scope.$watch('metric1', function (metric) {
-          console.log(metric);
+          scope.metricModel = MetricModelFactory.getMetricModel(metric.value);
+          if (scope.collection) {
+            scope.metricModel.update(scope.collection);
+            scope.renderer.updateMetricLabels(scope.metricModel);
+          }
         });
         scope.$watch('metric2', function (metric) {
-          console.log(metric);
+          scope.metricModel2 = MetricModelFactory.getMetricModel(metric.value);
+          if (scope.collection) {
+            scope.metricModel2.update(scope.collection);
+            scope.renderer.updateMetric2Labels(scope.metricModel2);
+          }
         });
 
         scope.$on('updateMetrics', function (event, collection) {
+          scope.collection = collection;
           //var changed = this.partitionsMetricModel.update(this.collection, true);
 
           //if (changed) {
