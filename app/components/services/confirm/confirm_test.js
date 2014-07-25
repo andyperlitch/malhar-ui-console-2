@@ -58,25 +58,23 @@ describe('Factory: confirm', function () {
 
 });
 
-'use strict';
-
 describe('Controller: ConfirmServiceController', function() {
 
-    var $scope, params;
-    
-    beforeEach(module('app.components.services.confirm'));
+  var $scope, params;
+  
+  beforeEach(module('app.components.services.confirm'));
 
-    beforeEach(inject(function($rootScope, $controller){
-        params = {};
-        $scope = $rootScope.$new();
-        $controller('ConfirmServiceController', {
-            $scope: $scope,
-            params: params
-        });
-    }));
-
-    it('should put params on the scope', function() {
-      expect($scope.params === params).toEqual(true);
+  beforeEach(inject(function($rootScope, $controller){
+    params = {};
+    $scope = $rootScope.$new();
+    $controller('ConfirmServiceController', {
+      $scope: $scope,
+      params: params
     });
+  }));
+
+  it('should put params on the scope', function() {
+    expect($scope.params === params).toEqual(true);
+  });
 
 });

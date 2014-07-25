@@ -38,7 +38,7 @@ describe('Filter: byte', function() {
 
   it('should be able to handle gb', function() {
     expect(f(3.5 * 1024 * 1024 * 1024)).toEqual('3.5 GB');
-  });  
+  });
 
   it('should return just bytes if number is negative', function() {
     expect(f('-35')).toEqual('-35 B');
@@ -56,7 +56,7 @@ describe('Filter: byte', function() {
   it('should throw if the second argument is not an available level', function() {
     var fn = function() {
       f(2048, {});
-    }
+    };
     expect(fn).toThrow();
   });
 

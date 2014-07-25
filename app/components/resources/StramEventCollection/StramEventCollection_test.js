@@ -14,7 +14,8 @@
 * limitations under the License.
 */
 
-/* global describe, before, beforeEach, after, afterEach, inject, it, expect, module */
+
+
 'use strict';
 
 describe('Factory: StramEventCollection', function () {

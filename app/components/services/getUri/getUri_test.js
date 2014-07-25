@@ -130,7 +130,7 @@ describe('Service: getUri', function () {
 
     it('should interpolate given parameters', function() {
       expect(getUri.page('Test2', {param: 'xyz'}) === '#/some/xyz/page').toEqual(true);
-    });      
+    });
   });
 
 });

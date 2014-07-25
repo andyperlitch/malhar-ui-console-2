@@ -34,7 +34,7 @@ describe('Service: BaseResource', function () {
       topic: function() {
         return 'fake.topic';
       }
-    }
+    };
   });
 
   // load the service's module

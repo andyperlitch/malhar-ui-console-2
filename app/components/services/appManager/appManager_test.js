@@ -58,7 +58,7 @@ describe('Service: appManager', function () {
   describe('the endApp method', function() {
 
     it('should issue a post request with id of app object passed to it if the modal promise is resolved', inject(function(getUri) {
-      var expected = getUri.action('killApp', { appId: 'application_101010101_0001' })
+      var expected = getUri.action('killApp', { appId: 'application_101010101_0001' });
       $httpBackend.whenPOST(expected).respond({});
       $httpBackend.expectPOST(expected);
       appManager.endApp('kill', { id: 'application_101010101_0001' });
@@ -67,7 +67,7 @@ describe('Service: appManager', function () {
     }));
 
     it('should do nothing if modal promise is rejected', inject(function(getUri) {
-      var expected = getUri.action('killApp', { appId: 'application_101010101_0001' })
+      var expected = getUri.action('killApp', { appId: 'application_101010101_0001' });
       appManager.endApp('kill', { id: 'application_101010101_0001' });
       openDeferred.reject();
       $httpBackend.verifyNoOutstandingRequest();
