@@ -23,7 +23,7 @@ describe('Service: dtText', function () {
   beforeEach(module('app.components.services.dtText', function($provide) {
     $provide.value('$log', $log = {
       warn: function() {}
-    })
+    });
   }));
 
   // instantiate service

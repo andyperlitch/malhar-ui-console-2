@@ -34,7 +34,7 @@ describe('BaseModel', function () {
         someTopicKey: 'fake.topic',
         otherTopicKey: 'other.fake.:thing.topic'
       }
-    }
+    };
   });
 
   // load the service's module
@@ -83,7 +83,7 @@ describe('BaseModel', function () {
     });
 
     it('should take a string as its first argument and use it as the id for the url', function() {
-      expect(m1_1.url).toEqual('/fake/endpoint/1234')
+      expect(m1_1.url).toEqual('/fake/endpoint/1234');
     });
 
     it('should take a parameters object as its first argument and use it to interpolate the url and topic', function() {

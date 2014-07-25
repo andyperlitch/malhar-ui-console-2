@@ -70,13 +70,13 @@ describe('Resource: ApplicationCollection', function() {
     it('should add params.states if no params object exists', function() {
       var c = new ApplicationCollection();
       c.fetch({});
-      expect(BaseCollection.prototype.fetch).toHaveBeenCalledWith({ params: { states: 'STATE1,STATE2,STATE3' } });      
+      expect(BaseCollection.prototype.fetch).toHaveBeenCalledWith({ params: { states: 'STATE1,STATE2,STATE3' } });
     });
 
     it('should not change params.states if a params object is specified in options', function() {
       var c = new ApplicationCollection();
       c.fetch({ params: {} });
-      expect(BaseCollection.prototype.fetch).toHaveBeenCalledWith({ params: {} });      
+      expect(BaseCollection.prototype.fetch).toHaveBeenCalledWith({ params: {} });
     });
 
   });
