@@ -28,20 +28,6 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
     var LogicalDagDataModel = BaseDataModel.extend({
 
       init: function() {
-        var unwatch = this.widgetScope.$watch('appInstance.data.attributes', function (attributes) {
-          if (attributes) {
-            unwatch();
-            var windowSize = attributes.STREAMING_WINDOW_SIZE_MILLIS;
-            console.log(windowSize);
-            this.loadData(windowSize);
-          }
-        }.bind(this));
-
-        //this.resource.subscribe(this.widgetScope);
-        //this.widgetScope.data = this.resource.data;
-      },
-
-      loadData: function (windowSize) {
         this.resource = new LogicalDag({
           //appId: this.dataModelOptions.appId
           appId: this.widgetScope.appId //TODO
@@ -52,7 +38,7 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
 
           this.widgetScope.$broadcast('logicalPlan', data); //TODO
 
-          var ops = new LogicalOperatorCollection({ windowSize: windowSize, appId: this.widgetScope.appId });
+          var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
           ops.fetch().then(function (data) {
             this.widgetScope.$broadcast('updateMetrics', data); //TODO
           }.bind(this));
