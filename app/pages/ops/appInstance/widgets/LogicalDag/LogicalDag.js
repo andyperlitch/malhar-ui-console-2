@@ -32,6 +32,7 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
           //appId: this.dataModelOptions.appId
           appId: this.widgetScope.appId //TODO
         });
+
         this.resource.fetch().then(function (data) {
           //this.widgetScope.logicalPlan = data; //TODO
 
@@ -46,8 +47,6 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
           }.bind(this));
 
         }.bind(this));
-        //this.resource.subscribe(this.widgetScope);
-        //this.widgetScope.data = this.resource.data;
       },
 
       destroy: function() {

@@ -20,9 +20,6 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
   'app.components.directives.logicalDag.MetricModel'
 ])
   .factory('MetricModelFactory', function (MetricModel) {
-    var bormat = {}; //TODO
-    var formatters = {}; //TODO
-
     return {
       getMetricModel: function (metricId) {
         return new MetricModel({
@@ -124,9 +121,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return map.hasOwnProperty(id);
           },
 
-          valueToString: function (value) {
-            return formatters.windowOffsetFormatter(value);
-          }
+          ngFilter: 'windowOffset'
         },
 
         totalTuplesProcessed: {
@@ -152,9 +147,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return map.hasOwnProperty(id);
           },
 
-          valueToString: function (value) {
-            return formatters.windowOffsetFormatter(value);
-          }
+          ngFilter: 'windowOffset'
         }
       }
     };

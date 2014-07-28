@@ -93,6 +93,7 @@ angular.module('app.components.directives.logicalDag',
             value: 'containerCount',
             label: dtText.get('containers_label')
           },
+          /*
           {
             value: 'cpuMin',
             label: dtText.get('cpu_min_label')
@@ -105,6 +106,7 @@ angular.module('app.components.directives.logicalDag',
             value: 'cpuAvg',
             label: dtText.get('cpu_avg_label')
           },
+          */
           {
             value: 'lastHeartbeat',
             label: dtText.get('last_heartbeat_label')
