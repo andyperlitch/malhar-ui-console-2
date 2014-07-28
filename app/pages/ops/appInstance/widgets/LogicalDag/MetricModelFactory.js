@@ -78,27 +78,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
           ngFilter: 'number'
         },
 
-        cpuMin: {
-          showMetric: function (id, map) {
-            return map.hasOwnProperty(id);
-          },
-
-          valueToString: function (value) {
-            return (value * 1).toFixed(2) + '%';
-          }
-        },
-
-        cpuMax: {
-          showMetric: function (id, map) {
-            return map.hasOwnProperty(id);
-          },
-
-          valueToString: function (value) {
-            return (value * 1).toFixed(2) + '%';
-          }
-        },
-
-        cpuAvg: {
+        cpuPercentageMA: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
           },
