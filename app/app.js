@@ -32,6 +32,7 @@ angular.module('app', [
   'app.components.filters.commaGroups',
   'app.components.filters.byte',
   'app.components.filters.timeSince',
+  'app.components.filters.windowOffset',
   'app.components.directives.dtText',
   'app.components.services.dtText',
   'app.components.services.extend',
