@@ -19,6 +19,7 @@
 angular.module('app.components.directives.logicalDag.LogicalDagRenderer', [])
   .factory('LogicalDagRenderer', function (settings) {
     function LogicalDagRenderer(element, logicalPlan) {
+      this.onlyScrollOnAlt = true;
       this.element = element;
       this.graph = this.buildGraph(logicalPlan);
       this.streams = logicalPlan.streams;
