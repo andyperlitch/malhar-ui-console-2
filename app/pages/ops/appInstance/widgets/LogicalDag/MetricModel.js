@@ -94,8 +94,7 @@ angular.module('app.components.directives.logicalDag.MetricModel', [])
         if (this.filter) {
           return this.filter(value);
         } else if (this.implementation.valueToString) {
-          //return this.implementation.valueToString(value); //TODO
-          return value; //TODO
+          return this.implementation.valueToString(value);
         } else {
           return value;
         }
