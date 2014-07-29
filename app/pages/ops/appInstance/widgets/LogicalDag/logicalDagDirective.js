@@ -86,27 +86,17 @@ angular.module('app.components.directives.logicalDag',
             label: dtText.get('latency_ms_label')
           },
           {
-            value: 'partitionCount',
-            label: dtText.get('partitions_label')
+            value: 'partitions',
+            label: dtText.get('num_partitions_label')
           },
           {
-            value: 'containerCount',
-            label: dtText.get('containers_label')
-          },
-          /*
-          {
-            value: 'cpuMin',
-            label: dtText.get('cpu_min_label')
+            value: 'containerIds',
+            label: dtText.get('num_containers_label')
           },
           {
-            value: 'cpuMax',
-            label: dtText.get('cpu_max_label')
+            value: 'cpuPercentageMA',
+            label: dtText.get('cpu_sum_label')
           },
-          {
-            value: 'cpuAvg',
-            label: dtText.get('cpu_avg_label')
-          },
-          */
           {
             value: 'lastHeartbeat',
             label: dtText.get('last_heartbeat_label')

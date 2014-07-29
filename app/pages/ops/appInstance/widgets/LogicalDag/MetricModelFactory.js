@@ -61,21 +61,24 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
           ngFilter: 'number'
         },
 
-        partitionCount: {
-          showMetric: function (id, map) {
-            var value = map[id];
-            return (map.hasOwnProperty(id) && value > 1);
-          },
-
-          ngFilter: 'number'
-        },
-
-        containerCount: {
+        partitions: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
           },
 
-          ngFilter: 'number'
+          valueToString: function (value) {
+            return value.length;
+          }
+        },
+
+        containerIds: {
+          showMetric: function (id, map) {
+            return map.hasOwnProperty(id);
+          },
+
+          valueToString: function (value) {
+            return value.length;
+          }
         },
 
         cpuPercentageMA: {
