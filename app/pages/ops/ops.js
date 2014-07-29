@@ -39,9 +39,20 @@ angular.module('app.pages.ops', [
   })
 
 // Controller
-  .controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose, RandomPercentageDataModel) {
+  .controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose,
+                                   RandomPercentageDataModel, RandomMinutesDataModel) {
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+      {
+        name: 'Bar Chart',
+        title: 'Bar Chart',
+        directive: 'wt-bar-chart',
+        dataAttrName: 'data',
+        dataModelType: RandomMinutesDataModel,
+        style: {
+          width: '70%'
+        }
+      },
       {
         name: 'Gauge',
         title: 'Memory',
