@@ -23,39 +23,51 @@
 angular.module('app.pages.ops', [
   'app.pages.ops.widgets.ClusterMetrics',
   'app.pages.ops.widgets.AppsList',
-  'app.components.services.defaultWidgetSettings'
+  'app.components.services.defaultWidgetSettings',
+  'ui.widgets',
+  'ui.models'
 ])
 
 // Route
-.config(function($routeProvider) {
-  $routeProvider
-    .when('/ops', {
-      controller: 'OpsCtrl',
-      templateUrl: 'pages/ops/ops.html',
-      label: 'operations'
-    });
-})
+  .config(function ($routeProvider) {
+    $routeProvider
+      .when('/ops', {
+        controller: 'OpsCtrl',
+        templateUrl: 'pages/ops/ops.html',
+        label: 'operations'
+      });
+  })
 
 // Controller
-.controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose){
-  var widgetDefinitions = [
-    new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
-    new AppsListWidget({ name: 'AppList' })
-  ];
+  .controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose, RandomPercentageDataModel) {
+    var widgetDefinitions = [
+      new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+      {
+        name: 'Gauge',
+        title: 'Memory',
+        directive: 'wt-gauge',
+        dataAttrName: 'value',
+        dataModelType: RandomPercentageDataModel,
+        style: {
+          width: '250px'
+        }
+      },
+      new AppsListWidget({ name: 'AppList' })
+    ];
 
-  var defaultWidgets = _.clone(widgetDefinitions);
+    var defaultWidgets = _.clone(widgetDefinitions);
 
-  $scope.dashboardOptions = {
-    storage: localStorage,
-    storageId: 'dashboard.ops',
-    widgetButtons: false,
-    widgetDefinitions: widgetDefinitions,
-    defaultWidgets: defaultWidgets,
-    defaultLayouts: [
-      { title: 'default', active: true , defaultWidgets: defaultWidgets },
-    ],
-    settingsModalOptions: defaultSettingsModalOptions,
-    onSettingsClose: defaultOnSettingsClose
-  };
+    $scope.dashboardOptions = {
+      storage: localStorage,
+      storageId: 'dashboard.ops',
+      widgetButtons: false,
+      widgetDefinitions: widgetDefinitions,
+      defaultWidgets: defaultWidgets,
+      defaultLayouts: [
+        { title: 'default', active: true, defaultWidgets: defaultWidgets },
+      ],
+      settingsModalOptions: defaultSettingsModalOptions,
+      onSettingsClose: defaultOnSettingsClose
+    };
 
-});
+  });
