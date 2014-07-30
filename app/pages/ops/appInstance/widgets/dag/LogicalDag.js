@@ -28,21 +28,20 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
     var LogicalDagDataModel = BaseDataModel.extend({
 
       init: function() {
-        this.resource = new LogicalPlanResource({
-          //appId: this.dataModelOptions.appId
+        this.logicalPlan = new LogicalPlanResource({
           appId: this.widgetScope.appId //TODO
         });
 
-        this.resource.fetch().then(function (data) {
+        this.logicalPlan.fetch().then(function (data) {
           //this.widgetScope.logicalPlan = data; //TODO
 
           this.widgetScope.$broadcast('logicalPlan', data); //TODO
 
-          var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
-          ops.fetch().then(function (data) {
+          this.operators = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
+          this.operators.fetch().then(function (data) {
             this.widgetScope.$broadcast('updateMetrics', data); //TODO
           }.bind(this));
-          ops.subscribe(this.widgetScope, function (data) {
+          this.operators.subscribe(this.widgetScope, function (data) {
             this.widgetScope.$broadcast('updateMetrics', data); //TODO
           }.bind(this));
 
@@ -50,7 +49,10 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
       },
 
       destroy: function() {
-        this.resource.unsubscribe();
+        this.logicalPlan.unsubscribe();
+        if (this.operators) {
+          this.operators.unsubscribe();
+        }
       }
 
     });

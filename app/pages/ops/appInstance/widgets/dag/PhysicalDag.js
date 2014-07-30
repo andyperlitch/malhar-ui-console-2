@@ -26,17 +26,17 @@ angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
     var PhysicalDagWidgetModel = BaseDataModel.extend({
 
       init: function() {
-        this.resource = new PhysicalPlanResource({
+        this.physicalPlan = new PhysicalPlanResource({
           appId: this.widgetScope.appId //TODO
         });
 
-        this.resource.fetch().then(function (data) {
+        this.physicalPlan.fetch().then(function (data) {
           this.widgetScope.$broadcast('physicalPlan', data); //TODO
         }.bind(this));
       },
 
       destroy: function() {
-        this.resource.unsubscribe();
+        this.physicalPlan.unsubscribe();
       }
 
     });
