@@ -21,7 +21,8 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
   'app.settings',
   'app.components.directives.logicalDag',
   'app.components.directives.dtSelect',
-  'app.components.resources.LogicalDag'
+  'app.components.resources.LogicalDag',
+  'app.components.resources.PhysicalPlanModel'
 ])
   .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection) {
 
@@ -71,4 +72,36 @@ angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
     });
 
     return LogicalDagWidgetDefinition;
+  })
+  .factory('PhysicalDagWidgetModel', function(BaseDataModel, PhysicalPlanModel) {
+    var PhysicalDagWidgetModel = BaseDataModel.extend({
+
+      init: function() {
+        this.resource = new PhysicalPlanModel({
+          appId: this.widgetScope.appId //TODO
+        });
+
+        this.resource.fetch().then(function (data) {
+          this.widgetScope.$broadcast('physicalPlan', data); //TODO
+        }.bind(this));
+      },
+
+      destroy: function() {
+        this.resource.unsubscribe();
+      }
+
+    });
+
+    return PhysicalDagWidgetModel;
+  })
+  .factory('PhysicalDagWidgetDefinition', function(BaseWidget, PhysicalDagWidgetModel) {
+    var PhysicalDagWidgetDefinition = BaseWidget.extend({
+      defaults: {
+        title: 'Physical DAG',
+        directive: 'dt-physical-dag',
+        dataModelType: PhysicalDagWidgetModel
+      }
+    });
+
+    return PhysicalDagWidgetDefinition;
   });

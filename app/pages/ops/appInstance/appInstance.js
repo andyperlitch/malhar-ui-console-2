@@ -26,7 +26,8 @@ angular.module('app.pages.ops.appInstance', [
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
   'app.pages.ops.appInstance.widgets.StramEvents',
-  'app.pages.ops.appinstance.widgets.LogicalDag'
+  'app.pages.ops.appinstance.widgets.LogicalDag',
+  'app.components.directives.dag.physicalDag'
 ])
 
 // Route
@@ -46,6 +47,7 @@ angular.module('app.pages.ops.appInstance', [
     _,
     ApplicationModel,
     LogicalDagWidgetDefinition,
+    PhysicalDagWidgetDefinition,
     AppInstanceOverviewWidgetDef,
     StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
@@ -81,12 +83,8 @@ angular.module('app.pages.ops.appInstance', [
           width: '66%'
         }
       }),
-      new LogicalDagWidgetDefinition({
+      new PhysicalDagWidgetDefinition({
         name: 'Physical DAG',
-        title: 'Physical DAG',
-        dataModelOptions: {
-          appId: $scope.appId
-        },
         style: {
           width: '100%'
         }
@@ -104,7 +102,7 @@ angular.module('app.pages.ops.appInstance', [
 
     $scope.dashboardOptions = {
       storage: localStorage,
-      storageId: 'dashboard.ops',
+      storageId: 'dashboard.ops.app',
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
