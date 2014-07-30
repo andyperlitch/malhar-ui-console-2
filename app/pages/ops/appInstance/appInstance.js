@@ -73,18 +73,34 @@ angular.module('app.pages.ops.appInstance', [
       new AppInstanceOverviewWidgetDef({ name:  'Application Overview', style: { width: '66%' } }),
       new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float':'right' } }),
       new LogicalDagWidgetDefinition({
-        name: 'LogicalDAG',
+        name: 'Logical DAG',
         dataModelOptions: {
-          appId: $scope.appId
+          appId: $scope.appId //TODO not used
         },
         style: {
           width: '66%'
         }
       }),
-      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
+      new LogicalDagWidgetDefinition({
+        name: 'Physical DAG',
+        title: 'Physical DAG',
+        dataModelOptions: {
+          appId: $scope.appId
+        },
+        style: {
+          width: '100%'
+        }
+      }),
+      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' })
     ];
 
-    var defaultWidgets = _.clone(widgetDefinitions);
+    var defaultWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'LogicalOperatorsList'], function (name) {
+      return { name: name };
+    });
+
+    var physicalDagViewLayoutWidgets = _.map(['Physical DAG'], function (name) {
+      return { name: name };
+    });
 
     $scope.dashboardOptions = {
       storage: localStorage,
@@ -93,6 +109,7 @@ angular.module('app.pages.ops.appInstance', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
+        { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
         { title: 'logical', active: true , defaultWidgets: defaultWidgets }
       ],
       settingsModalOptions: defaultSettingsModalOptions,
