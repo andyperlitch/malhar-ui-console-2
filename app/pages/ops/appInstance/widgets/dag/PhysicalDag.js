@@ -16,63 +16,13 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appinstance.widgets.LogicalDag', [
+angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
   'app.components.widgets.Base',
-  'app.settings',
-  'app.components.directives.logicalDag',
   'app.components.directives.dtSelect',
   'app.components.resources.LogicalDag',
-  'app.components.resources.PhysicalPlanModel'
+  'app.components.resources.PhysicalPlanModel',
+  'app.components.widgets.dag.physical.physicalDag'
 ])
-  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection) {
-
-    var LogicalDagDataModel = BaseDataModel.extend({
-
-      init: function() {
-        this.resource = new LogicalDag({
-          //appId: this.dataModelOptions.appId
-          appId: this.widgetScope.appId //TODO
-        });
-
-        this.resource.fetch().then(function (data) {
-          //this.widgetScope.logicalPlan = data; //TODO
-
-          this.widgetScope.$broadcast('logicalPlan', data); //TODO
-
-          var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
-          ops.fetch().then(function (data) {
-            this.widgetScope.$broadcast('updateMetrics', data); //TODO
-          }.bind(this));
-          ops.subscribe(this.widgetScope, function (data) {
-            this.widgetScope.$broadcast('updateMetrics', data); //TODO
-          }.bind(this));
-
-        }.bind(this));
-      },
-
-      destroy: function() {
-        this.resource.unsubscribe();
-      }
-
-    });
-
-    return LogicalDagDataModel;
-  })
-  .factory('LogicalDagWidgetDefinition', function(BaseWidget, LogicalDagDataModel) {
-    var LogicalDagWidgetDefinition = BaseWidget.extend({
-      defaults: {
-        title: 'Logical DAG',
-        directive: 'dt-logical-dag',
-        dataModelType: LogicalDagDataModel,
-        attrs: {
-          'app-id': 'appId',
-          'logical-plan': 'logicalPlan'
-        }
-      }
-    });
-
-    return LogicalDagWidgetDefinition;
-  })
   .factory('PhysicalDagWidgetModel', function(BaseDataModel, PhysicalPlanModel) {
     var PhysicalDagWidgetModel = BaseDataModel.extend({
 

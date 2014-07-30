@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app.components.directives.logicalDag',
+angular.module('app.components.widgets.dag.physical.logicalDag',
   [
     'app.components.directives.logicalDag.LogicalDagRenderer',
     'app.components.directives.logicalDag.MetricModelFactory'
@@ -24,12 +24,9 @@ angular.module('app.components.directives.logicalDag',
   .directive('dtLogicalDag', function (LogicalDagRenderer, LogicalDagHelper) {
     return {
       restrict: 'A',
-      templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/logicalDagDirective.html',
+      templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
       scope: true,
       link: function postLink(scope, element) {
-        scope.values = ['option1', 'option2', 'option3'];
-        scope.value = scope.values[0];
-
         scope.$on('logicalPlan', function (event, logicalPlan) {
           scope.renderer = new LogicalDagRenderer(element, logicalPlan);
           scope.renderer.displayGraph();

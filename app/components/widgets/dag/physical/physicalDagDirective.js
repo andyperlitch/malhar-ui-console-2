@@ -16,18 +16,20 @@
 
 'use strict';
 
-angular.module('app.components.directives.dag.physicalDag', [
+angular.module('app.components.widgets.dag.physical.physicalDag', [
   'app.components.directives.dag.PhysicalDagRenderer'
 ])
-  .directive('dtPhysicalDag', function (PhysicalDagRenderer) {
+  .directive('dtPhysicalDag', function (PhysicalDagRenderer, LogicalDagHelper) {
     return {
       restrict: 'A',
-      templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/physicalDagDirective.html',
+      templateUrl: 'components/widgets/dag/physical/physicalDagDirective.html',
       scope: true,
       link: function postLink(scope, element) {
         scope.$on('physicalPlan', function (event, logicalPlan) {
           scope.renderer = new PhysicalDagRenderer(element, logicalPlan);
           scope.renderer.displayGraph();
+
+          LogicalDagHelper.setupActions(scope);
         });
       }
     };
