@@ -67,6 +67,9 @@ angular.module('app.components.directives.dag.PhysicalDagRenderer', [
       },
 
       postRender: function(graph, root) {
+        this.graph = graph;
+        this.svgRoot = root;
+
         var nodeMap = this.nodeMap;
         var colors = d3.scale.category20(); //TODO do not limit to 20 colors
 

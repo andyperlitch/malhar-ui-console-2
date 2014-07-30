@@ -1,6 +1,11 @@
-<div class="app-dag physical-dag">
-    <div class="form-inline">
-        <div class="options-controls">
+<div class="app-dag logical-dag">
+    <div class="options-controls">
+        <div class="form-inline">
+            <a href="#" class="btn btn-link"
+                    ng-click="toggleLocality($event);">
+                <span ng-hide="showLocality">Show Stream Locality</span>
+                <span ng-show="showLocality">Hide Stream Locality</span>
+            </a>
             <a href="#" class="btn btn-link"
                     ng-click="resetPosition($event);">
                 Reset Position
@@ -15,8 +20,8 @@
     </div>
     <svg height="110" class="svg-main">
         <filter id="f1" x="0" y="0" height="150%">
-            <feOffset result="offOut" in="SourceGraphic" dx="5" dy="5" />
-            <feBlend in="SourceGraphic" in2="offOut" mode="normal" />
+            <feOffset result="offOut" in="SourceGraphic" dx="5" dy="5"/>
+            <feBlend in="SourceGraphic" in2="offOut" mode="normal"/>
         </filter>
         <g transform="translate(20, 40)"/>
     </svg>

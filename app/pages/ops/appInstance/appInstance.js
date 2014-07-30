@@ -26,8 +26,8 @@ angular.module('app.pages.ops.appInstance', [
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
   'app.pages.ops.appInstance.widgets.StramEvents',
-  'app.pages.ops.appinstance.widgets.LogicalDag',
-  'app.components.directives.dag.physicalDag'
+  'app.pages.ops.appinstance.widgets.dag.LogicalDag',
+  'app.pages.ops.appinstance.widgets.dag.PhysicalDag'
 ])
 
 // Route
