@@ -21,14 +21,14 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
   'app.settings',
   'app.components.widgets.dag.physical.logicalDag',
   'app.components.directives.dtSelect',
-  'app.components.resources.LogicalDag'
+  'app.components.resources.LogicalPlanResource'
 ])
-  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection) {
+  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalPlanResource, LogicalOperatorCollection) {
 
     var LogicalDagDataModel = BaseDataModel.extend({
 
       init: function() {
-        this.resource = new LogicalDag({
+        this.resource = new LogicalPlanResource({
           //appId: this.dataModelOptions.appId
           appId: this.widgetScope.appId //TODO
         });

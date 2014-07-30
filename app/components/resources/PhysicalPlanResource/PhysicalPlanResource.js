@@ -16,12 +16,12 @@
 
 'use strict';
 
-angular.module('app.components.resources.LogicalDag', ['app.components.resources.BaseModel'])
-  .factory('LogicalDag', function(BaseModel) {
+angular.module('app.components.resources.PhysicalPlanResource', ['app.components.resources.BaseModel'])
+  .factory('PhysicalPlanResource', function(BaseModel) {
 
-    var LogicalDag = BaseModel.extend({
-      urlKey: 'LogicalPlan'
+    var PhysicalPlanResource = BaseModel.extend({
+      urlKey: 'PhysicalPlan'
     });
 
-    return LogicalDag;
+    return PhysicalPlanResource;
   });

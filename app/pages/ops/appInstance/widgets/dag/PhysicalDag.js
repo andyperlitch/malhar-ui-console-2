@@ -19,15 +19,14 @@
 angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
   'app.components.widgets.Base',
   'app.components.directives.dtSelect',
-  'app.components.resources.LogicalDag',
-  'app.components.resources.PhysicalPlanModel',
+  'app.components.resources.PhysicalPlanResource',
   'app.components.widgets.dag.physical.physicalDag'
 ])
-  .factory('PhysicalDagWidgetModel', function(BaseDataModel, PhysicalPlanModel) {
+  .factory('PhysicalDagWidgetModel', function(BaseDataModel, PhysicalPlanResource) {
     var PhysicalDagWidgetModel = BaseDataModel.extend({
 
       init: function() {
-        this.resource = new PhysicalPlanModel({
+        this.resource = new PhysicalPlanResource({
           appId: this.widgetScope.appId //TODO
         });
 
