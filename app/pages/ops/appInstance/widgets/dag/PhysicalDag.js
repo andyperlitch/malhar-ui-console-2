@@ -22,12 +22,18 @@ angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
   'app.components.resources.PhysicalPlanResource',
   'app.components.widgets.dag.physical.physicalDag'
 ])
-  .factory('PhysicalDagWidgetModel', function(BaseDataModel, PhysicalPlanResource) {
-    var PhysicalDagWidgetModel = BaseDataModel.extend({
+  .factory('PhysicalDagWidgetDataModel', function(WidgetDataModel, PhysicalPlanResource) {
+    function PhysicalDagWidgetDataModel(options) {
+      this.appId = options.appId;
+    }
 
+    PhysicalDagWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    PhysicalDagWidgetDataModel.prototype.constructor = WidgetDataModel;
+
+    angular.extend(PhysicalDagWidgetDataModel.prototype, {
       init: function() {
         this.physicalPlan = new PhysicalPlanResource({
-          appId: this.widgetScope.appId //TODO
+          appId: this.appId
         });
 
         this.physicalPlan.fetch().then(function (data) {
@@ -41,14 +47,14 @@ angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
 
     });
 
-    return PhysicalDagWidgetModel;
+    return PhysicalDagWidgetDataModel;
   })
-  .factory('PhysicalDagWidgetDefinition', function(BaseWidget, PhysicalDagWidgetModel) {
+  .factory('PhysicalDagWidgetDefinition', function(BaseWidget, PhysicalDagWidgetDataModel) {
     var PhysicalDagWidgetDefinition = BaseWidget.extend({
       defaults: {
         title: 'Physical DAG',
         directive: 'dt-physical-dag',
-        dataModelType: PhysicalDagWidgetModel
+        dataModelType: PhysicalDagWidgetDataModel
       }
     });
 

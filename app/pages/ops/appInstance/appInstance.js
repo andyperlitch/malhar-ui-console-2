@@ -76,15 +76,14 @@ angular.module('app.pages.ops.appInstance', [
       new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float':'right' } }),
       new LogicalDagWidgetDefinition({
         name: 'Logical DAG',
-        dataModelOptions: {
-          appId: $scope.appId //TODO not used
-        },
+        dataModelArgs: { appId: $scope.appId },
         style: {
           width: '66%'
         }
       }),
       new PhysicalDagWidgetDefinition({
         name: 'Physical DAG',
+        dataModelArgs: { appId: $scope.appId },
         style: {
           width: '100%'
         }
