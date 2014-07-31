@@ -52,7 +52,7 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
           deferred.promise.then(function () {
             this.ctrl.renderDag(data);
 
-            this.operators = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
+            this.operators = new LogicalOperatorCollection({ appId: this.appId });
 
             this.operators.fetchAndSubscribe(this.widgetScope, function (data) {
               this.ctrl.updateMetrics(data);
