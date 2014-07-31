@@ -19,9 +19,10 @@
 angular.module('app.components.widgets.dag.physical.logicalDag',
   [
     'app.components.directives.logicalDag.LogicalDagRenderer',
-    'app.components.directives.logicalDag.MetricModelFactory'
+    'app.components.directives.logicalDag.MetricModelFactory',
+    'app.components.widgets.dag.DagHelper'
   ])
-  .directive('dtLogicalDag', function (LogicalDagRenderer, LogicalDagHelper) {
+  .directive('dtLogicalDag', function (LogicalDagRenderer, DagHelper, LogicalDagHelper) {
     return {
       restrict: 'A',
       templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
@@ -39,7 +40,7 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
         });
       },
       link: function postLink(scope, element, attrs, ctrl) {
-        LogicalDagHelper.setupActions(scope);
+        DagHelper.setupActions(scope);
         LogicalDagHelper.setupMetrics(scope);
 
         scope.$emit('registerController', ctrl);
@@ -48,31 +49,6 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
   })
   .factory('LogicalDagHelper', function (dtText, MetricModelFactory) {
     return {
-      setupActions: function (scope) {
-        scope.showLocality = false;
-        scope.toggleLocality = function (event) {
-          event.preventDefault();
-
-          scope.showLocality = !scope.showLocality;
-
-          if (scope.showLocality) {
-            if (scope.renderer) {
-              scope.renderer.updateStreams();
-            }
-          } else {
-            if (scope.renderer) {
-              scope.renderer.clearStreamLocality();
-            }
-          }
-        };
-
-        scope.resetPosition = function (event) {
-          event.preventDefault();
-          if (scope.renderer) {
-            scope.renderer.resetPosition();
-          }
-        };
-      },
       setupMetrics: function (scope) {
         scope.metrics = [
           {

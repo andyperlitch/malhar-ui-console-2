@@ -17,9 +17,10 @@
 'use strict';
 
 angular.module('app.components.widgets.dag.physical.physicalDag', [
-  'app.components.directives.dag.PhysicalDagRenderer'
+  'app.components.directives.dag.PhysicalDagRenderer',
+  'app.components.widgets.dag.DagHelper'
 ])
-  .directive('dtPhysicalDag', function (PhysicalDagRenderer, LogicalDagHelper) {
+  .directive('dtPhysicalDag', function (PhysicalDagRenderer, DagHelper) {
     return {
       restrict: 'A',
       templateUrl: 'components/widgets/dag/physical/physicalDagDirective.html',
@@ -33,7 +34,7 @@ angular.module('app.components.widgets.dag.physical.physicalDag', [
         });
       },
       link: function postLink(scope, element, attrs, ctrl) {
-        LogicalDagHelper.setupActions(scope);
+        DagHelper.setupActions(scope);
 
         scope.$emit('registerController', ctrl);
       }
