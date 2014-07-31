@@ -17,15 +17,15 @@
 'use strict';
 
 angular.module('app.components.directives.dag.PhysicalDagRenderer', [
-  'app.components.directives.logicalDag.LogicalDagRenderer'
+  'app.components.widgets.dag.DagRenderer'
 ])
-  .factory('PhysicalDagRenderer', function (LogicalDagRenderer) {
+  .factory('PhysicalDagRenderer', function (DagRenderer) {
     function PhysicalDagRenderer(element, dagPlan) {
-      LogicalDagRenderer.call(this, element, dagPlan);
+      DagRenderer.call(this, element, dagPlan);
     }
 
-    PhysicalDagRenderer.prototype = Object.create(LogicalDagRenderer.prototype);
-    PhysicalDagRenderer.prototype.constructor = LogicalDagRenderer;
+    PhysicalDagRenderer.prototype = Object.create(DagRenderer.prototype);
+    PhysicalDagRenderer.prototype.constructor = DagRenderer;
 
     angular.extend(PhysicalDagRenderer.prototype, {
       buildGraph: function(data) {
@@ -67,9 +67,6 @@ angular.module('app.components.directives.dag.PhysicalDagRenderer', [
       },
 
       postRender: function(graph, root) {
-        this.graph = graph;
-        this.svgRoot = root;
-
         var nodeMap = this.nodeMap;
         var colors = d3.scale.category20(); //TODO do not limit to 20 colors
 

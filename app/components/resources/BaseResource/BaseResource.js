@@ -94,6 +94,18 @@ angular.module('app.components.resources.BaseResource', [
       webSocket.subscribe(this.topic, this.__subscribeFn__, scope);
     },
 
+    fetchAndSubscribe: function (scope, callback) {
+      var fetchPromise = this.fetch();
+
+      fetchPromise.then(function (data) {
+        callback(data);
+      });
+
+      this.subscribe(scope, callback);
+
+      return fetchPromise;
+    },
+
     /**
      * Unsubscribes to this.topic. Should only be called after
      * this.subscribe has been called at least once.

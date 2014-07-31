@@ -19,37 +19,56 @@
 angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
   'app.components.widgets.Base',
   'app.components.directives.dtSelect',
-  'app.components.resources.LogicalDag',
-  'app.components.resources.PhysicalPlanModel',
+  'app.components.resources.PhysicalPlanResource',
   'app.components.widgets.dag.physical.physicalDag'
 ])
-  .factory('PhysicalDagWidgetModel', function(BaseDataModel, PhysicalPlanModel) {
-    var PhysicalDagWidgetModel = BaseDataModel.extend({
+  .factory('PhysicalDagWidgetDataModel', function(WidgetDataModel, PhysicalPlanResource, $q) {
+    function PhysicalDagWidgetDataModel(options) {
+      this.appId = options.appId;
+      this.ctrl = null; // directive controller
+      this.physicalPlan = null;
+    }
 
+    PhysicalDagWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    PhysicalDagWidgetDataModel.prototype.constructor = WidgetDataModel;
+
+    angular.extend(PhysicalDagWidgetDataModel.prototype, {
       init: function() {
-        this.resource = new PhysicalPlanModel({
-          appId: this.widgetScope.appId //TODO
+        this.physicalPlan = new PhysicalPlanResource({
+          appId: this.appId
         });
 
-        this.resource.fetch().then(function (data) {
-          this.widgetScope.$broadcast('physicalPlan', data); //TODO
+        var deferred = $q.defer();
+
+        this.widgetScope.$on('registerController', function (event, ctrl) {
+          event.stopPropagation();
+          this.ctrl = ctrl;
+          deferred.resolve();
+        }.bind(this));
+
+        this.physicalPlan.fetch().then(function (data) {
+          deferred.promise.then(function () {
+            this.ctrl.renderDag(data);
+          }.bind(this));
         }.bind(this));
       },
 
       destroy: function() {
-        this.resource.unsubscribe();
+        if (this.physicalPlan) {
+          this.physicalPlan.unsubscribe();
+        }
       }
 
     });
 
-    return PhysicalDagWidgetModel;
+    return PhysicalDagWidgetDataModel;
   })
-  .factory('PhysicalDagWidgetDefinition', function(BaseWidget, PhysicalDagWidgetModel) {
+  .factory('PhysicalDagWidgetDefinition', function(BaseWidget, PhysicalDagWidgetDataModel) {
     var PhysicalDagWidgetDefinition = BaseWidget.extend({
       defaults: {
         title: 'Physical DAG',
         directive: 'dt-physical-dag',
-        dataModelType: PhysicalDagWidgetModel
+        dataModelType: PhysicalDagWidgetDataModel
       }
     });
 

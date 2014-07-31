@@ -19,51 +19,36 @@
 angular.module('app.components.widgets.dag.physical.logicalDag',
   [
     'app.components.directives.logicalDag.LogicalDagRenderer',
-    'app.components.directives.logicalDag.MetricModelFactory'
+    'app.components.directives.logicalDag.MetricModelFactory',
+    'app.components.widgets.dag.DagHelper'
   ])
-  .directive('dtLogicalDag', function (LogicalDagRenderer, LogicalDagHelper) {
+  .directive('dtLogicalDag', function (LogicalDagRenderer, DagHelper, LogicalDagHelper) {
     return {
       restrict: 'A',
       templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
       scope: true,
-      link: function postLink(scope, element) {
-        scope.$on('logicalPlan', function (event, logicalPlan) {
-          scope.renderer = new LogicalDagRenderer(element, logicalPlan);
-          scope.renderer.displayGraph();
-        });
+      controller: function ($scope, $element) {
+        angular.extend(this, {
+          renderDag: function (logicalPlan) {
+            $scope.renderer = new LogicalDagRenderer($element, logicalPlan);
+            $scope.renderer.displayGraph();
+          },
 
-        LogicalDagHelper.setupActions(scope);
+          updateMetrics: function (collection) {
+            $scope.updateMetrics(collection);
+          }
+        });
+      },
+      link: function postLink(scope, element, attrs, ctrl) {
+        DagHelper.setupActions(scope);
         LogicalDagHelper.setupMetrics(scope);
+
+        scope.$emit('registerController', ctrl);
       }
     };
   })
   .factory('LogicalDagHelper', function (dtText, MetricModelFactory) {
     return {
-      setupActions: function (scope) {
-        scope.showLocality = false;
-        scope.toggleLocality = function (event) {
-          event.preventDefault();
-
-          scope.showLocality = !scope.showLocality;
-
-          if (scope.showLocality) {
-            if (scope.renderer) {
-              scope.renderer.updateStreams();
-            }
-          } else {
-            if (scope.renderer) {
-              scope.renderer.clearStreamLocality();
-            }
-          }
-        };
-
-        scope.resetPosition = function (event) {
-          event.preventDefault();
-          if (scope.renderer) {
-            scope.renderer.resetPosition();
-          }
-        };
-      },
       setupMetrics: function (scope) {
         scope.metrics = [
           {
@@ -137,25 +122,20 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
           }
         });
 
-        scope.$on('updateMetrics', function (event, collection) {
+        scope.updateMetrics = function (collection) {
           scope.collection = collection;
-          //var changed = this.partitionsMetricModel.update(this.collection, true);
 
-          //if (changed) {
-          //  this.updatePartitions();
-          //}
-
-          if (!scope.metricModel.isNone()) {
+          if (scope.renderer && !scope.metricModel.isNone()) {
             scope.metricModel.update(collection);
             //console.log(scope.renderer);
             scope.renderer.updateMetricLabels(scope.metricModel);
           }
 
-          if (!scope.metricModel2.isNone()) {
+          if (scope.renderer && !scope.metricModel2.isNone()) {
             scope.metricModel2.update(collection);
             scope.renderer.updateMetric2Labels(scope.metricModel2);
           }
-        });
+        };
       }
     };
   });

@@ -17,56 +17,67 @@
 'use strict';
 
 angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
-  'app.components.widgets.Base',
   'app.settings',
   'app.components.widgets.dag.physical.logicalDag',
   'app.components.directives.dtSelect',
-  'app.components.resources.LogicalDag'
+  'app.components.resources.LogicalPlanResource'
 ])
-  .factory('LogicalDagDataModel', function(BaseDataModel, LogicalDag, LogicalOperatorCollection) {
+  .factory('LogicalDagWidgetDataModel', function(WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q) {
+    function LogicalDagWidgetDataModel(options) {
+      this.appId = options.appId;
+      this.ctrl = null; // directive controller
+      this.logicalPlan = null;
+      this.operators = null;
+    }
 
-    var LogicalDagDataModel = BaseDataModel.extend({
+    LogicalDagWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    LogicalDagWidgetDataModel.prototype.constructor = WidgetDataModel;
 
+    angular.extend(LogicalDagWidgetDataModel.prototype, {
       init: function() {
-        this.resource = new LogicalDag({
-          //appId: this.dataModelOptions.appId
-          appId: this.widgetScope.appId //TODO
+        this.logicalPlan = new LogicalPlanResource({
+          appId: this.appId
         });
 
-        this.resource.fetch().then(function (data) {
-          //this.widgetScope.logicalPlan = data; //TODO
+        var deferred = $q.defer();
 
-          this.widgetScope.$broadcast('logicalPlan', data); //TODO
+        this.widgetScope.$on('registerController', function (event, ctrl) {
+          event.stopPropagation();
+          this.ctrl = ctrl;
+          deferred.resolve();
+        }.bind(this));
 
-          var ops = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
-          ops.fetch().then(function (data) {
-            this.widgetScope.$broadcast('updateMetrics', data); //TODO
+        this.logicalPlan.fetch().then(function (data) {
+          deferred.promise.then(function () {
+            this.ctrl.renderDag(data);
+
+            this.operators = new LogicalOperatorCollection({ appId: this.appId });
+
+            this.operators.fetchAndSubscribe(this.widgetScope, function (data) {
+              this.ctrl.updateMetrics(data);
+            }.bind(this));
           }.bind(this));
-          ops.subscribe(this.widgetScope, function (data) {
-            this.widgetScope.$broadcast('updateMetrics', data); //TODO
-          }.bind(this));
-
         }.bind(this));
       },
 
       destroy: function() {
-        this.resource.unsubscribe();
+        if (this.logicalPlan) {
+          this.logicalPlan.unsubscribe();
+        }
+        if (this.operators) {
+          this.operators.unsubscribe();
+        }
       }
-
     });
 
-    return LogicalDagDataModel;
+    return LogicalDagWidgetDataModel;
   })
-  .factory('LogicalDagWidgetDefinition', function(BaseWidget, LogicalDagDataModel) {
+  .factory('LogicalDagWidgetDefinition', function(BaseWidget, LogicalDagWidgetDataModel) {
     var LogicalDagWidgetDefinition = BaseWidget.extend({
       defaults: {
         title: 'Logical DAG',
         directive: 'dt-logical-dag',
-        dataModelType: LogicalDagDataModel,
-        attrs: {
-          'app-id': 'appId',
-          'logical-plan': 'logicalPlan'
-        }
+        dataModelType: LogicalDagWidgetDataModel
       }
     });
 
