@@ -22,7 +22,7 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
   'app.components.directives.dtSelect',
   'app.components.resources.LogicalPlanResource'
 ])
-  .factory('LogicalDagWidgetDataModel', function(WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection) {
+  .factory('LogicalDagWidgetDataModel', function(WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q) {
     function LogicalDagWidgetDataModel(options) {
       this.appId = options.appId;
     }
@@ -31,27 +31,40 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
     LogicalDagWidgetDataModel.prototype.constructor = WidgetDataModel;
 
     angular.extend(LogicalDagWidgetDataModel.prototype, {
+      ctrl: null, // directive controller
+      logicalPlan: null,
+      operators: null,
+
       init: function() {
         this.logicalPlan = new LogicalPlanResource({
           appId: this.appId
         });
 
+        var deferred = $q.defer();
+
+        this.widgetScope.$on('registerController', function (event, ctrl) {
+          event.stopPropagation();
+          this.ctrl = ctrl;
+          deferred.resolve();
+        }.bind(this));
+
         this.logicalPlan.fetch().then(function (data) {
-          this.widgetScope.$broadcast('logicalPlan', data); //TODO
+          deferred.promise.then(function () {
+            this.ctrl.renderDag(data);
 
-          this.operators = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
-          this.operators.fetch().then(function (data) {
-            this.widgetScope.$broadcast('updateMetrics', data); //TODO
-          }.bind(this));
-          this.operators.subscribe(this.widgetScope, function (data) {
-            this.widgetScope.$broadcast('updateMetrics', data); //TODO
-          }.bind(this));
+            this.operators = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
 
+            this.operators.fetchAndSubscribe(this.widgetScope, function (data) {
+              this.ctrl.updateMetrics(data);
+            }.bind(this));
+          }.bind(this));
         }.bind(this));
       },
 
       destroy: function() {
-        this.logicalPlan.unsubscribe();
+        if (this.logicalPlan) {
+          this.logicalPlan.unsubscribe();
+        }
         if (this.operators) {
           this.operators.unsubscribe();
         }

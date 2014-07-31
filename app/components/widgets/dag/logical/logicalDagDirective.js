@@ -26,14 +26,23 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
       restrict: 'A',
       templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
       scope: true,
-      link: function postLink(scope, element) {
-        scope.$on('logicalPlan', function (event, logicalPlan) {
-          scope.renderer = new LogicalDagRenderer(element, logicalPlan);
-          scope.renderer.displayGraph();
-        });
+      controller: function ($scope, $element) {
+        angular.extend(this, {
+          renderDag: function (logicalPlan) {
+            $scope.renderer = new LogicalDagRenderer($element, logicalPlan);
+            $scope.renderer.displayGraph();
+          },
 
+          updateMetrics: function (collection) {
+            $scope.updateMetrics(collection);
+          }
+        });
+      },
+      link: function postLink(scope, element, attrs, ctrl) {
         LogicalDagHelper.setupActions(scope);
         LogicalDagHelper.setupMetrics(scope);
+
+        scope.$emit('registerController', ctrl);
       }
     };
   })
@@ -137,25 +146,20 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
           }
         });
 
-        scope.$on('updateMetrics', function (event, collection) {
+        scope.updateMetrics = function (collection) {
           scope.collection = collection;
-          //var changed = this.partitionsMetricModel.update(this.collection, true);
 
-          //if (changed) {
-          //  this.updatePartitions();
-          //}
-
-          if (!scope.metricModel.isNone()) {
+          if (scope.renderer && !scope.metricModel.isNone()) {
             scope.metricModel.update(collection);
             //console.log(scope.renderer);
             scope.renderer.updateMetricLabels(scope.metricModel);
           }
 
-          if (!scope.metricModel2.isNone()) {
+          if (scope.renderer && !scope.metricModel2.isNone()) {
             scope.metricModel2.update(collection);
             scope.renderer.updateMetric2Labels(scope.metricModel2);
           }
-        });
+        };
       }
     };
   });
