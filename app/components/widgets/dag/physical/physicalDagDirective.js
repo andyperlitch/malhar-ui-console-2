@@ -24,13 +24,18 @@ angular.module('app.components.widgets.dag.physical.physicalDag', [
       restrict: 'A',
       templateUrl: 'components/widgets/dag/physical/physicalDagDirective.html',
       scope: true,
-      link: function postLink(scope, element) {
-        scope.$on('physicalPlan', function (event, logicalPlan) {
-          scope.renderer = new PhysicalDagRenderer(element, logicalPlan);
-          scope.renderer.displayGraph();
-
-          LogicalDagHelper.setupActions(scope);
+      controller: function ($scope, $element) {
+        angular.extend(this, {
+          renderDag: function (physicalPlan) {
+            $scope.renderer = new PhysicalDagRenderer($element, physicalPlan);
+            $scope.renderer.displayGraph();
+          }
         });
+      },
+      link: function postLink(scope, element, attrs, ctrl) {
+        LogicalDagHelper.setupActions(scope);
+
+        scope.$emit('registerController', ctrl);
       }
     };
   });

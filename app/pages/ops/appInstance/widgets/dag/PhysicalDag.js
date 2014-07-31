@@ -22,9 +22,11 @@ angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
   'app.components.resources.PhysicalPlanResource',
   'app.components.widgets.dag.physical.physicalDag'
 ])
-  .factory('PhysicalDagWidgetDataModel', function(WidgetDataModel, PhysicalPlanResource) {
+  .factory('PhysicalDagWidgetDataModel', function(WidgetDataModel, PhysicalPlanResource, $q) {
     function PhysicalDagWidgetDataModel(options) {
       this.appId = options.appId;
+      this.ctrl = null; // directive controller
+      this.physicalPlan = null;
     }
 
     PhysicalDagWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
@@ -36,13 +38,25 @@ angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
           appId: this.appId
         });
 
+        var deferred = $q.defer();
+
+        this.widgetScope.$on('registerController', function (event, ctrl) {
+          event.stopPropagation();
+          this.ctrl = ctrl;
+          deferred.resolve();
+        }.bind(this));
+
         this.physicalPlan.fetch().then(function (data) {
-          this.widgetScope.$broadcast('physicalPlan', data); //TODO
+          deferred.promise.then(function () {
+            this.ctrl.renderDag(data);
+          }.bind(this));
         }.bind(this));
       },
 
       destroy: function() {
-        this.physicalPlan.unsubscribe();
+        if (this.physicalPlan) {
+          this.physicalPlan.unsubscribe();
+        }
       }
 
     });

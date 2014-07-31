@@ -25,16 +25,15 @@ angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
   .factory('LogicalDagWidgetDataModel', function(WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q) {
     function LogicalDagWidgetDataModel(options) {
       this.appId = options.appId;
+      this.ctrl = null; // directive controller
+      this.logicalPlan = null;
+      this.operators = null;
     }
 
     LogicalDagWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
     LogicalDagWidgetDataModel.prototype.constructor = WidgetDataModel;
 
     angular.extend(LogicalDagWidgetDataModel.prototype, {
-      ctrl: null, // directive controller
-      logicalPlan: null,
-      operators: null,
-
       init: function() {
         this.logicalPlan = new LogicalPlanResource({
           appId: this.appId
