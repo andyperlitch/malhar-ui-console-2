@@ -95,9 +95,17 @@ angular.module('app.pages.ops.appInstance', [
       return { name: name };
     });
 
-    var physicalDagViewLayoutWidgets = _.map(['Physical DAG'], function (name) {
-      return { name: name };
-    });
+    var physicalDagViewLayoutWidgets = [
+      {
+        name: 'Application Overview',
+        style: {
+          width: '100%' //TODO if this widget is added again it will have width from widgetDefinitions
+        }
+      },
+      {
+        name: 'Physical DAG'
+      }
+    ];
 
     $scope.dashboardOptions = {
       storage: localStorage,
