@@ -40,9 +40,19 @@ angular.module('app.pages.ops', [
 
 // Controller
   .controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose,
-                                   RandomPercentageDataModel, RandomMinutesDataModel) {
+                                   RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel) {
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+      {
+        name: 'Line Chart',
+        title: 'Line Chart',
+        directive: 'wt-nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: RandomNVD3TimeSeriesDataModel,
+        style: {
+          width: '40%'
+        }
+      },
       {
         name: 'Bar Chart',
         title: 'Bar Chart',
@@ -50,7 +60,7 @@ angular.module('app.pages.ops', [
         dataAttrName: 'data',
         dataModelType: RandomMinutesDataModel,
         style: {
-          width: '70%'
+          width: '40%'
         }
       },
       {
