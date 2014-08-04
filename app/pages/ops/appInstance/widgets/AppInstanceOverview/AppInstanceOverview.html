@@ -26,33 +26,37 @@
   </div>
 
   <div class="overview-item">
-    <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title" tooltip-popup-delay="0"></div>
-    <div class="value" window-id="data.currentWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
-  </div>
+    <div class="overview-subitem">
+      <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title" tooltip-popup-delay="0"></div>
+      <div class="value" window-id="data.currentWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+    </div>
+
+    <div class="overview-subitem">
+      <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0"></div>
+      <div class="value" window-id="data.recoveryWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+    </div>
+  </div>  
 
   <div class="overview-item">
-    <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0"></div>
-    <div class="value" window-id="data.recoveryWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
-  </div>
+    <div class="overview-subitem">
+      <div class="key" dt-text="processed_per_sec"></div>
+      <div class="value">{{ data.stats.tuplesProcessedPSMA | commaGroups }}</div>
+    </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text="processed_per_sec"></div>
-    <div class="value">{{ data.stats.tuplesProcessedPSMA | commaGroups }}</div>
-  </div>
+    <div class="overview-subitem">
+      <div class="key" dt-text="emitted_per_sec"></div>
+      <div class="value">{{ data.stats.tuplesEmittedPSMA | commaGroups }}</div>
+    </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text="emitted_per_sec"></div>
-    <div class="value">{{ data.stats.tuplesEmittedPSMA | commaGroups }}</div>
-  </div>
+    <div class="overview-subitem">
+      <div class="key" dt-text="processed_total"></div>
+      <div class="value">{{ data.stats.totalTuplesProcessed | commaGroups }}</div>
+    </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text="processed_total"></div>
-    <div class="value">{{ data.stats.totalTuplesProcessed | commaGroups }}</div>
-  </div>
-
-  <div class="overview-item">
-    <div class="key" dt-text="emitted_total"></div>
-    <div class="value">{{ data.stats.totalTuplesEmitted | commaGroups }}</div>
+    <div class="overview-subitem">
+      <div class="key" dt-text="emitted_total"></div>
+      <div class="value">{{ data.stats.totalTuplesEmitted | commaGroups }}</div>
+    </div>  
   </div>
 
   <div class="overview-item">
