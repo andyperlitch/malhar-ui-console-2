@@ -16,63 +16,39 @@
 
 'use strict';
 
-angular.module('app.components.directives.logicalDag',
+angular.module('app.components.widgets.dag.physical.logicalDag',
   [
     'app.components.directives.logicalDag.LogicalDagRenderer',
-    'app.components.directives.logicalDag.MetricModelFactory'
+    'app.components.directives.logicalDag.MetricModelFactory',
+    'app.components.widgets.dag.DagHelper'
   ])
-  .directive('dtLogicalDag', function (LogicalDagRenderer, LogicalDagHelper) {
+  .directive('dtLogicalDag', function (LogicalDagRenderer, DagHelper, LogicalDagHelper) {
     return {
       restrict: 'A',
-      templateUrl: 'pages/ops/appInstance/widgets/LogicalDag/logicalDagDirective.html',
-      scope: {
-        appId: '=',
-        logicalPlan: '='
-      },
-      link: function postLink(scope, element) {
-        scope.values = ['option1', 'option2', 'option3'];
-        scope.value = scope.values[0];
+      templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
+      scope: true,
+      controller: function ($scope, $element) {
+        angular.extend(this, {
+          renderDag: function (logicalPlan) {
+            $scope.renderer = new LogicalDagRenderer($element, logicalPlan);
+            $scope.renderer.displayGraph();
+          },
 
-        //TODO unwatch
-        scope.$watch('logicalPlan', function (logicalPlan) {
-          if (logicalPlan) {
-            scope.renderer = new LogicalDagRenderer(element, logicalPlan);
-            scope.renderer.displayGraph();
+          updateMetrics: function (collection) {
+            $scope.updateMetrics(collection);
           }
         });
-
-        LogicalDagHelper.setupActions(scope);
+      },
+      link: function postLink(scope, element, attrs, ctrl) {
+        DagHelper.setupActions(scope);
         LogicalDagHelper.setupMetrics(scope);
+
+        scope.$emit('registerController', ctrl);
       }
     };
   })
   .factory('LogicalDagHelper', function (dtText, MetricModelFactory) {
     return {
-      setupActions: function (scope) {
-        scope.showLocality = false;
-        scope.toggleLocality = function (event) {
-          event.preventDefault();
-
-          scope.showLocality = !scope.showLocality;
-
-          if (scope.showLocality) {
-            if (scope.renderer) {
-              scope.renderer.updateStreams();
-            }
-          } else {
-            if (scope.renderer) {
-              scope.renderer.clearStreamLocality();
-            }
-          }
-        };
-
-        scope.resetPosition = function (event) {
-          event.preventDefault();
-          if (scope.renderer) {
-            scope.renderer.resetPosition();
-          }
-        };
-      },
       setupMetrics: function (scope) {
         scope.metrics = [
           {
@@ -89,27 +65,19 @@ angular.module('app.components.directives.logicalDag',
           },
           {
             value: 'latencyMA',
-            label: dtText.get('max_latency_label')
+            label: dtText.get('latency_ms_label')
           },
           {
-            value: 'partitionCount',
-            label: dtText.get('partitions_label')
+            value: 'partitions',
+            label: dtText.get('num_partitions_label')
           },
           {
-            value: 'containerCount',
-            label: dtText.get('containers_label')
+            value: 'containerIds',
+            label: dtText.get('num_containers_label')
           },
           {
-            value: 'cpuMin',
-            label: dtText.get('cpu_min_label')
-          },
-          {
-            value: 'cpuMax',
-            label: dtText.get('cpu_max_label')
-          },
-          {
-            value: 'cpuAvg',
-            label: dtText.get('cpu_avg_label')
+            value: 'cpuPercentageMA',
+            label: dtText.get('cpu_sum_label')
           },
           {
             value: 'lastHeartbeat',
@@ -140,30 +108,34 @@ angular.module('app.components.directives.logicalDag',
 
         //TODO use ng-model in select
         scope.$watch('metric1', function (metric) {
-          console.log(metric);
+          scope.metricModel = MetricModelFactory.getMetricModel(metric.value);
+          if (scope.collection) {
+            scope.metricModel.update(scope.collection);
+            scope.renderer.updateMetricLabels(scope.metricModel);
+          }
         });
         scope.$watch('metric2', function (metric) {
-          console.log(metric);
+          scope.metricModel2 = MetricModelFactory.getMetricModel(metric.value);
+          if (scope.collection) {
+            scope.metricModel2.update(scope.collection);
+            scope.renderer.updateMetric2Labels(scope.metricModel2);
+          }
         });
 
-        scope.$on('updateMetrics', function (event, collection) {
-          //var changed = this.partitionsMetricModel.update(this.collection, true);
+        scope.updateMetrics = function (collection) {
+          scope.collection = collection;
 
-          //if (changed) {
-          //  this.updatePartitions();
-          //}
-
-          if (!scope.metricModel.isNone()) {
+          if (scope.renderer && !scope.metricModel.isNone()) {
             scope.metricModel.update(collection);
             //console.log(scope.renderer);
             scope.renderer.updateMetricLabels(scope.metricModel);
           }
 
-          if (!scope.metricModel2.isNone()) {
+          if (scope.renderer && !scope.metricModel2.isNone()) {
             scope.metricModel2.update(collection);
             scope.renderer.updateMetric2Labels(scope.metricModel2);
           }
-        });
+        };
       }
     };
   });

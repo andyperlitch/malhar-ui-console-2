@@ -26,7 +26,8 @@ angular.module('app.pages.ops.appInstance', [
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
   'app.pages.ops.appInstance.widgets.StramEvents',
-  'app.pages.ops.appinstance.widgets.LogicalDag'
+  'app.pages.ops.appinstance.widgets.dag.LogicalDag',
+  'app.pages.ops.appinstance.widgets.dag.PhysicalDag'
 ])
 
 // Route
@@ -46,6 +47,7 @@ angular.module('app.pages.ops.appInstance', [
     _,
     ApplicationModel,
     LogicalDagWidgetDefinition,
+    PhysicalDagWidgetDefinition,
     AppInstanceOverviewWidgetDef,
     StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
@@ -73,18 +75,37 @@ angular.module('app.pages.ops.appInstance', [
       new AppInstanceOverviewWidgetDef({ name:  'Application Overview', style: { width: '66%' } }),
       new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float':'right' } }),
       new LogicalDagWidgetDefinition({
-        name: 'LogicalDAG',
-        dataModelOptions: {
-          appId: $scope.appId
-        },
+        name: 'Logical DAG',
+        dataModelArgs: { appId: $scope.appId },
         style: {
           width: '66%'
         }
       }),
-      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
+      new PhysicalDagWidgetDefinition({
+        name: 'Physical DAG',
+        dataModelArgs: { appId: $scope.appId },
+        style: {
+          width: '100%'
+        }
+      }),
+      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' })
     ];
 
-    var defaultWidgets = _.clone(widgetDefinitions);
+    var defaultWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'LogicalOperatorsList'], function (name) {
+      return { name: name };
+    });
+
+    var physicalDagViewLayoutWidgets = [
+      {
+        name: 'Application Overview',
+        style: {
+          width: '100%' //TODO if this widget is added again it will have width from widgetDefinitions
+        }
+      },
+      {
+        name: 'Physical DAG'
+      }
+    ];
 
     $scope.dashboardOptions = {
       storage: localStorage,
@@ -93,6 +114,7 @@ angular.module('app.pages.ops.appInstance', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
+        { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
         { title: 'logical', active: true , defaultWidgets: defaultWidgets }
       ],
       settingsModalOptions: defaultSettingsModalOptions,

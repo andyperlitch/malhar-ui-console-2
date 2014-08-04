@@ -20,9 +20,6 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
   'app.components.directives.logicalDag.MetricModel'
 ])
   .factory('MetricModelFactory', function (MetricModel) {
-    var bormat = {}; //TODO
-    var formatters = {}; //TODO
-
     return {
       getMetricModel: function (metricId) {
         return new MetricModel({
@@ -43,9 +40,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
 
         tuplesEmittedPSMA: {
@@ -54,58 +49,45 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
 
         latencyMA: {
           showMetric: function (id, map) {
             var value = map[id];
             return (map.hasOwnProperty(id) && value > 0);
-          }
+          },
+
+          ngFilter: 'number'
         },
 
-        partitionCount: {
-          showMetric: function (id, map) {
-            var value = map[id];
-            return (map.hasOwnProperty(id) && value > 1);
-          }
-        },
-
-        containerCount: {
-          showMetric: function (id, map) {
-            return map.hasOwnProperty(id);
-          }
-        },
-
-        cpuMin: {
+        partitions: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
           },
 
           valueToString: function (value) {
-            return formatters.percentageFormatter(value, true);
+            return value.length;
           }
         },
 
-        cpuMax: {
+        containerIds: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
           },
 
           valueToString: function (value) {
-            return formatters.percentageFormatter(value, true);
+            return value.length;
           }
         },
 
-        cpuAvg: {
+        cpuPercentageMA: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
           },
 
           valueToString: function (value) {
-            return formatters.percentageFormatter(value, true);
+            return (value * 1).toFixed(2) + '%';
           }
         },
 
@@ -114,9 +96,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return map.hasOwnProperty(id);
           },
 
-          valueToString: function (value) {
-            return new Date(value).toLocaleTimeString();
-          }
+          ngFilter: 'relativeTimestamp'
         },
 
         currentWindowId: {
@@ -124,9 +104,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return map.hasOwnProperty(id);
           },
 
-          valueToString: function (value) {
-            return formatters.windowOffsetFormatter(value);
-          }
+          ngFilter: 'windowOffset'
         },
 
         totalTuplesProcessed: {
@@ -135,9 +113,7 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
 
         totalTuplesEmitted: {
@@ -146,18 +122,15 @@ angular.module('app.components.directives.logicalDag.MetricModelFactory', [
             return (map.hasOwnProperty(id) && value > 0);
           },
 
-          valueToString: function (value) {
-            return bormat.commaGroups(value);
-          }
+          ngFilter: 'commaGroups'
         },
+
         recoveryWindowId: {
           showMetric: function (id, map) {
             return map.hasOwnProperty(id);
           },
 
-          valueToString: function (value) {
-            return formatters.windowOffsetFormatter(value);
-          }
+          ngFilter: 'windowOffset'
         }
       }
     };

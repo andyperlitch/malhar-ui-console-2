@@ -17,11 +17,15 @@
 'use strict';
 
 angular.module('app.components.directives.logicalDag.MetricModel', [])
-  .factory('MetricModel', function () {
+  .factory('MetricModel', function ($filter) {
     function MetricModel(options) {
       this.metricId = options.metricId;
       this.operators = options.operators;
       this.implementation = options.implementation;
+
+      if (this.implementation.ngFilter) {
+        this.filter = $filter(this.implementation.ngFilter);
+      }
     }
 
     MetricModel.prototype = {
@@ -87,9 +91,10 @@ angular.module('app.components.directives.logicalDag.MetricModel', [])
 
       getTextValue: function (id) {
         var value = this.getValue(id);
-        if (this.implementation.valueToString) {
-          //return this.implementation.valueToString(value); //TODO
-          return value; //TODO
+        if (this.filter) {
+          return this.filter(value);
+        } else if (this.implementation.valueToString) {
+          return this.implementation.valueToString(value);
         } else {
           return value;
         }

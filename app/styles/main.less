@@ -13,6 +13,9 @@
 // angular-table
 @import "@{bower}/malhar-angular-table/dist/mlhr-table.css";
 
+// angular-table
+@import "@{bower}/nvd3/nv.d3.css";
+
 // Pines-Notify
 @import "@{bower}/pines-notify/pnotify.core.css";
 @import "@{bower}/pines-notify/pnotify.buttons.css";
@@ -29,5 +32,25 @@
 @import "tables";
 @import "views";
 @import "modal";
-@import "../pages/ops/appInstance/widgets/LogicalDag/LogicalDagDirective.less";
+@import "../components/widgets/dag/dag.less";
 @import "../pages/ops/appInstance/widgets/StramEvents/StramEvents.less";
+
+.line-chart, .bar-chart {
+  height: 220px
+}
+
+fieldset.overview-group {
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  padding: 10px;
+  display: inline-block;
+
+  legend {
+    width: auto;
+    display: inline-block;
+    border: 0;
+    margin-bottom: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+}
