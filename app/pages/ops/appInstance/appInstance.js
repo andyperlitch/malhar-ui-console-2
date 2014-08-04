@@ -88,7 +88,7 @@ angular.module('app.pages.ops.appInstance', [
 
     $scope.dashboardOptions = {
       storage: localStorage,
-      storageId: 'dashboard.ops',
+      storageId: 'dashboard.ops.appInstance',
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
