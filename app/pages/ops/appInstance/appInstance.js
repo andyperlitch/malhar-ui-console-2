@@ -21,6 +21,7 @@
  */
 
 angular.module('app.pages.ops.appInstance', [
+  'app.settings',
   'app.components.services.defaultWidgetSettings',
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
