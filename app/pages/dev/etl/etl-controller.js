@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app')
+angular.module('app.pages.dev.etl',[])
   
   .controller('EtlEditSourceCtrl', function($scope, $modalInstance, source, sources, sourceTypes) {
 
