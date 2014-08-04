@@ -31,7 +31,7 @@ angular.module('app.components.services.dashboardOptionsFactory', [
         onSettingsClose: defaultOnSettingsClose,
         widgetButtons: true
       };
-      return angular.extend(this, angular.copy(defaults), o);
+      return angular.extend({}, defaults, o);
     };
     return dashboardOptionsFactory;
   }
