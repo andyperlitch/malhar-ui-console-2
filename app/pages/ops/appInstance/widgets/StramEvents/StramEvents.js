@@ -199,7 +199,8 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
     restrict: 'E',
     scope: {
       resource: '=',
-      state: '='
+      state: '=',
+      appId: '='
     },
     link: function(scope, element) {
       scope.followEvents = true;
