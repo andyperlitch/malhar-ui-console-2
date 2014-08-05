@@ -121,7 +121,7 @@ angular.module('app.pages.ops.appInstance', [
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
         { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
-        { title: 'physical', active: false , defaultWidgets: physicalLayoutWidgets },   
+        { title: 'physical', active: false , defaultWidgets: physicalLayoutWidgets },
         { title: 'logical', active: true , defaultWidgets: logicalLayoutWidgets }
       ]
     });
