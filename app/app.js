@@ -27,7 +27,7 @@ angular.module('app', [
   'ui.dashboard',
 
   // components
-  'app.components.services.webSocket',
+  'ui.websocket',
   'app.components.filters.percent2cpu',
   'app.components.filters.commaGroups',
   'app.components.filters.byte',
@@ -47,6 +47,7 @@ angular.module('app', [
 ])
 .config(function (settings, webSocketProvider, $routeProvider) {
   webSocketProvider.setWebSocketURL('ws://' + settings.GATEWAY_WEBSOCKET_HOST + '/pubsub');
+  webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 
   // Catchall route
   $routeProvider
