@@ -16,12 +16,28 @@
 'use strict';
 
 angular.module('app.components.resources.LogicalOperatorModel', [
-  'app.components.resources.BaseModel'
+  'app.components.resources.BaseModel',
+  'underscore'
 ])
-.factory('LogicalOperatorModel', function(BaseModel) {
+.factory('LogicalOperatorModel', function(BaseModel, _) {
   var LogicalOperatorModel = BaseModel.extend({
     urlKey: 'LogicalOperator',
-    idAttribute: 'name'
+    idAttribute: 'name',
+    topicKey: 'LogicalOperators',
+    transformResponse: function(raw, type) {
+      switch(type) {
+        
+        case 'subscribe':
+          var name = this.data.name;
+          return _.find(raw.operators, function(o) {
+            return o.name === name;
+          });
+
+        default:
+
+          return raw;
+      }
+    }
   });
   return LogicalOperatorModel;
 });
