@@ -18,7 +18,7 @@
 
 angular.module('app.components.resources.BaseResource', [
   'underscore',
-  'app.components.services.webSocket',
+  'ui.websocket',
   'app.components.services.extend'
 ])
 .factory('BaseResource', function(_, $http, webSocket, extend, $log, $q) {
