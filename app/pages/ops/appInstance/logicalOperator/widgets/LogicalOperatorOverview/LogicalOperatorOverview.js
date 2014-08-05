@@ -24,39 +24,16 @@
 // Module Definition
 angular.module('app.pages.ops.appInstance.logicalOperator.widgets.LogicalOperatorOverview', [
   'app.components.widgets.Base',
-  'app.components.resources.LogicalOperatorModel',
   'app.components.directives.logicalOperatorStatus',
   'app.settings'
 ])
 
 // Widget Data Model
-.factory('LogicalOperatorOverviewWidgetDataModel', function(BaseDataModel, LogicalOperatorModel) {
+.factory('LogicalOperatorOverviewWidgetDataModel', function(BaseDataModel) {
   var LogicalOperatorOverviewWidgetDataModel = BaseDataModel.extend({
     init: function() {
-
-      var resource;
-
-      // logicalOperator resource
-      if (this.widgetScope.logicalOperator && this.widgetScope.logicalOperator instanceof LogicalOperatorModel) {
-        resource = this.resource = this.widgetScope.logicalOperator;
-      }
-      else {
-        this.unsubscribeOnDestroy = true;
-        resource = this.resource = new LogicalOperatorModel({
-          id: this.widgetScope.appId,
-          name: this.widgetScope.operatorName
-        });
-        resource.fetch();
-        resource.subscribe(this.widgetScope);
-      }
-
-      this.widgetScope.data = resource.data;
-    },
-
-    destroy: function() {
-      if (this.unsubscribeOnDestroy) {
-        this.resource.unsubscribe();
-      }
+      this.resource = this.widgetScope.logicalOperator;
+      this.widgetScope.data = this.resource.data;
     }
   });
   return LogicalOperatorOverviewWidgetDataModel;
