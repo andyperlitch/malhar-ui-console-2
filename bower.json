@@ -5,7 +5,7 @@
     "angular": "~1.2.21",
     "angular-route": "~1.2.21",
     "bootstrap": "~3.2.0",
-    "malhar-angular-dashboard": "~0.3.2",
+    "malhar-angular-dashboard": "https://github.com/DataTorrent/malhar-angular-dashboard.git#master",
     "malhar-angular-widgets": "https://github.com/DataTorrent/malhar-angular-widgets.git#master",
     "angular-pines-notify": "~1.0.0",
     "ng-breadcrumbs": "~0.1.0",
@@ -30,14 +30,10 @@
   },
   "resolutions": {
     "bootstrap": "~3.2.0",
-    "jquery-ui": ">=1.11.0",
-    "angular-bootstrap": "~0.11.0",
     "underscore": "~1.6.0",
-    "angular": "1.2.21",
     "jquery": "~2.0.3",
-    "angular-pines-notify": "~1.0.0",
-    "pines-notify": "~2",
     "d3": "~3.4.10",
-    "es5-shim": "~2.1.0"
+    "es5-shim": "~2.1.0",
+    "angular": "1.2.21"
   }
 }
