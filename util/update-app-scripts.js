@@ -59,6 +59,12 @@ function updateAppScripts(done) {
       if (b === 'app.js') {
         return 1;
       }
+      if (a < b) {
+        return -1;
+      }
+      if (a > b) {
+        return 1;
+      }
       return 0;
     }); 
     fillTags(scriptsrcs);

@@ -258,7 +258,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       this.resource = new StramEventCollection({ appId: this.widgetScope.appId });
       scope.resource = this.resource;
       scope.state = {
-        mode: 'range',
+        mode: 'tail',
         range: {
           from: new Date(Date.now() - 10 * 60 * 1000), // 10 minutes ago
           to: new Date(Date.now())
