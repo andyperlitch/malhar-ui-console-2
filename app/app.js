@@ -40,6 +40,7 @@ angular.module('app', [
   // pages
   'app.pages.ops',
   'app.pages.ops.appInstance',
+  'app.pages.ops.appInstance.logicalOperator',
 
   // misc
   'app.settings'
