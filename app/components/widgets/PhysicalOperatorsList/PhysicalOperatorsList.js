@@ -27,8 +27,7 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
   'app.settings',
   'app.components.resources.PhysicalOperatorCollection',
   'app.components.services.dtText',
-  'app.components.filters.percent2cpu',
-  'app.components.directives.physicalOperatorStatus'
+  'app.components.filters.percent2cpu'
 ])
 
 // Widget Data Model
@@ -66,7 +65,8 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
           key: 'id',
           filter: 'number',
           sort: 'number',
-          template: '<a dt-page-href="PhysicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorId: row.id }">{{ row.id }}</a>'
+          template: '<a dt-page-href="PhysicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorId: row.id }">{{ row.id }}</a>',
+          width: '4em'
         },
         {
           id: 'name',
@@ -74,6 +74,30 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
           filter: 'like',
           sort: 'string',
           template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
+        },
+        {
+          id: 'status',
+          key: 'status',
+          label: dtText.get('status_label'),
+          sort: 'string',
+          filter: 'like',
+          template: '<span app-state="row.status"></span>'
+        },
+        {
+          id: 'tuplesProcessedPSMA',
+          key: 'tuplesProcessedPSMA',
+          label: dtText.get('processed_per_sec'),
+          sort: 'number',
+          filter: 'number',
+          ngFilter: 'commaGroups'
+        },
+        {
+          id: 'tuplesEmittedPSMA',
+          key: 'tuplesEmittedPSMA',
+          label: dtText.get('emitted_per_sec'),
+          sort: 'number',
+          filter: 'number',
+          ngFilter: 'commaGroups'
         },
         {
           id: 'cpuPercentageMA',
@@ -106,7 +130,8 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
           key: 'failureCount',
           label: dtText.get('failure_count_label'),
           sort: 'string',
-          filter: 'like'
+          filter: 'like',
+          width: '4em',
         },
         {
           id: 'lastHeartbeat',
@@ -116,36 +141,29 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
           filter: 'date',
           ngFilter: 'relativeTimestamp'
         },
+        // host
+        {
+          id: 'host',
+          key: 'host',
+          label: dtText.get('host_label'),
+          sort: 'string',
+          filter: 'like',
+          width: '20em'
+        },
+        // container
+        {
+          id: 'container',
+          key: 'container',
+          label: dtText.get('container_label'),
+          sort: 'string',
+          template: '<a dt-page-href="Container" params="{ appId: \'' + this.widgetScope.appId + '\', containerId: row.container }" dt-container-shorthand="row.container"></a>'
+        },
         {
           id: 'latencyMA',
           key: 'latencyMA',
           label: dtText.get('latency_ms_label'),
           sort: 'number',
           filter: 'number'
-        },
-        {
-          id: 'status',
-          key: 'status',
-          label: dtText.get('status_label'),
-          sort: 'string',
-          filter: 'like',
-          template: '<span app-state="row.status"></span>'
-        },
-        {
-          id: 'tuplesProcessedPSMA',
-          key: 'tuplesProcessedPSMA',
-          label: dtText.get('processed_per_sec'),
-          sort: 'number',
-          filter: 'number',
-          ngFilter: 'commaGroups'
-        },
-        {
-          id: 'tuplesEmittedPSMA',
-          key: 'tuplesEmittedPSMA',
-          label: dtText.get('emitted_per_sec'),
-          sort: 'number',
-          filter: 'number',
-          ngFilter: 'commaGroups'
         },
         {
           id: 'totalTuplesProcessed',
@@ -180,7 +198,7 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
     defaults: {
       dataModelType: PhysicalOperatorsListWidgetDataModel,
       title: 'Physical Operators', // default display name (editable by user)
-      templateUrl: 'pages/ops/appInstance/widgets/PhysicalOperatorsList/PhysicalOperatorsList.html',
+      templateUrl: 'components/widgets/PhysicalOperatorsList/PhysicalOperatorsList.html',
     }
   });
 

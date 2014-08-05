@@ -26,6 +26,7 @@ angular.module('app.pages.ops.appInstance', [
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
+  'app.pages.ops.appInstance.widgets.PhysicalOperatorsList',
   'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appinstance.widgets.dag.LogicalDag',
   'app.pages.ops.appinstance.widgets.dag.PhysicalDag'
@@ -52,6 +53,7 @@ angular.module('app.pages.ops.appInstance', [
     AppInstanceOverviewWidgetDef,
     StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
+    PhysicalOperatorsListWidgetDef,
     breadcrumbs,
     dashboardOptionsFactory
   ) {
@@ -88,10 +90,15 @@ angular.module('app.pages.ops.appInstance', [
           width: '100%'
         }
       }),
-      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' })
+      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
+      new PhysicalOperatorsListWidgetDef({ name: 'PhysicalOperatorsList' })
     ];
 
-    var defaultWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'LogicalOperatorsList'], function (name) {
+    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'LogicalOperatorsList'], function (name) {
+      return { name: name };
+    });
+
+    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'PhysicalOperatorsList'], function (name) {
       return { name: name };
     });
 
@@ -109,11 +116,13 @@ angular.module('app.pages.ops.appInstance', [
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance',
+      storageHash: 'l324kj52cvl75',
       widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
+      defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
         { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
-        { title: 'logical', active: true , defaultWidgets: defaultWidgets }
+        { title: 'physical', active: false , defaultWidgets: physicalLayoutWidgets },   
+        { title: 'logical', active: true , defaultWidgets: logicalLayoutWidgets }
       ]
     });
 
