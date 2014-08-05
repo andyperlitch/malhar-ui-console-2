@@ -77,8 +77,7 @@ angular.module('app.pages.ops.appInstance.widgets.AppInstanceOverview', [
     defaults: {
       dataModelType: AppInstanceOverviewDataModel,
       title: 'Application Overview',
-      templateUrl: 'pages/ops/appInstance/widgets/AppInstanceOverview/AppInstanceOverview.html',
-      settingsPartialUrl: 'pages/ops/appInstance/widgets/AppInstanceOverview/settingsPartialUrl.html'
+      templateUrl: 'pages/ops/appInstance/widgets/AppInstanceOverview/AppInstanceOverview.html'
     }
   });
 

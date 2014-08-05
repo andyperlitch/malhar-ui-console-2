@@ -21,7 +21,8 @@
  */
 
 angular.module('app.pages.ops.appInstance', [
-  'app.components.services.defaultWidgetSettings',
+  'app.settings',
+  'app.components.services.dashboardOptionsFactory',
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
@@ -52,8 +53,7 @@ angular.module('app.pages.ops.appInstance', [
     StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
     breadcrumbs,
-    defaultSettingsModalOptions,
-    defaultOnSettingsClose
+    dashboardOptionsFactory
   ) {
 
     // Set up breadcrumb label
@@ -107,18 +107,14 @@ angular.module('app.pages.ops.appInstance', [
       }
     ];
 
-    $scope.dashboardOptions = {
-      storage: localStorage,
+    $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance',
-      widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
         { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
         { title: 'logical', active: true , defaultWidgets: defaultWidgets }
-      ],
-      settingsModalOptions: defaultSettingsModalOptions,
-      onSettingsClose: defaultOnSettingsClose
-    };
+      ]
+    });
 
   });
