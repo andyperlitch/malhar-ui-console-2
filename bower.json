@@ -32,6 +32,8 @@
     "bootstrap": "~3.2.0",
     "jquery": "~2.0.3",
     "d3": "~3.4.10",
-    "angular": "1.2.21"
+    "angular": "1.2.21",
+    "underscore": "~1.6.0",
+    "es5-shim": "~2.1.0"
   }
 }
