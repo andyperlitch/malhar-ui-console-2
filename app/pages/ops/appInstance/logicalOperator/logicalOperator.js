@@ -16,7 +16,11 @@
 'use strict';
 
 angular.module('app.pages.ops.appInstance.logicalOperator', [
-  'app.settings'
+  'app.settings',
+  'app.components.resources.LogicalOperatorModel',
+  'app.components.resources.ApplicationModel',
+  'app.components.services.dashboardOptionsFactory',
+  'app.pages.ops.appInstance.logicalOperator.widgets.LogicalOperatorOverview'
 ])
 
 // Route
@@ -24,12 +28,62 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
     $routeProvider
       .when(settings.pages.LogicalOperator, {
         controller: 'LogicalOperatorCtrl',
-        templateUrl: 'pages/ops/ops.html',
-        label: 'App Instance'
+        templateUrl: 'pages/ops/appInstance/logicalOperator/logicalOperator.html',
+        label: 'Logical Operator'
       });
   })
 
 // Controller
-  .controller('LogicalOperatorCtrl', function($scope) {
-    $scope.something = 'true';
+  .controller('LogicalOperatorCtrl', function(
+    $scope,
+    $routeParams,
+    breadcrumbs,
+    ApplicationModel,
+    LogicalOperatorModel,
+    dashboardOptionsFactory,
+    LogicalOperatorOverviewWidgetDef
+  ) {
+    
+    // Set up breadcrumb label
+    breadcrumbs.options['App Instance'] = $routeParams.appId;
+    breadcrumbs.options['Logical Operator'] = 'Logical Operator: ' + $routeParams.operatorName;
+
+    // Set scope info for use by widgets
+    $scope.operatorName = $routeParams.operatorName;
+    $scope.appId = $routeParams.appId;
+
+    // Instantiate resources
+    $scope.appInstance = new ApplicationModel({
+      id: $routeParams.appId
+    });
+    $scope.appInstance.fetch();
+
+    $scope.logicalOperator = new LogicalOperatorModel({
+      name: $routeParams.operatorName,
+      appId: $routeParams.appId
+    });
+    $scope.logicalOperator.fetch();
+    $scope.logicalOperator.subscribe($scope);
+    $scope.$on('$destroy', function() {
+      $scope.logicalOperator.unsubscribe();
+    });
+
+    // Create widgets arrays
+    var widgetDefinitions = [
+      new LogicalOperatorOverviewWidgetDef({ name: 'Overview'})
+    ];
+    var defaultWidgets = [
+      { name: 'Overview' }
+    ];
+
+    // Set dashboard options
+    $scope.dashboardOptions = dashboardOptionsFactory({
+      storageId: 'dashboard.ops.appInstance.logicalOperator',
+      widgetDefinitions: widgetDefinitions,
+      defaultWidgets: defaultWidgets,
+      defaultLayouts: [
+        { title: 'default', active: false }
+      ]
+    });
+
   });
