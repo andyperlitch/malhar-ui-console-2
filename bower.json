@@ -6,6 +6,7 @@
     "angular-route": "~1.2.21",
     "bootstrap": "~3.2.0",
     "malhar-angular-dashboard": "~0.3.2",
+    "malhar-angular-widgets": "https://github.com/DataTorrent/malhar-angular-widgets.git#master",
     "angular-pines-notify": "~1.0.0",
     "ng-breadcrumbs": "~0.1.0",
     "angular-strap": "~2.0.3",
