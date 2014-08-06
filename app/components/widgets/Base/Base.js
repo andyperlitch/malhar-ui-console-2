@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('app.components.widgets.Base', [
-  'underscore',
+  'lodash',
   'app.components.services.extend',
   'ui.dashboard'
 ])

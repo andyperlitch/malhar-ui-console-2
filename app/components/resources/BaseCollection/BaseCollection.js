@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('app.components.resources.BaseCollection', [
-  'underscore',
+  'lodash',
   'app.components.services.getUri',
   'app.components.resources.BaseResource',
   'app.components.resources.BaseModel'

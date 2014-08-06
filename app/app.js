@@ -56,9 +56,14 @@ angular.module('app', [
       redirectTo: '/ops'
     });
 });
+
 angular.module('exceptionOverride', []).factory('$exceptionHandler', function () {
   return function (exception, cause) {
     exception.message += ' (caused by "' + cause + '")';
     throw exception;
   };
+});
+
+angular.module('lodash', []).factory('_', function($window) {
+  return $window._; // Lodash
 });

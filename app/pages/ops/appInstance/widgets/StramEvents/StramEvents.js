@@ -23,7 +23,6 @@
 
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
-  'underscore',
   'app.components.services.dtText',
   'app.components.filters.relativeTimestamp',
   'app.components.resources.StramEventCollection',
