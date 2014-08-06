@@ -16,8 +16,7 @@
 'use strict';
 
 angular.module('app.components.resources.LogicalOperatorModel', [
-  'app.components.resources.BaseModel',
-  'underscore'
+  'app.components.resources.BaseModel'
 ])
 .factory('LogicalOperatorModel', function(BaseModel, _) {
   var LogicalOperatorModel = BaseModel.extend({
