@@ -1,13 +1,13 @@
 <div class="overview-container">
   <h2>
-    {{ data.name || 'loading...' }}
-    <small ng-if="data.className">{{ data.className }}</small>
+    {{ data.id ? data.id : 'loading...' }}
+    <small ng-if="data.className">{{ data.name }}</small>
   </h2>
   
   <div class="overview-item">
     <div class="key" dt-text>status</div>
     <div class="value">
-      <span logical-operator-status="data.status"></span>
+      <span app-state="data.status"></span>
     </div>
   </div>
 
@@ -49,20 +49,6 @@
     <div class="key" dt-text>latency_ms_label</div>
     <div class="value">
       {{ data.latencyMA | commaGroups }}
-    </div>
-  </div>
-
-  <div class="overview-item">
-    <div class="key" dt-text>partitions</div>
-    <div class="value">
-      {{ data.partitions ? data.partitions.length : '-' }}
-    </div>
-  </div>
-
-  <div class="overview-item">
-    <div class="key" dt-text>containers</div>
-    <div class="value">
-      {{ data.containerIds ? data.containerIds.length : '-' }}
     </div>
   </div>
 
