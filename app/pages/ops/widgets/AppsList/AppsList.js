@@ -24,7 +24,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
   'app.components.services.dtText',
   'app.components.services.appManager',
   'app.components.directives.appIdLink',
-  'app.components.directives.appState',
+  'app.components.directives.dtStatus',
   'app.components.directives.dtPageHref',
   'datatorrent.mlhrTable',
   'app.components.resources.ApplicationCollection'
@@ -108,7 +108,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
       id: 'state',
       label: dtText.get('state_label'),
       key: 'state',
-      template: '<span app-state="row.state" final-status="row.finalStatus"></span>',
+      template: '<span dt-status="row.state" final-status="row.finalStatus"></span>',
       sort: stateSorter,
       filter:'like'
     },

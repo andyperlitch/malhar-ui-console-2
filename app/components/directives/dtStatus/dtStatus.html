@@ -1,3 +1,3 @@
-<span ng-if="!appState">-</span>
-<span ng-if="appState" ng-class=" 'status-' + appState.toLowerCase() ">{{ appState }}</span>
+<span ng-if="!dtStatus">-</span>
+<span ng-if="dtStatus" ng-class=" 'status-' + dtStatus.toLowerCase() ">{{ dtStatus }}</span>
 <small ng-if="finalStatus && finalStatus !== 'UNDEFINED' " class="final-status" dt-text-title="final_status_title">({{ finalStatus }})</small>

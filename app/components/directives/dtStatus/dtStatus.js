@@ -16,14 +16,14 @@
 
 'use strict';
 
-angular.module('app.components.directives.appState', [])
-.directive('appState', function () {
+angular.module('app.components.directives.dtStatus', [])
+.directive('dtStatus', function () {
   return {
     restrict: 'A',
     scope: {
-      appState: '=',
+      dtStatus: '=',
       finalStatus: '='
     },
-    templateUrl: 'components/directives/appState/appState.html'
+    templateUrl: 'components/directives/dtStatus/dtStatus.html'
   };
 });
