@@ -32,7 +32,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
 ])
 
 // Widget Data Model
-.factory('ContainersListWidgetDataModel', function(BaseDataModel, ContainerCollection, dtText, containerManager, $filter) {
+.factory('ContainersListWidgetDataModel', function(BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings) {
 
   var jvmName_rgx = /^(\d+)@(.*)/;
   function processFormatter(value) {
@@ -71,7 +71,11 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
       this.resource = new ContainerCollection({
         appId: this.widgetScope.appId
       });
-      this.resource.fetch();
+      this.resource.fetch({
+        params: {
+          states: settings.NONENDED_CONTAINER_STATES.join(',')
+        }
+      });
       this.resource.subscribe(this.widgetScope);
       this.widgetScope.containerManager = containerManager;
       this.widgetScope.resource = this.resource;
