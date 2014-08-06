@@ -10,8 +10,6 @@
     "angular-pines-notify": "~1.0.0",
     "ng-breadcrumbs": "~0.1.0",
     "angular-strap": "~2.0.3",
-    "underscore": "~1.6.0",
-    "angular-underscore-module": "*",
     "angular-sanitize": "~1.2.21",
     "angular-mousewheel": "~1.0.4",
     "jquery": "~2.0.3",
@@ -23,7 +21,8 @@
     "ng-grid": "~2.0.11",
     "nvd3": "~1.1.15-beta",
     "angularjs-nvd3-directives": "~0.0.7",
-    "visibilityjs": "~1.2.1"
+    "visibilityjs": "~1.2.1",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.21"
@@ -31,9 +30,6 @@
   "resolutions": {
     "bootstrap": "~3.2.0",
     "jquery": "~2.0.3",
-    "d3": "~3.4.10",
-    "angular": "1.2.21",
-    "underscore": "~1.6.0",
-    "es5-shim": "~2.1.0"
+    "d3": "~3.4.10"
   }
 }
