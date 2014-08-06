@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('app.components.resources.ContainerModel', [
-  'underscore',
+  'lodash',
   'app.components.resources.BaseModel'
 ])
 .factory('ContainerModel', function(BaseModel, _) {
