@@ -80,7 +80,15 @@ describe('Resource: ApplicationModel', function() {
     
     describe('when the type is fetch, or undefined', function() {
 
-      
+      it('should not transform the response at all when it is fetch', function() {
+        var result = m.transformResponse(f_raw, 'fetch');
+        expect(result).toEqual(f_raw);
+      });
+
+      it('should not transform the response at all when type is not provided', function() {
+        var result = m.transformResponse(f_raw);
+        expect(result).toEqual(f_raw);
+      });
 
     });
 
