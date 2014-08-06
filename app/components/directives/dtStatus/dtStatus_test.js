@@ -82,7 +82,7 @@ describe('Directive: dtStatus', function () {
   describe('when no state is present', function() {
     beforeEach(function() {
       // Define and compile the element
-      element = angular.element('<span app-state></span>');
+      element = angular.element('<span dt-status></span>');
       element = compile(element)(scope);
       scope.$digest();
       isoScope = element.isolateScope();
