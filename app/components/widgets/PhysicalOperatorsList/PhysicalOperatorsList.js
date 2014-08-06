@@ -81,7 +81,7 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
           label: dtText.get('status_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span app-state="row.status"></span>'
+          template: '<span dt-status="row.status"></span>'
         },
         {
           id: 'tuplesProcessedPSMA',

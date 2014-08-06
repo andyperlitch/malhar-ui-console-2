@@ -16,7 +16,7 @@
 
 'use strict';
 
-describe('Directive: appState', function () {
+describe('Directive: dtStatus', function () {
 
   var element, scope, rootScope, isoScope, compile;
 
@@ -27,7 +27,7 @@ describe('Directive: appState', function () {
   });
 
   // load the directive's module
-  beforeEach(module('app.components.directives.appState', function($provide) {
+  beforeEach(module('app.components.directives.dtStatus', function($provide) {
     // Inject dependencies like this:
     // $provide.value('', mockThing);
 
@@ -44,7 +44,7 @@ describe('Directive: appState', function () {
     scope = $rootScope.$new();
 
     // Define and compile the element
-    element = angular.element('<span app-state="\'RUNNING\'" final-status="\'UNDEFINED\'"></span>');
+    element = angular.element('<span dt-status="\'RUNNING\'" final-status="\'UNDEFINED\'"></span>');
     element = compile(element)(scope);
     scope.$digest();
     isoScope = element.isolateScope();
@@ -65,7 +65,7 @@ describe('Directive: appState', function () {
   describe('when the state has ended and there is a final-status', function() {
     beforeEach(function() {
       // Define and compile the element
-      element = angular.element('<span app-state="\'FINISHED\'" final-status="\'FAILED\'"></span>');
+      element = angular.element('<span dt-status="\'FINISHED\'" final-status="\'FAILED\'"></span>');
       element = compile(element)(scope);
       scope.$digest();
       isoScope = element.isolateScope();
@@ -82,7 +82,7 @@ describe('Directive: appState', function () {
   describe('when no state is present', function() {
     beforeEach(function() {
       // Define and compile the element
-      element = angular.element('<span app-state></span>');
+      element = angular.element('<span dt-status></span>');
       element = compile(element)(scope);
       scope.$digest();
       isoScope = element.isolateScope();
@@ -101,7 +101,7 @@ describe('Directive: appState', function () {
       };
 
       // Define and compile the element
-      element = angular.element('<span app-state="data.state" final-status="data.finalStatus"></span>');
+      element = angular.element('<span dt-status="data.state" final-status="data.finalStatus"></span>');
       element = compile(element)(scope);
       scope.$digest();
       isoScope = element.isolateScope();
