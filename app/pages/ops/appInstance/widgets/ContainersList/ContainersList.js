@@ -29,7 +29,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
   'app.components.widgets.Base',
   'app.settings',
   'app.components.services.containerManager',
-  'app.components.filters.relativeTimestamp'
+  'app.components.filters.relativeTimestamp',
+  'app.pages.ops.appInstance.widgets.ContainersList.ContainersListPaletteCtrl'
 ])
 
 // Widget Data Model
@@ -78,37 +79,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
         }
       });
       this.resource.subscribe(this.widgetScope);
-      this.widgetScope.containerManager = containerManager;
       this.widgetScope.resource = this.resource;
-
       this.widgetScope.selected = [];
-
-      // Palette Methods
-      this.widgetScope.selectActive = function(excludeAppMaster) {
-        this.selected.length = 0;
-        _.each(this.resource.data, function(c) {
-          if (settings.NONENDED_CONTAINER_STATES.indexOf(c.state) >= 0) {
-            if (!excludeAppMaster || !containerManager.isAppMaster(c.id)) {
-              this.selected.push(c.id);
-            }
-          }
-        }, this);
-      };
-
-      this.widgetScope.retrieveKilled = function() {
-        this.resource.fetch();
-      };
-
-      this.widgetScope.deselectAll = function() {
-        this.selected.length = 0;
-      };
-
-      this.widgetScope.killSelected = function() {
-        _.each(this.selected, function(id) {
-          containerManager.kill({ id: id }, this.appId);
-        }, this);
-      };
-
       this.widgetScope.table_options = {
         row_limit: 10,
         initial_sorts: [

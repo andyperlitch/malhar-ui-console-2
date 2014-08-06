@@ -94,7 +94,8 @@ angular.module('app.settings', [])
       AppInstance              :'/ops/apps/:appId',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
       PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
-      Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId'
+      Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
+      ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName'
     },
 
     stramEvents: {

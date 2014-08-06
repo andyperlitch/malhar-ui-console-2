@@ -16,11 +16,12 @@
 'use strict';
 
 angular.module('app.components.services.containerManager', [
+  'app.components.resources.ContainerLogCollection',
   'app.components.services.confirm',
   'app.components.services.dtText',
   'app.components.services.getUri'
 ])
-.factory('containerManager', function(confirm, dtText, getUri, $http) {
+.factory('containerManager', function(confirm, dtText, getUri, $http, ContainerLogCollection) {
 
   return {
 
@@ -59,13 +60,28 @@ angular.module('app.components.services.containerManager', [
         .then(function() {
           $http.post(url);
         });
-        
+
       }
 
       else {
         $http.post(url);
       }
 
+    },
+
+    /**
+     * Factory method that creates a ContainerLogCollection for
+     the given container.
+     * @param  {object}  container        The object representing the container
+     * @return {ContainerLogCollection}   The collection resource of logs for given container
+     */
+    getLogsFor: function(container, appId) {
+      var logs = new ContainerLogCollection({
+        containerId: container.id,
+        appId: container.appId || appId
+      });
+      logs.fetch();
+      return logs;
     }
   };
 
