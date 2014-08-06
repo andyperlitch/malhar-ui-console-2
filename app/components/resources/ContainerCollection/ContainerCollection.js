@@ -16,11 +16,10 @@
 'use strict';
 
 angular.module('app.components.resources.ContainerCollection', [
-  'app.settings',
   'app.components.resources.ContainerModel',
   'app.components.resources.BaseCollection'
 ])
-.factory('ContainerCollection', function(BaseCollection, ContainerModel, settings) {
+.factory('ContainerCollection', function(BaseCollection, ContainerModel) {
 
   var ContainerCollection = BaseCollection.extend({
 

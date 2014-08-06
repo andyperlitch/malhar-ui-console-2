@@ -25,7 +25,7 @@ angular.module('app.settings', [])
     maxAlertActions: 3,
     statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],
     NONENDED_APP_STATES: ['SUBMITTED','ACCEPTED','RUNNING'],
-    NONENDED_CONTAINER_STATES: ['ACTIVE'],
+    NONENDED_CONTAINER_STATES: ['ACTIVE', 'ALLOCATED'],
     VISIBILITY_TIMEOUT: 20000,
     urls: {
 

@@ -23,6 +23,7 @@
 
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
+  'lodash',
   'app.components.services.dtText',
   'app.components.resources.ContainerCollection',
   'app.components.widgets.Base',
@@ -32,7 +33,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
 ])
 
 // Widget Data Model
-.factory('ContainersListWidgetDataModel', function(BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings) {
+.factory('ContainersListWidgetDataModel', function(_, BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings) {
 
   var jvmName_rgx = /^(\d+)@(.*)/;
   function processFormatter(value) {
@@ -82,9 +83,36 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
 
       this.widgetScope.selected = [];
 
+      // Palette Methods
+      this.widgetScope.selectActive = function(excludeAppMaster) {
+        this.selected.length = 0;
+        _.each(this.resource.data, function(c) {
+          if (settings.NONENDED_CONTAINER_STATES.indexOf(c.state) >= 0) {
+            if (!excludeAppMaster || !containerManager.isAppMaster(c.id)) {
+              this.selected.push(c.id);
+            }
+          }
+        }, this);
+      };
+
+      this.widgetScope.retrieveKilled = function() {
+        this.resource.fetch();
+      };
+
+      this.widgetScope.deselectAll = function() {
+        this.selected.length = 0;
+      };
+
+      this.widgetScope.killSelected = function() {
+        _.each(this.selected, function(id) {
+          containerManager.kill({ id: id }, this.appId);
+        }, this);
+      };
+
       this.widgetScope.table_options = {
-        row_limit: 20,
+        row_limit: 10,
         initial_sorts: [
+          { id: 'state', dir: '+' },
           { id: 'id', dir: '+' }
         ]
       };
