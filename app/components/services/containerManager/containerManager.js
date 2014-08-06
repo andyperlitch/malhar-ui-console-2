@@ -15,21 +15,13 @@
 */
 'use strict';
 
-angular.module('app.components.resources.ContainerCollection', [
-  'app.components.resources.ContainerModel',
-  'app.components.resources.BaseCollection'
-])
-.factory('ContainerCollection', function(BaseCollection, ContainerModel) {
+angular.module('app.components.services.containerManager', [])
+.factory('containerManager', function() {
 
-  var ContainerCollection = BaseCollection.extend({
-
-    urlKey: 'Container',
-    topicKey: 'Containers',
-    model: ContainerModel,
-    transformResponse: 'containers'
-
-  });
-
-  return ContainerCollection;
+  return {
+    isAppMaster: function(id) {
+      return (/_0+1$/).test(id);
+    }
+  };
 
 });

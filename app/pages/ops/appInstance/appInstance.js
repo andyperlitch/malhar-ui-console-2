@@ -27,6 +27,7 @@ angular.module('app.pages.ops.appInstance', [
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
   'app.pages.ops.appInstance.widgets.PhysicalOperatorsList',
+  'app.pages.ops.appInstance.widgets.ContainersList',
   'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appinstance.widgets.dag.LogicalDag',
   'app.pages.ops.appinstance.widgets.dag.PhysicalDag'
@@ -54,6 +55,7 @@ angular.module('app.pages.ops.appInstance', [
     StramEventsWidgetDef,
     LogicalOperatorsListWidgetDef,
     PhysicalOperatorsListWidgetDef,
+    ContainersListWidgetDef,
     breadcrumbs,
     dashboardOptionsFactory
   ) {
@@ -90,15 +92,16 @@ angular.module('app.pages.ops.appInstance', [
           width: '100%'
         }
       }),
-      new LogicalOperatorsListWidgetDef({ name: 'LogicalOperatorsList' }),
-      new PhysicalOperatorsListWidgetDef({ name: 'PhysicalOperatorsList' })
+      new LogicalOperatorsListWidgetDef({ name: 'Logical Operators List' }),
+      new PhysicalOperatorsListWidgetDef({ name: 'Physical Operators List' }),
+      new ContainersListWidgetDef({ name: 'Containers List'})
     ];
 
-    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'LogicalOperatorsList'], function (name) {
+    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List'], function (name) {
       return { name: name };
     });
 
-    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'PhysicalOperatorsList'], function (name) {
+    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Physical Operators List', 'Containers List'], function (name) {
       return { name: name };
     });
 
@@ -109,14 +112,12 @@ angular.module('app.pages.ops.appInstance', [
           width: '100%' //TODO if this widget is added again it will have width from widgetDefinitions
         }
       },
-      {
-        name: 'Physical DAG'
-      }
+      { name: 'Physical DAG' }
     ];
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance',
-      storageHash: 'l324kj52cvl75',
+      storageHash: 'asdf5797a6sdf0',
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
