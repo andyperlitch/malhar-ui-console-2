@@ -7,6 +7,8 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+/* jshint node: true */
+
 // Get config file
 var config = require('./config');
 
@@ -273,7 +275,7 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
+        jshintrc: '.jshintrc-grunt',
         reporter: require('jshint-stylish')
       },
       all: appCodeFiles.concat('Gruntfile.js'),
