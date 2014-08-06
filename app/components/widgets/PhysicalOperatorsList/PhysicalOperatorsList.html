@@ -1,14 +1,27 @@
-<p class="palette">
+<div class="palette">
+    
+    <!-- when none are selected -->
     <span ng-if="!selected.length">
       <button class="btn btn-default" disabled>select an operator</button>
     </span>
+    
+    <!-- when one is selected -->
     <span ng-if="selected.length === 1">
       <a class="btn btn-primary" dt-page-href="PhysicalOperator" params="{ appId: appInstance.data.id, operatorId: selected[0] }">
         <span class="glyphicon glyphicon-eye-open"></span>
         <span dt-text="inspect"></span>
       </a>
     </span>
-</p>
+
+    <!-- when multple are selected -->
+    <span ng-if="selected.length > 1">
+      <button class="btn btn-default" disabled>
+        <span dt-text>no actions available</span>
+      </button>
+    </span> 
+
+    <span dt-table-selected-count="selected"></span>
+</div>
 <mlhr-table 
     options="table_options"
     columns="columns" 

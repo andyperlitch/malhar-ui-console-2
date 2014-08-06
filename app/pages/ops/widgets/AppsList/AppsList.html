@@ -1,4 +1,4 @@
-<p class="palette">
+<div class="palette">
     <span ng-show="selected.length === 1">
         <a dt-page-href="AppInstance" params="{ appId: selected[0] }" class="btn btn-primary">
             <span class="glyphicon glyphicon-eye-open"></span>
@@ -17,7 +17,8 @@
         <span class="glyphicon glyphicon-download"></span>
         <span dt-text="retrieve ended apps"></span>
     </button>
-</p>
+    <span dt-table-selected-count="selected"></span>
+</div>
 <mlhr-table 
     options="options"
     columns="columns" 
