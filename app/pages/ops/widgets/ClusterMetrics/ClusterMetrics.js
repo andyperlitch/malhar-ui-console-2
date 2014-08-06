@@ -18,7 +18,6 @@
 
 angular.module('app.pages.ops.widgets.ClusterMetrics', [
   'app.components.widgets.Base',
-  'underscore',
   'app.components.resources.ClusterMetrics'
 ])
 .factory('ClusterMetricsDataModel', function(BaseDataModel, ClusterMetrics) {

@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('app.components.resources.BaseResource', [
-  'underscore',
+  'lodash',
   'ui.websocket',
   'app.components.services.extend'
 ])

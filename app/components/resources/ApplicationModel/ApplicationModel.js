@@ -22,7 +22,7 @@
  */
 
 angular.module('app.components.resources.ApplicationModel', [
-  'underscore',
+  'lodash',
   'app.components.resources.BaseModel',
   'app.components.filters.relativeTimestamp',
   'app.components.filters.commaGroups'

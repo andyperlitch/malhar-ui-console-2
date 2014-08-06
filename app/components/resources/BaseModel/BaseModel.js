@@ -39,7 +39,7 @@
  */
 
 angular.module('app.components.resources.BaseModel', [
-  'underscore',
+  'lodash',
   'app.components.services.getUri',
   'app.components.resources.BaseResource'
 ])
