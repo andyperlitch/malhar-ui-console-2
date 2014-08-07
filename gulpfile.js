@@ -10,8 +10,7 @@ var dev = {
   scripts: [
     'app/*.js',
     'app/components/**/*.js',
-    'app/pages/**/*.js',
-    'app/vendor/**/*.js'
+    'app/pages/**/*.js'
   ],
   images: 'app/images/*',
   fonts: 'app/bower_components/bootstrap/fonts/*',
@@ -33,9 +32,18 @@ var options = {
   uglify: { mangle: false }
 };
 
-gulp.task('scripts', function () {
+gulp.task('jshint', function () {
+  var testFileCondition = /_test\.js/;
+
+  gulp.src(dev.scripts)
+    .pipe($.ignore.include(testFileCondition))
+    .pipe($.jshint('test/.jshintrc'))
+    .pipe($.jshint.reporter('jshint-stylish'));
+
   return gulp.src(dev.scripts)
-    .pipe($.size()); //TODO jshint
+    .pipe($.ignore.exclude(testFileCondition))
+    .pipe($.jshint())
+    .pipe($.jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('less', function () {
@@ -118,7 +126,7 @@ gulp.task('copy', function() {
     .pipe(gulp.dest(prod.images));
 });
 
-gulp.task('dist', ['less', 'minify-css', 'copy'], function() {
+gulp.task('dist', ['jshint', 'less', 'minify-css', 'copy'], function() {
   gulp.src(dev.index)
     .pipe($.usemin({
       js: [$.uglify(options.uglify)]
