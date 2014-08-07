@@ -5,17 +5,54 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 var dev = {
+  index: 'app/index.html',
+  less: 'app/styles/main.less',
   scripts: [
     'app/*.js',
     'app/components/**/*.js',
     'app/pages/**/*.js',
     'app/vendor/**/*.js'
+  ],
+  images: 'app/images/*',
+  fonts: 'app/bower_components/bootstrap/fonts/*',
+  templates: [
+    'app/pages/**/*.html',
+    'app/components/**/*.html'
   ]
+};
+
+var prod = {
+  dir: 'dist',
+  images: 'dist/images',
+  styles: 'dist/styles',
+  fonts: 'dist/fonts'
+};
+
+var options = {
+  clean: { read: false },
+  uglify: { mangle: false }
 };
 
 gulp.task('scripts', function () {
   return gulp.src(dev.scripts)
-    .pipe($.size());
+    .pipe($.size()); //TODO jshint
+});
+
+gulp.task('less', function () {
+  gulp.src('app/styles/main.less')
+    .pipe($.less({
+      paths: ['app/styles']
+    }))
+    .pipe(gulp.dest('.tmp/styles'));
+});
+
+gulp.task('minify-css', function() {
+  //gulp.src('app/styles/main.css')
+  gulp.src('.tmp/styles/main.css')
+    .pipe($.minifyCss({
+      relativeTo: 'app/styles'
+    }))
+    .pipe(gulp.dest(prod.styles));
 });
 
 gulp.task('connect', function () {
@@ -34,8 +71,26 @@ gulp.task('connect', function () {
     });
 });
 
+gulp.task('connect:dist', function () {
+  var connect = require('connect');
+  var app = connect()
+    .use(connect.static('dist'))
+    .use(connect.directory('dist'))
+    .use(require('./gateway'));
+
+  require('http').createServer(app)
+    .listen(9001)
+    .on('listening', function () {
+      console.log('Started connect web server on http://localhost:9001');
+    });
+});
+
 gulp.task('serve', ['connect'], function () {
   require('opn')('http://localhost:9000');
+});
+
+gulp.task('serve:dist', ['connect:dist'], function () {
+  require('opn')('http://localhost:9001');
 });
 
 gulp.task('watch', ['connect', 'serve'], function () {
@@ -43,8 +98,30 @@ gulp.task('watch', ['connect', 'serve'], function () {
 
   gulp.watch([
     'app/**/*.html',
+    '.tmp/styles/main.css',
     'app/**/*.js'
   ]).on('change', function (file) {
     server.changed(file.path);
   });
+
+  gulp.watch(['app/styles/**/*.less'], ['less']);
+});
+
+gulp.task('copy', function() {
+  gulp.src(dev.templates, { base: 'app' }) //TODO
+    .pipe(gulp.dest(prod.dir));
+
+  gulp.src(dev.fonts)
+    .pipe(gulp.dest(prod.fonts));
+
+  gulp.src(dev.images)
+    .pipe(gulp.dest(prod.images));
+});
+
+gulp.task('dist', ['less', 'minify-css', 'copy'], function() {
+  gulp.src(dev.index)
+    .pipe($.usemin({
+      js: [$.uglify(options.uglify)]
+    }))
+    .pipe(gulp.dest(prod.dir));
 });
