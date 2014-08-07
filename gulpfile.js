@@ -133,11 +133,11 @@ gulp.task('serve:dist', ['connect:dist'], function () {
   require('opn')('http://localhost:9001');
 });
 
-gulp.task('watch', ['less', 'connect', 'serve'], function () {
+gulp.task('watch', ['connect', 'serve'], function () {
   var server = $.livereload();
 
   gulp.watch([
-    'app/**/*.html',
+    dev.index,
     '.tmp/styles/main.css',
     '.tmp/templates.js',
     dev.scripts
