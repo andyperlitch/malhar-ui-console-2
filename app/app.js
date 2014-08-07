@@ -47,6 +47,7 @@ angular.module('app', [
   'app.settings'
 ])
 .config(function (settings, webSocketProvider, $routeProvider) {
+    console.log('_app config');
   webSocketProvider.setWebSocketURL('ws://' + settings.GATEWAY_WEBSOCKET_HOST + '/pubsub');
   webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 
