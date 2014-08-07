@@ -20,10 +20,17 @@
 
 describe('Directive: dtContainerShorthand', function () {
 
-  var element, scope, rootScope, isoScope, compile;
+  var element, scope, rootScope, isoScope, compile, requestedFilter;
 
   // load the directive's module
-  beforeEach(module('app.components.directives.dtContainerShorthand'));
+  beforeEach(module('app.components.directives.dtContainerShorthand', function($provide) {
+    $provide.value('$filter', function(key) {
+      requestedFilter = key;
+      return function() {
+        return 'super fun time';
+      };
+    });
+  }));
 
   beforeEach(inject(function ($compile, $rootScope) {
     // Cache these for reuse    
@@ -43,8 +50,16 @@ describe('Directive: dtContainerShorthand', function () {
     isoScope = element.isolateScope();
   }));
 
-  it('should only use the last part of the container id', function() {
-    expect(element.text()).toEqual('0001');
+  it('should use the dtContainerShorthand filter', function() {
+    expect(requestedFilter).toEqual('dtContainerShorthand');
   });
+
+  it('should place the result of the filter function into the element', function() {
+    expect(element.text()).toEqual('super fun time');
+  });
+
+  // it('should only use the last part of the container id', function() {
+  //   expect(element.text()).toEqual('0001');
+  // });
 
 });

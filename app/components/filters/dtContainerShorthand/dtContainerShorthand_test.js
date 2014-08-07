@@ -15,19 +15,22 @@
 */
 'use strict';
 
-angular.module('app.components.directives.dtContainerShorthand', [
-  'app.components.filters.dtContainerShorthand'
-])
-.directive('dtContainerShorthand', function($filter) {
+describe('filter: dtContainerShorthand', function() {
+  
+  beforeEach(module('app.components.filters.dtContainerShorthand'));
 
-  var fn = $filter('dtContainerShorthand');
+  var fn;
 
-  return {
-    scope: {
-      id: '=dtContainerShorthand'
-    },
-    link: function(scope, element) {
-      element.text(fn(scope.id));
-    }
-  };
+  beforeEach(inject(function($filter) {
+    fn = $filter('dtContainerShorthand');
+  }));
+
+  it('should be a function', function() {
+    expect(typeof fn).toEqual('function');
+  });
+
+  it('should only return the last part of the container id', function() {
+    expect(fn('container_9283749827394234_00003')).toEqual('00003');
+  });
+
 });
