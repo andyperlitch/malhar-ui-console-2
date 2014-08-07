@@ -46,6 +46,19 @@ gulp.task('jshint', function () {
     .pipe($.jshint.reporter('jshint-stylish'));
 });
 
+gulp.task('test', function() {
+  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
+    .pipe($.karma({
+      configFile: 'test/karma-unit.conf.js',
+      //configFile: 'test/karma-coverage.conf.js',
+      action: 'run',
+      browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+    }))
+    .on('error', function(err) {
+      throw err;
+    });
+});
+
 gulp.task('less', function () {
   gulp.src('app/styles/main.less')
     .pipe($.less({
@@ -126,7 +139,7 @@ gulp.task('copy', function() {
     .pipe(gulp.dest(prod.images));
 });
 
-gulp.task('dist', ['jshint', 'less', 'minify-css', 'copy'], function() {
+gulp.task('dist', ['jshint', 'test', 'less', 'minify-css', 'copy'], function() {
   gulp.src(dev.index)
     .pipe($.usemin({
       js: [$.uglify(options.uglify)]
