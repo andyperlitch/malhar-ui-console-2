@@ -5,6 +5,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 var dev = {
+  dir: 'app',
   index: 'app/index.html',
   less: 'app/styles/main.less',
   scripts: [
@@ -69,8 +70,7 @@ gulp.task('less', function () {
 });
 
 gulp.task('ngtemplates', function () {
-  gulp.src(dev.templates)
-    .pipe($.htmlmin({collapseWhitespace: true}))
+  gulp.src(dev.templates, { base: dev.dir })
     .pipe($.ngtemplate({
       module: 'app'
     }))
@@ -79,7 +79,6 @@ gulp.task('ngtemplates', function () {
 });
 
 gulp.task('minify-css', function () {
-  //gulp.src('app/styles/main.css')
   gulp.src('.tmp/styles/main.css')
     .pipe($.minifyCss({
       relativeTo: 'app/styles'
@@ -140,9 +139,6 @@ gulp.task('watch', ['less', 'connect', 'serve'], function () {
 });
 
 gulp.task('copy', function () {
-  gulp.src(dev.templates, { base: 'app' }) //TODO
-    .pipe(gulp.dest(prod.dir));
-
   gulp.src(dev.fonts)
     .pipe(gulp.dest(prod.fonts));
 
