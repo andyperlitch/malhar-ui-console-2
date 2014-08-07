@@ -1,5 +1,13 @@
 'use strict';
 
+//TODO
+/*
+- multiple karma configurations
+- fix rimraf
+- don't use template.js in dev
+- fix less and themes, load bootstrap theme
+*/
+
 var gulp = require('gulp');
 
 var $ = require('gulp-load-plugins')();
