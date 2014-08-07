@@ -138,6 +138,11 @@ gulp.task('watch', ['less', 'connect', 'serve'], function () {
   gulp.watch(['app/styles/**/*.less'], ['less']);
 });
 
+gulp.task('clean', function() {
+  return gulp.src(prod.dir, options.clean)
+    .pipe($.rimraf({ force: true }));
+});
+
 gulp.task('copy', function () {
   gulp.src(dev.fonts)
     .pipe(gulp.dest(prod.fonts));
@@ -154,6 +159,6 @@ gulp.task('usemin', function () {
     .pipe(gulp.dest(prod.dir));
 });
 
-gulp.task('dist', ['jshint', 'ngtemplates', 'test', 'less', 'minify-css', 'copy', 'usemin']);
+gulp.task('dist', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'minify-css', 'copy', 'usemin']);
 
 gulp.task('travis', ['jshint', 'test']);
