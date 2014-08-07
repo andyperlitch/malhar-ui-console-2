@@ -34,6 +34,7 @@ angular.module('app', [
   'app.components.filters.timeSince',
   'app.components.filters.windowOffset',
   'app.components.directives.dtText',
+  'app.components.directives.dtTableSelectedCount',
   'app.components.services.dtText',
   'app.components.services.extend',
 

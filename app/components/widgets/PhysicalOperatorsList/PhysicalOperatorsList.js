@@ -43,7 +43,7 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
 
       // Set the table options
       this.widgetScope.table_options = {
-        row_limit: 20,
+        row_limit: 10,
         initial_sorts: [
           { id: 'id', dir: '+' }
         ],

@@ -29,7 +29,7 @@ angular.module('app.components.services.dashboardOptionsFactory', [
         storage: localStorage,
         settingsModalOptions: defaultSettingsModalOptions,
         onSettingsClose: defaultOnSettingsClose,
-        widgetButtons: true
+        widgetButtons: false
       };
       return angular.extend({}, defaults, o);
     };
