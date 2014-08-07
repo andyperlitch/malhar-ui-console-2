@@ -6,6 +6,7 @@
 - fix rimraf
 - don't use template.js in dev
 - fix less and themes, load bootstrap theme
+- watch on ngtemplates
 */
 
 var gulp = require('gulp');
@@ -138,12 +139,14 @@ gulp.task('watch', ['less', 'connect', 'serve'], function () {
   gulp.watch([
     'app/**/*.html',
     '.tmp/styles/main.css',
+    '.tmp/templates.js',
     'app/**/*.js'
   ]).on('change', function (file) {
     server.changed(file.path);
   });
 
   gulp.watch(['app/styles/**/*.less'], ['less']);
+  gulp.watch(dev.templates, ['ngtemplates']);
 });
 
 gulp.task('clean', function() {
