@@ -5,6 +5,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 var dev = {
+  dir: 'app',
   index: 'app/index.html',
   less: 'app/styles/main.less',
   scripts: [
@@ -46,7 +47,7 @@ gulp.task('jshint', function () {
     .pipe($.jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('test', function() {
+gulp.task('test', function () {
   return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
     .pipe($.karma({
       configFile: 'test/karma-unit.conf.js',
@@ -55,7 +56,7 @@ gulp.task('test', function() {
       //browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
       browsers: ['PhantomJS']
     }))
-    .on('error', function(err) {
+    .on('error', function (err) {
       throw err;
     });
 });
@@ -68,8 +69,16 @@ gulp.task('less', function () {
     .pipe(gulp.dest('.tmp/styles'));
 });
 
-gulp.task('minify-css', function() {
-  //gulp.src('app/styles/main.css')
+gulp.task('ngtemplates', function () {
+  gulp.src(dev.templates, { base: dev.dir })
+    .pipe($.ngtemplate({
+      module: 'app'
+    }))
+    .pipe($.concat('templates.js'))
+    .pipe(gulp.dest('.tmp'));
+});
+
+gulp.task('minify-css', function () {
   gulp.src('.tmp/styles/main.css')
     .pipe($.minifyCss({
       relativeTo: 'app/styles'
@@ -115,7 +124,7 @@ gulp.task('serve:dist', ['connect:dist'], function () {
   require('opn')('http://localhost:9001');
 });
 
-gulp.task('watch', ['connect', 'serve'], function () {
+gulp.task('watch', ['less', 'connect', 'serve'], function () {
   var server = $.livereload();
 
   gulp.watch([
@@ -129,10 +138,7 @@ gulp.task('watch', ['connect', 'serve'], function () {
   gulp.watch(['app/styles/**/*.less'], ['less']);
 });
 
-gulp.task('copy', function() {
-  gulp.src(dev.templates, { base: 'app' }) //TODO
-    .pipe(gulp.dest(prod.dir));
-
+gulp.task('copy', function () {
   gulp.src(dev.fonts)
     .pipe(gulp.dest(prod.fonts));
 
@@ -140,12 +146,14 @@ gulp.task('copy', function() {
     .pipe(gulp.dest(prod.images));
 });
 
-gulp.task('dist', ['jshint', 'test', 'less', 'minify-css', 'copy'], function() {
+gulp.task('usemin', function () {
   gulp.src(dev.index)
     .pipe($.usemin({
       js: [$.uglify(options.uglify)]
     }))
     .pipe(gulp.dest(prod.dir));
 });
+
+gulp.task('dist', ['jshint', 'ngtemplates', 'test', 'less', 'minify-css', 'copy', 'usemin']);
 
 gulp.task('travis', ['jshint', 'test']);
