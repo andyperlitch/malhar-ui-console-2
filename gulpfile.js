@@ -52,7 +52,8 @@ gulp.task('test', function() {
       configFile: 'test/karma-unit.conf.js',
       //configFile: 'test/karma-coverage.conf.js',
       action: 'run',
-      browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+      //browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+      browsers: ['PhantomJS']
     }))
     .on('error', function(err) {
       throw err;
@@ -146,3 +147,5 @@ gulp.task('dist', ['jshint', 'test', 'less', 'minify-css', 'copy'], function() {
     }))
     .pipe(gulp.dest(prod.dir));
 });
+
+gulp.task('travis', ['jshint', 'test']);
