@@ -15,16 +15,19 @@
 */
 'use strict';
 
-angular.module('app.components.directives.dtContainerShorthand', [])
-.directive('dtContainerShorthand', function() {
+angular.module('app.components.directives.dtContainerShorthand', [
+  'app.components.filters.dtContainerShorthand'
+])
+.directive('dtContainerShorthand', function($filter) {
+
+  var fn = $filter('dtContainerShorthand');
+
   return {
     scope: {
       id: '=dtContainerShorthand'
     },
     link: function(scope, element) {
-      var parts = scope.id.split('_');
-      var shorthand = parts[parts.length -1];
-      element.text(shorthand);
+      element.text(fn(scope.id));
     }
   };
 });

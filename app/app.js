@@ -33,6 +33,7 @@ angular.module('app', [
   'app.components.filters.byte',
   'app.components.filters.timeSince',
   'app.components.filters.windowOffset',
+  'app.components.filters.dtContainerShorthand',
   'app.components.directives.dtText',
   'app.components.directives.dtTableSelectedCount',
   'app.components.services.dtText',
@@ -43,12 +44,12 @@ angular.module('app', [
   'app.pages.ops.appInstance',
   'app.pages.ops.appInstance.logicalOperator',
   'app.pages.ops.appInstance.physicalOperator',
+  'app.pages.ops.appInstance.container',
 
   // misc
   'app.settings'
 ])
   .config(function (settings, webSocketProvider, $routeProvider) {
-    console.log('_app config');
     webSocketProvider.setWebSocketURL('ws://' + settings.GATEWAY_WEBSOCKET_HOST + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 

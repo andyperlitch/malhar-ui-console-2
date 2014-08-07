@@ -1,6 +1,6 @@
 /*
 * Copyright (c) 2013 DataTorrent, Inc. ALL Rights Reserved.
-* awesome
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -15,26 +15,11 @@
 */
 'use strict';
 
-/**
- * ContainerOverviewWidget
- *
- * Displays overview information about a container
- */
-
-// Module Definition
-angular.module('app.pages.ops.appInstance.container.widgets.ContainerOverview', [
-  'app.components.widgets.Base',
-  'app.settings'
-])
-
-// Widget Definition
-.factory('ContainerOverviewWidgetDef', function(BaseWidget) {
-  var ContainerOverviewWidgetDef = BaseWidget.extend({
-    defaults: {
-      title: 'Container Overview',
-      templateUrl: 'pages/ops/appInstance/container/widgets/ContainerOverview/ContainerOverview.html'
-    }
-  });
-
-  return ContainerOverviewWidgetDef;
+angular.module('app.components.filters.dtContainerShorthand', [])
+.filter('dtContainerShorthand', function() {
+  return function(id) {
+    var parts = id.split('_');
+    var shorthand = parts[parts.length -1];
+    return shorthand;
+  };
 });
