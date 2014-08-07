@@ -17,12 +17,18 @@
 
 describe('Service: containerManager', function () {
 
-  var mocks;
+  var mocks, constrOpts;
 
   beforeEach(function() {
     mocks = {};
     mocks.confirm = function() {
       return mocks.confirmDeferred.promise;
+    };
+    mocks.ContainerLogCollection = function(options) {
+      constrOpts = options;
+    };
+    mocks.ContainerLogCollection.prototype.fetch = function() {
+
     };
     mocks.settings = {
       actions: {
@@ -36,6 +42,7 @@ describe('Service: containerManager', function () {
   beforeEach(module('app.components.services.containerManager', function($provide) {
     $provide.value('confirm', mocks.confirm);
     $provide.constant('settings', mocks.settings);
+    $provide.value('ContainerLogCollection', mocks.ContainerLogCollection);
   }));
 
   // instantiate service
@@ -143,6 +150,33 @@ describe('Service: containerManager', function () {
         $httpBackend.flush();
       });
 
+    });
+
+  });
+
+  describe('the getLogsFor method', function() {
+    
+    it('should return a ContainerLogCollection', function() {
+      var result = containerManager.getLogsFor({ id: 'ctnr1', appId: 'app1' });
+      expect(result instanceof mocks.ContainerLogCollection).toEqual(true);
+    });
+
+    it('should pass an object with containerId and appId', function() {
+      containerManager.getLogsFor({ id: 'ctnr1', appId: 'app1' });
+      expect(constrOpts.containerId).toEqual('ctnr1');
+      expect(constrOpts.appId).toEqual('app1');
+    });
+
+    it('should call fetch', function() {
+      spyOn(mocks.ContainerLogCollection.prototype, 'fetch');
+      containerManager.getLogsFor({ id: 'ctnr1', appId: 'app1' });
+      expect(mocks.ContainerLogCollection.prototype.fetch).toHaveBeenCalled();
+    });
+
+    it('should be able to take appId as a second argument', function() {
+      containerManager.getLogsFor({ id: 'ctnr1' }, 'app1');
+      expect(constrOpts.containerId).toEqual('ctnr1');
+      expect(constrOpts.appId).toEqual('app1');
     });
 
   });
