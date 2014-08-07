@@ -71,7 +71,7 @@ gulp.task('test', function () {
 });
 
 gulp.task('less', function () {
-  gulp.src('app/styles/main.less')
+  return gulp.src('app/styles/main.less')
     .pipe($.less({
       paths: ['app/styles']
     }))
@@ -133,7 +133,7 @@ gulp.task('serve:dist', ['connect:dist'], function () {
   require('opn')('http://localhost:9001');
 });
 
-gulp.task('watch', ['connect', 'serve'], function () {
+gulp.task('watch', ['less', 'serve'], function () {
   var server = $.livereload();
 
   gulp.watch([
