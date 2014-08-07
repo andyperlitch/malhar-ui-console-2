@@ -59,6 +59,9 @@ angular.module('app.pages.ops', [
         directive: 'wt-bar-chart',
         dataAttrName: 'data',
         dataModelType: RandomMinutesDataModel,
+        dataModelArgs: {
+          limit: 1000
+        },
         style: {
           width: '40%'
         }
