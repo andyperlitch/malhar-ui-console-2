@@ -46,17 +46,17 @@ angular.module('app', [
   // misc
   'app.settings'
 ])
-.config(function (settings, webSocketProvider, $routeProvider) {
+  .config(function (settings, webSocketProvider, $routeProvider) {
     console.log('_app config');
-  webSocketProvider.setWebSocketURL('ws://' + settings.GATEWAY_WEBSOCKET_HOST + '/pubsub');
-  webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
+    webSocketProvider.setWebSocketURL('ws://' + settings.GATEWAY_WEBSOCKET_HOST + '/pubsub');
+    webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 
-  // Catchall route
-  $routeProvider
-    .otherwise({
-      redirectTo: '/ops'
-    });
-});
+    // Catchall route
+    $routeProvider
+      .otherwise({
+        redirectTo: '/ops'
+      });
+  });
 
 angular.module('exceptionOverride', []).factory('$exceptionHandler', function () {
   return function (exception, cause) {
@@ -65,6 +65,6 @@ angular.module('exceptionOverride', []).factory('$exceptionHandler', function ()
   };
 });
 
-angular.module('lodash', []).factory('_', function($window) {
+angular.module('lodash', []).factory('_', function ($window) {
   return $window._; // Lodash
 });
