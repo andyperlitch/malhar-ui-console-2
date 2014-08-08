@@ -76,9 +76,20 @@ angular.module('app.components.services.containerManager', [
      * @return {ContainerLogCollection}   The collection resource of logs for given container
      */
     getLogsFor: function(container, appId) {
+
+      appId = container.appId || appId;
+
+      if (!appId) {
+        throw new Error('The containerManager::getLogsFor method require an appId to be specified, either on the container object or as a second argument.');
+      }
+
+      if (typeof container === 'string') {
+        container = { id: container };
+      }
+
       var logs = new ContainerLogCollection({
         containerId: container.id,
-        appId: container.appId || appId
+        appId: appId
       });
       logs.fetch();
       return logs;

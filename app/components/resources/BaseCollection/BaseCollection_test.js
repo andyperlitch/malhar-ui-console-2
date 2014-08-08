@@ -76,6 +76,15 @@ describe('Resource: BaseCollection', function () {
     expect(c.topic).toBeDefined();
   });
 
+  it('should set the params directly on the object itself', function() {
+    c = new C({
+      appId: 'awesome',
+      id: 'wicked'
+    });
+    expect(c.appId).toEqual('awesome');
+    expect(c.id).toEqual('wicked');
+  });
+
   describe('the get method', function() {
     
     it('should look for the object with the idAttribute of id', function() {

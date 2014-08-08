@@ -23,6 +23,7 @@
 
 // Module Definition
 angular.module('app.pages.ops.appInstance.container.widgets.ContainerOverview', [
+  'app.components.directives.containerLogsDropdown',
   'app.components.widgets.Base',
   'app.settings'
 ])

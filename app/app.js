@@ -36,6 +36,7 @@ angular.module('app', [
   'app.components.filters.dtContainerShorthand',
   'app.components.directives.dtText',
   'app.components.directives.dtTableSelectedCount',
+  'app.components.directives.containerLogsDropdown',
   'app.components.services.dtText',
   'app.components.services.extend',
 

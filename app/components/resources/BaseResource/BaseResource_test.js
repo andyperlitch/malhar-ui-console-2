@@ -67,7 +67,7 @@ describe('Service: BaseResource', function () {
 
   describe('the fetch method', function() {
       
-    var C, r;
+    var C, r, reqHandler;
 
     beforeEach(function() {
       C = BaseResource.extend({
@@ -76,30 +76,73 @@ describe('Service: BaseResource', function () {
         }
       });
       r = new C();
+      r.url = '/my-url';
+      reqHandler = $httpBackend.whenGET(/\/my\-url(\?key=value)?/);
+      reqHandler.respond({});
     });
 
     it('should make a GET request to this.url with any passed options', function() {
-
-      $httpBackend.whenGET('/my-url?key=value').respond({});
-
-      r.url = '/my-url';
       r.fetch({ params: { key: 'value' }});
-
       $httpBackend.expectGET('/my-url?key=value');
       $httpBackend.flush();
     });
 
     it('should return a promise', function() {
-      
-      $httpBackend.whenGET('/my-url?key=value').respond({});
-
-      r.url = '/my-url';
-      var result = r.fetch({ params: { key: 'value' }});
-      
+      var result = r.fetch({ params: { key: 'value' }});      
       $httpBackend.flush();
-      
       expect(typeof result.then).toEqual('function');
+    });
 
+    it('should set fetching=true after it is called', function() {
+      r.fetch({ params: { key: 'value' }});
+      expect(r.fetching).toEqual(true);
+      $httpBackend.flush();
+    });
+
+    it('should set fetching=false after the server responds', function() {
+      r.fetch();
+      $httpBackend.flush();
+      expect(r.fetching).toEqual(false);
+    });
+
+    it('should set fetching=false after the server errors', function() {
+      reqHandler.respond(404, {});
+      r.fetch();
+      $httpBackend.flush();
+      expect(r.fetching).toEqual(false);
+    });
+
+    it('should set fetchError to response when the server errors', function() {
+      reqHandler.respond(404, {});
+      r.fetch();
+      $httpBackend.flush();
+      expect(r.fetchError).toBeDefined();
+    });
+
+    it('should reset fetchError to response when the server responds successfully', function() {
+      // bad response
+      reqHandler.respond(404, {});
+      r.fetch();
+      $httpBackend.flush();
+
+      // good response
+      reqHandler.respond({});
+      r.fetch();
+      $httpBackend.flush();
+      expect(r.fetchError).toEqual(false);
+    });
+
+    it('should call onFetchError method when server response is bad', function() {
+
+      // spy
+      spyOn(r, 'onFetchError');
+
+      // bad response
+      reqHandler.respond(404, {});
+      r.fetch();
+      $httpBackend.flush();
+
+      expect(r.onFetchError).toHaveBeenCalled();  
     });
 
   });

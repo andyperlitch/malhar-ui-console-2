@@ -179,6 +179,24 @@ describe('Service: containerManager', function () {
       expect(constrOpts.appId).toEqual('app1');
     });
 
+    it('should be able to take containerId as the first argument as long as appId is the second', function() {
+      containerManager.getLogsFor('ctnr1', 'app1');
+      expect(constrOpts.containerId).toEqual('ctnr1');
+      expect(constrOpts.appId).toEqual('app1');
+    });
+
+    it('should throw if appId is not supplied', function() {
+
+      expect(function() {
+        containerManager.getLogsFor('ctnr1');
+      }).toThrow();
+
+      expect(function() {
+        containerManager.getLogsFor({ id: 'ctnr1' });
+      }).toThrow();
+
+    });
+
   });
 
 });

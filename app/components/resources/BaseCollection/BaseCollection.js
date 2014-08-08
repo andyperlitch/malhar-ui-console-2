@@ -31,6 +31,7 @@ angular.module('app.components.resources.BaseCollection', [
      * @param  {object} params  Parameters to be used when interpolating url or topic URIs
      */
     constructor: function(params) {
+      _.extend(this, params);
       this.url = getUri.url(this.urlKey, params);
       this.data = [];
       this._idAttribute_ = this.model.prototype.idAttribute;
