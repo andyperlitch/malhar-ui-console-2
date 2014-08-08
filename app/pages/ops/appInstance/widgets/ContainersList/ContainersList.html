@@ -24,11 +24,7 @@
         <span dt-text>logs</span>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" role="menu">
-        <li ng-repeat="log in logsForSelected.data">
-          <a dt-page-href="ContainerLog" params="{ appId: appId, containerId: selected[0], logName: log.name }">{{ log.name }} <span class="text-muted">({{ log.length | byte }})</span></a>
-        </li>
-      </ul>
+      <ul class="dropdown-menu" role="menu" container-logs-dropdown="logsForSelected"></ul>
     </span>
   </span>
 
