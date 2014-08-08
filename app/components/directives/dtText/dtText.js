@@ -30,7 +30,7 @@ angular.module('app.components.directives.dtText', [
     restrict: 'A',
     scope: false,
     link: function postLink(scope, element, attrs) {
-      var key = attrs.dtText || element.text();
+      var key = attrs.dtText || $.trim(element.text());
       element.text(dtText.get(key));
     }
   };

@@ -70,6 +70,13 @@ describe('Module: text-directives', function () {
         expect(element.text()).toEqual('this is some text');
       });
 
+      it('should trim the element.text() to be used as the value', function() {
+        element = angular.element('<div dt-text>    \n this is \n</div>');
+        element = compile(element)(scope);
+        scope.$digest();
+        expect(element.text()).toEqual('this is some text');
+      });
+
     });
 
   });
