@@ -79,7 +79,7 @@ gulp.task('less', function () {
 });
 
 gulp.task('ngtemplates', function () {
-  gulp.src(dev.templates, { base: dev.dir })
+  return gulp.src(dev.templates, { base: dev.dir })
     .pipe($.ngtemplate({
       module: 'app'
     }))
@@ -133,7 +133,7 @@ gulp.task('serve:dist', ['connect:dist'], function () {
   require('opn')('http://localhost:9001');
 });
 
-gulp.task('watch', ['less', 'serve'], function () {
+gulp.task('watch', ['less', 'ngtemplates', 'serve'], function () {
   var server = $.livereload();
 
   gulp.watch([
