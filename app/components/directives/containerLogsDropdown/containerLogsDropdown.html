@@ -1,6 +1,14 @@
-<li ng-if="logs.fetching" dt-text class="text-muted">loading</li>
+<li ng-if="logs.fetching" class="text-muted">
+  <span>
+    <span class="glyphicon glyphicon-time"></span>
+    <span dt-text>loading</span>
+  </span>
+</li>
 <li ng-if="!logs.fetching && logs.fetchError">
-  <span class="text-danger" dt-text>failed to load logs</span>
+  <span class="text-danger">
+    <span class="glyphicon glyphicon-exclamation-sign" tooltip-popup-delay="0" dt-text-tooltip="An error occurred retrieving this container's logs. Server response: {{ logs.fetchError.statusText }}"></span>
+    <span dt-text>failed to load logs</span>
+  </span>
 </li>
 <li ng-repeat="log in logs.data">
   <a dt-page-href="ContainerLog" params="{ appId: logs.appId, containerId: logs.containerId, logName: log.name }">{{ log.name }} <span class="text-muted">({{ log.length | byte }})</span></a>
