@@ -94,14 +94,19 @@ angular.module('app.pages.ops.appInstance', [
       }),
       new LogicalOperatorsListWidgetDef({ name: 'Logical Operators List' }),
       new PhysicalOperatorsListWidgetDef({ name: 'Physical Operators List' }),
-      new ContainersListWidgetDef({ name: 'Containers List'})
+      new ContainersListWidgetDef({
+        name: 'Containers List',
+        style: {
+          width: '66%'
+        }
+      })
     ];
 
     var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List'], function (name) {
       return { name: name };
     });
 
-    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Physical Operators List', 'Containers List'], function (name) {
+    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Containers List', 'Physical Operators List' ], function (name) {
       return { name: name };
     });
 
@@ -117,7 +122,7 @@ angular.module('app.pages.ops.appInstance', [
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance',
-      storageHash: 'asdf5797a6sdf0',
+      storageHash: 'owjkne79273sjf',
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [

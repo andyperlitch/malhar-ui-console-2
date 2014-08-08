@@ -21,6 +21,7 @@ angular.module('app.pages.ops.appInstance.container', [
   'app.components.services.dashboardOptionsFactory',
   'app.components.resources.ApplicationModel',
   'app.components.resources.ContainerModel',
+  'app.components.services.containerManager',
 
   'app.pages.ops.appInstance.container.widgets.ContainerOverview'
 ])
@@ -44,7 +45,9 @@ angular.module('app.pages.ops.appInstance.container', [
     ApplicationModel,
     ContainerModel,
     dashboardOptionsFactory,
-    ContainerOverviewWidgetDef
+    ContainerOverviewWidgetDef,
+    settings,
+    containerManager
   ) {
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
@@ -52,6 +55,12 @@ angular.module('app.pages.ops.appInstance.container', [
 
     // Set appId on scope for use
     $scope.appId = $routeParams.appId;
+
+    // Store array of active container states
+    $scope.NONENDED_CONTAINER_STATES = settings.NONENDED_CONTAINER_STATES;
+
+    // Expose containerManager to scope
+    $scope.containerManager = containerManager;
 
     // Create new app instance on scope
     $scope.appInstance = new ApplicationModel({ id: $routeParams.appId });
