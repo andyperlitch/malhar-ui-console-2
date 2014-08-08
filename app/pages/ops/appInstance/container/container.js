@@ -49,12 +49,16 @@ angular.module('app.pages.ops.appInstance.container', [
     settings,
     containerManager
   ) {
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = $routeParams.appId;
-    breadcrumbs.options.Container = $routeParams.containerId;
+    
+    // Set appId and containerId on scope for use
+    var appId = $scope.appId = $routeParams.appId;
+    var containerId = $scope.containerId = $routeParams.containerId;
 
-    // Set appId on scope for use
-    $scope.appId = $routeParams.appId;
+    // Set up breadcrumb label
+    breadcrumbs.options['App Instance'] = appId;
+    breadcrumbs.options.Container = containerId;
+
+    
 
     // Store array of active container states
     $scope.NONENDED_CONTAINER_STATES = settings.NONENDED_CONTAINER_STATES;
@@ -63,14 +67,17 @@ angular.module('app.pages.ops.appInstance.container', [
     $scope.containerManager = containerManager;
 
     // Create new app instance on scope
-    $scope.appInstance = new ApplicationModel({ id: $routeParams.appId });
+    $scope.appInstance = new ApplicationModel({ id: appId });
     $scope.appInstance.fetch();
 
     // Create the container model
     $scope.container = new ContainerModel({
-      id: $routeParams.containerId,
-      appId: $routeParams.appId
+      id: containerId,
+      appId: appId
     });
+
+    // Create container log collection
+    $scope.containerLogs = containerManager.getLogsFor(containerId, appId);
 
     $scope.container.fetch();
     $scope.container.subscribe($scope);
