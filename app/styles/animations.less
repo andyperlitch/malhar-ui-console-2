@@ -1,0 +1,16 @@
+@-webkit-keyframes blink-warn {
+  0% { background-color: orange; }
+  100% { background-color: cornsilk; }
+}
+@-webkit-keyframes blink-error {
+  0% { background-color: red; }
+  100% { background-color: lightcoral; }
+}
+
+.blink {
+  .key {
+    color: black;
+  }
+  cursor: pointer;
+  -webkit-animation: blink-warn 1s ease-in infinite;
+}
