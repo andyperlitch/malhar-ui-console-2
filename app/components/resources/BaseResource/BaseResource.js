@@ -33,6 +33,10 @@ angular.module('app.components.resources.BaseResource', [
 
     /**
      * Uses this.url to retrieve info from the server.
+     * While fetching, this.fetching will be true. When
+     * the server responds, this.fetching will be false.
+     * Additionally, if the server errors, the original
+     * response object will be stored as this.fetchError.
      * 
      * @param  {object} options   (optional) The config object to be past to $http.get().
      * @return {Promise}          The original $http promise.
@@ -48,16 +52,36 @@ angular.module('app.components.resources.BaseResource', [
       // Reference to this
       var self = this;
 
+      // Set fetching property
+      this.fetching = true;
+
       // Store in data on return
       httpPromise.then(
         function(response) {
+
+          // Transform and store response data
           var transformed = self._getTransformed(response.data, 'fetch');
           self.set(transformed);
+          
+          // Update fetching flags
+          self.fetching = false;
+          self.fetchError = false;
+          
+          // Resolve deferred
           deferred.resolve(transformed);
         },
         _.bind(function(response) {
+
+          // Update fetching flags
+          self.fetching = false;
+          self.fetchError = response;
+
+          // Call the fetch error handler
           this.onFetchError(response);
+          
+          // Reject the deferred
           deferred.reject(response);
+          
         },this)
       );
 
