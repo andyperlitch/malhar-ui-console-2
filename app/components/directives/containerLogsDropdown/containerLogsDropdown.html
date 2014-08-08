@@ -1,5 +1,7 @@
 <li ng-if="logs.fetching" dt-text class="text-muted">loading</li>
-<li ng-if="!logs.fetching && logs.fetchError" class="text-danger" dt-text>failed to load logs</li>
+<li ng-if="!logs.fetching && logs.fetchError">
+  <span class="text-danger" dt-text>failed to load logs</span>
+</li>
 <li ng-repeat="log in logs.data">
   <a dt-page-href="ContainerLog" params="{ appId: logs.appId, containerId: logs.containerId, logName: log.name }">{{ log.name }} <span class="text-muted">({{ log.length | byte }})</span></a>
 </li>
