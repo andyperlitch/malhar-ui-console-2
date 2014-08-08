@@ -70,6 +70,16 @@ gulp.task('test', function () {
     });
 });
 
+gulp.task('karma:watch', [], function () {
+  gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
+    .pipe($.karma({
+      configFile: 'test/karma-coverage.conf.js',
+      action: 'watch',
+      //browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+      browsers: ['PhantomJS', 'Chrome']
+    }));
+});
+
 gulp.task('less', function () {
   return gulp.src('app/styles/main.less')
     .pipe($.less({
@@ -133,7 +143,7 @@ gulp.task('serve:dist', ['connect:dist'], function () {
   require('opn')('http://localhost:9001');
 });
 
-gulp.task('watch', ['less', 'ngtemplates', 'serve'], function () {
+gulp.task('watch', ['less', 'ngtemplates', 'serve', 'karma:watch'], function () {
   var server = $.livereload();
 
   gulp.watch([
