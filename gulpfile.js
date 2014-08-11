@@ -70,6 +70,18 @@ gulp.task('test', function () {
     });
 });
 
+gulp.task('coverage', function () {
+  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
+    .pipe($.karma({
+      configFile: 'test/karma-coverage.conf.js',
+      action: 'run',
+      browsers: ['Chrome']
+    }))
+    .on('error', function (err) {
+      throw err;
+    });
+});
+
 gulp.task('karma:watch', [], function () {
   gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
     .pipe($.karma({
