@@ -84,7 +84,7 @@ exports = module.exports = {
         LogicalOperators         :'applications.:appId.logicalOperators',
         Containers               :'applications.:appId.containers',
         StramEvents              :'applications.:appId.events',
-        TupleRecorder            :'tupleRecorder.:startTime'
+        TupleRecorder            :'applications.:appId.tupleRecorder.:startTime'
 
     },
 
