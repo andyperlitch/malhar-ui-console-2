@@ -43,4 +43,14 @@ describe('Controller: AppInstanceCtrl', function() {
       expect(typeof $scope.dashboardOptions).toEqual('object');
     });
 
+    it('should have an appInstance', inject(function(ApplicationModel) {
+      expect($scope.appInstance instanceof ApplicationModel).toEqual(true);
+    }));
+
+    it('should call unsubscribe on appInstance when the $scope is destroyed', function() {
+      spyOn($scope.appInstance, 'unsubscribe');
+      $scope.$destroy();
+      expect($scope.appInstance.unsubscribe).toHaveBeenCalled();
+    });
+
 });
