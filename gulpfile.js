@@ -135,7 +135,7 @@ gulp.task('connect:dist', function () {
     });
 });
 
-gulp.task('serve', ['connect'], function () {
+gulp.task('serve', ['connect', 'watch'], function () {
   require('opn')('http://localhost:9000');
 });
 
@@ -143,7 +143,7 @@ gulp.task('serve:dist', ['connect:dist'], function () {
   require('opn')('http://localhost:9001');
 });
 
-gulp.task('watch', ['less', 'ngtemplates', 'serve', 'karma:watch'], function () {
+gulp.task('watch', ['less', 'ngtemplates', 'karma:watch'], function () {
   var server = $.livereload();
 
   gulp.watch([
@@ -180,6 +180,10 @@ gulp.task('usemin', function () {
     .pipe(gulp.dest(prod.dir));
 });
 
-gulp.task('dist', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'minify-css', 'copy', 'usemin']);
+gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'minify-css', 'copy', 'usemin']);
 
 gulp.task('travis', ['jshint', 'test']);
+
+gulp.task('default', [], function () {
+  gulp.start('build');
+});
