@@ -23,7 +23,6 @@
 
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
-  'lodash',
   'app.components.directives.containerLogsDropdown',
   'app.components.services.dtText',
   'app.components.resources.ContainerCollection',
@@ -35,7 +34,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
 ])
 
 // Widget Data Model
-.factory('ContainersListWidgetDataModel', function(_, BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings) {
+.factory('ContainersListWidgetDataModel', function(BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings) {
 
   var jvmName_rgx = /^(\d+)@(.*)/;
   function processFormatter(value) {

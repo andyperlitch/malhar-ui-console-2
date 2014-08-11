@@ -17,15 +17,14 @@
 'use strict';
 
 angular.module('app.components.widgets.Base', [
-  'lodash',
   'app.components.services.extend',
   'ui.dashboard'
 ])
-.factory('BaseDataModel', function(_, WidgetDataModel, extend) {
+.factory('BaseDataModel', function(WidgetDataModel, extend) {
   var BaseDataModel = extend.call(WidgetDataModel, {}, { extend: extend });
   return BaseDataModel;
 })
-.factory('BaseWidget', function(_, extend) {
+.factory('BaseWidget', function(extend) {
 
   function BaseWidget(attrs) {
     

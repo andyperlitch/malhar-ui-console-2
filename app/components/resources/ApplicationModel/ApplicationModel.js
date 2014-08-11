@@ -22,12 +22,11 @@
  */
 
 angular.module('app.components.resources.ApplicationModel', [
-  'lodash',
   'app.components.resources.BaseModel',
   'app.components.filters.relativeTimestamp',
   'app.components.filters.commaGroups'
 ])
-.factory('ApplicationModel', function(_, BaseModel) {
+.factory('ApplicationModel', function(BaseModel) {
 
   var ApplicationModel = BaseModel.extend({
 

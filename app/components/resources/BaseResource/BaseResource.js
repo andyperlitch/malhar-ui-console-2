@@ -17,11 +17,10 @@
 'use strict';
 
 angular.module('app.components.resources.BaseResource', [
-  'lodash',
   'ui.websocket',
   'app.components.services.extend'
 ])
-.factory('BaseResource', function(_, $http, webSocket, extend, $log, $q) {
+.factory('BaseResource', function($http, webSocket, extend, $log, $q) {
 
   /**
    * Abstract class for all resources (models and collections).

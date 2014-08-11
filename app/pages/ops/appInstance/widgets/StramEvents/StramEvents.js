@@ -250,7 +250,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
 })
 
 // Widget Data Model
-.factory('StramEventsWidgetDataModel', function(_, BaseDataModel, StramEventCollection, settings) {
+.factory('StramEventsWidgetDataModel', function(BaseDataModel, StramEventCollection, settings) {
   var StramEventsWidgetDataModel = BaseDataModel.extend({
 
     init: function() {

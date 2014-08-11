@@ -39,11 +39,10 @@
  */
 
 angular.module('app.components.resources.BaseModel', [
-  'lodash',
   'app.components.services.getUri',
   'app.components.resources.BaseResource'
 ])
-.factory('BaseModel', function(_, getUri, BaseResource) {
+.factory('BaseModel', function(getUri, BaseResource) {
 
   // Abstract BaseModel class
   var BaseModel = BaseResource.extend({
