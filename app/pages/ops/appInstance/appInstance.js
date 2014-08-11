@@ -28,7 +28,7 @@ angular.module('app.pages.ops.appInstance', [
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
-  'app.pages.ops.appInstance.widgets.PhysicalOperatorsList',
+  'app.components.widgets.PhysicalOperatorsList',
   'app.pages.ops.appInstance.widgets.ContainersList',
   'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appinstance.widgets.dag.LogicalDag',
