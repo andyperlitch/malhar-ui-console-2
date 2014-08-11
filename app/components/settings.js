@@ -94,6 +94,7 @@ angular.module('app.settings', [])
       AppInstance              :'/ops/apps/:appId',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
       PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
+      Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portId',
       Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
       ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName'
     },
