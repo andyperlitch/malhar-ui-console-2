@@ -203,6 +203,7 @@ var RecordingModel = BaseModel.extend({
     subscribe: function() {
 
         var startTime = this.get('startTime');
+        var appId = this.get('appId');
         var ended = !! this.get('ended');
         if (ended) {
             LOG(3, 'Cannot subscribe to a recording that has ended.');
@@ -213,7 +214,8 @@ var RecordingModel = BaseModel.extend({
             return;
         }
         var topic = this.resourceTopic('TupleRecorder', {
-            startTime: startTime
+            startTime: startTime,
+            appId: appId
         });
         
         this.listenTo(this.dataSource, topic, this.onLiveTuples);
@@ -221,8 +223,11 @@ var RecordingModel = BaseModel.extend({
     },
     
     unsubscribe: function() {
+        var startTime = this.get('startTime');
+        var appId = this.get('appId');
         var topic = this.resourceTopic('TupleRecorder', {
-            startTime: startTime
+            startTime: startTime,
+            appId: appId 
         });
         this.stopListening(this.dataSource, topic);
     },
