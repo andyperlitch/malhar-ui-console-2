@@ -21,7 +21,9 @@
  */
 
 angular.module('app.pages.ops.appInstance', [
+  'ngRoute',
   'app.settings',
+  'app.components.services.appManager',
   'app.components.services.dashboardOptionsFactory',
   'app.components.resources.ApplicationModel',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
@@ -47,7 +49,6 @@ angular.module('app.pages.ops.appInstance', [
   .controller('AppInstanceCtrl', function (
     $scope,
     $routeParams,
-    _,
     ApplicationModel,
     LogicalDagWidgetDefinition,
     PhysicalDagWidgetDefinition,

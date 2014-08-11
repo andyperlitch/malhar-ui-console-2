@@ -39,7 +39,7 @@ angular.module('app.pages.ops', [
   })
 
 // Controller
-  .controller('OpsCtrl', function ($scope, _, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose,
+  .controller('OpsCtrl', function ($scope, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose,
                                    RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel) {
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
