@@ -13,14 +13,12 @@ Uses the `bower.json` and `package.json` files:
     npm install .
     bower install .
 
-### Spin up node and grunt servers
-Use the `serve` grunt task:
+### Use Gulp tasks
 
-    grunt serve
-
-Also start the node server as a separate process:
-
-    node server
+* `gulp` or `gulp build` to build an optimized version of the application in `/dist`
+* `gulp serve` to launch a browser sync server on the source files
+* `gulp serve:dist` to launch a server on the optimized application
+* `gulp test` to launch unit tests with Karma
 
 Working with Dependencies
 -------------------------
