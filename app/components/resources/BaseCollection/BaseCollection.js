@@ -16,12 +16,11 @@
 'use strict';
 
 angular.module('app.components.resources.BaseCollection', [
-  'lodash',
   'app.components.services.getUri',
   'app.components.resources.BaseResource',
   'app.components.resources.BaseModel'
 ])
-.factory('BaseCollection', function(_, getUri, BaseResource, BaseModel) {
+.factory('BaseCollection', function(getUri, BaseResource, BaseModel) {
 
   var BaseCollection = BaseResource.extend({
     /**

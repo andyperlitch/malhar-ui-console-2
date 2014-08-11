@@ -39,7 +39,7 @@ angular.module('app.pages.ops.widgets.ClusterMetrics', [
 
   return DataModel;
 })
-.factory('ClusterMetricsWidget', ['BaseWidget', '_', 'ClusterMetricsDataModel', function(Base, _, DataModel) {
+.factory('ClusterMetricsWidget', ['BaseWidget', 'ClusterMetricsDataModel', function(Base, DataModel) {
 
   var ClusterMetricsWidget = Base.extend({
 

@@ -67,7 +67,3 @@ angular.module('exceptionOverride', []).factory('$exceptionHandler', function ()
     throw exception;
   };
 });
-
-angular.module('lodash', []).factory('_', function ($window) {
-  return $window._; // Lodash
-});

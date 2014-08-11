@@ -16,10 +16,9 @@
 'use strict';
 
 angular.module('app.components.resources.ContainerModel', [
-  'lodash',
   'app.components.resources.BaseModel'
 ])
-.factory('ContainerModel', function(BaseModel, _) {
+.factory('ContainerModel', function(BaseModel) {
 
   var ContainerModel = BaseModel.extend({
     urlKey: 'Container',

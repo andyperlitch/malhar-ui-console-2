@@ -18,7 +18,7 @@
 angular.module('app.components.resources.PhysicalOperatorModel', [
   'app.components.resources.BaseModel'
 ])
-.factory('PhysicalOperatorModel', function(BaseModel, _) {
+.factory('PhysicalOperatorModel', function(BaseModel) {
 
   var PhysicalOperatorModel = BaseModel.extend({
 
