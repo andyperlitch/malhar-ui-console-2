@@ -23,6 +23,7 @@ angular.module('app.pages.ops.appInstance.container', [
   'app.components.resources.ContainerModel',
   'app.components.services.containerManager',
 
+  'app.components.widgets.PhysicalOperatorsList',
   'app.pages.ops.appInstance.container.widgets.ContainerOverview'
 ])
 // Route
@@ -46,6 +47,7 @@ angular.module('app.pages.ops.appInstance.container', [
     ContainerModel,
     dashboardOptionsFactory,
     ContainerOverviewWidgetDef,
+    PhysicalOperatorsListWidgetDef,
     settings,
     containerManager
   ) {
@@ -84,13 +86,16 @@ angular.module('app.pages.ops.appInstance.container', [
     
     // Set dashboard options
     var widgetDefinitions = [
-      new ContainerOverviewWidgetDef({ name: 'Overview' })
+      new ContainerOverviewWidgetDef({ name: 'Overview' }),
+      new PhysicalOperatorsListWidgetDef({ name: 'Physical Operators' })
     ];
     var defaultWidgets = [
-      { name: 'Overview' }
+      { name: 'Overview' },
+      { name: 'Physical Operators' }
     ];
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance.container',
+      storageHash: 'b1i55er1v3sx5',
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
