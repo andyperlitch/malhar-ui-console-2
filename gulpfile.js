@@ -101,20 +101,19 @@ gulp.task('serve', ['connect', 'watch']);
 
 gulp.task('serve:dist', ['connect:dist']);
 
-gulp.task('watch', ['less', 'ngtemplates', 'karma:watch'], function () {
+gulp.task('watch', ['less', 'karma:watch'], function () {
   var server = $.livereload();
 
   gulp.watch([
     dev.index,
     '.tmp/styles/main.css',
-    '.tmp/templates.js',
+    dev.templates,
     dev.scripts
   ]).on('change', function (file) {
     server.changed(file.path);
   });
 
   gulp.watch(['app/styles/**/*.less'], ['less']);
-  gulp.watch(dev.templates, ['ngtemplates']);
 });
 
 gulp.task('clean', function() {
@@ -132,6 +131,10 @@ gulp.task('copy', function () {
 
 gulp.task('usemin', function () {
   gulp.src(dev.index)
+    .pipe($.inject(gulp.src('.tmp/templates.js'), {
+      read: false,
+      relative: true
+    }))
     .pipe($.usemin({
       css: [
         $.minifyCss({ relativeTo: 'app/styles'}),
