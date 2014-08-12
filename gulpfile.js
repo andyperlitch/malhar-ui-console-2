@@ -101,7 +101,7 @@ gulp.task('serve', ['connect', 'watch']);
 
 gulp.task('serve:dist', ['connect:dist']);
 
-gulp.task('watch', ['less', 'karma:watch'], function () {
+gulp.task('watch', ['less'], function () {
   var server = $.livereload();
 
   gulp.watch([
