@@ -30,8 +30,68 @@ describe('Factory: PortsListWidgetDef', function () {
     expect(typeof PortsListWidgetDef).toEqual('function');
   });
 
-  it('should ', function() {
-    
+});
+
+describe('Factory: PortsListWidgetDataModel', function () {
+
+  // load the service's module
+  beforeEach(module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', function($provide) {
+    $provide.value('BaseDataModel', {
+      extend: function(proto) {
+        function Mock() {}
+        Mock.prototype = proto;
+        return Mock;
+      }
+    });
+  }));
+
+  // instantiate service
+  var PortsListWidgetDataModel;
+  beforeEach(inject(function (_PortsListWidgetDataModel_) {
+    PortsListWidgetDataModel = _PortsListWidgetDataModel_;
+  }));
+
+  it('should be a function', function() {
+    expect(typeof PortsListWidgetDataModel).toEqual('function');
   });
+
+  it('should attach an init function', function() {
+    var m = new PortsListWidgetDataModel();
+    expect(typeof m.init).toEqual('function');
+  });
+
+  describe('the init function', function() {
+    
+    var m, scope;
+
+    beforeEach(function() {
+      m = new PortsListWidgetDataModel();
+      m.widgetScope = scope = {
+        physicalOperator: {
+          data: {}
+        }
+      };
+    });
+
+    it('should set scope.physicalOperator.data.ports to an empty array if it is undefined', function() {
+      m.init();
+      expect(scope.physicalOperator.data.ports).toEqual([]);
+    });
+
+    it('should not change ports if it is already set', function() {
+      var orig = scope.physicalOperator.data.ports = [{}, {}];
+      m.init();
+      expect(scope.physicalOperator.data.ports === orig).toEqual(true);
+    });
+
+    it('should add table_options, selected, and columns to the scope', function() {
+      m.init();
+      expect(typeof scope.table_options).toEqual('object');
+      expect(scope.selected instanceof Array).toEqual(true);
+      expect(scope.columns instanceof Array).toEqual(true);
+    });
+
+  });
+
 
 });
