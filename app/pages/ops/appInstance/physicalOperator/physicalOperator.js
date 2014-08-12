@@ -20,7 +20,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
   'app.components.resources.PhysicalOperatorModel',
   'app.components.resources.ApplicationModel',
   'app.components.services.dashboardOptionsFactory',
-  'app.pages.ops.appInstance.physicalOperator.widgets.PhysicalOperatorOverview'
+  'app.pages.ops.appInstance.physicalOperator.widgets.PhysicalOperatorOverview',
+  'app.pages.ops.appInstance.physicalOperator.widgets.PortsList'
 ])
 
 // Route
@@ -41,7 +42,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
     ApplicationModel,
     PhysicalOperatorModel,
     dashboardOptionsFactory,
-    PhysicalOperatorOverviewWidgetDef
+    PhysicalOperatorOverviewWidgetDef,
+    PortsListWidgetDef
   ) {
     
     // Set up breadcrumb label
@@ -70,10 +72,12 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
 
     // Create widgets arrays
     var widgetDefinitions = [
-      new PhysicalOperatorOverviewWidgetDef({ name: 'Overview'})
+      new PhysicalOperatorOverviewWidgetDef({ name: 'Overview'}),
+      new PortsListWidgetDef({ name: 'Ports List' })
     ];
     var defaultWidgets = [
-      { name: 'Overview' }
+      { name: 'Overview' },
+      { name: 'Ports List' }
     ];
 
     // Set dashboard options
