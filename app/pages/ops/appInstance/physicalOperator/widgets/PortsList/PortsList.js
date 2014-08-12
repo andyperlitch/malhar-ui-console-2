@@ -31,56 +31,6 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
 // Widget Data Model
 .factory('PortsListWidgetDataModel', function(BaseDataModel, dtText) {
 
-  var columns = [
-    {
-      id: 'selector',
-      selector: true,
-      key: 'name',
-      label: '',
-      width: '40px',
-      lock_width: true
-    },
-    {
-      id: 'name',
-      key: 'name',
-      label: dtText.get('name_label'),
-      filter: 'like',
-      sort: 'string'
-    },
-    {
-      id: 'type',
-      key: 'type',
-      label: dtText.get('type_label'),
-      filter: 'like',
-      sort: 'string',
-      template: '<span ng-class="\'port-type-\' + row.type">{{ row.type }}</span>'
-    },
-    {
-      id: 'tuplesPSMA',
-      key: 'tuplesPSMA',
-      label: dtText.get('tuples_per_sec'),
-      filter: 'number',
-      sort: 'number',
-      ngFilter: 'commaGroups'
-    },
-    {
-      id: 'totalTuples',
-      key: 'totalTuples',
-      label: dtText.get('tuples_total'),
-      filter: 'number',
-      sort: 'number',
-      ngFilter: 'commaGroups'
-    },
-    {
-      id: 'bufferServerBytesPSMA',
-      key: 'bufferServerBytesPSMA',
-      label: dtText.get('buffer_server_bps_label'),
-      filter: 'number',
-      sort: 'number',
-      ngFilter: 'commaGroups'
-    }
-  ];
-
   var PortsListWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
@@ -95,7 +45,56 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
         ]
       };
       this.widgetScope.selected = [];
-      this.widgetScope.columns = columns;
+      this.widgetScope.columns = [
+        {
+          id: 'selector',
+          selector: true,
+          key: 'name',
+          label: '',
+          width: '40px',
+          lock_width: true
+        },
+        {
+          id: 'name',
+          key: 'name',
+          label: dtText.get('name_label'),
+          filter: 'like',
+          sort: 'string',
+          template: '<a dt-page-href="Port" params="{ appId: \'' + this.widgetScope.appId + '\', operatorId: \'' + this.widgetScope.operatorId + '\', portId: row.name }">{{row.name}}</a>'
+        },
+        {
+          id: 'type',
+          key: 'type',
+          label: dtText.get('type_label'),
+          filter: 'like',
+          sort: 'string',
+          template: '<span ng-class="\'port-type-\' + row.type">{{ row.type }}</span>'
+        },
+        {
+          id: 'tuplesPSMA',
+          key: 'tuplesPSMA',
+          label: dtText.get('tuples_per_sec'),
+          filter: 'number',
+          sort: 'number',
+          ngFilter: 'commaGroups'
+        },
+        {
+          id: 'totalTuples',
+          key: 'totalTuples',
+          label: dtText.get('tuples_total'),
+          filter: 'number',
+          sort: 'number',
+          ngFilter: 'commaGroups'
+        },
+        {
+          id: 'bufferServerBytesPSMA',
+          key: 'bufferServerBytesPSMA',
+          label: dtText.get('buffer_server_bps_label'),
+          filter: 'number',
+          sort: 'number',
+          ngFilter: 'commaGroups'
+        }
+      ];
 
     }
 
