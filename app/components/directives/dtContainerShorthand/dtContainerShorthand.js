@@ -27,7 +27,11 @@ angular.module('app.components.directives.dtContainerShorthand', [
       id: '=dtContainerShorthand'
     },
     link: function(scope, element) {
-      element.text(fn(scope.id));
+      scope.$watch('id', function() {
+        if (scope.id) {
+          element.text(fn(scope.id));
+        }
+      });
     }
   };
 });
