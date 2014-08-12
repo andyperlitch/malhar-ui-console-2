@@ -51,7 +51,8 @@ angular.module('app', [
   'app.settings'
 ])
   .config(function (settings, webSocketProvider, $routeProvider) {
-    webSocketProvider.setWebSocketURL('ws://' + settings.GATEWAY_WEBSOCKET_HOST + '/pubsub');
+    var host = settings.GATEWAY_WEBSOCKET_HOST ? settings.GATEWAY_WEBSOCKET_HOST : window.location.host;
+    webSocketProvider.setWebSocketURL('ws://' + host + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 
     // Catchall route
