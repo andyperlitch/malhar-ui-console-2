@@ -84,6 +84,7 @@ angular.module('app.components.services.dtText', [])
       'status_label'               :  'status',
       'submitted_label'            :  'submitted',
       'total_tuples_label'         :  'total tuples',
+      'type_label'                 :  'type',
       'up_for_label'               :  'up for',
       'user_label'                 :  'user',
       // End Labels
