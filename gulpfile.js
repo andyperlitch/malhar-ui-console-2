@@ -12,6 +12,7 @@
 var gulp = require('gulp');
 
 var $ = require('gulp-load-plugins')();
+require('./gulp/gateway');
 
 var dev = {
   dir: 'app',
@@ -105,43 +106,9 @@ gulp.task('minify-css', function () {
     .pipe(gulp.dest(prod.styles));
 });
 
-gulp.task('connect', function () {
-  var connect = require('connect');
-  var app = connect()
-    .use(require('connect-livereload')({ port: 35729 }))
-    .use(connect.static('app'))
-    .use(connect.static('.tmp'))
-    .use(connect.directory('app'))
-    .use(require('./gateway'));
+gulp.task('serve', ['connect', 'watch']);
 
-  require('http').createServer(app)
-    .listen(9000)
-    .on('listening', function () {
-      console.log('Started connect web server on http://localhost:9000');
-    });
-});
-
-gulp.task('connect:dist', function () {
-  var connect = require('connect');
-  var app = connect()
-    .use(connect.static('dist'))
-    .use(connect.directory('dist'))
-    .use(require('./gateway'));
-
-  require('http').createServer(app)
-    .listen(9001)
-    .on('listening', function () {
-      console.log('Started connect web server on http://localhost:9001');
-    });
-});
-
-gulp.task('serve', ['connect', 'watch'], function () {
-  require('opn')('http://localhost:9000');
-});
-
-gulp.task('serve:dist', ['connect:dist'], function () {
-  require('opn')('http://localhost:9001');
-});
+gulp.task('serve:dist', ['connect:dist']);
 
 gulp.task('watch', ['less', 'ngtemplates', 'karma:watch'], function () {
   var server = $.livereload();
