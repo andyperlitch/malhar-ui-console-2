@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
+'use strict';
+
+var gulp = require('gulp');
+
+var connect = require('connect');
+var http = require('http');
+var opn = require('opn');
 var httpProxy = require('http-proxy');
-var config = require('./config');
+var config = require('./../config');
 
 // Set up the proxy that goes to the gateway
 var proxy = httpProxy.createProxyServer({
@@ -25,8 +32,9 @@ var proxy = httpProxy.createProxyServer({
   }
 });
 
-function gateway(req, res, next) {
-  // proxy Gateway REST API calls
+
+// proxy Gateway REST API calls
+function gatewayMiddleware(req, res, next) {
   if (req.originalUrl.indexOf('/ws/') === 0) {
     proxy.proxyRequest(req, res);
   } else {
@@ -34,5 +42,38 @@ function gateway(req, res, next) {
   }
 }
 
-module.exports = gateway;
+function startServer(baseDirs, port) {
+  var app = connect();
+
+  baseDirs.forEach(function (dir) {
+    app.use(connect.static(dir));
+  });
+
+  app.use(gatewayMiddleware);
+
+  var server = http.createServer(app);
+
+  server.on('upgrade', function (req, socket, head) {
+    proxy.ws(req, socket, head);
+  });
+
+  var url = 'http://localhost:' + port;
+
+  server.listen(port)
+    .on('listening', function () {
+      console.log('Started connect web server on ' + url);
+    });
+
+  opn(url);
+}
+
+gulp.task('connect', function () {
+  startServer(['app', '.tmp'], 9000);
+});
+
+gulp.task('connect:dist', function () {
+  startServer(['dist'], 9001);
+});
+
+
 
