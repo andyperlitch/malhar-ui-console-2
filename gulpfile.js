@@ -10,7 +10,6 @@
 */
 
 var gulp = require('gulp');
-
 var $ = require('gulp-load-plugins')();
 require('./gulp/gateway');
 
@@ -110,14 +109,6 @@ gulp.task('ngtemplates', function () {
     .pipe(gulp.dest('.tmp'));
 });
 
-gulp.task('minify-css', function () {
-  gulp.src('.tmp/styles/main.css')
-    .pipe($.minifyCss({
-      relativeTo: 'app/styles'
-    }))
-    .pipe(gulp.dest(prod.styles));
-});
-
 gulp.task('serve', ['connect', 'watch']);
 
 gulp.task('serve:dist', ['connect:dist']);
@@ -154,12 +145,20 @@ gulp.task('copy', function () {
 gulp.task('usemin', function () {
   gulp.src(dev.index)
     .pipe($.usemin({
-      js: [$.uglify(options.uglify)]
+      css: [
+        $.minifyCss({ relativeTo: 'app/styles'}),
+        'concat',
+        $.rev()
+      ],
+      js: [
+        $.uglify(options.uglify),
+        $.rev()
+      ]
     }))
     .pipe(gulp.dest(prod.dir));
 });
 
-gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'minify-css', 'copy', 'usemin']);
+gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'copy', 'usemin']);
 
 gulp.task('travis', ['jshint', 'test']);
 
