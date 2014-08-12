@@ -32,7 +32,9 @@ angular.module('app.pages.ops.appInstance', [
   'app.pages.ops.appInstance.widgets.ContainersList',
   'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appinstance.widgets.dag.LogicalDag',
-  'app.pages.ops.appinstance.widgets.dag.PhysicalDag'
+  'app.pages.ops.appinstance.widgets.dag.PhysicalDag',
+  'ui.widgets',
+  'ui.models'
 ])
 
 // Route
@@ -58,7 +60,8 @@ angular.module('app.pages.ops.appInstance', [
     PhysicalOperatorsListWidgetDef,
     ContainersListWidgetDef,
     breadcrumbs,
-    dashboardOptionsFactory
+    dashboardOptionsFactory,
+    RandomNVD3TimeSeriesDataModel
   ) {
 
     // Set up breadcrumb label
@@ -100,7 +103,17 @@ angular.module('app.pages.ops.appInstance', [
         style: {
           width: '66%'
         }
-      })
+      }),
+      {
+        name: 'Metrics Chart',
+        title: 'Metrics Chart',
+        directive: 'wt-nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: RandomNVD3TimeSeriesDataModel,
+        style: {
+          width: '100%'
+        }
+      }
     ];
 
     var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List'], function (name) {
@@ -121,12 +134,23 @@ angular.module('app.pages.ops.appInstance', [
       { name: 'Physical DAG' }
     ];
 
+    var metricViewLayoutWidgets = [
+      {
+        name: 'Application Overview',
+        style: {
+          width: '100%' //TODO if this widget is added again it will have width from widgetDefinitions
+        }
+      },
+      { name: 'Metrics Chart' }
+    ];
+
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance',
       storageHash: 'owjkne79273sjf',
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
+        { title: 'metric-view', active: false , defaultWidgets: metricViewLayoutWidgets },
         { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
         { title: 'physical', active: false , defaultWidgets: physicalLayoutWidgets },
         { title: 'logical', active: true , defaultWidgets: logicalLayoutWidgets }
