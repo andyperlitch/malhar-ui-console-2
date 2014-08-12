@@ -21,6 +21,7 @@ var gulp = require('gulp');
 var connect = require('connect');
 var http = require('http');
 var opn = require('opn');
+var livereload = require('connect-livereload');
 var httpProxy = require('http-proxy');
 var config = require('./../config');
 
@@ -44,6 +45,8 @@ function gatewayMiddleware(req, res, next) {
 
 function startServer(baseDirs, port) {
   var app = connect();
+
+  app.use(livereload({ port: 35729 }));
 
   baseDirs.forEach(function (dir) {
     app.use(connect.static(dir));
