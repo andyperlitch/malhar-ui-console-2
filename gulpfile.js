@@ -22,6 +22,10 @@ var dev = {
     'app/components/**/*.js',
     'app/pages/**/*.js'
   ],
+  watchDependencies: [
+    'app/bower_components/malhar-angular-dashboard/dist/angular-ui-dashboard.js',
+    'app/bower_components/malhar-angular-widgets/dist/malhar-angular-widgets.js'
+  ],
   images: 'app/images/*',
   fonts: 'app/bower_components/bootstrap/fonts/*',
   templates: [
@@ -113,14 +117,15 @@ gulp.task('serve', ['connect', 'watch']);
 
 gulp.task('serve:dist', ['connect:dist']);
 
-gulp.task('watch', ['less'], function () {
+gulp.task('watch', [], function () {
   var server = $.livereload();
 
   gulp.watch([
     dev.index,
     '.tmp/styles/main.css',
     dev.templates,
-    dev.scripts
+    dev.scripts,
+    dev.watchDependencies
   ]).on('change', function (file) {
     server.changed(file.path);
   });
