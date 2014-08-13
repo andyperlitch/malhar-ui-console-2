@@ -33,12 +33,13 @@ angular.module('app.pages.ops.appInstance', [
   'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appinstance.widgets.dag.LogicalDag',
   'app.pages.ops.appinstance.widgets.dag.PhysicalDag',
+  'app.pages.ops.appinstance.widgets.metrics',
   'ui.widgets',
   'ui.models'
 ])
 
 // Route
-  .config(function($routeProvider, settings) {
+  .config(function ($routeProvider, settings) {
     $routeProvider
       .when(settings.pages.AppInstance, {
         controller: 'AppInstanceCtrl',
@@ -48,21 +49,7 @@ angular.module('app.pages.ops.appInstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function (
-    $scope,
-    $routeParams,
-    ApplicationModel,
-    LogicalDagWidgetDefinition,
-    PhysicalDagWidgetDefinition,
-    AppInstanceOverviewWidgetDef,
-    StramEventsWidgetDef,
-    LogicalOperatorsListWidgetDef,
-    PhysicalOperatorsListWidgetDef,
-    ContainersListWidgetDef,
-    breadcrumbs,
-    dashboardOptionsFactory,
-    RandomNVD3TimeSeriesDataModel
-  ) {
+  .controller('AppInstanceCtrl', function ($scope, $routeParams, ApplicationModel, LogicalDagWidgetDefinition, PhysicalDagWidgetDefinition, AppInstanceOverviewWidgetDef, StramEventsWidgetDef, LogicalOperatorsListWidgetDef, PhysicalOperatorsListWidgetDef, ContainersListWidgetDef, MetricsWidgetDef, breadcrumbs, dashboardOptionsFactory) {
 
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
@@ -74,14 +61,14 @@ angular.module('app.pages.ops.appInstance', [
     $scope.appInstance = new ApplicationModel({ id: $routeParams.appId });
     $scope.appInstance.fetch();
     $scope.appInstance.subscribe($scope);
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
       $scope.appInstance.unsubscribe();
     });
 
 
     var widgetDefinitions = [
-      new AppInstanceOverviewWidgetDef({ name:  'Application Overview', style: { width: '66%' } }),
-      new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float':'right' } }),
+      new AppInstanceOverviewWidgetDef({ name: 'Application Overview', style: { width: '66%' } }),
+      new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float': 'right' } }),
       new LogicalDagWidgetDefinition({
         name: 'Logical DAG',
         dataModelArgs: { appId: $scope.appId },
@@ -104,19 +91,15 @@ angular.module('app.pages.ops.appInstance', [
           width: '66%'
         }
       }),
-      {
+      new MetricsWidgetDef({
         name: 'Metrics Chart',
-        title: 'Metrics Chart',
-        directive: 'wt-nvd3-line-chart',
-        dataAttrName: 'data',
-        dataModelType: RandomNVD3TimeSeriesDataModel,
         style: {
-          width: '100%'
+          width: '50%'
         }
-      }
+      })
     ];
 
-    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List', 'Metrics Chart'], function (name) {
+    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List'], function (name) {
       return { name: name };
     });
 
@@ -150,10 +133,10 @@ angular.module('app.pages.ops.appInstance', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
-        { title: 'metric-view', active: false , defaultWidgets: metricViewLayoutWidgets },
-        { title: 'physical-dag-view', active: false , defaultWidgets: physicalDagViewLayoutWidgets },
-        { title: 'physical', active: false , defaultWidgets: physicalLayoutWidgets },
-        { title: 'logical', active: true , defaultWidgets: logicalLayoutWidgets }
+        { title: 'metric-view', active: false, defaultWidgets: metricViewLayoutWidgets },
+        { title: 'physical-dag-view', active: false, defaultWidgets: physicalDagViewLayoutWidgets },
+        { title: 'physical', active: false, defaultWidgets: physicalLayoutWidgets },
+        { title: 'logical', active: true, defaultWidgets: logicalLayoutWidgets }
       ]
     });
 
