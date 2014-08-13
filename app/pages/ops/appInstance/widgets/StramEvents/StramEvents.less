@@ -1,5 +1,5 @@
-@stram-event-list-min-height: 100px;
-@stram-event-list-max-height: 400px;
+@stram-event-default-height: 400px;
+
 // stram event colors
 @stram-event-default-color: #CFCFCF;
 @stram-event-default-color-active: #AAA;
@@ -44,6 +44,7 @@
 
 .event-list-container {
   position: relative;
+  height: @stram-event-default-height;
 }
 
 .follow-events-btn {
@@ -54,11 +55,11 @@
 }
 
 .event-list {
-  max-height: @stram-event-list-max-height;
-  min-height: @stram-event-list-min-height;
+  height: 100%;
   overflow: auto;
   padding: 3px;
   margin-bottom: 0;
+  outline: none;
 }
 
 .event-item {

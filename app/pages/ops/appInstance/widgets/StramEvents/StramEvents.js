@@ -27,6 +27,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   'app.components.filters.relativeTimestamp',
   'app.components.resources.StramEventCollection',
   'app.components.directives.dtContainerShorthand',
+  'app.components.directives.uiResizable',
   'app.components.widgets.Base',
   'app.settings',
   'ui.bootstrap'
@@ -160,6 +161,11 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       }
     );
   };
+
+  $scope.resizableOptions = {
+    handles: 'n, s'
+  };
+
 })
 .run(function($templateCache) {
   $templateCache.put('template/timepicker/timepicker.html',
