@@ -42,9 +42,10 @@ describe('Directive: uiResizable', function () {
     scope.options = {
 
     };
+    scope.onResize = jasmine.createSpy();
 
     // Define and compile the element
-    element = angular.element('<div ui-resizable="options"></div>');
+    element = angular.element('<div ui-resizable="options" on-resize="onResize()"></div>');
     element = compile(element)(scope);
     scope.$digest();
     isoScope = element.isolateScope();
@@ -52,6 +53,25 @@ describe('Directive: uiResizable', function () {
 
   it('should call resizable on the element', function() {
     expect($.fn.resizable).toHaveBeenCalledWith(scope.options);
+  });
+
+  it('should set an event handler on resizestop if provided in the attributes', function() {
+    element.trigger('resizestop');
+    scope.$digest();
+    expect(scope.onResize).toHaveBeenCalled();
+  });
+
+  it('should not throw if a callback is not provided', function() {
+    element = angular.element('<div ui-resizable="options"></div>');
+    element = compile(element)(scope);
+    scope.$digest();
+    isoScope = element.isolateScope();
+    console.log('this one');
+    expect(function() {
+
+      element.trigger('resizestop');
+      scope.$digest();  
+    }).not.toThrow();
   });
 
 });
