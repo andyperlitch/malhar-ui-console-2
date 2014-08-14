@@ -21,7 +21,8 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
   'app.components.resources.ApplicationModel',
   'app.components.services.dashboardOptionsFactory',
   'app.pages.ops.appInstance.logicalOperator.widgets.LogicalOperatorOverview',
-  'app.components.widgets.PhysicalOperatorsList'
+  'app.components.widgets.PhysicalOperatorsList',
+  'app.pages.ops.appInstance.logicalOperator.widgets.metrics'
 ])
 
 // Route
@@ -43,7 +44,8 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
     LogicalOperatorModel,
     dashboardOptionsFactory,
     LogicalOperatorOverviewWidgetDef,
-    PhysicalOperatorsListWidgetDef
+    PhysicalOperatorsListWidgetDef,
+    OpMetricsWidgetDef
   ) {
     
     // Set up breadcrumb label
@@ -73,11 +75,13 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
     // Create widgets arrays
     var widgetDefinitions = [
       new LogicalOperatorOverviewWidgetDef({ name: 'Overview'}),
-      new PhysicalOperatorsListWidgetDef({ name: 'Partitions'})
+      new PhysicalOperatorsListWidgetDef({ name: 'Partitions'}),
+      new OpMetricsWidgetDef({ name: 'Metrics Chart' })
     ];
     var defaultWidgets = [
       { name: 'Overview' },
-      { name: 'Partitions', title: 'Partitions'}
+      { name: 'Partitions', title: 'Partitions'},
+      { name: 'Metrics Chart'}
     ];
 
     // Set dashboard options
