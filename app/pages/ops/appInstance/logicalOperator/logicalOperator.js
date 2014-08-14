@@ -22,7 +22,7 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
   'app.components.services.dashboardOptionsFactory',
   'app.pages.ops.appInstance.logicalOperator.widgets.LogicalOperatorOverview',
   'app.components.widgets.PhysicalOperatorsList',
-  'app.pages.ops.appInstance.logicalOperator.widgets.metrics'
+  'app.pages.ops.appInstance.operators.widgets.metrics'
 ])
 
 // Route
@@ -76,12 +76,15 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
     var widgetDefinitions = [
       new LogicalOperatorOverviewWidgetDef({ name: 'Overview'}),
       new PhysicalOperatorsListWidgetDef({ name: 'Partitions'}),
-      new OpMetricsWidgetDef({ name: 'Metrics Chart' })
+      new OpMetricsWidgetDef({
+        name: 'Metrics Chart',
+        dataModelArgs: { operatorResource: $scope.logicalOperator }
+      })
     ];
     var defaultWidgets = [
       { name: 'Overview' },
       { name: 'Partitions', title: 'Partitions'},
-      { name: 'Metrics Chart'}
+      { name: 'Metrics Chart' }
     ];
 
     // Set dashboard options
