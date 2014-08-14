@@ -190,6 +190,11 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
         }
       ];
 
+      // Splice out name column if this is a partitions table
+      if (resource.operatorName) {
+        this.widgetScope.columns.splice(2, 1);
+      }
+
       // Set the selected array
       this.widgetScope.selected = [];
 
