@@ -67,26 +67,23 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
           }
         ];
 
-        var resource;
-
         if (false && this.widgetScope.appInstance && this.widgetScope.appInstance instanceof ApplicationModel) {
-          resource = this.resource = this.widgetScope.appInstance;
-        }
-        else {
+          this.appInstance = this.widgetScope.appInstance;
+        } else {
           this.unsubscribeOnDestroy = true;
-          resource = this.resource = new ApplicationModel({
+          this.appInstance = new ApplicationModel({
             id: this.widgetScope.appId
           });
         }
 
-        resource.subscribe(this.widgetScope, function (appInfo) {
+        this.appInstance.fetchAndSubscribe(this.widgetScope, function (appInfo) {
           chartController.addPoint(appInfo.stats);
         });
       },
 
       destroy: function () {
         if (this.unsubscribeOnDestroy) {
-          this.resource.unsubscribe();
+          this.appInstance.unsubscribe();
         }
       }
     })
