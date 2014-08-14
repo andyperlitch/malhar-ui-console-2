@@ -47,19 +47,19 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
             key: 'totalBufferServerReadBytesPSMA',
             color: '#AE08CE',
             label: dtText.get('buffer_server_reads_label'),
-            visible: false
+            visible: true
           },
           {
             key: 'totalBufferServerWriteBytesPSMA',
             color: '#f2be20',
             label: dtText.get('buffer_server_writes_label'),
-            visible: false
+            visible: true
           },
           {
             key: 'latency',
             color: '#da1c17',
             label: dtText.get('latency_ms_label'),
-            visible: false
+            visible: true
           }
         ];
 
@@ -94,6 +94,7 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
           var timeLimit = 30 * 1000;
           var now = Date.now();
           var startTime = now - timeLimit;
+
           var ind = _.findIndex(history, function (historyPoint) {
             return historyPoint.timestamp >= startTime;
           });
@@ -113,7 +114,7 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
             var values = _.map(history, function (historyPoint) {
               return {
                 timestamp: historyPoint.timestamp,
-                value: historyPoint.stats[metricKey]
+                value: Math.round(parseInt(historyPoint.stats[metricKey]))
               };
             });
             series[index].values = values;
@@ -142,8 +143,9 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
            });
            */
 
-          this.updateScope(_.clone(series));
-
+          if (history.length > 1) {
+            this.updateScope(_.clone(series));
+          }
         }.bind(this));
       },
 
