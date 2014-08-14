@@ -23,6 +23,31 @@ angular.module('app.components.resources.PhysicalOperatorCollection', [
 
   var PhysicalOperatorCollection = BaseCollection.extend({
 
+    constructor: function(options) {
+      BaseCollection.apply(this, arguments);
+
+      if (options.containerId) {
+
+        var containerId = options.containerId;
+        this.transformResponse = function(raw) {
+          return _.filter(raw.operators, function(o) {
+            return o.container === containerId;
+          });
+        };
+
+      }
+
+      else if (options.operatorName) {
+        
+        var operatorName = options.operatorName;
+        this.transformResponse = function(raw) {
+          return _.filter(raw.operators, function(o) {
+            return o.name === operatorName;
+          });
+        };
+
+      }
+    },
     urlKey: 'PhysicalOperator',
     topicKey: 'PhysicalOperators',
     transformResponse: 'operators',

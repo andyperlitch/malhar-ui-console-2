@@ -1,8 +1,14 @@
 <div class="overview-container">
   <h2>
     {{ data.id ? data.id : 'loading...' }}
-    <small ng-if="data.className">{{ data.name }}</small>
+    <small ng-if="data.className"><a dt-page-href="LogicalOperator" params="{ appId: appId, operatorName: data.name }">{{ data.name }}</a></small>
   </h2>
+
+  <h4>
+    <small>container:</small> <a dt-page-href="Container" params="{ appId: appId, containerId: data.container }" dt-container-shorthand="data.container"></a>
+
+
+  </h4>
   
   <div class="overview-item">
     <div class="key" dt-text>status</div>

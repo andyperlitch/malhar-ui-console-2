@@ -22,7 +22,7 @@
  */
 
 // Module Definition
-angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
+angular.module('app.components.widgets.PhysicalOperatorsList', [
   'app.components.widgets.Base',
   'app.settings',
   'app.components.resources.PhysicalOperatorCollection',
@@ -37,7 +37,14 @@ angular.module('app.pages.ops.appInstance.widgets.PhysicalOperatorsList', [
     init: function() {
       
       // Set up resource
-      var resource = this.resource = this.widgetScope.resource = new PhysicalOperatorCollection({ appId: this.widgetScope.appId });
+      var resource = this.resource = this.widgetScope.resource = new PhysicalOperatorCollection({
+        // Will always be available
+        appId: this.widgetScope.appId,
+        // May be defined if on container page
+        containerId: this.widgetScope.containerId,
+        // May be defined if on logical operator page
+        operatorName: this.widgetScope.operatorName
+      });
       resource.fetch();
       resource.subscribe(this.widgetScope);
 

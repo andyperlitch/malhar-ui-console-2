@@ -15,21 +15,19 @@
 */
 'use strict';
 
-angular.module('app.components.directives.dtContainerShorthand', [
-  'app.components.filters.dtContainerShorthand'
-])
-.directive('dtContainerShorthand', function($filter) {
-
-  var fn = $filter('dtContainerShorthand');
-
+angular.module('app.components.directives.uiResizable', [])
+.directive('uiResizable', function() {
   return {
+    restrict: 'A',
     scope: {
-      id: '=dtContainerShorthand'
+      callback: '&onResize',
+      options: '=uiResizable'
     },
-    link: function(scope, element) {
-      scope.$watch('id', function() {
-        if (scope.id) {
-          element.text(fn(scope.id));
+    link: function postLink(scope, elem, attrs) {
+      elem.resizable(scope.options);
+      elem.on('resizestop', function () {
+        if (attrs.onResize) {
+          scope.callback();
         }
       });
     }

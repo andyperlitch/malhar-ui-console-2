@@ -20,7 +20,8 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
   'app.components.resources.LogicalOperatorModel',
   'app.components.resources.ApplicationModel',
   'app.components.services.dashboardOptionsFactory',
-  'app.pages.ops.appInstance.logicalOperator.widgets.LogicalOperatorOverview'
+  'app.pages.ops.appInstance.logicalOperator.widgets.LogicalOperatorOverview',
+  'app.components.widgets.PhysicalOperatorsList'
 ])
 
 // Route
@@ -41,7 +42,8 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
     ApplicationModel,
     LogicalOperatorModel,
     dashboardOptionsFactory,
-    LogicalOperatorOverviewWidgetDef
+    LogicalOperatorOverviewWidgetDef,
+    PhysicalOperatorsListWidgetDef
   ) {
     
     // Set up breadcrumb label
@@ -70,15 +72,18 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
 
     // Create widgets arrays
     var widgetDefinitions = [
-      new LogicalOperatorOverviewWidgetDef({ name: 'Overview'})
+      new LogicalOperatorOverviewWidgetDef({ name: 'Overview'}),
+      new PhysicalOperatorsListWidgetDef({ name: 'Partitions'})
     ];
     var defaultWidgets = [
-      { name: 'Overview' }
+      { name: 'Overview' },
+      { name: 'Partitions', title: 'Partitions'}
     ];
 
     // Set dashboard options
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance.logicalOperator',
+      storageHash: 'asd98at',
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [

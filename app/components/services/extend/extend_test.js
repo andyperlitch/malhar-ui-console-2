@@ -14,3 +14,49 @@
  * limitations under the License.
  */
 
+'use strict';
+
+describe('Factory: extend', function () {
+
+  // load the service's module
+  beforeEach(module('app.components.services.extend'));
+
+  // instantiate service
+  var extend;
+  beforeEach(inject(function (_extend_) {
+    extend = _extend_;
+  }));
+
+  it('should add extend to the child class', function() {
+    function Parent() {}
+    Parent.extend = extend;
+
+    var Child = Parent.extend({});
+
+    expect(Child.extend).toEqual(extend);
+  });
+
+  describe('when the constructor is provided', function() {
+    
+    it('should use the provided function as the constructor', function() {
+      
+      function Parent() {
+        this.isParent = true;
+      }
+      Parent.extend = extend;
+
+      var Child = Parent.extend({
+        constructor: function() {
+          this.isParent = false;
+        }
+      });
+
+      var c = new Child();
+
+      expect(c.isParent).toEqual(false);
+
+    });
+
+  });
+
+});

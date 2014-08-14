@@ -26,8 +26,8 @@ describe('Directive: dtContainerShorthand', function () {
   beforeEach(module('app.components.directives.dtContainerShorthand', function($provide) {
     $provide.value('$filter', function(key) {
       requestedFilter = key;
-      return function() {
-        return 'super fun time';
+      return function(id) {
+        return 'id:' + id;
       };
     });
   }));
@@ -55,7 +55,13 @@ describe('Directive: dtContainerShorthand', function () {
   });
 
   it('should place the result of the filter function into the element', function() {
-    expect(element.text()).toEqual('super fun time');
+    expect(element.text()).toEqual('id:' + scope.myId);
+  });
+
+  it('should update the text dynamically if the provided id changes', function() {
+    scope.myId = 'container_148989829898_0002';
+    scope.$digest();
+    expect(element.text()).toEqual('id:' + scope.myId);
   });
 
   // it('should only use the last part of the container id', function() {

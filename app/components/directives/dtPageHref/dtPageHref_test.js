@@ -74,4 +74,22 @@ describe('Directive: dtPageHref', function () {
     expect(isoScope).toBeUndefined();
   });
 
+  describe('when an object literal is used for params', function() {
+    
+    beforeEach(function() {
+      scope = rootScope.$new();
+      element = angular.element('<a dt-page-href="AppInstance" params="{ appId: data.appId }"></a>');
+      element = compile(element)(scope);
+      scope.$digest();
+      isoScope = element.isolateScope();     
+    });
+
+    it('should watch changes on elements of the object literal', function() {
+      scope.data = { appId: 'app1' };
+      scope.$digest();
+      expect(element.attr('href')).toEqual('#/ws/v1/applications/app1');
+    });
+
+  });
+
 });

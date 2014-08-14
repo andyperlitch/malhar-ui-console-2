@@ -26,6 +26,7 @@ angular.module('app.settings', [])
     statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],
     NONENDED_APP_STATES: ['SUBMITTED','ACCEPTED','RUNNING'],
     NONENDED_CONTAINER_STATES: ['ACTIVE', 'ALLOCATED'],
+    STORAGE_KEY: 'datatorrent-ui-console',
     VISIBILITY_TIMEOUT: 20000,
     urls: {
 
