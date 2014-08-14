@@ -40,8 +40,10 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
       var resource = this.resource = this.widgetScope.resource = new PhysicalOperatorCollection({
         // Will always be available
         appId: this.widgetScope.appId,
-        // May be undefined if only on appInstance page
-        containerId: this.widgetScope.containerId
+        // May be defined if on container page
+        containerId: this.widgetScope.containerId,
+        // May be defined if on logical operator page
+        operatorName: this.widgetScope.operatorName
       });
       resource.fetch();
       resource.subscribe(this.widgetScope);
