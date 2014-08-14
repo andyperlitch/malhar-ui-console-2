@@ -29,8 +29,12 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
 
     angular.extend(MetricsWidgetDataModel.prototype, {
       init: function () {
-        var history = [];
-        var metrics = [
+        var chartController = {
+          addPoint: function () {} // this method be replaced by chart directive
+        };
+        this.widgetScope.chartController = chartController;
+
+        this.widgetScope.metrics = [
           {
             key: 'tuplesEmittedPSMA',
             color: '#64c539',
@@ -63,21 +67,6 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
           }
         ];
 
-        var metricsMap = _.reduce(metrics, function (map, metric) {
-          map[metric.key] = metric;
-          return map;
-        }, {});
-
-        var series = [];
-        _.each(metrics, function (metric) {
-          var metricKey = metric.key;
-          series.push({
-            key: metricKey,
-            disabled: !metricsMap[metricKey].visible,
-            color: metricsMap[metricKey].color
-          });
-        });
-
         var resource;
 
         if (false && this.widgetScope.appInstance && this.widgetScope.appInstance instanceof ApplicationModel) {
@@ -91,62 +80,8 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
         }
 
         resource.subscribe(this.widgetScope, function (appInfo) {
-          var timeLimit = 30 * 1000;
-          var now = Date.now();
-          var startTime = now - timeLimit;
-
-          var ind = _.findIndex(history, function (historyPoint) {
-            return historyPoint.timestamp >= startTime;
-          });
-          if (ind > 1) {
-            history = _.rest(history, ind - 1);
-          }
-
-          var historyPoint = {
-            timestamp: now,
-            stats: appInfo.stats
-          };
-
-          history.push(historyPoint);
-
-          _.each(metrics, function (metric, index) {
-            var metricKey = metric.key;
-            var values = _.map(history, function (historyPoint) {
-              return {
-                timestamp: historyPoint.timestamp,
-                value: Math.round(parseInt(historyPoint.stats[metricKey]))
-              };
-            });
-            series[index].values = values;
-          });
-
-          /*
-          //TODO this is workaround to have fixed x axis scale when no enough date is available
-          chart.push({
-            key: 'Left Value',
-            values: [
-              {timestamp: startTime, value: 0}
-            ]
-          });
-          */
-
-          /*
-           var max = _.max(history, function (historyPoint) { //TODO optimize
-           return historyPoint.stats.tuplesEmittedPSMA; //TODO
-           });
-
-           chart.push({
-           key: 'Upper Value',
-           values: [
-           {timestamp: now - 30 * 1000, value: Math.round(max.value * 1.2)}
-           ]
-           });
-           */
-
-          if (history.length > 1) {
-            this.updateScope(_.clone(series));
-          }
-        }.bind(this));
+          chartController.addPoint(appInfo.stats);
+        });
       },
 
       destroy: function () {
@@ -168,7 +103,9 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
         dataAttrName: 'data',
         dataModelType: MetricsWidgetDataModel,
         attrs: {
-          style: 'height:300px'
+          style: 'height:300px',
+          metrics: 'metrics',
+          controller: 'chartController'
         }
       }
     });
