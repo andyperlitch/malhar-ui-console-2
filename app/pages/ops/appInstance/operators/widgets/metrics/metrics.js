@@ -16,10 +16,11 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appInstance.logicalOperator.widgets.metrics', [
+angular.module('app.pages.ops.appInstance.operators.widgets.metrics', [
 ])
-  .factory('OpMetricsWidgetDataModel', function (WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q, ApplicationModel, dtText) {
-    function MetricsWidgetDataModel() {
+  .factory('OpMetricsWidgetDataModel', function (WidgetDataModel, dtText) {
+    function MetricsWidgetDataModel(options) {
+      this.operatorResource = options.operatorResource;
     }
 
     MetricsWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
@@ -66,17 +67,9 @@ angular.module('app.pages.ops.appInstance.logicalOperator.widgets.metrics', [
           }
         ];
 
-        this.logicalOperator = this.widgetScope.logicalOperator;
-
-        this.logicalOperator.fetchAndSubscribe(this.widgetScope, function (opInfo) {
+        this.operatorResource.fetchAndSubscribe(this.widgetScope, function (opInfo) {
           chartController.addPoint(opInfo);
         });
-      },
-
-      destroy: function () {
-        //if (this.unsubscribeOnDestroy) {
-        //  this.appInstance.unsubscribe();
-        //}
       }
     })
     ;
