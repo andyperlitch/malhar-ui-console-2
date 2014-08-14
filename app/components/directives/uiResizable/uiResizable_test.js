@@ -66,7 +66,6 @@ describe('Directive: uiResizable', function () {
     element = compile(element)(scope);
     scope.$digest();
     isoScope = element.isolateScope();
-    console.log('this one');
     expect(function() {
 
       element.trigger('resizestop');
