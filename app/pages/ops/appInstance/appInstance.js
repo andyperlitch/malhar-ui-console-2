@@ -99,7 +99,7 @@ angular.module('app.pages.ops.appInstance', [
       })
     ];
 
-    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List'], function (name) {
+    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List', 'Metrics Chart'], function (name) {
       return { name: name };
     });
 
