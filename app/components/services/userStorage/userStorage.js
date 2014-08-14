@@ -78,6 +78,6 @@ angular.module('app.components.services.userStorage', [
 
       };
     }
-  }
+  };
     
-})
+});
