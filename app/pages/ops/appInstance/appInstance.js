@@ -94,7 +94,7 @@ angular.module('app.pages.ops.appInstance', [
       new MetricsWidgetDef({
         name: 'Metrics Chart',
         style: {
-          width: '50%'
+          width: '60%'
         }
       })
     ];
@@ -103,7 +103,7 @@ angular.module('app.pages.ops.appInstance', [
       return { name: name };
     });
 
-    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Containers List', 'Physical Operators List' ], function (name) {
+    var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Containers List', 'Physical Operators List', 'Metrics Chart'], function (name) {
       return { name: name };
     });
 
