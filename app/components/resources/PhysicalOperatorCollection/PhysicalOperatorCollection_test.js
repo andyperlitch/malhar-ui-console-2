@@ -40,7 +40,7 @@ describe('Factory: PhysicalOperatorCollection', function () {
 
     });
 
-    it('should be a function that filters response.operators when ', function() {
+    it('should be a function that filters response.operators when containerId or operatorName is specified', function() {
       
       var c = new PhysicalOperatorCollection({
         appId: 'application_1',
@@ -51,17 +51,28 @@ describe('Factory: PhysicalOperatorCollection', function () {
 
       var response = {
         operators: [
-          { id: '1', container: '1' },
-          { id: '2', container: '1' },
-          { id: '3', container: '2' },
-          { id: '4', container: '3' },
-          { id: '5', container: '1' }
+          { id: '1', container: '1', name: 'console' },
+          { id: '2', container: '1', name: 'generator' },
+          { id: '3', container: '2', name: 'console' },
+          { id: '4', container: '3', name: 'generator' },
+          { id: '5', container: '1', name: 'console' }
         ]
       };
 
       expect(c.transformResponse(response)).toEqual([
         response.operators[0],
         response.operators[1],
+        response.operators[4]
+      ]);
+
+      var c2 = new PhysicalOperatorCollection({
+        appId: 'application_1',
+        operatorName: 'console'
+      });
+
+      expect(c2.transformResponse(response)).toEqual([
+        response.operators[0],
+        response.operators[2],
         response.operators[4]
       ]);
 
