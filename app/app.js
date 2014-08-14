@@ -39,6 +39,7 @@ angular.module('app', [
   'app.components.directives.containerLogsDropdown',
   'app.components.services.dtText',
   'app.components.services.extend',
+  'app.components.services.userStorage',
 
   // pages
   'app.pages.ops',
@@ -51,10 +52,31 @@ angular.module('app', [
   // misc
   'app.settings'
 ])
-  .config(function (settings, webSocketProvider, $routeProvider) {
+  .config(function (settings, webSocketProvider, $routeProvider, userStorageProvider) {
+
+    // webSocket
     var host = settings.GATEWAY_WEBSOCKET_HOST ? settings.GATEWAY_WEBSOCKET_HOST : window.location.host;
     webSocketProvider.setWebSocketURL('ws://' + host + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
+
+    // userStorage
+    userStorageProvider.setSaveFunction(function() {
+      localStorage.setItem(settings.STORAGE_KEY, this.serialize());
+    });
+    var json = localStorage.getItem(settings.STORAGE_KEY);
+    var storage;
+
+    if (json) {
+      try {
+        storage = JSON.parse();
+      } catch (e) {
+        storage = {};
+      }
+    } else {
+      storage = {};
+    }
+      
+    userStorageProvider.load(storage);
 
     // Catchall route
     $routeProvider
