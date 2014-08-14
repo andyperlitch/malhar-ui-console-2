@@ -16,11 +16,9 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appinstance.widgets.metrics', [
-  'app.settings',
-  'app.components.directives.dtSelect'
+angular.module('app.pages.ops.appInstance.logicalOperator.widgets.metrics', [
 ])
-  .factory('MetricsWidgetDataModel', function (WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q, ApplicationModel, dtText) {
+  .factory('OpMetricsWidgetDataModel', function (WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q, ApplicationModel, dtText) {
     function MetricsWidgetDataModel() {
     }
 
@@ -40,51 +38,45 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
             color: '#64c539',
             label: dtText.get('emitted_per_sec'),
             visible: true
-          },
-          {
+          }, {
             key: 'tuplesProcessedPSMA',
             color: '#1da8db',
             label: dtText.get('processed_per_sec'),
             visible: true
-          },
-          {
-            key: 'totalBufferServerReadBytesPSMA',
-            color: '#AE08CE',
-            label: dtText.get('buffer_server_reads_label'),
-            visible: true
-          },
-          {
-            key: 'totalBufferServerWriteBytesPSMA',
-            color: '#f2be20',
-            label: dtText.get('buffer_server_writes_label'),
-            visible: true
-          },
-          {
-            key: 'latency',
+          },{
+            key: 'cpuPercentageMA',
             color: '#da1c17',
+            label: dtText.get('cpu_percentage_label'),
+            visible: true
+          }, {
+            key: 'latencyMA',
+            color: '#888',
             label: dtText.get('latency_ms_label'),
             visible: true
+          }, {
+            key: 'inputBufferServerBytesPS',
+            color: '#AE08CE',
+            label: dtText.get('buffer_server_reads_label'),
+            visible: false
+          }, {
+            key: 'outputBufferServerBytesPS',
+            color: '#f2be20',
+            label: dtText.get('buffer_server_writes_label'),
+            visible: false
           }
         ];
 
-        if (false && this.widgetScope.appInstance && this.widgetScope.appInstance instanceof ApplicationModel) {
-          this.appInstance = this.widgetScope.appInstance;
-        } else {
-          this.unsubscribeOnDestroy = true;
-          this.appInstance = new ApplicationModel({
-            id: this.widgetScope.appId
-          });
-        }
+        this.logicalOperator = this.widgetScope.logicalOperator;
 
-        this.appInstance.fetchAndSubscribe(this.widgetScope, function (appInfo) {
-          chartController.addPoint(appInfo.stats);
+        this.logicalOperator.fetchAndSubscribe(this.widgetScope, function (opInfo) {
+          chartController.addPoint(opInfo);
         });
       },
 
       destroy: function () {
-        if (this.unsubscribeOnDestroy) {
-          this.appInstance.unsubscribe();
-        }
+        //if (this.unsubscribeOnDestroy) {
+        //  this.appInstance.unsubscribe();
+        //}
       }
     })
     ;
@@ -92,12 +84,12 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
     return MetricsWidgetDataModel;
   })
   .
-  factory('MetricsWidgetDef', function (BaseWidget, MetricsWidgetDataModel) {
-    var LogicalDagWidgetDefinition = BaseWidget.extend({
+  factory('OpMetricsWidgetDef', function (BaseWidget, OpMetricsWidgetDataModel) {
+    var OpMetricsWidgetDef = BaseWidget.extend({
       defaults: {
         title: 'Metrics Chart',
         directive: 'wt-metrics-chart',
-        dataModelType: MetricsWidgetDataModel,
+        dataModelType: OpMetricsWidgetDataModel,
         attrs: {
           style: 'height:300px',
           metrics: 'metrics',
@@ -106,5 +98,5 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
       }
     });
 
-    return LogicalDagWidgetDefinition;
+    return OpMetricsWidgetDef;
   });
