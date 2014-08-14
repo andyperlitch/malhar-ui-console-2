@@ -16,9 +16,10 @@
 'use strict';
 
 angular.module('app.components.services.dashboardOptionsFactory', [
-  'app.components.services.defaultWidgetSettings'
+  'app.components.services.defaultWidgetSettings',
+  'app.components.services.userStorage'
 ])
-.factory('dashboardOptionsFactory', function(defaultSettingsModalOptions, defaultOnSettingsClose) {
+.factory('dashboardOptionsFactory', function(defaultSettingsModalOptions, defaultOnSettingsClose, userStorage) {
     var dashboardOptionsFactory;
     dashboardOptionsFactory = function(o) {
       var defaults;
@@ -26,7 +27,7 @@ angular.module('app.components.services.dashboardOptionsFactory', [
         o = {};
       }
       defaults = {
-        storage: localStorage,
+        storage: userStorage,
         settingsModalOptions: defaultSettingsModalOptions,
         onSettingsClose: defaultOnSettingsClose,
         widgetButtons: false

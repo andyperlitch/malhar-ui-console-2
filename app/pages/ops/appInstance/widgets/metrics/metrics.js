@@ -20,7 +20,7 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
   'app.settings',
   'app.components.directives.dtSelect'
 ])
-  .factory('MetricsWidgetDataModel', function (WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q, ApplicationModel) {
+  .factory('MetricsWidgetDataModel', function (WidgetDataModel, LogicalPlanResource, LogicalOperatorCollection, $q, ApplicationModel, dtText) {
     function MetricsWidgetDataModel() {
     }
 
@@ -30,6 +30,54 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
     angular.extend(MetricsWidgetDataModel.prototype, {
       init: function () {
         var history = [];
+        var metrics = [
+          {
+            key: 'tuplesEmittedPSMA',
+            color: '#64c539',
+            label: dtText.get('emitted_per_sec'),
+            visible: true
+          },
+          {
+            key: 'tuplesProcessedPSMA',
+            color: '#1da8db',
+            label: dtText.get('processed_per_sec'),
+            visible: true
+          },
+          {
+            key: 'totalBufferServerReadBytesPSMA',
+            color: '#AE08CE',
+            label: dtText.get('buffer_server_reads_label'),
+            visible: true
+          },
+          {
+            key: 'totalBufferServerWriteBytesPSMA',
+            color: '#f2be20',
+            label: dtText.get('buffer_server_writes_label'),
+            visible: true
+          },
+          {
+            key: 'latency',
+            color: '#da1c17',
+            label: dtText.get('latency_ms_label'),
+            visible: true
+          }
+        ];
+
+        var metricsMap = _.reduce(metrics, function (map, metric) {
+          map[metric.key] = metric;
+          return map;
+        }, {});
+
+        var series = [];
+        _.each(metrics, function (metric) {
+          var metricKey = metric.key;
+          series.push({
+            key: metricKey,
+            disabled: !metricsMap[metricKey].visible,
+            color: metricsMap[metricKey].color
+          });
+        });
+
         var resource;
 
         if (false && this.widgetScope.appInstance && this.widgetScope.appInstance instanceof ApplicationModel) {
@@ -43,17 +91,10 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
         }
 
         resource.subscribe(this.widgetScope, function (appInfo) {
-          var metricsHash = {
-            tuplesEmittedPSMA: true,
-            tuplesProcessedPSMA: true,
-            totalBufferServerReadBytesPSMA: true,
-            totalBufferServerWriteBytesPSMA: false,
-            latency: false
-          };
-
-          var timeLimit = 3 * 1000;
+          var timeLimit = 30 * 1000;
           var now = Date.now();
           var startTime = now - timeLimit;
+
           var ind = _.findIndex(history, function (historyPoint) {
             return historyPoint.timestamp >= startTime;
           });
@@ -68,23 +109,18 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
 
           history.push(historyPoint);
 
-          var chart = [];
-          _.each(metricsHash, function (metricEnabled, metricKey) {
-            if (metricEnabled) {
-              var values = _.map(history, function (historyPoint) {
-                return {
-                  timestamp: historyPoint.timestamp,
-                  value: historyPoint.stats[metricKey]
-                };
-              });
-
-              chart.push({
-                key: metricKey,
-                values: values
-              });
-            }
+          _.each(metrics, function (metric, index) {
+            var metricKey = metric.key;
+            var values = _.map(history, function (historyPoint) {
+              return {
+                timestamp: historyPoint.timestamp,
+                value: Math.round(parseInt(historyPoint.stats[metricKey]))
+              };
+            });
+            series[index].values = values;
           });
 
+          /*
           //TODO this is workaround to have fixed x axis scale when no enough date is available
           chart.push({
             key: 'Left Value',
@@ -92,24 +128,25 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
               {timestamp: startTime, value: 0}
             ]
           });
-
-          /*
-          var max = _.max(history, function (historyPoint) { //TODO optimize
-            return historyPoint.stats.tuplesEmittedPSMA; //TODO
-          });
-
-          chart.push({
-            key: 'Upper Value',
-            values: [
-              {timestamp: now - 30 * 1000, value: Math.round(max.value * 1.2)}
-            ]
-          });
           */
 
-          this.updateScope(chart);
-        }.bind(this));
+          /*
+           var max = _.max(history, function (historyPoint) { //TODO optimize
+           return historyPoint.stats.tuplesEmittedPSMA; //TODO
+           });
 
-        this.widgetScope.data = resource.data;
+           chart.push({
+           key: 'Upper Value',
+           values: [
+           {timestamp: now - 30 * 1000, value: Math.round(max.value * 1.2)}
+           ]
+           });
+           */
+
+          if (history.length > 1) {
+            this.updateScope(_.clone(series));
+          }
+        }.bind(this));
       },
 
       destroy: function () {
@@ -117,11 +154,13 @@ angular.module('app.pages.ops.appinstance.widgets.metrics', [
           this.resource.unsubscribe();
         }
       }
-    });
+    })
+    ;
 
     return MetricsWidgetDataModel;
   })
-  .factory('MetricsWidgetDef', function (BaseWidget, MetricsWidgetDataModel) {
+  .
+  factory('MetricsWidgetDef', function (BaseWidget, MetricsWidgetDataModel) {
     var LogicalDagWidgetDefinition = BaseWidget.extend({
       defaults: {
         title: 'Metrics Chart',
