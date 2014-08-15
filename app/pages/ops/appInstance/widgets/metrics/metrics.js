@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appinstance.widgets.metrics', [
+angular.module('app.pages.ops.appInstance.widgets.metrics', [
   'app.settings',
   'app.components.directives.dtSelect'
 ])

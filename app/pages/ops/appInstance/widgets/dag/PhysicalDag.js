@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appinstance.widgets.dag.PhysicalDag', [
+angular.module('app.pages.ops.appInstance.widgets.dag.PhysicalDag', [
   'app.components.widgets.Base',
   'app.components.directives.dtSelect',
   'app.components.resources.PhysicalPlanResource',
