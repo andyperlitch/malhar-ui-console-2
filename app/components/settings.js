@@ -54,6 +54,7 @@ angular.module('app.settings', [])
       LicenseLastRequest       :'/ws/:v/licenses/lastRequest',
       LogicalOperator          :'/ws/:v/applications/:appId/logicalPlan/operators',
       LogicalPlan              :'/ws/:v/applications/:appId/logicalPlan',
+      LogicalStream            :'/ws/:v/applications/:appId/logicalPlan/streams',
       OpProperties             :'/ws/:v/applications/:appId/logicalPlan/operators/:operatorName/properties',
       PhysicalOperator         :'/ws/:v/applications/:appId/physicalPlan/operators',
       PhysicalPlan             :'/ws/:v/applications/:appId/physicalPlan',
@@ -61,6 +62,7 @@ angular.module('app.settings', [])
       Recording                :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings',
       RecordingTuples          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/:startTime/tuples',
       StramEvent               :'/ws/:v/applications/:appId/events',
+      PhysicalStream           :'/ws/:v/applications/:appId/physicalPlan/streams',
       User                     :'/ws/:v/profile/user'
 
     },
