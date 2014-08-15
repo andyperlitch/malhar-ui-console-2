@@ -19,6 +19,10 @@ describe('Top-level app module', function() {
 
   var storageKey = 'testing';
 
+  beforeEach(function() {
+    angular.module('datatorrent.mlhrTable',[]);
+  });
+
   describe('when the stored state is valid', function() {
     beforeEach(function() {
       localStorage.setItem(storageKey, JSON.stringify({
