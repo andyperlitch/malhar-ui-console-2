@@ -39,7 +39,7 @@ describe('Top-level app module', function() {
     it('should load the STORAGE_KEY state into userStorage', inject(function(userStorage) {
       expect(userStorage.toObject()).toEqual({
         key1: 'value1'
-      })
+      });
     }));
   });
 
@@ -59,7 +59,7 @@ describe('Top-level app module', function() {
       });
       $provide.value('$log', $log = {
         warn: jasmine.createSpy()
-      })
+      });
     }));
 
     afterEach(function() {

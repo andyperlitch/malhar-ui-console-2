@@ -228,7 +228,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       // Set up listener for resize
       scope.onResize = function(event, ui) {
         scope.onResizeCallback({event: event, ui: ui});
-      }
+      };
 
       // Some setup for range selection
       scope.hstep = 1;
@@ -268,7 +268,6 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
 
     init: function() {
       var scope = this.widgetScope;
-      var self = this;
       scope.widget.dataModelOptions = scope.widget.dataModelOptions || {};
 
       this.resource = new StramEventCollection({ appId: scope.appId });
@@ -286,7 +285,7 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
       scope.onResize = function(event, ui) {
         scope.widget.dataModelOptions.listHeight = ui.size.height;
         scope.$emit('widgetChanged', scope.widget);
-      }
+      };
     },
 
     destroy: function() {
