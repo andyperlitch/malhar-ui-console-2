@@ -78,12 +78,19 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
       new PortsListWidgetDef({ name: 'Ports List' }),
       new OpMetricsWidgetDef({
         name: 'Metrics Chart',
-        dataModelArgs: { operatorResource: $scope.physicalOperator }
+        dataModelArgs: { operatorResource: $scope.physicalOperator },
+        style: {
+          width: '100%'
+        }
       })
     ];
-    var defaultWidgets = [
+    var defaultLayoutWidgets = [
       { name: 'Overview' },
-      { name: 'Ports List' },
+      { name: 'Ports List' }
+    ];
+
+    var metricsLayoutWidgets = [
+      { name: 'Overview' },
       { name: 'Metrics Chart' }
     ];
 
@@ -91,9 +98,9 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance.physicalOperator',
       widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
       defaultLayouts: [
-        { title: 'default', active: false }
+        { title: 'metrics', active: false, defaultWidgets: metricsLayoutWidgets },
+        { title: 'default', active: true, defaultWidgets: defaultLayoutWidgets }
       ]
     });
 

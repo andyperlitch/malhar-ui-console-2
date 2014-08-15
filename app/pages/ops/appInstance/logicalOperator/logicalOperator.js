@@ -78,7 +78,10 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
       new PhysicalOperatorsListWidgetDef({ name: 'Partitions'}),
       new OpMetricsWidgetDef({
         name: 'Metrics Chart',
-        dataModelArgs: { operatorResource: $scope.logicalOperator }
+        dataModelArgs: { operatorResource: $scope.logicalOperator },
+        style: {
+          width: '60%'
+        }
       })
     ];
     var defaultWidgets = [
