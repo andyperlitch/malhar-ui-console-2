@@ -31,9 +31,9 @@ angular.module('app.pages.ops.appInstance', [
   'app.components.widgets.PhysicalOperatorsList',
   'app.pages.ops.appInstance.widgets.ContainersList',
   'app.pages.ops.appInstance.widgets.StramEvents',
-  'app.pages.ops.appinstance.widgets.dag.LogicalDag',
-  'app.pages.ops.appinstance.widgets.dag.PhysicalDag',
-  'app.pages.ops.appinstance.widgets.metrics',
+  'app.pages.ops.appInstance.widgets.dag.LogicalDag',
+  'app.pages.ops.appInstance.widgets.dag.PhysicalDag',
+  'app.pages.ops.appInstance.widgets.metrics',
   'ui.widgets',
   'ui.models'
 ])
