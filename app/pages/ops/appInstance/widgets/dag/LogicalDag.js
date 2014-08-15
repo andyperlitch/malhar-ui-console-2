@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app.pages.ops.appinstance.widgets.dag.LogicalDag', [
+angular.module('app.pages.ops.appInstance.widgets.dag.LogicalDag', [
   'app.settings',
   'app.components.widgets.dag.physical.logicalDag',
   'app.components.directives.dtSelect',
