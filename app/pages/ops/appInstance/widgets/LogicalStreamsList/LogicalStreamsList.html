@@ -1,0 +1,54 @@
+<div class="palette">
+
+  <!-- when none are selected -->
+  <!-- <span ng-if="!selected.length">
+    <button class="btn btn-success" ng-click="selectActive()">
+      <span class="glyphicon glyphicon-check"></span>
+      <span dt-text>select active</span>
+    </button>
+    <button class="btn btn-default" ng-click="selectActive(true)">
+      <span class="glyphicon glyphicon-check"></span>
+      <span dt-text>select all active but app master</span>
+    </button>
+  </span> -->
+
+  <!-- when exactly one is selected -->
+<!--   <span ng-if="selected.length === 1">
+    <a class="btn btn-primary" dt-page-href="LogicalOperator" params="{ appId: appId, operatorName: selected[0] }">
+      <span class="glyphicon glyphicon-eye-open"></span>
+      <span dt-text="inspect"></span>
+    </a>
+    <span class="btn-group" ng-init="getLogsForSelected()">
+      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+        <span class="glyphicon glyphicon-file"></span>
+        <span dt-text>logs</span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" container-logs-dropdown="logsForSelected"></ul>
+    </span>
+  </span> -->
+
+  <!-- when one or more are selected -->
+<!--   <span ng-if="selected.length >= 1">
+    <button class="btn btn-danger" ng-click="killSelected()">
+      <span class="glyphicon glyphicon-ban-circle"></span>
+      <span dt-text>kill selected</span>
+    </button>
+    <button class="btn btn-default" ng-click="deselectAll()">
+      <span class="glyphicon glyphicon-unchecked"></span>
+      <span dt-text>deselect all</span>
+    </button>
+  </span>
+ -->
+  <!-- <span dt-table-selected-count="selected"></span> -->
+
+</div>
+<mlhr-table 
+options="table_options"
+columns="columns" 
+rows="resource.data" 
+track-by="name"
+class="dt-table"
+table-class="table" 
+selected="selected">
+</mlhr-table>

@@ -31,9 +31,10 @@ angular.module('app.pages.ops.appInstance', [
   'app.components.widgets.PhysicalOperatorsList',
   'app.pages.ops.appInstance.widgets.ContainersList',
   'app.pages.ops.appInstance.widgets.StramEvents',
-  'app.pages.ops.appinstance.widgets.dag.LogicalDag',
-  'app.pages.ops.appinstance.widgets.dag.PhysicalDag',
-  'app.pages.ops.appinstance.widgets.metrics',
+  'app.pages.ops.appInstance.widgets.dag.LogicalDag',
+  'app.pages.ops.appInstance.widgets.dag.PhysicalDag',
+  'app.pages.ops.appInstance.widgets.metrics',
+  'app.pages.ops.appInstance.widgets.LogicalStreamsList',
   'ui.widgets',
   'ui.models'
 ])
@@ -49,7 +50,22 @@ angular.module('app.pages.ops.appInstance', [
   })
 
 // Controller
-  .controller('AppInstanceCtrl', function ($scope, $routeParams, ApplicationModel, LogicalDagWidgetDefinition, PhysicalDagWidgetDefinition, AppInstanceOverviewWidgetDef, StramEventsWidgetDef, LogicalOperatorsListWidgetDef, PhysicalOperatorsListWidgetDef, ContainersListWidgetDef, MetricsWidgetDef, breadcrumbs, dashboardOptionsFactory) {
+  .controller('AppInstanceCtrl', function (
+    $scope,
+    $routeParams,
+    ApplicationModel,
+    LogicalDagWidgetDefinition,
+    PhysicalDagWidgetDefinition,
+    AppInstanceOverviewWidgetDef,
+    StramEventsWidgetDef,
+    LogicalOperatorsListWidgetDef,
+    PhysicalOperatorsListWidgetDef,
+    ContainersListWidgetDef,
+    MetricsWidgetDef,
+    LogicalStreamsListWidgetDef,
+    breadcrumbs,
+    dashboardOptionsFactory
+  ) {
 
     // Set up breadcrumb label
     breadcrumbs.options['App Instance'] = $routeParams.appId;
@@ -91,6 +107,7 @@ angular.module('app.pages.ops.appInstance', [
           width: '66%'
         }
       }),
+      new LogicalStreamsListWidgetDef({ name: 'Logical Streams' }),
       new MetricsWidgetDef({
         name: 'Metrics Chart',
         style: {
@@ -99,7 +116,7 @@ angular.module('app.pages.ops.appInstance', [
       })
     ];
 
-    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List', 'Metrics Chart'], function (name) {
+    var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List', 'Logical Streams', 'Metrics Chart'], function (name) {
       return { name: name };
     });
 
@@ -129,7 +146,7 @@ angular.module('app.pages.ops.appInstance', [
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storageId: 'dashboard.ops.appInstance',
-      storageHash: 'owjkne79273sjf',
+      storageHash: '5s6fw21e62f',
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
