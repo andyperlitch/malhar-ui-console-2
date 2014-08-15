@@ -56,6 +56,7 @@ describe('Module: StramEvents', function() {
     beforeEach(inject(function($rootScope) {
       dm = new StramEventsWidgetDataModel();
       dm.widgetScope = scope = $rootScope.$new();
+      scope.widget = {};
     }));
 
     it('should be a function', function() {

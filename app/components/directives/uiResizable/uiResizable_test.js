@@ -45,7 +45,7 @@ describe('Directive: uiResizable', function () {
     scope.onResize = jasmine.createSpy();
 
     // Define and compile the element
-    element = angular.element('<div ui-resizable="options" on-resize="onResize()"></div>');
+    element = angular.element('<div ui-resizable="options" on-resize="onResize(event, ui)"></div>');
     element = compile(element)(scope);
     scope.$digest();
     isoScope = element.isolateScope();

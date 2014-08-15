@@ -24,9 +24,6 @@ angular.module('app.components.services.userStorage', [
   var saveFunction = angular.noop;
 
   return {
-    load: function(state) {
-      storage = state;
-    },
     setSaveFunction: function(fn) {
       saveFunction = fn;
     },

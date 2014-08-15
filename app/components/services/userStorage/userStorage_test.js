@@ -23,14 +23,14 @@ describe('Service: userStorage', function () {
     saveFn = jasmine.createSpy();
     var fakeModule = angular.module('fakeModule', ['app.components.services.userStorage']);
     fakeModule.config(function(userStorageProvider) {
-      userStorageProvider.load({
-        foo: 'bar'
-      });
       userStorageProvider.setSaveFunction(saveFn);
     });
     module('app.components.services.userStorage', 'fakeModule');
     inject(function(_userStorage_) {
       userStorage = _userStorage_;
+      userStorage.load({
+        foo: 'bar'
+      });
     });
     
   });
