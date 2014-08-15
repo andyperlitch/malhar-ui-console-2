@@ -25,9 +25,9 @@ angular.module('app.components.directives.uiResizable', [])
     },
     link: function postLink(scope, elem, attrs) {
       elem.resizable(scope.options);
-      elem.on('resizestop', function () {
+      elem.on('resizestop', function (event, ui) {
         if (attrs.onResize) {
-          scope.callback();
+          scope.callback({ event: event, ui: ui });
         }
       });
     }

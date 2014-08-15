@@ -59,30 +59,36 @@ angular.module('app', [
     webSocketProvider.setWebSocketURL('ws://' + host + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 
-    // userStorage
+    // userStorage save function
     userStorageProvider.setSaveFunction(function() {
       localStorage.setItem(settings.STORAGE_KEY, this.serialize());
     });
-    var json = localStorage.getItem(settings.STORAGE_KEY);
-    var storage;
-
-    if (json) {
-      try {
-        storage = JSON.parse();
-      } catch (e) {
-        storage = {};
-      }
-    } else {
-      storage = {};
-    }
-      
-    userStorageProvider.load(storage);
 
     // Catchall route
     $routeProvider
       .otherwise({
         redirectTo: '/ops'
       });
+
+  })
+  .run(function(userStorage, settings, $log) {
+    // load saved state in userStorage
+    var json = localStorage.getItem(settings.STORAGE_KEY);
+    var storage;
+
+    if (json) {
+      try {
+        storage = JSON.parse(json);
+      } catch (e) {
+        $log.warn('State from localStorage could not be parsed! ', e);
+        localStorage.removeItem(settings.STORAGE_KEY);
+        storage = {};
+      }
+    } else {
+      storage = {};
+    }
+      
+    userStorage.load(storage);
   });
 
 angular.module('exceptionOverride', []).factory('$exceptionHandler', function () {

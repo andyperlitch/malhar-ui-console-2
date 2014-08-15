@@ -37,6 +37,7 @@ module.exports = function(config, chain) {
   // here we specify which of the files we want to appear in the coverage report
   conf.preprocessors['app/components/**/!(*_test)+(.js)'] = ['coverage'];
   conf.preprocessors['app/pages/**/!(*_test)+(.js)'] = ['coverage'];
+  conf.preprocessors['app/app!(*_test)+(.js)'] = ['coverage'];
 
   if (chain) {
     return conf;

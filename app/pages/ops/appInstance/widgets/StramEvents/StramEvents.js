@@ -205,7 +205,9 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
     scope: {
       resource: '=',
       state: '=',
-      appId: '='
+      appId: '=',
+      onResizeCallback: '&onResize',
+      listHeight: '='
     },
     link: function(scope, element) {
       scope.followEvents = true;
@@ -222,6 +224,11 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
           }, 'slow');
         }
       });
+
+      // Set up listener for resize
+      scope.onResize = function(event, ui) {
+        scope.onResizeCallback({event: event, ui: ui});
+      };
 
       // Some setup for range selection
       scope.hstep = 1;
@@ -261,7 +268,9 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
 
     init: function() {
       var scope = this.widgetScope;
-      this.resource = new StramEventCollection({ appId: this.widgetScope.appId });
+      scope.widget.dataModelOptions = scope.widget.dataModelOptions || {};
+
+      this.resource = new StramEventCollection({ appId: scope.appId });
       scope.resource = this.resource;
       scope.state = {
         mode: 'tail',
@@ -272,6 +281,10 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
         tail: {
           limit: settings.stramEvents.INITIAL_LIMIT
         }
+      };
+      scope.onResize = function(event, ui) {
+        scope.widget.dataModelOptions.listHeight = ui.size.height;
+        scope.$emit('widgetChanged', scope.widget);
       };
     },
 
