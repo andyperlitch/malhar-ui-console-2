@@ -25,11 +25,21 @@
 angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
   'app.components.widgets.Base',
   'app.components.resources.LogicalStreamCollection',
-  'app.settings'
+  'app.settings',
+  'app.components.services.dtText'
 ])
 
 // Widget Data Model
-.factory('LogicalStreamsListWidgetDataModel', function(BaseDataModel, LogicalStreamCollection) {
+.factory('LogicalStreamsListWidgetDataModel', function(BaseDataModel, LogicalStreamCollection, dtText) {
+
+  function sourceFilter(search, source) {
+    var op = ( source.operatorName + '').toLowerCase();
+    var port = ( source.portName + '').toLowerCase();
+    var term = ( search + '').toLowerCase();
+    return op.indexOf(term) > -1 || port.indexOf(term) > -1;
+  }
+  sourceFilter.placeholder = dtText.get('string search');
+
   var LogicalStreamsListWidgetDataModel = BaseDataModel.extend({
     init: function() {
       var scope = this.widgetScope;
@@ -39,8 +49,53 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
       scope.resource.fetch();
       scope.resource.subscribe(scope);
       scope.selected = [];
+      scope.deselectAll = function() {
+        while(scope.selected.length) {
+          scope.selected.pop();
+        }
+      };
+      scope.table_options = {
+        row_limit: 10
+      };
       scope.columns = [
-        
+        {
+          id: 'selector', 
+          selector: true, 
+          key: 'name', 
+          label: '', 
+          width: '40px', 
+          lock_width: true
+        },
+        {
+          id: 'name', 
+          label: dtText.get('name_label'), 
+          key: 'name', 
+          filter: 'like', 
+          sort: 'string', 
+          template: '<a dt-page-href="LogicalStream" params="{ appId: \'' + scope.appId + '\', streamName: row.name }">{{ row.name }}</a>'
+        },
+        {
+          id: 'locality', 
+          label: dtText.get('locality_label'), 
+          key: 'locality', 
+          filter: 'like', 
+          sort: 'string', 
+          template: '<span ng-if="row.locality">{{ row.locality }}</span><span ng-if="!row.locality" dt-text>locality_not_assigned</span>'
+        },
+        {
+          id: 'source', 
+          label: dtText.get('source_label'), 
+          key: 'source', 
+          filter: sourceFilter,
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.source.operatorName }">{{row.source.operatorName}}</a>: {{ row.source.portName }}'
+        },
+        {
+          id: 'sinks', 
+          label: dtText.get('sinks_label'), 
+          key: 'sinks', 
+          filter: 'likeFormatted', 
+          template: '<span ng-repeat="sink in row.sinks"><a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: sink.operatorName }">{{sink.operatorName}}</a>: {{ sink.portName }}</span>'
+        }
       ];
     }
   });

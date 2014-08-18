@@ -2,7 +2,10 @@
     
     <!-- when none are selected -->
     <span ng-if="!selected.length">
-      <button class="btn btn-default" disabled>select an operator</button>
+      <button class="btn btn-default" disabled>
+        <span class="glyphicon glyphicon-check"></span>
+        <span dt-text>select an operator</span>
+      </button>
     </span>
     
     <!-- when one is selected -->
