@@ -16,19 +16,41 @@
 'use strict';
 
 angular.module('app.components.services.tableOptionsFactory', [
-  'app.components.services.userStorage'
 ])
-.factory('tableOptionsFactory', function(userStorage) {
+.factory('tableStorageFactory', function() {
+  function WidgetStorage(widget, scope) {
+    widget.dataModelOptions = widget.dataModelOptions || {};
+    this.storage = widget.dataModelOptions;
+    this.scope = scope;
+  }
+  WidgetStorage.prototype = {
+    getItem: function(key) {
+      return this.storage[key];
+    },
+    setItem: function(key, value) {
+      this.storage[key] = value;
+      this.scope.$emit('widgetChanged', this.widget);
+    },
+    removeItem: function(key) {
+      delete this.storage[key];
+    }
+  };
+  return function(widget, scope) {
+    return new WidgetStorage(widget, scope);
+  };
+})
+.factory('tableOptionsFactory', function(tableStorageFactory) {
 
   var tableOptionsFactory;
 
-  tableOptionsFactory = function(o) {
+  tableOptionsFactory = function(o, widget, scope) {
     var defaults;
       if (!o) {
         o = {};
       }
       defaults = {
-        storage: userStorage
+        storage: tableStorageFactory(widget, scope),
+        storage_key: 'table'
       };
       return angular.extend({}, defaults, o);
   };

@@ -22,6 +22,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
   'app.components.filters.byte',
   'app.components.filters.timeSince',
   'app.components.services.dtText',
+  'app.components.services.tableOptionsFactory',
   'app.components.services.appManager',
   'app.components.directives.appIdLink',
   'app.components.directives.dtStatus',
@@ -42,7 +43,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
   return AppsListWidget;
 })
 
-.factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, dtText, $filter, appManager) {
+.factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, dtText, $filter, appManager, tableOptionsFactory) {
 
   function stateSorter(row1,row2) {
     var state1 = settings.statusOrder.indexOf(row1.state);
@@ -147,22 +148,22 @@ angular.module('app.pages.ops.widgets.AppsList', [
   var AppsListDataModel = BaseDataModel.extend({
 
     init: function() {
-      
-      this.widgetScope.columns = columns;
-      this.widgetScope.selected = [];
-      this.widgetScope.options = {
+      var scope = this.widgetScope;
+      scope.columns = columns;
+      scope.selected = [];
+      scope.options = tableOptionsFactory({
         row_limit: 10,
         initial_sorts: [
           { id: 'state', dir: '+' },
           { id: 'id', dir: '-' }
         ]
-      };
+      }, scope.widget, scope);
 
       this.resource = new ApplicationCollection();
       this.resource.fetch();
-      this.resource.subscribe(this.widgetScope);
-      this.widgetScope.resource = this.resource;
-      this.widgetScope.endApp = appManager.endApp;
+      this.resource.subscribe(scope);
+      scope.resource = this.resource;
+      scope.endApp = appManager.endApp;
     },
 
     destroy: function() {

@@ -28,31 +28,34 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
   'app.components.resources.LogicalOperatorCollection',
   'app.components.services.dtText',
   'app.components.filters.percent2cpu',
+  'app.components.services.tableOptionsFactory',
   'app.components.directives.logicalOperatorStatus'
 ])
 
 // Widget Data Model
-.factory('LogicalOperatorsListWidgetDataModel', function(BaseDataModel, LogicalOperatorCollection, dtText) {
+.factory('LogicalOperatorsListWidgetDataModel', function(BaseDataModel, LogicalOperatorCollection, dtText, tableOptionsFactory) {
   var LogicalOperatorsListWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
       
+      var scope = this.widgetScope;
+
       // Set up resource
-      var resource = this.resource = this.widgetScope.resource = new LogicalOperatorCollection({ appId: this.widgetScope.appId });
+      var resource = this.resource = scope.resource = new LogicalOperatorCollection({ appId: scope.appId });
       resource.fetch();
-      resource.subscribe(this.widgetScope);
+      resource.subscribe(scope);
 
       // Set the table options
-      this.widgetScope.table_options = {
+      scope.table_options = tableOptionsFactory({
         row_limit: 20,
         initial_sorts: [
           { id: 'name', dir: '+' }
         ],
-        appInstance: this.widgetScope.appInstance
-      };
+        appInstance: scope.appInstance
+      }, scope.widget, scope);
 
       // Set the table columns
-      this.widgetScope.columns = [
+      scope.columns = [
         {
           id: 'selector',
           selector: true,
@@ -66,7 +69,7 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           key: 'name',
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
         },
         {
           id: 'className',
@@ -167,7 +170,7 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
       ];
 
       // Set the selected array
-      this.widgetScope.selected = [];
+      scope.selected = [];
 
     }
 

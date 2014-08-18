@@ -26,11 +26,12 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
   'app.components.widgets.Base',
   'app.components.resources.LogicalStreamCollection',
   'app.settings',
+  'app.components.services.tableOptionsFactory',
   'app.components.services.dtText'
 ])
 
 // Widget Data Model
-.factory('LogicalStreamsListWidgetDataModel', function(BaseDataModel, LogicalStreamCollection, dtText) {
+.factory('LogicalStreamsListWidgetDataModel', function(BaseDataModel, LogicalStreamCollection, dtText, tableOptionsFactory) {
 
   function sourceFilter(search, source) {
     var op = ( source.operatorName + '').toLowerCase();
@@ -54,9 +55,9 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
           scope.selected.pop();
         }
       };
-      scope.table_options = {
+      scope.table_options = tableOptionsFactory({
         row_limit: 10
-      };
+      }, scope.widget, scope);
       scope.columns = [
         {
           id: 'selector', 
