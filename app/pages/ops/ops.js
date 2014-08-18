@@ -24,6 +24,7 @@ angular.module('app.pages.ops', [
   'app.pages.ops.widgets.ClusterMetrics',
   'app.pages.ops.widgets.AppsList',
   'app.components.services.defaultWidgetSettings',
+  'app.components.services.dashboardOptionsFactory',
   'ui.widgets',
   'ui.models'
 ])
@@ -39,8 +40,17 @@ angular.module('app.pages.ops', [
   })
 
 // Controller
-  .controller('OpsCtrl', function ($scope, ClusterMetricsWidget, AppsListWidget, defaultSettingsModalOptions, defaultOnSettingsClose,
-                                   RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel) {
+  .controller('OpsCtrl', function (
+    $scope,
+    ClusterMetricsWidget,
+    AppsListWidget,
+    defaultSettingsModalOptions,
+    defaultOnSettingsClose,
+    RandomPercentageDataModel,
+    RandomNVD3TimeSeriesDataModel,
+    RandomMinutesDataModel,
+    dashboardOptionsFactory
+  ) {
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
       {
@@ -81,7 +91,7 @@ angular.module('app.pages.ops', [
 
     var defaultWidgets = _.clone(widgetDefinitions);
 
-    $scope.dashboardOptions = {
+    $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
       storageId: 'dashboard.ops',
       widgetButtons: false,
@@ -92,6 +102,6 @@ angular.module('app.pages.ops', [
       ],
       settingsModalOptions: defaultSettingsModalOptions,
       onSettingsClose: defaultOnSettingsClose
-    };
+    });
 
   });
