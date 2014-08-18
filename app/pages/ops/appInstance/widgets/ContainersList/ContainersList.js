@@ -29,12 +29,13 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
   'app.components.widgets.Base',
   'app.settings',
   'app.components.services.containerManager',
+  'app.components.services.tableOptionsFactory',
   'app.components.filters.relativeTimestamp',
   'app.pages.ops.appInstance.widgets.ContainersList.ContainersListPaletteCtrl'
 ])
 
 // Widget Data Model
-.factory('ContainersListWidgetDataModel', function(BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings) {
+.factory('ContainersListWidgetDataModel', function(BaseDataModel, ContainerCollection, dtText, containerManager, $filter, settings, tableOptionsFactory) {
 
   var jvmName_rgx = /^(\d+)@(.*)/;
   function processFormatter(value) {
@@ -70,26 +71,29 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
   var ContainersListWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
+
+      var scope = this.widgetScope;
+
       this.resource = new ContainerCollection({
-        appId: this.widgetScope.appId
+        appId: scope.appId
       });
       this.resource.fetch({
         params: {
           states: settings.NONENDED_CONTAINER_STATES.join(',')
         }
       });
-      this.resource.subscribe(this.widgetScope);
-      this.widgetScope.resource = this.resource;
-      this.widgetScope.selected = [];
-      this.widgetScope.table_options = {
+      this.resource.subscribe(scope);
+      scope.resource = this.resource;
+      scope.selected = [];
+      scope.table_options = tableOptionsFactory({
         row_limit: 10,
         initial_sorts: [
           { id: 'state', dir: '+' },
           { id: 'id', dir: '+' }
         ]
-      };
+      }, scope.widget, scope);
 
-      this.widgetScope.columns = [
+      scope.columns = [
         {
           id: 'selector',
           selector: true,
@@ -104,7 +108,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'id',
           sort: 'string',
           filter: 'like',
-          template: '<a dt-page-href="Container" params="{ appId: \'' + this.widgetScope.appId + '\', containerId: row.id }" dt-container-shorthand="row.id"></a>'
+          template: '<a dt-page-href="Container" params="{ appId: \'' + scope.appId + '\', containerId: row.id }" dt-container-shorthand="row.id"></a>'
         },
         {
           id: 'process_id',

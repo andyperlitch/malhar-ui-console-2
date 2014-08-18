@@ -25,27 +25,30 @@
 angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
   'app.components.widgets.Base',
   'app.settings',
-  'app.components.services.dtText'
+  'app.components.services.dtText',
+  'app.components.services.tableOptionsFactory'
 ])
 
 // Widget Data Model
-.factory('PortsListWidgetDataModel', function(BaseDataModel, dtText) {
+.factory('PortsListWidgetDataModel', function(BaseDataModel, dtText, tableOptionsFactory) {
 
   var PortsListWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
 
-      if (!this.widgetScope.physicalOperator.data.ports) {
-        this.widgetScope.physicalOperator.data.ports = [];
+      var scope = this.widgetScope;
+
+      if (!scope.physicalOperator.data.ports) {
+        scope.physicalOperator.data.ports = [];
       }
 
-      this.widgetScope.table_options = {
+      scope.table_options = tableOptionsFactory({
         initial_sorts: [
           { id: 'name', dir: '+' }
         ]
-      };
-      this.widgetScope.selected = [];
-      this.widgetScope.columns = [
+      }, scope.widget, scope);
+      scope.selected = [];
+      scope.columns = [
         {
           id: 'selector',
           selector: true,
@@ -60,7 +63,7 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('name_label'),
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="Port" params="{ appId: \'' + this.widgetScope.appId + '\', operatorId: \'' + this.widgetScope.operatorId + '\', portId: row.name }">{{row.name}}</a>'
+          template: '<a dt-page-href="Port" params="{ appId: \'' + scope.appId + '\', operatorId: \'' + scope.operatorId + '\', portId: row.name }">{{row.name}}</a>'
         },
         {
           id: 'type',

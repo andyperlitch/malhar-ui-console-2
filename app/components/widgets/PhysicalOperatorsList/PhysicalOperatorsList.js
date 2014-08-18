@@ -27,38 +27,41 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
   'app.settings',
   'app.components.resources.PhysicalOperatorCollection',
   'app.components.services.dtText',
+  'app.components.services.tableOptionsFactory',
   'app.components.filters.percent2cpu'
 ])
 
 // Widget Data Model
-.factory('PhysicalOperatorsListWidgetDataModel', function(BaseDataModel, PhysicalOperatorCollection, dtText) {
+.factory('PhysicalOperatorsListWidgetDataModel', function(BaseDataModel, PhysicalOperatorCollection, dtText, tableOptionsFactory) {
   var PhysicalOperatorsListWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
       
+      var scope = this.widgetScope;
+
       // Set up resource
-      var resource = this.resource = this.widgetScope.resource = new PhysicalOperatorCollection({
+      var resource = this.resource = scope.resource = new PhysicalOperatorCollection({
         // Will always be available
-        appId: this.widgetScope.appId,
+        appId: scope.appId,
         // May be defined if on container page
-        containerId: this.widgetScope.containerId,
+        containerId: scope.containerId,
         // May be defined if on logical operator page
-        operatorName: this.widgetScope.operatorName
+        operatorName: scope.operatorName
       });
       resource.fetch();
-      resource.subscribe(this.widgetScope);
+      resource.subscribe(scope);
 
       // Set the table options
-      this.widgetScope.table_options = {
+      scope.table_options = tableOptionsFactory({
         row_limit: 10,
         initial_sorts: [
           { id: 'id', dir: '+' }
         ],
-        appInstance: this.widgetScope.appInstance
-      };
+        appInstance: scope.appInstance
+      }, scope.widget, scope);
 
       // Set the table columns
-      this.widgetScope.columns = [
+      scope.columns = [
         {
           id: 'selector',
           selector: true,
@@ -72,7 +75,7 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           key: 'id',
           filter: 'number',
           sort: 'number',
-          template: '<a dt-page-href="PhysicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorId: row.id }">{{ row.id }}</a>',
+          template: '<a dt-page-href="PhysicalOperator" params="{ appId: \'' + scope.appId + '\', operatorId: row.id }">{{ row.id }}</a>',
           width: '4em'
         },
         {
@@ -80,7 +83,7 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           key: 'name',
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + this.widgetScope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
         },
         {
           id: 'status',
@@ -163,7 +166,7 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           key: 'container',
           label: dtText.get('container_label'),
           sort: 'string',
-          template: '<a dt-page-href="Container" params="{ appId: \'' + this.widgetScope.appId + '\', containerId: row.container }" dt-container-shorthand="row.container"></a>'
+          template: '<a dt-page-href="Container" params="{ appId: \'' + scope.appId + '\', containerId: row.container }" dt-container-shorthand="row.container"></a>'
         },
         {
           id: 'latencyMA',
@@ -192,11 +195,11 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
 
       // Splice out name column if this is a partitions table
       if (resource.operatorName) {
-        this.widgetScope.columns.splice(2, 1);
+        scope.columns.splice(2, 1);
       }
 
       // Set the selected array
-      this.widgetScope.selected = [];
+      scope.selected = [];
 
     }
 

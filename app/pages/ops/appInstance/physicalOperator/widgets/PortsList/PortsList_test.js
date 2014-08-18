@@ -18,7 +18,11 @@
 describe('Factory: PortsListWidgetDef', function () {
 
   // load the service's module
-  beforeEach(module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList'));
+  beforeEach(module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', function($provide) {
+    $provide.value('tableOptionsFactory', function(object) {
+      return object;
+    });
+  }));
 
   // instantiate service
   var PortsListWidgetDef;
@@ -71,6 +75,7 @@ describe('Factory: PortsListWidgetDataModel', function () {
           data: {}
         }
       };
+      scope.widget = {};
     });
 
     it('should set scope.physicalOperator.data.ports to an empty array if it is undefined', function() {
