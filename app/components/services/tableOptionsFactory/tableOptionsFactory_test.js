@@ -23,6 +23,12 @@ describe('Service: tableOptionsFactory', function () {
     $provide.value('userStorage', {});
   }));
 
+  var scope;
+
+  beforeEach(inject(function($rootScope) {
+    scope = $rootScope.$new();
+  }));
+
   // instantiate service
   var tableOptionsFactory;
   beforeEach(inject(function (_tableOptionsFactory_) {
@@ -37,7 +43,7 @@ describe('Service: tableOptionsFactory', function () {
     var result = tableOptionsFactory({
       row_limit: 23,
       arbitrary: true
-    });
+    }, scope);
     expect(result.storage).toBeDefined();
     expect(result.arbitrary).toEqual(true);
     expect(result.row_limit).toEqual(23);
