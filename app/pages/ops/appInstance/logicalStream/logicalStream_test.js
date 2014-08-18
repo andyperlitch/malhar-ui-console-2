@@ -15,18 +15,24 @@
 */
 'use strict';
 
-angular.module('app.components.resources.LogicalStreamModel', [
-  'app.components.resources.BaseModel'
-])
-.factory('LogicalStreamModel', function(BaseModel) {
-  var LogicalStreamModel = BaseModel.extend({
-    urlKey: 'LogicalStream',
-    transformResponse: function(raw, type) {
-      var name = this.name;
-      return _.find(raw.streams, function(s) {
-        return s.name === name;
-      });
-    }
+describe('Controller: LogicalStreamCtrl', function() {
+
+  var $scope;
+
+  beforeEach(module('app.pages.ops.appInstance.logicalStream'));
+
+  beforeEach(inject(function($rootScope, $controller){
+    $scope = $rootScope.$new();
+    $controller('LogicalStreamCtrl', {
+      $scope: $scope
+
+        // Put other mock injections here...
+            
+    });
+  }));
+
+  it('should add a dashboardOptions object to the scope', function() {
+    expect(typeof $scope.dashboardOptions).toEqual('object');
   });
-  return LogicalStreamModel;
+
 });
