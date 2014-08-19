@@ -109,6 +109,11 @@ describe('BaseModel', function () {
       expect(m3.topic).toBeUndefined();
     });
 
+    it('should attach the params directly to the model', function() {
+      expect(m2_1.thing).toEqual('something');
+      expect(m2_1.otherId).toEqual('5678');
+    });
+
   });
 
   describe('the set method', function() {
