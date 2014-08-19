@@ -26,6 +26,9 @@ angular.module('app.components.widgets.dag.physical.physicalDag', [
       templateUrl: 'components/widgets/dag/physical/physicalDagDirective.html',
       scope: true,
       controller: function ($scope, $element) {
+        DagHelper.setupResize($scope);
+        DagHelper.setupActions($scope);
+
         angular.extend(this, {
           renderDag: function (physicalPlan) {
             $scope.renderer = new PhysicalDagRenderer($element, physicalPlan);
@@ -34,8 +37,6 @@ angular.module('app.components.widgets.dag.physical.physicalDag', [
         });
       },
       link: function postLink(scope, element, attrs, ctrl) {
-        DagHelper.setupActions(scope);
-
         scope.$emit('registerController', ctrl);
       }
     };

@@ -29,17 +29,9 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
       templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
       scope: true,
       controller: function ($scope, $element) {
-        $scope.resizableOptions = {
-          handles: 's'
-        };
-
-        $scope.onResize = function(event, ui) {
-          $scope.renderer.updateHeight(ui.size, ui.element);
-        };
-
-        $scope.$on('widgetResized', function (event, size) {
-          $scope.renderer.updateHeight(size);
-        });
+        DagHelper.setupResize($scope);
+        DagHelper.setupActions($scope);
+        LogicalDagHelper.setupMetrics($scope);
 
         angular.extend(this, {
           renderDag: function (logicalPlan) {
@@ -53,9 +45,6 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
         });
       },
       link: function postLink(scope, element, attrs, ctrl) {
-        DagHelper.setupActions(scope);
-        LogicalDagHelper.setupMetrics(scope);
-
         scope.$emit('registerController', ctrl);
       }
     };
