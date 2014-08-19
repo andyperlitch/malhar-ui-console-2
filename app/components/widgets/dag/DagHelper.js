@@ -19,6 +19,20 @@
 angular.module('app.components.widgets.dag.DagHelper', [])
   .factory('DagHelper', function () {
     return {
+      setupResize: function (scope) {
+        scope.resizableOptions = {
+          handles: 's'
+        };
+
+        scope.onResize = function(event, ui) {
+          scope.renderer.updateHeight(ui.size, ui.element);
+        };
+
+        scope.$on('widgetResized', function (event, size) {
+          scope.renderer.updateHeight(size);
+        });
+      },
+
       setupActions: function (scope) {
         scope.showLocality = false;
 
