@@ -73,6 +73,8 @@ angular.module('app.components.resources.BaseModel', [
       if (this.topicKey) {
         this.topic = getUri.topic(this.topicKey, params);
       }
+
+      _.extend(this, params);
     },
 
     /**
