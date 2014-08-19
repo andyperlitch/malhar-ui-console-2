@@ -382,7 +382,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         var viewbox = this.minimap.select('.minimap-viewbox');
         var viewboxWidth = $svg.width() * this.minimapMultiplier / scale;
         var viewboxHeight = $svg.height() * this.minimapMultiplier / scale;
-        var offset = this.$('.form-inline').height();
+        var offset = this.element.find('.form-inline').height();
         var x = translate[0];
         var y = translate[1];
 
@@ -399,8 +399,8 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         this.zoomBehavior.scale(1).translate([0,0]);
         this.lastZoomLevel.scale = 1;
         this.lastZoomLevel.translate = [0,0];
-        this.$('svg.svg-main > g > g').attr('transform', null);
-        this.updateMinimap($('svg.svg-main'), [0,0], 1);
+        this.element.find('svg.svg-main > g > g').attr('transform', null);
+        this.updateMinimap(this.element.find('svg.svg-main'), [0,0], 1);
       },
 
       createStreamLocalityMap: function () {
