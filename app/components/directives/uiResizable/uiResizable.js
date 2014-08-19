@@ -21,10 +21,10 @@ angular.module('app.components.directives.uiResizable', [])
     restrict: 'A',
     scope: {
       callback: '&onResize',
-      options: '=uiResizable'
+      resizableOptions: '='
     },
     link: function postLink(scope, elem, attrs) {
-      elem.resizable(scope.options);
+      elem.resizable(scope.resizableOptions);
       elem.on('resizestop', function (event, ui) {
         if (attrs.onResize) {
           scope.callback({ event: event, ui: ui });

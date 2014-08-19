@@ -20,7 +20,8 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
   [
     'app.components.directives.logicalDag.LogicalDagRenderer',
     'app.components.directives.logicalDag.MetricModelFactory',
-    'app.components.widgets.dag.DagHelper'
+    'app.components.widgets.dag.DagHelper',
+    'app.components.directives.uiResizable'
   ])
   .directive('dtLogicalDag', function (LogicalDagRenderer, DagHelper, LogicalDagHelper) {
     return {
@@ -28,6 +29,18 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
       templateUrl: 'components/widgets/dag/logical/logicalDagDirective.html',
       scope: true,
       controller: function ($scope, $element) {
+        $scope.resizableOptions = {
+          handles: 's'
+        };
+
+        $scope.onResize = function(event, ui) {
+          $scope.renderer.updateHeight(ui.size, ui.element);
+        };
+
+        $scope.$on('widgetResized', function (event, size) {
+          $scope.renderer.updateHeight(size);
+        });
+
         angular.extend(this, {
           renderDag: function (logicalPlan) {
             $scope.renderer = new LogicalDagRenderer($element, logicalPlan);
@@ -127,7 +140,6 @@ angular.module('app.components.widgets.dag.physical.logicalDag',
 
           if (scope.renderer && !scope.metricModel.isNone()) {
             scope.metricModel.update(collection);
-            //console.log(scope.renderer);
             scope.renderer.updateMetricLabels(scope.metricModel);
           }
 
