@@ -21,7 +21,7 @@ angular.module('app.components.resources.LogicalStreamModel', [
 .factory('LogicalStreamModel', function(BaseModel) {
   var LogicalStreamModel = BaseModel.extend({
     urlKey: 'LogicalStream',
-    transformResponse: function(raw, type) {
+    transformResponse: function(raw) {
       var name = this.name;
       return _.find(raw.streams, function(s) {
         return s.name === name;

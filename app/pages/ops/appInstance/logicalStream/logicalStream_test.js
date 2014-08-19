@@ -19,7 +19,15 @@ describe('Controller: LogicalStreamCtrl', function() {
 
   var $scope;
 
-  beforeEach(module('app.pages.ops.appInstance.logicalStream'));
+  beforeEach(module('app.pages.ops.appInstance.logicalStream', function($provide) {
+    $provide.value('webSocket', {
+      subscribe: jasmine.createSpy(),
+      unsubscribe: jasmine.createSpy()
+    });
+    $provide.value('breadcrumbs', {
+      options: {}
+    });
+  }));
 
   beforeEach(inject(function($rootScope, $controller){
     $scope = $rootScope.$new();

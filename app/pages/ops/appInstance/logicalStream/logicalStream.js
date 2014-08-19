@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.pages.ops.appInstance.logicalStream', [
+  'ngRoute',
   'app.settings',
   'app.components.resources.LogicalStreamModel',
   'app.components.resources.ApplicationModel',
