@@ -145,6 +145,17 @@ describe('Service: BaseResource', function () {
       expect(r.onFetchError).toHaveBeenCalled();  
     });
 
+    it('should be able to set fetchError to truthy in the transformResponse method', function() {
+      r.transformResponse = function() {
+        this.fetchError = true;
+      };
+      // good response
+      reqHandler.respond({});
+      r.fetch();
+      $httpBackend.flush();
+      expect(r.fetchError).toEqual(true);
+    });
+
   });
 
 });

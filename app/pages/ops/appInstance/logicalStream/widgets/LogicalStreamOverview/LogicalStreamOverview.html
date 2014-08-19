@@ -1,8 +1,8 @@
 <div class="overview-container">
   <h2>
-    <span ng-if="logicalStream.fetching" dt-text>loading...</span>
+    <span ng-if="logicalStream.fetching" dt-text class="text-muted">loading...</span>
     <span ng-if="!logicalStream.fetching && !logicalStream.fetchError">{{ logicalStream.data.name }}</span>
-    <span ng-if="!logicalStream.fetching && logicalStream.fetchError">(<span dt-text>Failed to load</span>)</span>
+    <span ng-if="!logicalStream.fetching && logicalStream.fetchError"><span dt-text class="text-danger">failed to load stream</span></span>
   </h2>
   <h4 ng-if="!logicalStream.fetching && !logicalStream.fetchError">
 

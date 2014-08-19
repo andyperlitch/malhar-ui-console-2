@@ -58,13 +58,13 @@ angular.module('app.components.resources.BaseResource', [
       httpPromise.then(
         function(response) {
 
-          // Transform and store response data
-          var transformed = self._getTransformed(response.data, 'fetch');
-          self.set(transformed);
-          
           // Update fetching flags
           self.fetching = false;
           self.fetchError = false;
+
+          // Transform and store response data
+          var transformed = self._getTransformed(response.data, 'fetch');
+          self.set(transformed);
           
           // Resolve deferred
           deferred.resolve(transformed);

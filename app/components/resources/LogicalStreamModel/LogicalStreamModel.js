@@ -23,9 +23,14 @@ angular.module('app.components.resources.LogicalStreamModel', [
     urlKey: 'LogicalStream',
     transformResponse: function(raw) {
       var name = this.name;
-      return _.find(raw.streams, function(s) {
+      var stream = _.find(raw.streams, function(s) {
         return s.name === name;
       });
+      if (stream) {
+        return stream;
+      }
+      this.fetchError = new Error('Stream \'' + name + '\' was not found.');
+      return {};
     }
   });
   return LogicalStreamModel;
