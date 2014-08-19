@@ -54,7 +54,7 @@ angular.module('app.settings', [])
       LicenseLastRequest       :'/ws/:v/licenses/lastRequest',
       LogicalOperator          :'/ws/:v/applications/:appId/logicalPlan/operators',
       LogicalPlan              :'/ws/:v/applications/:appId/logicalPlan',
-      LogicalStream            :'/ws/:v/applications/:appId/logicalPlan/streams',
+      LogicalStream            :'/ws/:v/applications/:appId/logicalPlan',
       OpProperties             :'/ws/:v/applications/:appId/logicalPlan/operators/:operatorName/properties',
       PhysicalOperator         :'/ws/:v/applications/:appId/physicalPlan/operators',
       PhysicalPlan             :'/ws/:v/applications/:appId/physicalPlan',
