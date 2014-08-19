@@ -6,7 +6,7 @@
   </h2>
   <h4 ng-if="!logicalStream.fetching && !logicalStream.fetchError">
 
-    <small>locality:</small> {{ data.locality || dtText.get('locality_not_assigned') }}
+    <small>locality:</small> {{ logicalStream.data.locality || dtText.get('locality_not_assigned') }}
     
   </h4>
 </div>
