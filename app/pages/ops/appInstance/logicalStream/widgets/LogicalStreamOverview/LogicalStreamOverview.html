@@ -1,3 +1,12 @@
-<h1>
-  {{ logicalStream.data.name }}
-</h1>
+<div class="overview-container">
+  <h2>
+    <span ng-if="logicalStream.fetching" dt-text>loading...</span>
+    <span ng-if="!logicalStream.fetching && !logicalStream.fetchError">{{ logicalStream.data.name }}</span>
+    <span ng-if="!logicalStream.fetching && logicalStream.fetchError">(<span dt-text>Failed to load</span>)</span>
+  </h2>
+  <h4 ng-if="!logicalStream.fetching && !logicalStream.fetchError">
+
+    <small>locality:</small> {{ data.locality || dtText.get('locality_not_assigned') }}
+    
+  </h4>
+</div>

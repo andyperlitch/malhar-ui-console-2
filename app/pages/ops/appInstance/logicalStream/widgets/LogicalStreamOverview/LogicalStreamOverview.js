@@ -24,13 +24,17 @@
 // Module Definition
 angular.module('app.pages.ops.appInstance.logicalStream.widgets.LogicalStreamOverview', [
   'app.components.widgets.Base',
+  'app.components.services.dtText',
   'app.settings'
 ])
 
 // Widget Data Model
-.factory('LogicalStreamOverviewWidgetDataModel', function(BaseDataModel) {
+.factory('LogicalStreamOverviewWidgetDataModel', function(BaseDataModel, dtText) {
   var LogicalStreamOverviewWidgetDataModel = BaseDataModel.extend({
-
+    init: function() {
+      var scope = this.widgetScope;
+      scope.dtText = dtText;
+    }
   });
   return LogicalStreamOverviewWidgetDataModel;
 })
@@ -40,7 +44,7 @@ angular.module('app.pages.ops.appInstance.logicalStream.widgets.LogicalStreamOve
   var LogicalStreamOverviewWidgetDef = BaseWidget.extend({
     defaults: {
       dataModelType: LogicalStreamOverviewWidgetDataModel,
-      title: 'Overview', // default display name (editable by user)
+      title: 'Stream', // default display name (editable by user)
       templateUrl: 'pages/ops/appInstance/logicalStream/widgets/LogicalStreamOverview/LogicalStreamOverview.html'
     }
   });
