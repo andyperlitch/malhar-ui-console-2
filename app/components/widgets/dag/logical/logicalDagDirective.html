@@ -1,4 +1,4 @@
-<div class="app-dag logical-dag">
+<div class="app-dag logical-dag" ui-resizable resizable-options="resizableOptions" on-resize="onResize(event, ui);">
     <div class="form-inline">
         <span dt-select label="Top:" ng-model="metric1" class="metric-select" value="metric1" options="metrics"></span>
         <span dt-select label="Bottom:" ng-model="metric2" class="metric2-select" value="metric2" options="metrics"></span>

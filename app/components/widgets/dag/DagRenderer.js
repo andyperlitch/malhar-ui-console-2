@@ -21,6 +21,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
     function DagRenderer(element, dagPlan) {
       this.onlyScrollOnAlt = true;
       this.element = element;
+      this.svgMain = jQuery(this.element).find('.app-dag > .svg-main');
       this.graph = this.buildGraph(dagPlan);
       this.streams = dagPlan.streams;
     }
@@ -31,7 +32,19 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         this.renderLegend(this.element);
 
         // Renders the main graph
-        this.renderGraph(this.graph, jQuery(this.element).find('.app-dag > .svg-main')[0]); //TODO no jQuery
+        this.renderGraph(this.graph, this.svgMain.get(0)); //TODO no jQuery
+      },
+
+      updateHeight: function(size, resizableElement) {
+        if (resizableElement) {
+          var offset = this.svgMain[0].getBoundingClientRect().top - resizableElement[0].getBoundingClientRect().top;
+          this.svgMain.height(resizableElement.height() - offset);
+        }
+
+        var main = this.svgMain.find('g > g');
+        var main_dimensions = main.get(0).getBoundingClientRect();
+        this.svgMain.find('.dag-minimap').remove();
+        this.renderMinimap(this.d3Graph, main_dimensions, this.svgMain);
       },
 
       renderLegend: function (element) {
@@ -119,7 +132,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         var renderer = new dagreD3.Renderer();
 
         // Extend original post render function
-        var oldPostRender = renderer._postRender;
+        var oldPostRender = this.defaultPostRender;
         renderer._postRender = function (graph, root) {
           oldPostRender.call(renderer, graph, root);
           this.graph = graph;
@@ -142,6 +155,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
 
         // Run the renderer
         var d3_graph = renderer.layout(layout).run(dagreD3.json.decode(nodes, links), svg.append('g'));
+        this.d3Graph = d3_graph;
 
         // Adjusting height to content
         var main = svgParent.find('g > g');
@@ -164,10 +178,10 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
           scale: zoomBehavior.scale()
         };
 
-        zoomBehavior.on('zoom', function () {
+        zoomBehavior.on('zoom', function() {
           var ev = d3.event;
 
-          if (self.onlyScrollOnAlt && !ev.sourceEvent.altKey && ev.sourceEvent.type === 'wheel') {
+          if (self.onlyScrollOnAlt && !ev.sourceEvent.altKey && (ev.sourceEvent.type === 'wheel' || ev.sourceEvent.type === 'mousewheel')) {
             var sev = ev.sourceEvent;
             window.scrollBy(0, sev.deltaY);
             zoomBehavior.translate(lastZoomLevel.translate);
@@ -188,6 +202,26 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         zoomBehavior(d3.select(svgParent.get(0)));
       },
 
+      // Due to issue with dagre-d3 library
+      defaultPostRender: function (graph, root) {
+        if (graph.isDirected() && root.select('#arrowhead').empty()) {
+          root
+            .append('svg:defs')
+            .append('svg:marker')
+            .attr('id', 'arrowhead')
+            .attr('viewBox', '0 0 10 10')
+            .attr('refX', 8)
+            .attr('refY', 5)
+            // .attr('markerUnits', 'strokewidth')
+            .attr('markerWidth', 8)
+            .attr('markerHeight', 5)
+            .attr('orient', 'auto')
+            .attr('style', 'fill: #333')
+            .append('svg:path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+        }
+      },
+
       /**
        * Creates minimap of the dag view.
        * @param  {d3.Digraph}   graph
@@ -195,26 +229,34 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
        * @param  {jQuery}       root                Root svg element as a jquery element
        * @return {void}
        */
-      renderMinimap: function (graph, graph_dimensions, $root) {
-
+      renderMinimap: function(graph, graph_dimensions, $root) {
         // Reference to the group that gets transform attribute updated.
         var graphGroup = $root.find('g>g')[0];
 
         // Padding for the map
         var mapPadding = 10;
-        var halfMapPadding = mapPadding / 2;
+        var halfMapPadding = mapPadding/2;
 
         // Width and Height of root svg element in widget
-        var rootWidth = $root.width();
-        var rootHeight = $root.height();
+        var rootWidth = this.svgMain.width();
+        var rootHeight = this.svgMain.height();
 
         // The map's width
         var minimapWidth = rootWidth * 0.2;
         // The ratio between the map and the graph
         var mapMultiplier = this.minimapMultiplier = minimapWidth / graph_dimensions.width;
         // Map height
-        var minimapHeight = graph_dimensions.height * mapMultiplier + mapPadding;
+        var minimapHeight = graph_dimensions.height * mapMultiplier;
+
+        var svgMainHeight = this.svgMain.height();
+        if (minimapHeight > svgMainHeight - 60) {
+          minimapHeight = svgMainHeight - 60;
+          mapMultiplier = this.minimapMultiplier = minimapHeight / graph_dimensions.height;
+          minimapWidth = graph_dimensions.width * mapMultiplier;
+        }
+
         // adjust minimapWidth with padding
+        minimapHeight += mapPadding;
         minimapWidth += mapPadding;
 
         // Create the minimap group
@@ -223,7 +265,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
           .attr({
             'class': 'dag-minimap',
             // minus 1 to include bottom and right borders for minimap
-            'transform': 'translate(' + (rootWidth - minimapWidth - 1) + ',' + (rootHeight - minimapHeight - 1) + ')'
+            'transform': 'translate(' + (rootWidth - minimapWidth - 1) + ',' + (rootHeight - minimapHeight -1) + ')'
           });
 
         // backdrop
@@ -243,10 +285,10 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
           });
 
         // edges
-        graph.eachEdge(function (stream_id, source_name, sink_name, info) {
+        graph.eachEdge(function(stream_id, source_name, sink_name, info) {
           minimap.append('path')
             .attr('class', 'minimap-stream')
-            .attr('d', function () {
+            .attr('d', function() {
 
               var points;
               // var points = info.points; // uncomment if cpettit ever fixes this
@@ -254,29 +296,27 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
               // HACK: points no longer contain endpoints on nodes
               var src = graph.node(source_name);
               var dest = graph.node(sink_name);
-              points = [
-                {x: src.x, y: src.y}
-              ].concat(info.points);
+              points = [{x: src.x, y: src.y}].concat(info.points);
               points = points.concat({x: dest.x, y: dest.y});
 
-              var point_strings = _.map(points, function (point) {
-                return (point.x * mapMultiplier + halfMapPadding) +
-                  ',' + (point.y * mapMultiplier + halfMapPadding);
+              var point_strings = _.map(points, function(point) {
+                return (point.x * mapMultiplier + halfMapPadding) + ',' + (point.y * mapMultiplier + halfMapPadding);
               });
+
               return 'M' + point_strings.join('L');
             });
         });
 
         // nodes
-        graph.eachNode(function (nodeName, info) {
+        graph.eachNode(function(nodeName, info) {
           var width, height;
           minimap.append('rect')
             .attr({
               'class': 'minimap-operator',
               'width': width = info.width * mapMultiplier,
               'height': height = info.height * mapMultiplier,
-              'x': info.x * mapMultiplier - width / 2 + halfMapPadding,
-              'y': info.y * mapMultiplier - height / 2 + halfMapPadding
+              'x': info.x * mapMultiplier - width/2 + halfMapPadding,
+              'y': info.y * mapMultiplier - height/2 + halfMapPadding
             });
         });
 
@@ -299,7 +339,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
             'width': minimapWidth
           });
 
-        var updateGraphPosition = _.bind(function () {
+        var updateGraphPosition = _.bind(function() {
           // d3.event.preventDefault();
           // d3.event.stopPropagation(); // silence other listeners
           var scale = this.zoomBehavior.scale();
@@ -307,21 +347,23 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
           var y = ((d3.event.y - viewbox.attr('height') / 2) / mapMultiplier) * scale;
           graphGroup.setAttribute('transform', 'translate(' + -x + ',' + -y + ') scale(' + scale + ')');
           // console.log('scale: ', this.zoomBehavior.scale());
-          this.zoomBehavior.translate([-x, -y]);
-          this.updateMinimap($root, [-x, -y], scale);
+          this.zoomBehavior.translate([-x,-y]);
+          this.updateMinimap($root,[-x,-y], scale);
         }, this);
 
         var drag = d3.behavior.drag()
-        .on('drag', function () {
-          updateGraphPosition();
-        })
-        .on('dragstart', function () {
-          // console.log('drag starting');
-          // updateGraphPosition();
-        });
+          // .on('drag', updateGraphPosition)
+          // .on("dragstart", updateGraphPosition);
+          .on('drag', function() {
+            updateGraphPosition();
+          })
+          .on('dragstart', function() {
+            // console.log('drag starting');
+            // updateGraphPosition();
+          });
 
         interaction
-          .on('mousedown', function () {
+          .on('mousedown', function() {
             d3.event.preventDefault();
             d3.event.stopPropagation();
           })
@@ -336,11 +378,11 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
        * @param  {Number} scale     scale of the zoom
        * @return {void}
        */
-      updateMinimap: function ($svg, translate, scale) {
+      updateMinimap: function($svg, translate, scale) {
         var viewbox = this.minimap.select('.minimap-viewbox');
         var viewboxWidth = $svg.width() * this.minimapMultiplier / scale;
         var viewboxHeight = $svg.height() * this.minimapMultiplier / scale;
-        var offset = $svg.position().top;
+        var offset = this.$('.form-inline').height();
         var x = translate[0];
         var y = translate[1];
 
@@ -352,12 +394,13 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         });
       },
 
-      resetPosition: function () {
-        this.zoomBehavior.scale(1).translate([0, 0]);
+      resetPosition: function(e) {
+        e.preventDefault();
+        this.zoomBehavior.scale(1).translate([0,0]);
         this.lastZoomLevel.scale = 1;
-        this.lastZoomLevel.translate = [0, 0];
-        jQuery(this.element).find('svg.svg-main > g > g').attr('transform', null);
-        this.updateMinimap($('svg.svg-main'), [0, 0], 1);
+        this.lastZoomLevel.translate = [0,0];
+        this.$('svg.svg-main > g > g').attr('transform', null);
+        this.updateMinimap($('svg.svg-main'), [0,0], 1);
       },
 
       createStreamLocalityMap: function () {
