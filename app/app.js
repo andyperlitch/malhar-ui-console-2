@@ -48,6 +48,7 @@ angular.module('app', [
   'app.pages.ops.appInstance.physicalOperator',
   'app.pages.ops.appInstance.physicalOperator.port',
   'app.pages.ops.appInstance.container',
+  'app.pages.ops.appInstance.container.containerLog',
   'app.pages.ops.appInstance.logicalStream',
 
   // misc
