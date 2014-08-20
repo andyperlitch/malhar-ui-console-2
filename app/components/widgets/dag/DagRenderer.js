@@ -394,7 +394,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         });
       },
 
-      resetPosition: function() {
+      resetPosition: function () {
         this.zoomBehavior.scale(1).translate([0,0]);
         this.lastZoomLevel.scale = 1;
         this.lastZoomLevel.translate = [0,0];
