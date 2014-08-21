@@ -18,10 +18,15 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function ($scope,breadcrumbs) {
+.controller('AppCtrl', function ($scope, breadcrumbs, $routeParams, setupBreadcrumbs) {
   // Initialize options
   breadcrumbs.options = {};
 
   // Set to scope
   $scope.breadcrumbs = breadcrumbs;
+
+  $scope.$on('$routeChangeSuccess', function() {
+    setupBreadcrumbs(breadcrumbs, $routeParams);
+  });
+
 });
