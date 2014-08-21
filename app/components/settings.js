@@ -93,6 +93,12 @@ angular.module('app.settings', [])
 
     },
 
+    // Page Routes
+    // 
+    // Used by routing definitions and 
+    // by the dt-page-href directive.
+    // This is the single source of truth
+    // for routes.
     pages: {
       AppInstance              :'/ops/apps/:appId',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
@@ -101,6 +107,16 @@ angular.module('app.settings', [])
       LogicalStream            :'/ops/apps/:appId/logicalPlan/streams/:streamName',
       Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
       ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName'
+    },
+
+    breadcrumbs: {
+      appInstance              :':appId',
+      container                :':containerId',
+      logicalOperator          :'Logical Operator: :operatorName',
+      physicalOperator         :'Physical Operator: :operatorId',
+      logicalStream            :'Stream: :streamName',
+      containerLog             :'Log: :logName',
+      port                     :'Port: :portId'
     },
 
     stramEvents: {

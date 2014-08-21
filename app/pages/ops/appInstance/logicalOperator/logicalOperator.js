@@ -31,7 +31,7 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
       .when(settings.pages.LogicalOperator, {
         controller: 'LogicalOperatorCtrl',
         templateUrl: 'pages/ops/appInstance/logicalOperator/logicalOperator.html',
-        label: 'Logical Operator'
+        label: 'logicalOperator'
       });
   })
 
@@ -48,10 +48,6 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
     OpMetricsWidgetDef
   ) {
     
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = $routeParams.appId;
-    breadcrumbs.options['Logical Operator'] = 'Logical Operator: ' + $routeParams.operatorName;
-
     // Set scope info for use by widgets
     $scope.operatorName = $routeParams.operatorName;
     $scope.appId = $routeParams.appId;

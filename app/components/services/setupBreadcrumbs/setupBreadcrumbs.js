@@ -15,22 +15,14 @@
 */
 'use strict';
 
-describe('Controller: PortPageCtrl', function() {
-
-    var $scope;
-    
-    beforeEach(module('app.pages.ops.appInstance.physicalOperator.port'));
-
-    beforeEach(inject(function($rootScope, $controller){
-
-        $scope = $rootScope.$new();
-        $controller('PortPageCtrl', {
-            $scope: $scope
-        });
-    }));
-
-    it('should put a dashboardOptions object on the $scope', function() {
-      expect(typeof $scope.dashboardOptions).toEqual('object');
+angular.module('app.components.services.setupBreadcrumbs', [
+  'app.settings',
+  'app.components.services.getUri'
+])
+.factory('setupBreadcrumbs', function(settings, getUri) {
+  return function(breadcrumbs, $routeParams) {
+    _.each(settings.breadcrumbs, function(template, key) {
+      breadcrumbs.options[key] = getUri.breadcrumb(key, $routeParams);
     });
-
+  };
 });

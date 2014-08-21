@@ -40,6 +40,7 @@ angular.module('app', [
   'app.components.services.dtText',
   'app.components.services.extend',
   'app.components.services.userStorage',
+  'app.components.services.setupBreadcrumbs',
 
   // pages
   'app.pages.ops',

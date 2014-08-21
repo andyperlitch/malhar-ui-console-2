@@ -45,7 +45,7 @@ angular.module('app.pages.ops.appInstance', [
       .when(settings.pages.AppInstance, {
         controller: 'AppInstanceCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'App Instance'
+        label: 'appInstance'
       });
   })
 
@@ -66,9 +66,6 @@ angular.module('app.pages.ops.appInstance', [
     breadcrumbs,
     dashboardOptionsFactory
   ) {
-
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = $routeParams.appId;
 
     // Set appId on scope for use
     $scope.appId = $routeParams.appId;

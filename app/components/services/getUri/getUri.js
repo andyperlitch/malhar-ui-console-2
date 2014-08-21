@@ -51,6 +51,10 @@ angular.module('app.components.services.getUri', ['app.settings'])
     page: function(key, params) {
       var template = settings.pages[key];
       return '#' + interpolateParams(template, angular.extend({}, params));
+    },
+    breadcrumb: function(key, params) {
+      var template = settings.breadcrumbs[key];
+      return interpolateParams(template, angular.extend({}, params));
     }
   };
 });
