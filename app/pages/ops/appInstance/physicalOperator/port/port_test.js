@@ -17,43 +17,20 @@
 
 describe('Controller: PortPageCtrl', function() {
 
-    var $scope, breadcrumbs;
+    var $scope;
     
     beforeEach(module('app.pages.ops.appInstance.physicalOperator.port'));
 
     beforeEach(inject(function($rootScope, $controller){
 
-        breadcrumbs = { options: {} };
-
         $scope = $rootScope.$new();
         $controller('PortPageCtrl', {
-            $scope: $scope,
-            breadcrumbs: breadcrumbs,
-            $routeParams: {
-              appId: 'app1',
-              operatorId: 'operator1',
-              portId: 'port1'
-            }
+            $scope: $scope
         });
     }));
 
     it('should put a dashboardOptions object on the $scope', function() {
       expect(typeof $scope.dashboardOptions).toEqual('object');
-    });
-
-    it('should set breadcrumbs.options.Port to a string containing $routeParams.portId', function() {
-      expect(typeof breadcrumbs.options.Port).toEqual('string');
-      expect(breadcrumbs.options.Port.indexOf('port1')).toBeGreaterThan(-1);
-    });
-
-    it('should set breadcrumbs.options["Physical Operator"] to a string containing $routeParams.operatorId', function() {
-      expect(typeof breadcrumbs.options['Physical Operator']).toEqual('string');
-      expect(breadcrumbs.options['Physical Operator'].indexOf('operator1')).toBeGreaterThan(-1);
-    });
-
-    it('should set breadcrumbs.options.appInstance to a string containing $routeParams.appId', function() {
-      expect(typeof breadcrumbs.options['App Instance']).toEqual('string');
-      expect(breadcrumbs.options['App Instance'].indexOf('app1')).toBeGreaterThan(-1);
     });
 
 });
