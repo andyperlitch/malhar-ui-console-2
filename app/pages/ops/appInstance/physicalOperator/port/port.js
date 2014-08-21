@@ -27,17 +27,12 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
       .when(settings.pages.Port, {
         controller: 'PortPageCtrl',
         templateUrl: 'pages/ops/appInstance/physicalOperator/port/port.html',
-        label: 'Port'
+        label: 'port'
       });
   })
 
   // Controller
-  .controller('PortPageCtrl', function($scope, $routeParams, dashboardOptionsFactory, breadcrumbs) {
-
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = $routeParams.appId;
-    breadcrumbs.options['Physical Operator'] = 'Physical Operator: ' + $routeParams.operatorId;
-    breadcrumbs.options.Port = 'Port: ' + $routeParams.portId;
+  .controller('PortPageCtrl', function($scope, $routeParams, dashboardOptionsFactory) {
 
     var widgetDefinitions = [];
     var defaultWidgets = [];

@@ -29,7 +29,7 @@ angular.module('app.pages.ops.appInstance.logicalStream', [
       .when(settings.pages.LogicalStream, {
         controller: 'LogicalStreamCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'Logical Stream'
+        label: 'logicalStream'
       });
   })
 
@@ -37,16 +37,11 @@ angular.module('app.pages.ops.appInstance.logicalStream', [
   .controller('LogicalStreamCtrl', function (
     $scope,
     $routeParams,
-    breadcrumbs,
     ApplicationModel,
     LogicalStreamModel,
     dashboardOptionsFactory,
     LogicalStreamOverviewWidgetDef
   ) {
-    
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = $routeParams.appId;
-    breadcrumbs.options['Logical Stream'] = 'Stream: ' + $routeParams.streamName;
 
     // Set scope info for use by widgets
     $scope.streamName = $routeParams.streamName;

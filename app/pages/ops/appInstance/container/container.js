@@ -32,7 +32,7 @@ angular.module('app.pages.ops.appInstance.container', [
       .when(settings.pages.Container, {
         controller: 'ContainerCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'Container'
+        label: 'container'
       });
   })
 
@@ -55,12 +55,6 @@ angular.module('app.pages.ops.appInstance.container', [
     // Set appId and containerId on scope for use
     var appId = $scope.appId = $routeParams.appId;
     var containerId = $scope.containerId = $routeParams.containerId;
-
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = appId;
-    breadcrumbs.options.Container = containerId;
-
-    
 
     // Store array of active container states
     $scope.NONENDED_CONTAINER_STATES = settings.NONENDED_CONTAINER_STATES;

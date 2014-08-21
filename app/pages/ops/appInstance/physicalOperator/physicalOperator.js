@@ -31,7 +31,7 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
       .when(settings.pages.PhysicalOperator, {
         controller: 'PhysicalOperatorCtrl',
         templateUrl: 'pages/ops/appInstance/physicalOperator/physicalOperator.html',
-        label: 'Physical Operator'
+        label: 'physicalOperator'
       });
   })
 
@@ -47,10 +47,6 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
     PortsListWidgetDef,
     OpMetricsWidgetDef
   ) {
-    
-    // Set up breadcrumb label
-    breadcrumbs.options['App Instance'] = $routeParams.appId;
-    breadcrumbs.options['Physical Operator'] = 'Physical Operator: ' + $routeParams.operatorId;
 
     // Set scope info for use by widgets
     $scope.operatorId = $routeParams.operatorId;
