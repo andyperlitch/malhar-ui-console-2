@@ -105,14 +105,15 @@ describe('Directive: dtBreadcrumbCollection', function () {
     expect($.trim(element.find('.dropdown-toggle').text())).toEqual('budgies');
   });
 
-  describe('when the dropdown is clicked', function() {
+  describe('when the dropdown is shown', function() {
 
     beforeEach(function() {
       mocks.BudgieCollection.prototype.fetch = function() {
         isoScope.resource.fetching = true;
+        return { then: function() {}};
       };
       spyOn(mocks.BudgieCollection.prototype, 'fetch').and.callThrough();
-      element.find('.dropdown-toggle').trigger('click');
+      element.find('.btn-group').trigger('show.bs.dropdown');
       scope.$digest();
     });
 
@@ -121,20 +122,9 @@ describe('Directive: dtBreadcrumbCollection', function () {
     });
 
     it('should say loading in the menu while the resource is fetching', function() {
-      expect($.trim(element.find('.dropdown-menu li').text())).toEqual('!loading...!');
-    });
-
-  });
-
-  describe('the pick function', function() {
-    
-    it('should be a function', function() {
-      expect(typeof isoScope.pick).toEqual('function');
-    });
-
-    it('should create a new object extracted from the first arg, specified by second arg', function() {
-      var result = isoScope.pick({ id: '123', name: 'andy', foo: 'bar' }, { appId: 'id', appName: 'name' });
-      expect(result).toEqual({ appId: '123', appName: 'andy' });
+      var el = element.find('.dropdown-menu li:eq(0)');
+      expect($.trim(el.text())).toEqual('!loading...!');
+      expect(el.hasClass('ng-hide')).toEqual(false);
     });
 
   });
