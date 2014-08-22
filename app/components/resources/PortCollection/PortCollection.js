@@ -28,7 +28,6 @@ angular.module('app.components.resources.PortCollection', [
       var operator = _.find(raw.operators, function(o) {
         return o.id === operatorId;
       });
-      console.log('operator', operator.ports);
       if (operator) {
         return operator.ports;
       }

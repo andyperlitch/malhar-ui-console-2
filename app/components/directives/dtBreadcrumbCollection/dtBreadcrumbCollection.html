@@ -3,13 +3,21 @@
     {{ collection.label }}
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li ng-if="resource.fetching">
+    <li ng-show="resource.fetching">
       <span class="text-muted" dt-text>loading...</span>
     </li>
-    <li ng-if="!resource.fetching" ng-repeat="row in resource.data">
-      <a dt-page-href page-key="collection.dtPage" params="pick(extend({},row,routeParams), collection.dtPageParams)">{{ row[resource._idAttribute_] }}</a>
+    <li ng-show="!resource.fetching">
+      <form action="" class="search-form">
+        <input type="text" class="form-control" ng-model="search.term" placeholder="search">
+      </form>
     </li>
-    <li ng-if="resource.fetchError">
+    <li ng-show="!resource.fetching" ng-repeat="row in resource.data | filter:search.term | orderBy:collection.orderBy | limitTo:search.limit">
+      <span ng-include="collection.templateUrl"></span>
+    </li>
+    <li ng-show="search.limit < resource.data.length">
+      <strong><a href="#" ng-click="incrementLimit($event)" dt-text>show more</a></strong>
+    </li>
+    <li ng-show="resource.fetchError">
       <span class="text-danger" dt-text>An error occurred</span>
     </li>
   </ul>

@@ -64,7 +64,7 @@ angular.module('app.components.resources.BaseModel', [
         params = {};
       }
 
-      if ( typeof params === 'object' && params.hasOwnProperty(this.idAttribute) ) {
+      if ( typeof params === 'object' && params.hasOwnProperty(this.idAttribute) && !this.doNotAppendIdAttribute) {
         id = params[this.idAttribute];
       }
 

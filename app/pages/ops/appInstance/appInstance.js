@@ -23,12 +23,14 @@
 angular.module('app.pages.ops.appInstance', [
   'ngRoute',
   'app.settings',
+  'app.components.directives.dtPageHref',
   'app.components.services.appManager',
   'app.components.services.dashboardOptionsFactory',
   'app.components.resources.ApplicationModel',
+  'app.components.widgets.PhysicalOperatorsList',
   'app.pages.ops.appInstance.widgets.AppInstanceOverview',
   'app.pages.ops.appInstance.widgets.LogicalOperatorsList',
-  'app.components.widgets.PhysicalOperatorsList',
+  
   'app.pages.ops.appInstance.widgets.ContainersList',
   'app.pages.ops.appInstance.widgets.StramEvents',
   'app.pages.ops.appInstance.widgets.dag.LogicalDag',
@@ -50,8 +52,8 @@ angular.module('app.pages.ops.appInstance', [
           label: 'apps',
           resource: 'ApplicationCollection',
           resourceParams: [],
-          dtPage: 'AppInstance',
-          dtPageParams: { appId: 'id' }
+          templateUrl: 'pages/ops/appInstance/breadcrumbTemplate.html',
+          orderBy: 'name'
         }
       });
   })
