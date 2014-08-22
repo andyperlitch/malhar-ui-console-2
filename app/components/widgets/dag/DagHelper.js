@@ -24,10 +24,6 @@ angular.module('app.components.widgets.dag.DagHelper', [])
           handles: 's'
         };
 
-        scope.onResize = function(event, ui) {
-          scope.renderer.updateHeight(ui.size, ui.element);
-        };
-
         scope.$on('widgetResized', function (event, size) {
           scope.renderer.updateHeight(size);
         });
