@@ -37,11 +37,8 @@ angular.module('app.pages.ops.appInstance.container', [
           label: 'containers',
           resource: 'ContainerCollection',
           resourceParams: ['appId'],
-          dtPage: 'Container',
-          dtPageParams: {
-            containerId: 'id',
-            appId: 'appId'
-          }
+          templateUrl: 'pages/ops/appInstance/container/breadcrumbTemplate.html',
+          orderBy: 'id'
         }
       });
   })

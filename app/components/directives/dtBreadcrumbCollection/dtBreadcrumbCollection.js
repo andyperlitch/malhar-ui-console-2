@@ -18,16 +18,7 @@
 angular.module('app.components.directives.dtBreadcrumbCollection', [
   'app.components.directives.dtText'
 ])
-.factory('dtBreadcrumbCollectionPick', function() {
-  return function(source, keys) {
-    var result = {};
-    _.each(keys, function(key, target) {
-      result[target] = source[key];
-    });
-    return result;
-  };
-})
-.directive('dtBreadcrumbCollection', function($injector, dtBreadcrumbCollectionPick) {
+.directive('dtBreadcrumbCollection', function($injector, $timeout) {
   return {
     scope: {
       collection: '=dtBreadcrumbCollection',
@@ -38,12 +29,31 @@ angular.module('app.components.directives.dtBreadcrumbCollection', [
       var Resource = $injector.get(scope.collection.resource);
       var resourceParams = _.pick(scope.routeParams, scope.collection.resourceParams);
       scope.resource = new Resource(resourceParams);
-      scope.pick = dtBreadcrumbCollectionPick;
-      scope.extend = _.extend;
+      scope.search = {
+        limit:10
+      };
+
+      // Set scope methods
+      scope.incrementLimit = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        scope.search.limit += 10;
+      };
 
       // Set click listener
-      element.find('.dropdown-toggle').on('click', function() {
-        scope.resource.fetch();
+      element.find('.btn-group').on('show.bs.dropdown', function() {
+        scope.resource.fetch().then(function() {
+          $timeout(function() {
+            element.find('.search-form input').focus();
+          }, 100);
+        });
+        scope.search = {
+          limit:10
+        };
+      });
+      element.find('.search-form input').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
       });
     }
   };

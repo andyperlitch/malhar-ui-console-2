@@ -41,7 +41,7 @@ angular.module('app.components.resources.ApplicationCollection', [
       }
 
       // Call super's as usual
-      BaseCollection.prototype.fetch.call(this, options);
+      return BaseCollection.prototype.fetch.call(this, options);
     },
     model: ApplicationModel
   });
