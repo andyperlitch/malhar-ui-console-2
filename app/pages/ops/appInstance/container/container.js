@@ -32,7 +32,17 @@ angular.module('app.pages.ops.appInstance.container', [
       .when(settings.pages.Container, {
         controller: 'ContainerCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'container'
+        label: 'container',
+        collection: {
+          label: 'containers',
+          resource: 'ContainerCollection',
+          resourceParams: ['appId'],
+          dtPage: 'Container',
+          dtPageParams: {
+            containerId: 'id',
+            appId: 'appId'
+          }
+        }
       });
   })
 

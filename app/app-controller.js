@@ -24,6 +24,7 @@ angular.module('app')
 
   // Set to scope
   $scope.breadcrumbs = breadcrumbs;
+  $scope.$routeParams = $routeParams;
 
   $scope.$on('$routeChangeSuccess', function() {
     setupBreadcrumbs(breadcrumbs, $routeParams);

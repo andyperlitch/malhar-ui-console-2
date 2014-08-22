@@ -45,7 +45,14 @@ angular.module('app.pages.ops.appInstance', [
       .when(settings.pages.AppInstance, {
         controller: 'AppInstanceCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'appInstance'
+        label: 'appInstance',
+        collection: {
+          label: 'apps',
+          resource: 'ApplicationCollection',
+          resourceParams: [],
+          dtPage: 'AppInstance',
+          dtPageParams: { appId: 'id' }
+        }
       });
   })
 

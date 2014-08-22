@@ -31,7 +31,17 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
       .when(settings.pages.PhysicalOperator, {
         controller: 'PhysicalOperatorCtrl',
         templateUrl: 'pages/ops/appInstance/physicalOperator/physicalOperator.html',
-        label: 'physicalOperator'
+        label: 'physicalOperator',
+        collection: {
+          label: 'physical operators',
+          dtPage: 'PhysicalOperator',
+          dtPageParams: {
+            appId: 'appId',
+            operatorId: 'id'
+          },
+          resource: 'PhysicalOperatorCollection',
+          resourceParams: ['appId']
+        }
       });
   })
 

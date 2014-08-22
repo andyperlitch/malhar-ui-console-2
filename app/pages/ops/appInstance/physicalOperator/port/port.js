@@ -18,7 +18,8 @@
 angular.module('app.pages.ops.appInstance.physicalOperator.port', [
   'ngRoute',
   'app.settings',
-  'app.components.services.dashboardOptionsFactory'
+  'app.components.services.dashboardOptionsFactory',
+  'app.components.resources.PortCollection'
 ])
 
   // Route
@@ -27,7 +28,18 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
       .when(settings.pages.Port, {
         controller: 'PortPageCtrl',
         templateUrl: 'pages/ops/appInstance/physicalOperator/port/port.html',
-        label: 'port'
+        label: 'port',
+        collection: {
+          label: 'ports',
+          resource: 'PortCollection',
+          resourceParams: ['appId','operatorId'],
+          dtPage: 'Port',
+          dtPageParams: {
+            appId: 'appId',
+            operatorId: 'operatorId',
+            portId: 'name'
+          }
+        }
       });
   })
 

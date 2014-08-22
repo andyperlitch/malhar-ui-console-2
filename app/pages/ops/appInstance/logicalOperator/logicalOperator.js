@@ -31,7 +31,17 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
       .when(settings.pages.LogicalOperator, {
         controller: 'LogicalOperatorCtrl',
         templateUrl: 'pages/ops/appInstance/logicalOperator/logicalOperator.html',
-        label: 'logicalOperator'
+        label: 'logicalOperator',
+        collection: {
+          label: 'logical operators',
+          resource: 'LogicalOperatorCollection',
+          resourceParams: ['appId'],
+          dtPage: 'LogicalOperator',
+          dtPageParams: {
+            operatorName: 'name',
+            appId: 'appId'
+          }
+        }
       });
   })
 

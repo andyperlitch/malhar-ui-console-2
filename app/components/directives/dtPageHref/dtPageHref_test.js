@@ -74,6 +74,13 @@ describe('Directive: dtPageHref', function () {
     expect(isoScope).toBeUndefined();
   });
 
+  it('should be able to take a dynamic page key', function() {
+    element = angular.element('<a dt-page-href page-key="\'AppInstance\'" params="params"></a>');
+    element = compile(element)(scope);
+    scope.$digest();
+    expect(element.attr('href')).toEqual('#/ws/v1/applications/application_0001');
+  });
+
   describe('when an object literal is used for params', function() {
     
     beforeEach(function() {
