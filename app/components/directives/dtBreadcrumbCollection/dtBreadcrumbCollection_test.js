@@ -124,8 +124,6 @@ describe('Directive: dtBreadcrumbCollection', function () {
       expect($.trim(element.find('.dropdown-menu li').text())).toEqual('!loading...!');
     });
 
-
-
   });
 
   describe('the pick function', function() {

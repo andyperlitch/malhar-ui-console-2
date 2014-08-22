@@ -33,12 +33,7 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
           label: 'ports',
           resource: 'PortCollection',
           resourceParams: ['appId','operatorId'],
-          dtPage: 'Port',
-          dtPageParams: {
-            appId: 'appId',
-            operatorId: 'operatorId',
-            portId: 'name'
-          }
+          templateUrl: 'pages/ops/appInstance/physicalOperator/port/breadcrumbTemplate.html'
         }
       });
   })

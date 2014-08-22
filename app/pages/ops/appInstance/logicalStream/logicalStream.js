@@ -29,7 +29,14 @@ angular.module('app.pages.ops.appInstance.logicalStream', [
       .when(settings.pages.LogicalStream, {
         controller: 'LogicalStreamCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'logicalStream'
+        label: 'logicalStream',
+        collection: {
+          label: 'streams',
+          resource: 'LogicalStreamCollection',
+          resourceParams: ['appId'],
+          templateUrl: 'pages/ops/appInstance/logicalStream/breadcrumbTemplate.html',
+          orderBy: 'name'
+        }
       });
   })
 

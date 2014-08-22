@@ -36,11 +36,8 @@ angular.module('app.pages.ops.appInstance.logicalOperator', [
           label: 'logical operators',
           resource: 'LogicalOperatorCollection',
           resourceParams: ['appId'],
-          dtPage: 'LogicalOperator',
-          dtPageParams: {
-            operatorName: 'name',
-            appId: 'appId'
-          }
+          templateUrl: 'pages/ops/appInstance/logicalOperator/breadcrumbTemplate.html',
+          orderBy: 'name'
         }
       });
   })

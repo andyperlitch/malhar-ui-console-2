@@ -34,11 +34,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
         label: 'physicalOperator',
         collection: {
           label: 'physical operators',
-          dtPage: 'PhysicalOperator',
-          dtPageParams: {
-            appId: 'appId',
-            operatorId: 'id'
-          },
+          templateUrl: 'pages/ops/appInstance/physicalOperator/breadcrumbTemplate.html',
+          orderBy: 'id',
           resource: 'PhysicalOperatorCollection',
           resourceParams: ['appId']
         }
