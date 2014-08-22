@@ -24,6 +24,7 @@ angular.module('app.components.widgets.dag.physical.physicalDag', [
     return {
       restrict: 'A',
       templateUrl: 'components/widgets/dag/physical/physicalDagDirective.html',
+      replace: true,
       scope: true,
       controller: function ($scope, $element) {
         DagHelper.setupResize($scope);
