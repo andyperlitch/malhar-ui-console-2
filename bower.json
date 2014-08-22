@@ -8,7 +8,7 @@
     "malhar-angular-dashboard": "https://github.com/DataTorrent/malhar-angular-dashboard.git#master",
     "malhar-angular-widgets": "https://github.com/DataTorrent/malhar-angular-widgets.git#master",
     "angular-pines-notify": "~1.0.0",
-    "ng-breadcrumbs": "~0.1.0",
+    "ng-breadcrumbs": "https://github.com/andyperlitch/ng-breadcrumbs.git#master",
     "angular-strap": "~2.0.3",
     "angular-sanitize": "~1.2.21",
     "angular-mousewheel": "~1.0.4",
