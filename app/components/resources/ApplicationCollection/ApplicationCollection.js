@@ -19,9 +19,10 @@
 angular.module('app.components.resources.ApplicationCollection', [
   'app.components.services.getUri',
   'app.components.resources.BaseCollection',
+  'app.components.resources.ApplicationModel',
   'app.settings'
 ])
-.factory('ApplicationCollection', function(BaseCollection, settings) {
+.factory('ApplicationCollection', function(BaseCollection, ApplicationModel, settings) {
 
   var ApplicationCollection = BaseCollection.extend({
     urlKey: 'Application',
@@ -41,7 +42,8 @@ angular.module('app.components.resources.ApplicationCollection', [
 
       // Call super's as usual
       BaseCollection.prototype.fetch.call(this, options);
-    }
+    },
+    model: ApplicationModel
   });
 
   return ApplicationCollection;

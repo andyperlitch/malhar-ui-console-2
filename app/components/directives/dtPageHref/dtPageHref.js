@@ -36,6 +36,11 @@ angular.module('app.components.directives.dtPageHref', [
       // set up pageKey and params
       var pageKey = attrs.dtPageHref;
 
+      // check if pageKey is provided dynamically
+      if (!pageKey) {
+        pageKey = scope.$eval(attrs.pageKey);
+      }
+
       // watch for changes to the expression
       scope.$watch(
         attrs.params, 

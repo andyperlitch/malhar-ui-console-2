@@ -15,25 +15,12 @@
 */
 'use strict';
 
-angular.module('app.pages.ops.appInstance.container.containerLog', [
-  'ngRoute',
-  'app.settings'
+angular.module('app.components.resources.PortModel',[
+  'app.components.resources.BaseModel'
 ])
-  // Route
-  .config(function($routeProvider, settings) {
-    $routeProvider
-      .when(settings.pages.ContainerLog, {
-        controller: 'ContainerLogCtrl',
-        templateUrl: 'pages/ops/appInstance/container/containerLog/containerLog.html',
-        label: 'containerLog'
-      });
-  })
-  // Controller
-  .controller('ContainerLogCtrl', function(
-    // $scope,
-    // dtText
-  ) {
-
-
-
+.factory('PortModel', function(BaseModel) {
+  var PortModel = BaseModel.extend({
+    idAttribute: 'name'
   });
+  return PortModel;
+});

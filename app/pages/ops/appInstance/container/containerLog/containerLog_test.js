@@ -43,10 +43,4 @@ describe('Controller: ContainerLogCtrl', function() {
     });
   }));
 
-  it('should set breadcrumbs.options to their appropriate replacements', function() {
-    expect(breadcrumbs.options['App Instance']).toEqual('app1');
-    expect(breadcrumbs.options.Container).toEqual('ctnr1');
-    expect(breadcrumbs.options.ContainerLog).toEqual('log1');
-  });
-
 });

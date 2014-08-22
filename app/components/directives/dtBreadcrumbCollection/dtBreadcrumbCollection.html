@@ -1,0 +1,16 @@
+<span class="btn-group">
+  <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+    {{ collection.label }}
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li ng-if="resource.fetching">
+      <span class="text-muted" dt-text>loading...</span>
+    </li>
+    <li ng-if="!resource.fetching" ng-repeat="row in resource.data">
+      <a dt-page-href page-key="collection.dtPage" params="pick(extend({},row,routeParams), collection.dtPageParams)">{{ row[resource._idAttribute_] }}</a>
+    </li>
+    <li ng-if="resource.fetchError">
+      <span class="text-danger" dt-text>An error occurred</span>
+    </li>
+  </ul>
+</span>

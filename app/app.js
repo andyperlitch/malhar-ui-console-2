@@ -37,6 +37,7 @@ angular.module('app', [
   'app.components.directives.dtText',
   'app.components.directives.dtTableSelectedCount',
   'app.components.directives.containerLogsDropdown',
+  'app.components.directives.dtBreadcrumbCollection',
   'app.components.services.dtText',
   'app.components.services.extend',
   'app.components.services.userStorage',
