@@ -23,7 +23,19 @@ angular.module('app.components.resources.ContainerLogModel', [
   var ContainerLogModel = BaseModel.extend({
 
     urlKey: 'ContainerLog',
-    idAttribute: 'name'
+    idAttribute: 'name',
+    doNotAppendIdAttribute: true,
+    transformResponse: function(raw) {
+      var name = this.name;
+      var container = _.find(raw.logs, function(c) {
+        return c.name === name;
+      });
+      if (container) {
+        return container;
+      }
+      this.fetchError = new Error('Container log "' + name + '" not found.');
+      return {};
+    }
 
   });
 

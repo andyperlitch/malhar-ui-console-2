@@ -17,7 +17,10 @@
 
 angular.module('app.pages.ops.appInstance.container.containerLog', [
   'ngRoute',
-  'app.settings'
+  'app.settings',
+  'app.components.resources.ContainerLogModel',
+  'app.components.resources.ContainerLogCollection',
+  'app.components.services.getUri'
 ])
   // Route
   .config(function($routeProvider, settings) {
@@ -29,11 +32,32 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       });
   })
   // Controller
-  .controller('ContainerLogCtrl', function(
-    // $scope,
-    // dtText
-  ) {
+  .controller('ContainerLogCtrl', function($scope, $routeParams, $location, ContainerLogModel, ContainerLogCollection, getUri) {
 
+    // Set up resources
+    $scope.logs = new ContainerLogCollection({
+      appId: $routeParams.appId,
+      containerId: $routeParams.containerId
+    });
+
+    $scope.log = new ContainerLogModel({
+      appId: $routeParams.appId,
+      containerId: $routeParams.containerId,
+      name: $routeParams.logName
+    });
+
+    $scope.logs.fetch().then(function(res) {
+      var container = $scope.log.transformResponse({ logs: res });
+      $scope.log.set(container);
+    });
+
+
+    // Set location based on select change
+    $scope.onJumpToLog = function() {
+      var params = _.extend({}, $routeParams, { logName: $scope.logToJumpTo.name });
+      var newUrl = getUri.page('ContainerLog', params, true);
+      $location.path(newUrl);
+    };
 
 
   });

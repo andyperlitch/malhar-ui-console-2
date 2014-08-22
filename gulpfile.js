@@ -130,7 +130,11 @@ gulp.task('watch', [], function () {
     server.changed(file.path);
   });
 
-  gulp.watch(['app/styles/**/*.less'], ['less']);
+  gulp.watch([
+    'app/styles/**/*.less',
+    'app/components/**/*.less',
+    'app/pages/**/*.less'
+  ], ['less']);
 });
 
 gulp.task('clean', function() {

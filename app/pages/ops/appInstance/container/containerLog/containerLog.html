@@ -1,1 +1,15 @@
-hello
+<div id="container-log-view-page">
+  <h1>
+    <span ng-if="logs.fetching" dt-text class="text-muted">loading...</span>
+    <span ng-if="!logs.fetching && log.fetchError" dt-text class="text-danger">failed to load log</span>
+    {{ log.data.name }}
+    <select
+      id="jump-to-log-select"
+      ng-change="onJumpToLog()"
+      ng-model="logToJumpTo"
+      ng-options="logOption.name for logOption in logs.data"
+    >
+      <option value="" dt-text>jump to log...</option>
+    </select>
+  </h1>
+</div>
