@@ -21,7 +21,7 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
     function DagRenderer(element, dagPlan) {
       this.onlyScrollOnAlt = true;
       this.element = element;
-      this.svgMain = jQuery(this.element).find('.app-dag > .svg-main');
+      this.svgMain = jQuery(this.element).find('.svg-main');
       this.graph = this.buildGraph(dagPlan);
       this.streams = dagPlan.streams;
     }
@@ -35,16 +35,18 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         this.renderGraph(this.graph, this.svgMain.get(0)); //TODO no jQuery
       },
 
-      updateHeight: function(size, resizableElement) {
-        if (resizableElement) {
-          var offset = this.svgMain[0].getBoundingClientRect().top - resizableElement[0].getBoundingClientRect().top;
-          this.svgMain.height(resizableElement.height() - offset);
-        }
+      updateHeight: function () {
+        this.updateSvgMainHeight();
 
         var main = this.svgMain.find('g > g');
         var main_dimensions = main.get(0).getBoundingClientRect();
         this.svgMain.find('.dag-minimap').remove();
         this.renderMinimap(this.d3Graph, main_dimensions, this.svgMain);
+      },
+
+      updateSvgMainHeight: function () {
+        var offset = this.svgMain[0].getBoundingClientRect().top - this.element[0].getBoundingClientRect().top;
+        this.svgMain.height(this.element.height() - offset);
       },
 
       renderLegend: function (element) {
@@ -157,14 +159,21 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         var d3_graph = renderer.layout(layout).run(dagreD3.json.decode(nodes, links), svg.append('g'));
         this.d3Graph = d3_graph;
 
-        // Adjusting height to content
         var main = svgParent.find('g > g');
         var main_dimensions = main.get(0).getBoundingClientRect();
-        var h = main_dimensions.height;
-        var newHeight = h + 50;
-        newHeight = newHeight < 200 ? 200 : newHeight;
-        newHeight = newHeight > 500 ? 500 : newHeight;
-        svgParent.height(newHeight);
+
+        var autoHeight = !this.element.parent()[0].style.height; //TODO use widget model size attribute
+
+        if (autoHeight) {
+          // Adjusting height to content
+          var h = main_dimensions.height;
+          var newHeight = h + 50;
+          newHeight = newHeight < 200 ? 200 : newHeight;
+          newHeight = newHeight > 500 ? 500 : newHeight;
+          svgParent.height(newHeight);
+        } else {
+          this.updateSvgMainHeight();
+        }
 
         var self = this;
 
