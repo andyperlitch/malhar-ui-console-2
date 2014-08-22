@@ -156,10 +156,10 @@ angular.module('app.pages.ops.appInstance', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: logicalLayoutWidgets,
       defaultLayouts: [
-        { title: 'metric-view', active: false, defaultWidgets: metricViewLayoutWidgets },
-        { title: 'physical-dag-view', active: false, defaultWidgets: physicalDagViewLayoutWidgets },
+        { title: 'logical', active: true, defaultWidgets: logicalLayoutWidgets },
         { title: 'physical', active: false, defaultWidgets: physicalLayoutWidgets },
-        { title: 'logical', active: true, defaultWidgets: logicalLayoutWidgets }
+        { title: 'physical-dag-view', active: false, defaultWidgets: physicalDagViewLayoutWidgets },
+        { title: 'metric-view', active: false, defaultWidgets: metricViewLayoutWidgets }
       ]
     });
 
