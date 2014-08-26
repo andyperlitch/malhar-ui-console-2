@@ -17,9 +17,42 @@
     </select>
   </h1>
 
+  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="performGrep()">
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">grep</span>
+        <input type="text" class="form-control" placeholder="string" ng-model="logContent.grep">
+      </div>
+    </div>
+    <div class="form-group">
+      <select class="form-control" ng-model="logContent.grepMode" ng-options="mode.value as mode.description for mode in logContent.grepModes"></select>
+    </div>
+
+    <div ng-if="logContent.grepMode === 'range'" class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">from</span>
+        <input type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.from" readable-bytes>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">to</span>
+        <input type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.to" readable-bytes>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'">
+      <span class="glyphicon glyphicon-search"></span>
+    </button>
+
+  </form>
+
+
   <div class="well well-sm" id="container-log-viewer" msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
     <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
-    <div class="log-content" ng-repeat="line in logContent.lines track by $index">{{ line.line }}</div>
+
+    <div class="log-content" ng-if="logContent.grepMode === 'current'" ng-repeat="line in logContent.lines | filter:logContent.grep track by $index">{{ line.line }}</div>
+    <div class="log-content" ng-if="logContent.grepMode !== 'current'" ng-repeat="line in logContent.lines track by $index">{{ line.line }}</div>
+
     <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
     <div ng-if="appendMessage" ng-class="'loading-msg prepend alert alert-' + appendMessage.type">{{ appendMessage.message }}</div>
   </div>

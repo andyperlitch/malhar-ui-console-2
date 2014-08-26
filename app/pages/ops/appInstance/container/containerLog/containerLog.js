@@ -20,6 +20,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'app.settings',
   'app.components.resources.ContainerLogModel',
   'app.components.resources.ContainerLogCollection',
+  'app.components.directives.readableBytes',
   'app.components.services.getUri',
   'app.components.services.confirm',
   'app.components.services.dtText'
@@ -60,6 +61,11 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       var url = getUri.url('ContainerLog', $routeParams, $routeParams.logName);
       var start = params.start * 1 || 0;
       var end = params.end * 1 || log.data.length * 1;
+
+      // check that grep is not falsy
+      if (!params.grep) {
+        delete params.grep;
+      }
 
       var bytes = end - start;
       if (bytes > settings.containerLogs.CONFIRM_REQUEST_THRESHOLD_KB * 1024) {
@@ -114,8 +120,15 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     // API call with includeOffset turned on:
     //    { line: String, byteOffset: String offset }
     $scope.logContent = {
-      content: 'loading...',
-      lines: []
+      lines: [],
+      grep: '',
+      grepMode: 'current',
+      grepModes: [
+        { value: 'current', description: 'loaded lines' }, 
+        { value: 'range', description: 'specify byte range' }, 
+        { value: 'entire', description: 'entire log' }
+      ],
+      grepRange: {}
     };
 
     // Set up resources
@@ -340,6 +353,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
     };
 
-  });
+    $scope.performGrep = function() {
+      console.log('grepping', $scope.logContent);
+    };
 
-  
+  });
