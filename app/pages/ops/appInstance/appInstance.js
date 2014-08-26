@@ -90,7 +90,11 @@ angular.module('app.pages.ops.appInstance', [
 
     var widgetDefinitions = [
       new AppInstanceOverviewWidgetDef({ name: 'Application Overview', size: { width: '66%' } }),
-      new StramEventsWidgetDef({ name: 'Stram Events', size: { width: '34%', 'float': 'right' } }),
+      new StramEventsWidgetDef({
+        name: 'Stram Events',
+        style: { float: 'right' },
+        size: { width: '34%' }
+      }),
       new LogicalDagWidgetDefinition({
         name: 'Logical DAG',
         dataModelArgs: { appId: $scope.appId },

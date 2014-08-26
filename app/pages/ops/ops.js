@@ -44,8 +44,6 @@ angular.module('app.pages.ops', [
     $scope,
     ClusterMetricsWidget,
     AppsListWidget,
-    defaultSettingsModalOptions,
-    defaultOnSettingsClose,
     RandomPercentageDataModel,
     RandomNVD3TimeSeriesDataModel,
     RandomMinutesDataModel,
@@ -59,7 +57,7 @@ angular.module('app.pages.ops', [
         directive: 'wt-nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: RandomNVD3TimeSeriesDataModel,
-        style: {
+        size: {
           width: '40%'
         }
       },
@@ -72,7 +70,7 @@ angular.module('app.pages.ops', [
         dataModelArgs: {
           limit: 1000
         },
-        style: {
+        size: {
           width: '40%'
         }
       },
@@ -82,7 +80,7 @@ angular.module('app.pages.ops', [
         directive: 'wt-gauge',
         dataAttrName: 'value',
         dataModelType: RandomPercentageDataModel,
-        style: {
+        size: {
           width: '250px'
         }
       },
@@ -98,10 +96,8 @@ angular.module('app.pages.ops', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
-        { title: 'default', active: true, defaultWidgets: defaultWidgets },
-      ],
-      settingsModalOptions: defaultSettingsModalOptions,
-      onSettingsClose: defaultOnSettingsClose
+        { title: 'default', active: true, defaultWidgets: defaultWidgets }
+      ]
     });
 
   });
