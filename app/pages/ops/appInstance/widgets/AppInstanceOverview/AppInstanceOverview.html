@@ -1,82 +1,96 @@
 <div class="overview-container">
-  <h2>
-    {{data.name || 'Loading...'}}
-    <small>{{ data.id }}</small>
-    <button class="btn btn-xs btn-warning" ng-click="endApp('shutdown')">
-      <span class="glyphicon glyphicon-off"></span>
-      <span dt-text="shutdown"></span>
-    </button>
-    <button class="btn btn-xs btn-danger" ng-click="endApp('kill')">
-      <span class="glyphicon glyphicon-ban-circle"></span>
-      <span dt-text="kill"></span>
-    </button>
-  </h2>
-  <h4 ng-if="data.user">
+    <h2>
+        {{data.name || 'Loading...'}}
+        <small>{{ data.id }}</small>
+        <button class="btn btn-xs btn-warning" ng-click="endApp('shutdown')">
+            <span class="glyphicon glyphicon-off"></span>
+            <span dt-text="shutdown"></span>
+        </button>
+        <button class="btn btn-xs btn-danger" ng-click="endApp('kill')">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+            <span dt-text="kill"></span>
+        </button>
+    </h2>
+    <h4 ng-if="data.user">
 
-    <small>user:</small> {{data.user}}
-    <small>version:</small> <span ng-bind="data.version.split(' ')[0]" dt-text-tooltip=" {{data.version}} " ></span>
-    
-  </h4>
-  
-  <div class="overview-item">
-    <div class="key" dt-text="state_label"></div>
-    <div class="value">
-      <span dt-status="data.state" final-status="data.finalStatus"></span>
-    </div>
-  </div>
+        <small>user:</small>
+        {{data.user}}
+        <small>version:</small>
+        <span ng-bind="data.version.split(' ')[0]" dt-text-tooltip=" {{data.version}} "></span>
 
-  <div class="overview-item">
-    <div class="overview-subitem">
-      <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title" tooltip-popup-delay="0"></div>
-      <div class="value" window-id="data.currentWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
-    </div>
+    </h4>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0"></div>
-      <div class="value" window-id="data.recoveryWindowId" window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
-    </div>
-  </div>  
+    <fieldset class="overview-group">
+        <legend dt-text>State</legend>
+        <div class="overview-item">
+            <div class="key" dt-text="state_label"></div>
+            <div class="value">
+                <span dt-status="data.state" final-status="data.finalStatus"></span>
+            </div>
+        </div>
 
-  <div class="overview-item">
-    <div class="overview-subitem">
-      <div class="key" dt-text="processed_per_sec"></div>
-      <div class="value">{{ data.stats.tuplesProcessedPSMA | commaGroups }}</div>
-    </div>
+        <div class="overview-item">
+            <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title"
+                 tooltip-popup-delay="0"></div>
+            <div class="value" window-id="data.currentWindowId"
+                 window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+        </div>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="emitted_per_sec"></div>
-      <div class="value">{{ data.stats.tuplesEmittedPSMA | commaGroups }}</div>
-    </div>
+        <div class="overview-item">
+            <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title"
+                 tooltip-popup-delay="0"></div>
+            <div class="value" window-id="data.recoveryWindowId"
+                 window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+        </div>
+    </fieldset>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="processed_total"></div>
-      <div class="value">{{ data.stats.totalTuplesProcessed | commaGroups }}</div>
-    </div>
+    <fieldset class="overview-group">
+        <legend dt-text>Performance</legend>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="emitted_total"></div>
-      <div class="value">{{ data.stats.totalTuplesEmitted | commaGroups }}</div>
-    </div>  
-  </div>
+        <div class="overview-item">
+            <div class="key" dt-text="processed_per_sec"></div>
+            <div class="value">{{ data.stats.tuplesProcessedPSMA | commaGroups }}</div>
+        </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text="num_operators_label"></div>
-    <div class="value">{{ data.stats.numOperators | commaGroups }}</div>
-  </div>
+        <div class="overview-item">
+            <div class="key" dt-text="emitted_per_sec"></div>
+            <div class="value">{{ data.stats.tuplesEmittedPSMA | commaGroups }}</div>
+        </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text="planned_alloc_ctnrs_label"></div>
-    <div class="value">{{ data.stats.plannedContainers | commaGroups }} / {{ data.stats.allocatedContainers | commaGroups }}</div>
-  </div>
+        <div class="overview-item">
+            <div class="key" dt-text="processed_total"></div>
+            <div class="value">{{ data.stats.totalTuplesProcessed | commaGroups }}</div>
+        </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text="latency_ms_label"></div>
-    <div class="value">{{ data.stats.latency | commaGroups }}</div>
-  </div>
+        <div class="overview-item">
+            <div class="key" dt-text="emitted_total"></div>
+            <div class="value">{{ data.stats.totalTuplesEmitted | commaGroups }}</div>
+        </div>
+    </fieldset>
 
-  <div class="overview-item">
-    <div class="key" dt-text="alloc_mem_label"></div>
-    <div class="value">{{ data.stats.totalMemoryAllocated | byte:'mb' }}</div>
-  </div>
+    <fieldset class="overview-group">
+        <legend dt-text>Physical</legend>
 
+        <div class="overview-item">
+            <div class="key" dt-text="num_operators_label"></div>
+            <div class="value">{{ data.stats.numOperators | commaGroups }}</div>
+        </div>
+
+        <div class="overview-item">
+            <div class="key" dt-text="planned_alloc_ctnrs_label"></div>
+            <div class="value">{{ data.stats.plannedContainers | commaGroups }} / {{ data.stats.allocatedContainers |
+                commaGroups }}
+            </div>
+        </div>
+
+        <div class="overview-item">
+            <div class="key" dt-text="latency_ms_label"></div>
+            <div class="value">{{ data.stats.latency | commaGroups }}</div>
+        </div>
+
+        <div class="overview-item">
+            <div class="key" dt-text="alloc_mem_label"></div>
+            <div class="value">{{ data.stats.totalMemoryAllocated | byte:'mb' }}</div>
+        </div>
+    </fieldset>
 </div>
