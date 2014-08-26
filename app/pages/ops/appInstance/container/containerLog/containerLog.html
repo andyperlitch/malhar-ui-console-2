@@ -1,8 +1,12 @@
 <div id="container-log-view-page">
+  
   <h1>
     <span ng-if="logs.fetching" dt-text class="text-muted">loading...</span>
     <span ng-if="!logs.fetching && log.fetchError" dt-text class="text-danger">failed to load log</span>
-    {{ log.data.name }}
+    <span ng-if="!logs.fetching && !log.fetchError" class="container-log-title">
+      {{ log.data.name }}
+      <span class="text-muted" ng-bind="log.data.length | byte"></span>
+    </span>
     <select
       id="jump-to-log-select"
       ng-change="onJumpToLog()"
@@ -12,4 +16,24 @@
       <option value="" dt-text>jump to log...</option>
     </select>
   </h1>
+
+  <p>
+    <!-- <button class="btn btn-default" ng-click="prependToLog()" ng-disabled="!logContent.lines.length">
+      <span class="glyphicon glyphicon-chevron-up"></span>
+      <span dt-text>retrieve earlier log content</span>
+    </button> -->
+    <button class="btn btn-default" ng-click="appendToLog()" ng-disabled="!logContent.lines.length">
+      <span class="glyphicon glyphicon-chevron-down"></span>
+      <span dt-text>retrieve later log content</span>
+    </button>
+  </p>
+
+  <div class="well well-sm" id="container-log-viewer" msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
+    <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
+    <div class="log-content" ng-repeat="line in logContent.lines track by $index">{{ line.line }}</div>
+    <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
+    <!-- <div class="loading-msg append alert alert-info">loading...</div> -->
+  </div>
+
+
 </div>

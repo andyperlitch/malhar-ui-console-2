@@ -123,6 +123,15 @@ angular.module('app.settings', [])
       INITIAL_LIMIT: 50
     },
 
+    containerLogs: {
+      DEFAULT_START_OFFSET: -8192,
+      DEFAULT_SCROLL_REQUEST_KB: 8192,
+      UNSET_REQUEST_FLAG_WAIT: 100,
+      RETRIEVE_DEBOUNCE_WAIT: 500,
+      GREP_DEBOUNCE_WAIT: 500,
+      CONFIRM_REQUEST_THRESHOLD_KB: 1 * 1024 // 8mb
+    },
+
     dag: {
       edges: {
         NONE: {

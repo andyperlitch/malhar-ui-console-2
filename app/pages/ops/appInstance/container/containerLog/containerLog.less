@@ -1,9 +1,43 @@
 #container-log-view-page {
 
+  .container-log-title {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   #jump-to-log-select {
     display: inline-block;
     vertical-align: middle;
   }
 
+  #container-log-viewer {
+    max-height: 600px;
+    overflow: auto;
+    white-space: nowrap;
+
+    .loading-msg {
+      margin: 0;
+    }
+    .log-content {
+      white-space: pre-wrap;
+      word-wrap: normal;
+      border-style: solid;
+      border-color: #DEDEDE;
+      border-width: 0 0 1px 0;
+      background: none;
+      margin: 0;
+      padding: 5px 5px 5px 20px;
+      font-family: inconsolata, menlo, monospace;
+
+      &:last-child {
+        border-width: 0;
+      }
+
+      &:nth-child(odd) {
+        // background-color: rgba(255, 255, 255, 0.3);
+      }
+
+    }
+  }
 
 }

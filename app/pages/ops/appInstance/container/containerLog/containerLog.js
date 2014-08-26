@@ -20,7 +20,9 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'app.settings',
   'app.components.resources.ContainerLogModel',
   'app.components.resources.ContainerLogCollection',
-  'app.components.services.getUri'
+  'app.components.services.getUri',
+  'app.components.services.confirm',
+  'app.components.services.dtText'
 ])
   // Route
   .config(function($routeProvider, settings) {
@@ -28,11 +30,89 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       .when(settings.pages.ContainerLog, {
         controller: 'ContainerLogCtrl',
         templateUrl: 'pages/ops/appInstance/container/containerLog/containerLog.html',
-        label: 'containerLog'
+        label: 'containerLog',
+        collection: {
+          label: 'logs',
+          resource: 'ContainerLogCollection',
+          resourceParams: ['appId', 'containerId'],
+          templateUrl: 'pages/ops/appInstance/container/containerLog/breadcrumbTemplate.html',
+          orderBy: 'name'
+        }
       });
   })
+
+  // Counts the bytes of a string
+  .factory('byteCount', function() {
+
+    return function byteCount(s) {
+      return encodeURI(s).split(/%..|./).length - 1;
+    };
+
+  })
+
+  // Retrieves the log content (wrapper for $http.get).
+  // Used to ensure the user is informed if they are about
+  // to download the entire 200 mb file into the browser
+  .factory('getLogContent', function($http, $q, $routeParams, getUri, confirm, settings, dtText, $filter) {
+
+    function getLogContent(log, params) {
+
+      var url = getUri.url('ContainerLog', $routeParams, $routeParams.logName);
+      var start = params.start * 1 || 0;
+      var end = params.end * 1 || log.data.length * 1;
+
+      var bytes = end - start;
+      if (bytes > settings.containerLogs.CONFIRM_REQUEST_THRESHOLD_KB * 1024) {
+        return confirm({
+          title: 'Confirm large request',
+          body: dtText.get(
+            'Are you sure you want to load ' + 
+            $filter('byte')(end - start) +
+            ' into your browser?')
+        })
+        .then(function() {
+          return $http.get(url, { params: params });
+        });
+      }
+
+      return $http.get(url, { params: params });
+      
+    }
+
+    return getLogContent;
+  })
+
   // Controller
-  .controller('ContainerLogCtrl', function($scope, $routeParams, $location, ContainerLogModel, ContainerLogCollection, getUri) {
+  .controller('ContainerLogCtrl', function(
+    $scope,
+    $routeParams,
+    $location,
+    $http,
+    $timeout,
+    settings,
+    ContainerLogModel,
+    ContainerLogCollection,
+    getUri,
+    byteCount,
+    getLogContent,
+    dtText
+  ) {
+
+    // Cache main log view window
+    var $el = $('#container-log-viewer');
+    $el.on('scroll', function() {
+      if ($el.scrollTop() === 0) {
+        $scope.prependToLog();
+      }
+    });
+
+    // This holds the lines returned by the
+    // API call with includeOffset turned on:
+    //    { line: String, byteOffset: String offset }
+    $scope.logContent = {
+      content: 'loading...',
+      lines: []
+    };
 
     // Set up resources
     $scope.logs = new ContainerLogCollection({
@@ -49,8 +129,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     $scope.logs.fetch().then(function(res) {
       var container = $scope.log.transformResponse({ logs: res });
       $scope.log.set(container);
+      $scope.getInitialContent();
     });
-
 
     // Set location based on select change
     $scope.onJumpToLog = function() {
@@ -59,5 +139,112 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       $location.path(newUrl);
     };
 
+    $scope.getInitialContent = function() {
+
+      // Update log content parameters
+      var logLength = 1 * $scope.log.data.length;
+      $scope.logContent.start = Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
+      $scope.logContent.end = logLength;
+      
+      // Set up log content model
+      getLogContent($scope.log, {
+        includeOffset: true,
+        start: $scope.logContent.start,
+        end: $scope.logContent.end
+      })
+      .then(function(res) {
+        $scope.logContent.lines = res.data.lines;
+      }, function() {
+        $scope.logContent.error = 'Error retrieving log content';
+      });
+
+    };
+
+    $scope.onWheel = function($event, $delta, $deltaX, $deltaY) {
+      if ($el.scrollTop() === 0 && $deltaY > 0) {
+        $scope.prependToLog();
+      }
+    };
+
+    // Requests 
+
+    // $scope.prependToLog = _.debounce(function() {
+    $scope.prependToLog = function() {
+      
+      var params = {
+        includeOffset: true
+      };
+      params.end = $scope.logContent.start;
+      params.start = Math.max(0, params.end - settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB);
+      $scope.prependMessage = {
+        type: 'info',
+        message: dtText.get('fetching previous log content...')
+      };
+
+      if ($scope._prependingContent_) {
+        return;
+      }
+      $scope._prependingContent_ = true;
+      var promise = getLogContent($scope.log, params);
+      
+      promise.then(function(res) {
+
+        // Extract the lines from the response
+        var linesToPrepend = res.data.lines;
+
+        // Ensure we have something to add
+        if (angular.isArray(linesToPrepend) && linesToPrepend.length) {
+
+          // connect that first line of the current
+          // collection to the last line to prepend.
+          var currentFirstLine = $scope.logContent.lines.shift();
+          var lastLineToPrepend = linesToPrepend[linesToPrepend.length -1];
+          lastLineToPrepend.line += currentFirstLine.line;
+
+          // Get current scroll position
+          var scrollHeight = $el[0].scrollHeight;
+          var scrollTop = $el.scrollTop();
+
+          // Defer scroll adjustment
+          $timeout(function() {
+            var newScrollHeight = $el[0].scrollHeight;
+            var newScrollTop = newScrollHeight - scrollHeight + scrollTop;
+            $el.scrollTop(newScrollTop);
+          });
+
+          // Update lines
+          $scope.logContent.lines = linesToPrepend.concat($scope.logContent.lines);
+          $scope.logContent.start = params.start;
+
+          // Remove prepend message
+          $scope.prependMessage = false;
+
+        }
+
+      });
+
+      promise.finally(function() {
+        $timeout(function() {
+          $scope._prependingContent_ = false;
+        }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT);
+      });
+
+    // }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT, { leading: true });
+    };
+
+    $scope.appendToLog = function() {
+      var params = {};
+      params.start = $scope.logContent.params.end * 1;
+      if ($scope.log.data.length - params.start > settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB) {
+        params.end = params.start + settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB;
+      }
+      getLogContent($scope.log, { params: params })
+      .then(function(res) {
+        console.log(res);
+        $scope.logContent.params.start = params.start;
+      });      
+    };
 
   });
+
+  
