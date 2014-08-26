@@ -101,8 +101,12 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     // Cache main log view window
     var $el = $('#container-log-viewer');
     $el.on('scroll', function() {
+      var scrollTop = $el.scrollTop();
       if ($el.scrollTop() === 0) {
         $scope.prependToLog();
+      }
+      else if (scrollTop + $el.outerHeight() >= $el[0].scrollHeight) {
+        $scope.appendToLog();
       }
     });
 
@@ -161,30 +165,53 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     };
 
     $scope.onWheel = function($event, $delta, $deltaX, $deltaY) {
-      if ($el.scrollTop() === 0 && $deltaY > 0) {
+      var scrollTop = $el.scrollTop();
+      if (scrollTop === 0 && $deltaY > 0) {
         $scope.prependToLog();
+      }
+      else {
+        var bottom = scrollTop + $el.outerHeight();
+        var scrollHeight = $el[0].scrollHeight;
+        var scrollingDown = $deltaY < 0;
+        
+        if (bottom >= scrollHeight && scrollingDown) {
+          $scope.appendToLog();
+        }
       }
     };
 
     // Requests 
 
-    // $scope.prependToLog = _.debounce(function() {
+    /**
+     * Prepend log content from currently loaded position.
+     * @return {Promise} A promise that is resolved/rejected with content request.
+     */
     $scope.prependToLog = function() {
       
-      var params = {
-        includeOffset: true
-      };
-      params.end = $scope.logContent.start;
-      params.start = Math.max(0, params.end - settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB);
-      $scope.prependMessage = {
-        type: 'info',
-        message: dtText.get('fetching previous log content...')
-      };
-
+      // Check debounce flag
       if ($scope._prependingContent_) {
         return;
       }
       $scope._prependingContent_ = true;
+
+      // Set up param object to use with request
+      var params = {
+        includeOffset: true
+      };
+
+      // End at the current starting point
+      params.end = $scope.logContent.start;
+
+      // Start DEFAULT_SCROLL_REQUEST_KB kilobytes before that
+      params.start = Math.max(0, params.end - settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB);
+
+      // Add the prependMessage to the scope
+      $scope.prependMessage = {
+        type: 'info',
+        message: dtText.get('fetching log content...')
+      };
+
+      // Initiate the content request
       var promise = getLogContent($scope.log, params);
       
       promise.then(function(res) {
@@ -216,33 +243,101 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           $scope.logContent.lines = linesToPrepend.concat($scope.logContent.lines);
           $scope.logContent.start = params.start;
 
-          // Remove prepend message
-          $scope.prependMessage = false;
-
         }
+
+        // Remove prepend message
+        $scope.prependMessage = false;
 
       });
 
+      promise.error(function() {
+        $scope.prependMessage = {
+          type: 'danger',
+          message: dtText.get('an error occurred! ')
+        };
+      });
+
       promise.finally(function() {
+        // Unset the flag after RETRIEVE_DEBOUNCE_WAIT
         $timeout(function() {
           $scope._prependingContent_ = false;
         }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT);
       });
 
-    // }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT, { leading: true });
+      return promise;
+
     };
 
     $scope.appendToLog = function() {
-      var params = {};
-      params.start = $scope.logContent.params.end * 1;
-      if ($scope.log.data.length - params.start > settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB) {
-        params.end = params.start + settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB;
+
+      // Check appending flag
+      if ($scope._appendingContent_) {
+        return;
       }
-      getLogContent($scope.log, { params: params })
-      .then(function(res) {
-        console.log(res);
-        $scope.logContent.params.start = params.start;
-      });      
+      $scope._appendingContent_ = true;
+
+      // Initialize params for request
+      var params = {
+        includeOffset: true
+      };
+
+      // Add the appendMessage to the scope
+      $scope.appendMessage = {
+        type: 'info',
+        message: dtText.get('fetching log content...')
+      };
+
+      // First, get an updated picture of the log length
+      var promise = $scope.log.fetch().then(function() {
+        // Start at the current end
+        params.start = $scope.logContent.end * 1;
+
+        // If we aren't near the end of the log, specify 
+        // an end parameter, DEFAULT_SCROLL_REQUEST_KB kilobytes
+        // after the start.
+        if ($scope.log.data.length - params.start > settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB) {
+          params.end = params.start + settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB;
+        }
+        return getLogContent($scope.log, params);
+      });
+
+      promise.then(
+        // success
+        function(res) {
+          var linesToAppend = res.data.lines;
+          // Ensure we have something to add
+          if (angular.isArray(linesToAppend) && linesToAppend.length) {
+            // Join last line of current and first line of new
+            var currentLastLine = $scope.logContent.lines[$scope.logContent.lines.length - 1];
+            var firstLineToAppend = linesToAppend.shift();
+            currentLastLine.line += firstLineToAppend.line;
+
+            // Update lines
+            $scope.logContent.lines = $scope.logContent.lines.concat(linesToAppend);
+            $scope.logContent.start = params.start;
+          }
+
+          // Clear out message
+          $scope.appendMessage = false;
+        },
+
+        // error
+        function() {
+          $scope.appendMessage = {
+            type: 'danger',
+            message: dtText.get('an error occurred! ')
+          };
+        }
+      );
+
+      promise.finally(function() {
+        $timeout(function() {
+          $scope._appendingContent_ = false;
+        }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT);
+      });
+
+      return promise;
+
     };
 
   });
