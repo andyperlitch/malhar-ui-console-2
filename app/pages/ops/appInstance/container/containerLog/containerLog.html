@@ -32,11 +32,26 @@
     <div ng-if="logContent.grepMode === 'range'" class="form-group">
       <div class="input-group">
         <span class="input-group-addon">from</span>
-        <input type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.from" readable-bytes>
+        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.from" readable-bytes>
+        <div class="popover bottom" ng-messages="grep_form.from.$error" ng-style="{ display: grep_form.from.$error.readableBytes ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "from" offset</h3>
+          <div class="popover-content" ng-message="readableBytes">
+            <p dt-text>Enter a starting byte offset, like "10mb" or "0 kb."</p>
+          </div>
+        </div>
       </div>
+        
       <div class="input-group">
         <span class="input-group-addon">to</span>
-        <input type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.to" readable-bytes>
+        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.to" readable-bytes>
+        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.readableBytes ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
+          <div class="popover-content" ng-message="readableBytes">
+            <p dt-text>Enter an ending byte offset, like "12mb" or "8 kb."</p>
+          </div>
+        </div>
       </div>
     </div>
 

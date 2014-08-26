@@ -40,9 +40,10 @@ angular.module('app.components.directives.readableBytes', [
           var unit = matches[2].toLowerCase();
 
           if (!levels.hasOwnProperty(unit)) {
-            ngModel.$setValidity('readableBytes', false);  
+            ngModel.$setValidity('readableBytes', false);
           }
           else {
+            ngModel.$setValidity('readableBytes', true);
             return qty * levels[unit];
           }
         }
