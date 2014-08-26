@@ -26,5 +26,6 @@ angular.module('app.components.services.defaultWidgetSettings', [])
       widget.title = result.title;
       widget.setWidth(result.size.width);
       widget.setHeight(result.size.height);
+      widget.setStyle(result.style); // update float
     };
   });

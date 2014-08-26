@@ -54,7 +54,8 @@ describe('Factory: defaultOnSettingsClose', function () {
     var result = { size: { width: '40em' } };
     var widget = {
       setWidth: function() {},
-      setHeight: function() {}
+      setHeight: function() {},
+      setStyle: function() {}
     };
     spyOn(widget, 'setWidth');
     defaultOnSettingsClose(result, widget);
@@ -103,6 +104,8 @@ describe('Factory: defaultOnSettingsClose', function () {
         this.widthUnits = 'px';
       },
       setHeight: function () {
+      },
+      setStyle: function () {
       }
     };
     defaultOnSettingsClose(result, widget);
