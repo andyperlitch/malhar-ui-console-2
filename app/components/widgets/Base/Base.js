@@ -39,7 +39,7 @@ angular.module('app.components.widgets.Base', [
   BaseWidget.prototype = {
 
     defaults: {
-      style: {
+      size: {
         width: '100%'
       }
     }
