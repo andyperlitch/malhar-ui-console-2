@@ -53,7 +53,8 @@ describe('Factory: defaultOnSettingsClose', function () {
   it('should call widget.setWidth with result.width', function() {
     var result = { size: { width: '40em' } };
     var widget = {
-      setWidth: function() {}
+      setWidth: function() {},
+      setHeight: function() {}
     };
     spyOn(widget, 'setWidth');
     defaultOnSettingsClose(result, widget);
@@ -98,8 +99,10 @@ describe('Factory: defaultOnSettingsClose', function () {
       dataModelOptions: {
         a: false
       },
-      setWidth: function() {
+      setWidth: function () {
         this.widthUnits = 'px';
+      },
+      setHeight: function () {
       }
     };
     defaultOnSettingsClose(result, widget);
