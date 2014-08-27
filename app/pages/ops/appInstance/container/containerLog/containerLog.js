@@ -21,7 +21,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'ngMessages',
   'app.components.resources.ContainerLogModel',
   'app.components.resources.ContainerLogCollection',
-  'app.components.directives.readableBytes',
+  'app.components.directives.validation.readableBytes',
+  'app.components.directives.validation.greaterThan',
   'app.components.services.getUri',
   'app.components.services.confirm',
   'app.components.services.dtText'
@@ -117,20 +118,35 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       }
     });
 
+    // Params
+    $scope.displayParams = {
+      limit: 1000,
+      offset: 0
+    };
+
     // This holds the lines returned by the
     // API call with includeOffset turned on:
     //    { line: String, byteOffset: String offset }
     $scope.logContent = {
       lines: [],
       grep: '',
-      grepMode: 'current',
+      grepMode: 'range',
       grepModes: [
-        { value: 'current', description: 'loaded lines' }, 
-        { value: 'range', description: 'specify byte range' }, 
-        { value: 'entire', description: 'entire log' }
+        { value: 'range', description: 'within byte range' }, 
+        { value: 'entire', description: 'over entire log' }
       ],
-      grepRange: {}
+      grepRange: {},
+      manualRange: {}
     };
+
+    $scope.$watch('logContent.start', function(newValue) {
+      $scope.logContent.grepRange.start = newValue;
+      $scope.logContent.manualRange.start = newValue;
+    });
+    $scope.$watch('logContent.end', function(newValue) {
+      $scope.logContent.grepRange.end = newValue;
+      $scope.logContent.manualRange.end = newValue;
+    });
 
     // Set up resources
     $scope.logs = new ContainerLogCollection({
@@ -328,7 +344,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
             // Update lines
             $scope.logContent.lines = $scope.logContent.lines.concat(linesToAppend);
-            $scope.logContent.start = params.start;
+            $scope.logContent.end = params.end || $scope.log.data.length * 1;
           }
 
           // Clear out message
@@ -355,7 +371,41 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     };
 
     $scope.performGrep = function() {
-      console.log('grepping', $scope.logContent);
+      // Clear out current lines
+      $scope.logContent.lines = [];
+      // Set message
+      $scope.appendMessage = {
+        type: 'info',
+        message: dtText.get('performing grep...')
+      };
+      // Set up parameters
+      var params = { grep: $scope.logContent.grep, includeOffset: true };
+      var mode = $scope.logContent.grepMode;
+      if (mode === 'entire') {
+        params.start = 0;
+      }
+      else if (mode === 'range'){
+        params.start = $scope.logContent.grepRange.start;
+        params.end = $scope.logContent.grepRange.end;
+      }
+      else {
+        throw new TypeError('performGrep can only handle two modes: "entire" or "range"');
+      }
+      // Make call to getLogContent
+      var promise = $scope.getLogContent(params);
+
+      // Check number of lines to be rendered
+      promise.then(function(res) {
+        var lines = res.data.lines;
+        if (lines.length > settings.containerLogs.CONFIRM_LINE_COUNT_THRESHOLD) {
+
+        }
+      });
+    };
+
+    $scope.updateRange = function() {
+      var range = $scope.logContent.manualRange;
+      console.log(range);
     };
 
   });

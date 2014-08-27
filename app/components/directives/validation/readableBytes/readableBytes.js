@@ -15,7 +15,7 @@
 */
 'use strict';
 
-angular.module('app.components.directives.readableBytes', [
+angular.module('app.components.directives.validation.readableBytes', [
   'app.components.filters.byte'
 ])
 .directive('readableBytes', function($filter) {
@@ -30,14 +30,28 @@ angular.module('app.components.directives.readableBytes', [
       levels.mb = levels.m = levels.kb * 1024;
       levels.gb = levels.g = levels.mb * 1024;
       levels.tb = levels.t = levels.gb * 1024;
-
-      var parseRegExp = /^\s*([\d\.]+)\s*([a-zA-Z]+)$/;
+      var parseRegExp = new RegExp('^\\s*([\\d\\.]+)\\s*(' + _.keys(levels).join('|') + ')?(\\sB)?$', 'i');
 
       function fromUserString(text) {
         var matches = parseRegExp.exec(text);
         if (matches) {
-          var qty = matches[1] * 1;
-          var unit = matches[2].toLowerCase();
+
+          var qty = matches[1];
+
+          var unit = matches[2];
+
+          if (!unit) {
+            element.val(qty + ' B');
+            element[0].setSelectionRange(qty.length, qty.length);
+            unit = 'b';
+          }
+          else {
+            unit = unit.toLowerCase();
+          }
+
+
+          // typecast qty
+          qty *= 1;
 
           if (!levels.hasOwnProperty(unit)) {
             ngModel.$setValidity('readableBytes', false);

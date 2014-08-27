@@ -16,8 +16,48 @@
       <option value="" dt-text>jump to log...</option>
     </select>
   </h1>
+  <p ng-show="!editingRange">
+    showing {{logContent.start | byte}} to {{logContent.end | byte}}
+    <button class="btn btn-link" ng-click="editingRange = true">
+      <span class="glyphicon glyphicon-pencil"></span>
+    </button>
+  </p>
 
-  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="performGrep()">
+  <form name="range_form" novalidate class="form-inline range-form" role="form" ng-submit="updateRange()" ng-show="editingRange">
+    <p ng-show="!editingRange">
+       
+      <div class="form-group">
+        showing
+        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.start" readable-bytes>
+        <div class="popover bottom" ng-messages="range_form.from.$error" ng-style="{ display: range_form.from.$error.readableBytes ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "from" offset</h3>
+          <div class="popover-content" ng-message="readableBytes">
+            <p dt-text>Enter a starting byte offset, like "10mb" or "0 kb."</p>
+          </div>
+        </div>
+      </div>
+      to
+      <div class="form-group">
+        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.end">
+        <div class="popover bottom" ng-messages="range_form.to.$error" ng-style="{ display: range_form.to.$error.readableBytes ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
+          <div class="popover-content" ng-message="readableBytes">
+            <p dt-text>Enter an ending byte offset, like "12mb" or "8 kb."</p>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'">
+        <span dt-text>update</span>
+      </button>
+      <button class="btn btn-danger" type="button" role="button" ng-click="editingRange = false">
+        <span dt-text>cancel</span>
+      </button>
+    </p>
+  </form>
+
+  <!-- <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="performGrep()">
 
     <div class="form-group">
       <div class="input-group">
@@ -32,7 +72,7 @@
     <div ng-if="logContent.grepMode === 'range'" class="form-group">
       <div class="input-group">
         <span class="input-group-addon">from</span>
-        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.from" readable-bytes>
+        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.start" readable-bytes>
         <div class="popover bottom" ng-messages="grep_form.from.$error" ng-style="{ display: grep_form.from.$error.readableBytes ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "from" offset</h3>
@@ -44,7 +84,7 @@
         
       <div class="input-group">
         <span class="input-group-addon">to</span>
-        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.to" readable-bytes>
+        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.end" readable-bytes greater-than="logContent.grepRange.end">
         <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.readableBytes ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
@@ -59,14 +99,12 @@
       <span class="glyphicon glyphicon-search"></span>
     </button>
 
-  </form>
-
+  </form> -->
 
   <div class="well well-sm" id="container-log-viewer" msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
     <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
 
-    <div class="log-content" ng-if="logContent.grepMode === 'current'" ng-repeat="line in logContent.lines | filter:logContent.grep track by $index">{{ line.line }}</div>
-    <div class="log-content" ng-if="logContent.grepMode !== 'current'" ng-repeat="line in logContent.lines track by $index">{{ line.line }}</div>
+    <div class="log-content" ng-repeat="line in logContent.lines track by $index">{{ line.line }}</div>
 
     <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
     <div ng-if="appendMessage" ng-class="'loading-msg prepend alert alert-' + appendMessage.type">{{ appendMessage.message }}</div>

@@ -124,12 +124,12 @@ angular.module('app.settings', [])
     },
 
     containerLogs: {
-      DEFAULT_START_OFFSET: -8192,
-      DEFAULT_SCROLL_REQUEST_KB: 8192,
+      DEFAULT_START_OFFSET: -1 * 64 * 1024, // KB
+      DEFAULT_SCROLL_REQUEST_KB: 64 * 1024, // KB
       UNSET_REQUEST_FLAG_WAIT: 100,
       RETRIEVE_DEBOUNCE_WAIT: 500,
       GREP_DEBOUNCE_WAIT: 500,
-      CONFIRM_REQUEST_THRESHOLD_KB: 1 * 1024 // 8mb
+      CONFIRM_REQUEST_THRESHOLD_KB: 8 * 1024 // 8mb
     },
 
     dag: {
