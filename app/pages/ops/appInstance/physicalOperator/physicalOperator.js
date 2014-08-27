@@ -22,7 +22,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
   'app.components.services.dashboardOptionsFactory',
   'app.pages.ops.appInstance.physicalOperator.widgets.PhysicalOperatorOverview',
   'app.pages.ops.appInstance.physicalOperator.widgets.PortsList',
-  'app.pages.ops.appInstance.operators.widgets.metrics'
+  'app.pages.ops.appInstance.operators.widgets.metrics',
+  'app.pages.ops.appInstance.operators.widgets.OpProperties'
 ])
 
 // Route
@@ -52,7 +53,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
     dashboardOptionsFactory,
     PhysicalOperatorOverviewWidgetDef,
     PortsListWidgetDef,
-    OpMetricsWidgetDef
+    OpMetricsWidgetDef,
+    OpPropertiesWidgetDef
   ) {
 
     // Set scope info for use by widgets
@@ -69,7 +71,9 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
       id: $routeParams.operatorId,
       appId: $routeParams.appId
     });
-    $scope.physicalOperator.fetch();
+
+    var fetchPromise = $scope.physicalOperator.fetch();
+
     $scope.physicalOperator.subscribe($scope);
     $scope.$on('$destroy', function() {
       $scope.physicalOperator.unsubscribe();
@@ -82,14 +86,25 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
       new OpMetricsWidgetDef({
         name: 'Metrics Chart',
         dataModelArgs: { operatorResource: $scope.physicalOperator },
-        style: {
+        size: {
           width: '100%'
+        }
+      }),
+      new OpPropertiesWidgetDef({
+        name: 'Properties',
+        dataModelArgs: {
+          appId: $routeParams.appId,
+          operatorFetchPromise: fetchPromise
+        },
+        size: {
+          width: '40%'
         }
       })
     ];
     var defaultLayoutWidgets = [
       { name: 'Overview' },
-      { name: 'Ports List' }
+      { name: 'Ports List' },
+      { name: 'Properties' }
     ];
 
     var metricsLayoutWidgets = [
