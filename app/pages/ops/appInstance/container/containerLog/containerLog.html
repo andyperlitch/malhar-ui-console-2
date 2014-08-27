@@ -16,14 +16,8 @@
       <option value="" dt-text>jump to log...</option>
     </select>
   </h1>
-  <p ng-show="!editingRange">
-    showing {{logContent.start | byte}} to {{logContent.end | byte}}
-    <button class="btn btn-link" ng-click="editingRange = true">
-      <span class="glyphicon glyphicon-pencil"></span>
-    </button>
-  </p>
 
-  <form name="range_form" novalidate class="form-inline range-form" role="form" ng-submit="updateRange()" ng-show="editingRange">
+  <form name="range_form" novalidate class="form-inline range-form" role="form" ng-submit="updateRange()">
     <p ng-show="!editingRange">
        
       <div class="form-group">
@@ -50,9 +44,6 @@
       </div>
       <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'">
         <span dt-text>update</span>
-      </button>
-      <button class="btn btn-danger" type="button" role="button" ng-click="editingRange = false">
-        <span dt-text>cancel</span>
       </button>
     </p>
   </form>
