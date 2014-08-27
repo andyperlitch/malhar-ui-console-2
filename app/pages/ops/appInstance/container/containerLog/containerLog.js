@@ -56,34 +56,43 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   // Retrieves the log content (wrapper for $http.get).
   // Used to ensure the user is informed if they are about
   // to download the entire 200 mb file into the browser
-  .factory('getLogContent', function($http, $q, $routeParams, getUri, confirm, settings, dtText, $filter) {
+  .factory('getLogContent', function($http, $q, $routeParams, getUri, confirm, settings) {
 
     function getLogContent(log, params) {
 
+      // Holds the finalized parameters to be passed to 
+      // the request
+      var queryParams = { includeOffset: true };
+
+      // URL to send the request to
       var url = getUri.url('ContainerLog', $routeParams, $routeParams.logName);
-      var start = params.start * 1 || 0;
-      var end = params.end * 1 || log.data.length * 1;
+
+      // Starting offset in bytes to get the file from
+      queryParams.start = params.hasOwnProperty('start') ? params.start * 1 : 0;
+      queryParams.end = params.hasOwnProperty('end') ? params.end * 1 : log.data.length * 1;
 
       // check that grep is not falsy
-      if (!params.grep) {
-        delete params.grep;
+      if (params.grep) {
+        queryParams.grep = params.grep;
       }
 
-      var bytes = end - start;
+      var bytes = queryParams.end - queryParams.start;
       if (bytes > settings.containerLogs.CONFIRM_REQUEST_THRESHOLD_KB * 1024) {
+
         return confirm({
-          title: 'Confirm large request',
-          body: dtText.get(
-            'Are you sure you want to load ' + 
-            $filter('byte')(end - start) +
-            ' into your browser?')
+          bytes: bytes,
+          downloadHref: getUri.url('ContainerLog', $routeParams, $routeParams.logName),
+          templateUrl: 'pages/ops/appInstance/container/containerLog/confirmLargeRequest.html'
         })
         .then(function() {
-          return $http.get(url, { params: params });
+          return $http.get(url, { params: queryParams });
         });
       }
+      else if (bytes === 0) {
+        return false;
+      }
 
-      return $http.get(url, { params: params });
+      return $http.get(url, { params: queryParams });
       
     }
 
@@ -105,6 +114,9 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     getLogContent,
     dtText
   ) {
+
+    // Set up the download link
+    $scope.downloadHref = getUri.url('ContainerLog', $routeParams, $routeParams.logName);
 
     // Cache main log view window
     var $el = $('#container-log-viewer');
@@ -132,19 +144,16 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       grep: '',
       grepMode: 'range',
       grepModes: [
-        { value: 'range', description: 'within byte range' }, 
+        { value: 'range', description: 'within specified range' }, 
         { value: 'entire', description: 'over entire log' }
       ],
-      grepRange: {},
       manualRange: {}
     };
 
     $scope.$watch('logContent.start', function(newValue) {
-      $scope.logContent.grepRange.start = newValue;
       $scope.logContent.manualRange.start = newValue;
     });
     $scope.$watch('logContent.end', function(newValue) {
-      $scope.logContent.grepRange.end = newValue;
       $scope.logContent.manualRange.end = newValue;
     });
 
@@ -166,19 +175,12 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       $scope.getInitialContent();
     });
 
-    // Set location based on select change
-    $scope.onJumpToLog = function() {
-      var params = _.extend({}, $routeParams, { logName: $scope.logToJumpTo.name });
-      var newUrl = getUri.page('ContainerLog', params, true);
-      $location.path(newUrl);
-    };
-
     $scope.getInitialContent = function() {
 
       // Update log content parameters
       var logLength = 1 * $scope.log.data.length;
-      $scope.logContent.start = Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
-      $scope.logContent.end = logLength;
+      $scope.logContent.start = $routeParams.start || Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
+      $scope.logContent.end = $routeParams.end || logLength;
       
       // Set up log content model
       getLogContent($scope.log, {
@@ -234,14 +236,21 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       // Start DEFAULT_SCROLL_REQUEST_KB kilobytes before that
       params.start = Math.max(0, params.end - settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB);
 
+      // Set grep
+      params.grep = $scope.logContent.grep;
+
+      // Initiate the content request
+      var promise = getLogContent($scope.log, params);
+
+      if (typeof promise.then !== 'function') {
+        return;
+      }
+
       // Add the prependMessage to the scope
       $scope.prependMessage = {
         type: 'info',
         message: dtText.get('fetching log content...')
       };
-
-      // Initiate the content request
-      var promise = getLogContent($scope.log, params);
       
       promise.then(function(res) {
 
@@ -277,9 +286,9 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
         // Remove prepend message
         $scope.prependMessage = false;
 
-      });
-
-      promise.error(function() {
+      }, 
+      // Error Handler
+      function() {
         $scope.prependMessage = {
           type: 'danger',
           message: dtText.get('an error occurred! ')
@@ -318,7 +327,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       // First, get an updated picture of the log length
       var promise = $scope.log.fetch().then(function() {
         // Start at the current end
-        params.start = $scope.logContent.end * 1;
+        params.start = ($scope.logContent.end * 1) + 1;
 
         // If we aren't near the end of the log, specify 
         // an end parameter, DEFAULT_SCROLL_REQUEST_KB kilobytes
@@ -367,42 +376,53 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       return promise;
     };
 
-    $scope.performGrep = function() {
+    $scope.performQuery = function() {
       // Clear out current lines
       $scope.logContent.lines = [];
       // Set message
       $scope.appendMessage = {
         type: 'info',
-        message: dtText.get('performing grep...')
+        message: dtText.get('performing query...')
       };
+      
       // Set up parameters
       var params = { grep: $scope.logContent.grep, includeOffset: true };
-      var mode = $scope.logContent.grepMode;
-      if (mode === 'entire') {
+
+      // Cache grep value
+      var grep = $scope.logContent.grep;
+
+      if (grep && $scope.logContent.grepMode === 'entire') {
         params.start = 0;
       }
-      else if (mode === 'range'){
-        params.start = $scope.logContent.grepRange.start;
-        params.end = $scope.logContent.grepRange.end;
-      }
       else {
-        throw new TypeError('performGrep can only handle two modes: "entire" or "range"');
+        params.start = $scope.logContent.manualRange.start;
+        params.end = $scope.logContent.manualRange.end;
       }
       // Make call to getLogContent
-      var promise = $scope.getLogContent(params);
+      var promise = getLogContent($scope.log, params);
 
       // Check number of lines to be rendered
-      promise.then(function(res) {
-        var lines = res.data.lines;
-        if (lines.length > settings.containerLogs.CONFIRM_LINE_COUNT_THRESHOLD) {
-
+      promise.then(
+        function(res) {
+          var lines = res.data.lines;
+          $scope.logContent.lines = lines;
+          if (!lines.length) {
+            $scope.appendMessage = {
+              type: 'warning',
+              message: dtText.get('found no results')
+            };
+          }
+          else {
+            $scope.appendMessage = false;
+          }
+        },
+        function() {
+          $scope.appendMessage = {
+            type: 'danger',
+            message: dtText.get('An error occurred!')
+          };
         }
-      });
+      );
     };
 
-    $scope.updateRange = function() {
-      var range = $scope.logContent.manualRange;
-      console.log(range);
-    };
-
-  });
+  }); 

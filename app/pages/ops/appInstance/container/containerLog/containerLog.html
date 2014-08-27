@@ -7,63 +7,18 @@
       {{ log.data.name }}
       <span class="text-muted" ng-bind="log.data.length | byte"></span>
     </span>
-    <select
-      id="jump-to-log-select"
-      ng-change="onJumpToLog()"
-      ng-model="logToJumpTo"
-      ng-options="logOption.name for logOption in logs.data"
-    >
-      <option value="" dt-text>jump to log...</option>
-    </select>
+    <a ng-href="{{downloadHref}}" class="btn btn-xs btn-success">
+      <span class="glyphicon glyphicon-arrow-down"></span>
+      <span dt-text>download file</span>
+    </a>
   </h1>
 
-  <form name="range_form" novalidate class="form-inline range-form" role="form" ng-submit="updateRange()">
-    <p ng-show="!editingRange">
-       
-      <div class="form-group">
-        showing
-        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.start" readable-bytes>
-        <div class="popover bottom" ng-messages="range_form.from.$error" ng-style="{ display: range_form.from.$error.readableBytes ? 'block' : 'none' }">
-          <div class="arrow"></div>
-          <h3 class="popover-title" dt-text>Invalid "from" offset</h3>
-          <div class="popover-content" ng-message="readableBytes">
-            <p dt-text>Enter a starting byte offset, like "10mb" or "0 kb."</p>
-          </div>
-        </div>
-      </div>
-      to
-      <div class="form-group">
-        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.end">
-        <div class="popover bottom" ng-messages="range_form.to.$error" ng-style="{ display: range_form.to.$error.readableBytes ? 'block' : 'none' }">
-          <div class="arrow"></div>
-          <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
-          <div class="popover-content" ng-message="readableBytes">
-            <p dt-text>Enter an ending byte offset, like "12mb" or "8 kb."</p>
-          </div>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'">
-        <span dt-text>update</span>
-      </button>
-    </p>
-  </form>
-
-  <!-- <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="performGrep()">
+  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="performQuery()">
 
     <div class="form-group">
-      <div class="input-group">
-        <span class="input-group-addon">grep</span>
-        <input type="text" class="form-control" placeholder="string" ng-model="logContent.grep">
-      </div>
-    </div>
-    <div class="form-group">
-      <select class="form-control" ng-model="logContent.grepMode" ng-options="mode.value as mode.description for mode in logContent.grepModes"></select>
-    </div>
-
-    <div ng-if="logContent.grepMode === 'range'" class="form-group">
       <div class="input-group">
         <span class="input-group-addon">from</span>
-        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.start" readable-bytes>
+        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.start" readable-bytes>
         <div class="popover bottom" ng-messages="grep_form.from.$error" ng-style="{ display: grep_form.from.$error.readableBytes ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "from" offset</h3>
@@ -75,7 +30,7 @@
         
       <div class="input-group">
         <span class="input-group-addon">to</span>
-        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.grepRange.end" readable-bytes greater-than="logContent.grepRange.end">
+        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.end">
         <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.readableBytes ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
@@ -86,11 +41,21 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">grep</span>
+        <input type="text" class="form-control" placeholder="string" ng-model="logContent.grep">
+      </div>
+    </div>
+    <div class="form-group">
+      <select class="form-control" ng-model="logContent.grepMode" ng-options="mode.value as mode.description for mode in logContent.grepModes"></select>
+    </div>
+
     <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'">
       <span class="glyphicon glyphicon-search"></span>
     </button>
 
-  </form> -->
+  </form>
 
   <div class="well well-sm" id="container-log-viewer" msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
     <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>

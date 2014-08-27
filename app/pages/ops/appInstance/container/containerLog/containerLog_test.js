@@ -53,6 +53,9 @@ describe('Controller: ContainerLogCtrl', function() {
       },
       urls: {
         ContainerLog: ''
+      },
+      containerLogs: {
+        DEFAULT_START_OFFSET: -1000
       }
     });
     // $provide.value('ContainerLogModel', ContainerLogModel);
@@ -79,20 +82,6 @@ describe('Controller: ContainerLogCtrl', function() {
     ];
     fetchCallback(logs);
     expect($scope.log.data.length).toEqual(10000);
-  });
-
-  describe('the onJumpToLog method', function() {
-    
-    it('should be attached to the scope', function() {
-      expect(typeof $scope.onJumpToLog).toEqual('function');
-    });
-
-    it('should set the location to the selected container log page', function() {
-      $scope.logToJumpTo = { name: 'mylog.log' };
-      $scope.onJumpToLog();
-      expect($location.path).toHaveBeenCalledWith('/ws/v1/applications/app1/ctnr1/mylog.log');
-    });
-
   });
 
 });
