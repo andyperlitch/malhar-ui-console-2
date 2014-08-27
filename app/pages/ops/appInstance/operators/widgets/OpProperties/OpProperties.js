@@ -54,33 +54,26 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
           ]
         }, this.widgetScope.widget, this.widgetScope);
 
-        this.propertiesResource = new OpPropertiesModel({
+        var propertiesResource = new OpPropertiesModel({
           appId: this.appId,
           operatorName: this.operatorName
         });
 
-        this.propertiesResource.fetch().then(function (properties) {
-          console.log(properties);
-
+        propertiesResource.fetch().then(function (properties) {
           this.widgetScope.data = _.map(_.pairs(properties), function (pair) {
             return {
               name: pair[0],
               value: pair[1]
             };
           });
-          console.log(this.widgetScope.data);
         }.bind(this));
-      },
-
-      destroy: function () {
-        //this.propertiesResource.unsubscribe();
       }
     });
 
     return OpPropertiesWidgetDataModel;
   })
   .factory('OpPropertiesWidgetDef', function (BaseWidget, OpPropertiesWidgetDataModel) {
-    var OpMetricsWidgetDef = BaseWidget.extend({
+    var OpPropertiesWidgetDef = BaseWidget.extend({
       defaults: {
         title: 'Operator Properties',
         templateUrl: 'pages/ops/appInstance/operators/widgets/OpProperties/OpProperties.html',
@@ -88,5 +81,5 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
       }
     });
 
-    return OpMetricsWidgetDef;
+    return OpPropertiesWidgetDef;
   });
