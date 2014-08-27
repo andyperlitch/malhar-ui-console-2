@@ -23,6 +23,7 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
     function OpPropertiesWidgetDataModel(options) {
       this.appId = options.appId;
       this.operatorName = options.operatorName;
+      this.operatorFetchPromise = options.operatorFetchPromise;
     }
 
     OpPropertiesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
@@ -54,6 +55,17 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
           ]
         }, this.widgetScope.widget, this.widgetScope);
 
+        if (!this.operatorFetchPromise) {
+          this.load();
+        } else {
+          this.operatorFetchPromise.then(function (operator) {
+            this.operatorName = operator.name;
+            this.load();
+          }.bind(this));
+        }
+      },
+
+      load: function () {
         var propertiesResource = new OpPropertiesModel({
           appId: this.appId,
           operatorName: this.operatorName
