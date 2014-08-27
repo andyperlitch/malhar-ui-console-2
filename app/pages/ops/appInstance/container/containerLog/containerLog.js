@@ -191,7 +191,6 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       }, function() {
         $scope.logContent.error = 'Error retrieving log content';
       });
-
     };
 
     $scope.onWheel = function($event, $delta, $deltaX, $deltaY) {
@@ -295,7 +294,6 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       });
 
       return promise;
-
     };
 
     $scope.appendToLog = function() {
@@ -367,7 +365,6 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       });
 
       return promise;
-
     };
 
     $scope.performGrep = function() {
