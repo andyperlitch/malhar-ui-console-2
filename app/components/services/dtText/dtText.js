@@ -74,6 +74,8 @@ angular.module('app.components.services.dtText', [])
       'port_label'                 :  'port',
       'ports_label'                :  'ports',
       'process_id_label'           :  'process id',
+      'property_name_label'        :  'property',
+      'property_value_label'       :  'value',
       'recovery_wid_label'         :  'recovery wID',
       'remaining_licensed_mem'     :  'remaining licensed mem.',
       'running_label'              :  'running',
