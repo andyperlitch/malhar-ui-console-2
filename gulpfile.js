@@ -11,6 +11,7 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
+var runSequence = require('run-sequence');
 require('./gulp/gateway');
 
 var dev = {
@@ -113,7 +114,10 @@ gulp.task('ngtemplates', function () {
     .pipe(gulp.dest('.tmp'));
 });
 
-gulp.task('serve', ['connect', 'watch']);
+gulp.task('serve', function() {
+    runSequence('less', ['connect', 'watch']);
+  }
+);
 
 gulp.task('serve:dist', ['connect:dist']);
 

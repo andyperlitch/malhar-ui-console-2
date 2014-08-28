@@ -15,17 +15,12 @@
  */
 'use strict';
 
-angular.module('app.components.services.defaultWidgetSettings', [])
-  .factory('defaultSettingsModalOptions', function () {
-    return {
-      templateUrl: 'components/services/defaultWidgetSettings/defaultWidgetSettings.html'
-    };
-  })
-  .factory('defaultOnSettingsClose', function () {
-    return function (result, widget) {
-      widget.title = result.title;
-      widget.setWidth(result.size.width);
-      widget.setHeight(result.size.height);
-      widget.setStyle(result.style); // update float
-    };
+angular.module('app.components.resources.OpPropertiesModel', [
+  'app.components.resources.BaseModel'
+])
+  .factory('OpPropertiesModel', function(BaseModel) {
+    var OpProperties = BaseModel.extend({
+      urlKey: 'OpProperties'
+    });
+    return OpProperties;
   });

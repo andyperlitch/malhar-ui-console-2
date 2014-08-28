@@ -71,7 +71,7 @@ function startServer(baseDirs, port) {
 }
 
 gulp.task('connect', function () {
-  startServer(['app', '.tmp'], 9000);
+  startServer(['app', '.tmp'], config.web.port);
 });
 
 gulp.task('connect:dist', function () {

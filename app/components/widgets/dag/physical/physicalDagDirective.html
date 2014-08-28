@@ -1,4 +1,4 @@
-<div class="app-dag logical-dag" ui-resizable resizable-options="resizableOptions" on-resize="onResize(event, ui);">
+<div class="app-dag logical-dag">
     <div class="options-controls">
         <div class="form-inline">
             <a href="#" class="btn btn-link"
@@ -12,11 +12,13 @@
             </a>
         </div>
     </div>
-    <div class="dag-legend" ng-show="showLocality">
-        <svg height="110" width="370" class="svg-legend">
-            <g transform="translate(10, 10)">
-            </g>
-        </svg>
+    <div ng-show="showLocality" class="dag-legend-container">
+        <div class="dag-legend">
+            <svg height="130" width="370" class="svg-legend">
+                <g transform="translate(10, 10)">
+                </g>
+            </svg>
+        </div>
     </div>
     <svg height="110" class="svg-main">
         <filter id="f1" x="0" y="0" height="150%">

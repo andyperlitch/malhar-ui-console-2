@@ -89,19 +89,23 @@ angular.module('app.pages.ops.appInstance', [
 
 
     var widgetDefinitions = [
-      new AppInstanceOverviewWidgetDef({ name: 'Application Overview', style: { width: '66%' } }),
-      new StramEventsWidgetDef({ name: 'Stram Events', style: { width: '34%', 'float': 'right' } }),
+      new AppInstanceOverviewWidgetDef({ name: 'Application Overview', size: { width: '66%' } }),
+      new StramEventsWidgetDef({
+        name: 'Stram Events',
+        style: { float: 'right' },
+        size: { width: '34%' }
+      }),
       new LogicalDagWidgetDefinition({
         name: 'Logical DAG',
         dataModelArgs: { appId: $scope.appId },
-        style: {
+        size: {
           width: '66%'
         }
       }),
       new PhysicalDagWidgetDefinition({
         name: 'Physical DAG',
         dataModelArgs: { appId: $scope.appId },
-        style: {
+        size: {
           width: '100%'
         }
       }),
@@ -109,14 +113,14 @@ angular.module('app.pages.ops.appInstance', [
       new PhysicalOperatorsListWidgetDef({ name: 'Physical Operators List' }),
       new ContainersListWidgetDef({
         name: 'Containers List',
-        style: {
+        size: {
           width: '66%'
         }
       }),
       new LogicalStreamsListWidgetDef({ name: 'Logical Streams' }),
       new MetricsWidgetDef({
         name: 'Metrics Chart',
-        style: {
+        size: {
           width: '60%'
         }
       })
@@ -133,7 +137,7 @@ angular.module('app.pages.ops.appInstance', [
     var physicalDagViewLayoutWidgets = [
       {
         name: 'Application Overview',
-        style: {
+        size: {
           width: '100%' //TODO if this widget is added again it will have width from widgetDefinitions
         }
       },
@@ -143,7 +147,7 @@ angular.module('app.pages.ops.appInstance', [
     var metricViewLayoutWidgets = [
       {
         name: 'Application Overview',
-        style: {
+        size: {
           width: '100%' //TODO if this widget is added again it will have width from widgetDefinitions
         }
       },
