@@ -99,6 +99,39 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     return getLogContent;
   })
 
+  .directive('containerLogViewer', function() {
+    return {
+      link: function(scope, element) {
+        // Set scroll listener
+        element.on('scroll', function() {
+          var scrollTop = element.scrollTop();
+          if (element.scrollTop() === 0) {
+            scope.prependToLog();
+          }
+          else if (scrollTop + element.outerHeight() >= element[0].scrollHeight) {
+            scope.appendToLog();
+          }
+        });
+        // Set wheel listener
+        scope.onWheel = function($event, $delta, $deltaX, $deltaY) {
+          var scrollTop = element.scrollTop();
+          if (scrollTop === 0 && $deltaY > 0) {
+            scope.prependToLog();
+          } 
+          else {  
+            var bottom = scrollTop + element.outerHeight();
+            var scrollHeight = element[0].scrollHeight;
+            var scrollingDown = $deltaY < 0;
+            
+            if (bottom >= scrollHeight && scrollingDown) {
+              scope.appendToLog();
+            }
+          }
+        };
+      }
+    };
+  })
+
   // Controller
   .controller('ContainerLogCtrl', function(
     $scope,
@@ -117,18 +150,6 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
     // Set up the download link
     $scope.downloadHref = getUri.url('ContainerLog', $routeParams, $routeParams.logName);
-
-    // Cache main log view window
-    var $el = $('#container-log-viewer');
-    $el.on('scroll', function() {
-      var scrollTop = $el.scrollTop();
-      if ($el.scrollTop() === 0) {
-        $scope.prependToLog();
-      }
-      else if (scrollTop + $el.outerHeight() >= $el[0].scrollHeight) {
-        $scope.appendToLog();
-      }
-    });
 
     // Params
     $scope.displayParams = {
@@ -195,22 +216,6 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       });
     };
 
-    $scope.onWheel = function($event, $delta, $deltaX, $deltaY) {
-      var scrollTop = $el.scrollTop();
-      if (scrollTop === 0 && $deltaY > 0) {
-        $scope.prependToLog();
-      }
-      else {
-        var bottom = scrollTop + $el.outerHeight();
-        var scrollHeight = $el[0].scrollHeight;
-        var scrollingDown = $deltaY < 0;
-        
-        if (bottom >= scrollHeight && scrollingDown) {
-          $scope.appendToLog();
-        }
-      }
-    };
-
     // Requests 
 
     /**
@@ -227,7 +232,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
       // Set up param object to use with request
       var params = {
-        includeOffset: true
+        grep: $scope.logContent.grep
       };
 
       // End at the current starting point
@@ -235,9 +240,6 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
       // Start DEFAULT_SCROLL_REQUEST_KB kilobytes before that
       params.start = Math.max(0, params.end - settings.containerLogs.DEFAULT_SCROLL_REQUEST_KB);
-
-      // Set grep
-      params.grep = $scope.logContent.grep;
 
       // Initiate the content request
       var promise = getLogContent($scope.log, params);
@@ -267,6 +269,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           lastLineToPrepend.line += currentFirstLine.line;
 
           // Get current scroll position
+          var $el = $('#container-log-viewer');
           var scrollHeight = $el[0].scrollHeight;
           var scrollTop = $el.scrollTop();
 
@@ -315,7 +318,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
       // Initialize params for request
       var params = {
-        includeOffset: true
+        grep: $scope.logContent.grep
       };
 
       // Add the appendMessage to the scope
@@ -359,7 +362,14 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
         },
 
         // error
-        function() {
+        function(response) {
+          if (response.status === 404) {
+            $scope.appendMessage = {
+              type: 'success',
+              message: dtText.get('reached end of file.')
+            };
+            return;
+          }
           $scope.appendMessage = {
             type: 'danger',
             message: dtText.get('an error occurred! ')
@@ -423,6 +433,16 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           };
         }
       );
+    };
+
+    $scope.goToLogLocation = function(line) {
+      var byteOffset = line.byteOffset * 1;
+      var start = Math.max(0, byteOffset - settings.containerLogs.GOTO_PADDING_BYTES);
+      var end = byteOffset + settings.containerLogs.GOTO_PADDING_BYTES;
+      $location.search({
+        start: start,
+        end: end
+      });
     };
 
   }); 
