@@ -197,36 +197,34 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       $scope.getInitialContent();
     });
 
+    /**
+     * Retrieves the initially displayed content of
+     * a log. Internally calls performQuery.
+     * 
+     * @return {Promise} Returns the promise returned by performQuery.
+     */
     $scope.getInitialContent = function() {
 
       // Update log content parameters
       var logLength = 1 * $scope.log.data.length;
-      $scope.logContent.start = $routeParams.start || Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
-      $scope.logContent.end = $routeParams.end || logLength;
+      $scope.logContent.manualRange.start = $routeParams.start || Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
+      $scope.logContent.manualRange.end = $routeParams.end || logLength;
+      $scope.logContent.manualGrep = '';
+      return $scope.performQuery();
       
-      // Set up log content model
-      getLogContent($scope.log, {
-        includeOffset: true,
-        start: $scope.logContent.start,
-        end: $scope.logContent.end
-      })
-      .then(function(res) {
-        $scope.logContent.lines = res.data.lines;
-      }, function() {
-        $scope.logContent.error = 'Error retrieving log content';
-      });
     };
 
     // Requests 
 
     /**
      * Prepend log content from currently loaded position.
+     * 
      * @return {Promise} A promise that is resolved/rejected with content request.
      */
     $scope.prependToLog = function() {
       
       // Check debounce flag
-      if ($scope._prependingContent_) {
+      if ($scope._prependingContent_ || $scope.preventScroll) {
         return;
       }
       $scope._prependingContent_ = true;
@@ -263,7 +261,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
         // Ensure we have something to add
         if (angular.isArray(linesToPrepend) && linesToPrepend.length) {
 
-          if (params.grep) {
+          if (!params.grep) {
             // connect that first line of the current
             // collection to the last line to prepend.
             var currentFirstLine = $scope.logContent.lines.shift();
@@ -284,7 +282,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           });
 
           // Update lines
-          $scope.logContent.lines = linesToPrepend.concat($scope.logContent.lines);
+          $scope.setLines(linesToPrepend.concat($scope.logContent.lines));
           $scope.logContent.start = params.start;
 
         }
@@ -311,10 +309,15 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       return promise;
     };
 
+    /**
+     * Append log content from currently loaded position.
+     * 
+     * @return {Promise} A promise that is resolved/rejected with content request.
+     */
     $scope.appendToLog = function() {
 
       // Check appending flag
-      if ($scope._appendingContent_) {
+      if ($scope._appendingContent_ || $scope.preventScroll) {
         return;
       }
       $scope._appendingContent_ = true;
@@ -351,7 +354,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           // Ensure we have something to add
           if (angular.isArray(linesToAppend) && linesToAppend.length) {
 
-            if (params.grep) {
+            if (!params.grep) {
               // Join last line of current and first line of new
               var currentLastLine = $scope.logContent.lines[$scope.logContent.lines.length - 1];
               var firstLineToAppend = linesToAppend.shift();
@@ -359,7 +362,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
             }
 
             // Update lines
-            $scope.logContent.lines = $scope.logContent.lines.concat(linesToAppend);
+            $scope.setLines($scope.logContent.lines.concat(linesToAppend));
             $scope.logContent.end = params.end || $scope.log.data.length * 1;
           }
 
@@ -392,9 +395,22 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       return promise;
     };
 
+    /**
+     * Performs a new query for log content based on the 
+     * values of $scope.logContent.manualRange and 
+     * $scope.logContent.manualGrep. These values are
+     * used by the form just above the log viewer.
+     * 
+     * @return {Promise} A promise that is resolved/rejected with content request.
+     */
     $scope.performQuery = function() {
+      
+      // Set flag to prevent accidental scrolling
+      $scope.preventScroll = true;
+
       // Clear out current lines
       $scope.logContent.lines = [];
+
       // Set message
       $scope.appendMessage = {
         type: 'info',
@@ -414,6 +430,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       else {
         params.start = $scope.logContent.manualRange.start;
         params.end = $scope.logContent.manualRange.end;
+        params.grep = grep;
       }
       // Make call to getLogContent
       var promise = getLogContent($scope.log, params);
@@ -422,7 +439,13 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       promise.then(
         function(res) {
           var lines = res.data.lines;
-          $scope.logContent.lines = lines;
+
+          // Update current offsets
+          $scope.logContent.start = params.start;
+          $scope.logContent.end = params.end || lines[lines.length - 1].byteOffset + byteCount(lines[lines.length - 1].line);
+
+          $scope.setLines(lines);
+
           if (!lines.length) {
             $scope.appendMessage = {
               type: 'warning',
@@ -440,20 +463,38 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           };
         }
       );
+
+      promise.finally(function() {
+        $scope.preventScroll = false;
+      });
+
+      return promise;
     };
 
+    /**
+     * Navigates to a specific section of the log.
+     * Internally, calls $scope.performQuery.
+     * 
+     * @param  {Object} line The line object, returned by the gateway.
+     * @return {Promise}      Returns the promise returned by performQuery.
+     */
     $scope.goToLogLocation = function(line) {
       var byteOffset = line.byteOffset * 1;
-      var start = Math.max(0, byteOffset - settings.containerLogs.GOTO_PADDING_BYTES);
-      var end = byteOffset + settings.containerLogs.GOTO_PADDING_BYTES;
-      $location.search({
-        start: start,
-        end: end
-      });
+      $scope.logContent.manualRange.start = Math.max(0, byteOffset - settings.containerLogs.GOTO_PADDING_BYTES);
+      $scope.logContent.manualRange.end = byteOffset + settings.containerLogs.GOTO_PADDING_BYTES;
+      $scope.logContent.manualGrep = '';
+      return $scope.performQuery();
     };
 
-    $scope.setLines = function() {
-
+    /**
+     * Wrapper function for `$scope.logContent.lines = lines`. This
+     * is so that if lines.length is very large, we can stop them all
+     * from all rendering, and instead show a partial list.
+     * 
+     * @param {Array} lines Lines to be set to the scope.
+     */
+    $scope.setLines = function(lines) {
+      $scope.logContent.lines = lines;
     };
 
   }); 
