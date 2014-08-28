@@ -113,7 +113,7 @@ gulp.task('ngtemplates', function () {
     .pipe(gulp.dest('.tmp'));
 });
 
-gulp.task('serve', ['connect', 'watch']);
+gulp.task('serve', ['connect', 'less', 'watch']);
 
 gulp.task('serve:dist', ['connect:dist']);
 
