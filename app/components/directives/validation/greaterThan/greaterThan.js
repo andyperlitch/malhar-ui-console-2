@@ -21,8 +21,20 @@ angular.module('app.components.directives.validation.greaterThan', [])
     restrict: 'A',
     require: 'ngModel',
     link: function(scope, element, attrs, ngModel) {
-      var greaterThan = scope.$eval(attrs.greaterThan);
       
+      var setValidity = function() {
+        var minimumValue = scope.$eval(attrs.greaterThan) * 1;
+        var currentValue = scope.$eval(attrs.ngModel) * 1;
+        if (minimumValue >= currentValue) {
+          ngModel.$setValidity('greaterThan', false);
+        }
+        else {
+          ngModel.$setValidity('greaterThan', true); 
+        }
+      };
+
+      scope.$watch(attrs.ngModel, setValidity);
+      scope.$watch(attrs.greaterThan, setValidity);
     }
   };
 });
