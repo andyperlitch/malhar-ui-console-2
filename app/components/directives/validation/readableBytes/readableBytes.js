@@ -45,10 +45,16 @@ angular.module('app.components.directives.validation.readableBytes', [
             element[0].setSelectionRange(qty.length, qty.length);
             unit = 'b';
           }
-          else {
-            unit = unit.toLowerCase();
+          else if (matches[3]) {
+            var newText = text.replace(/\sB/i, '');
+            var selectionStart = element[0].selectionStart;
+            var selectionEnd = element[0].selectionEnd;
+            element.val(newText);
+            element[0].setSelectionRange(selectionStart, selectionEnd);
           }
 
+          // Ensure lowercase unit
+          unit = unit.toLowerCase();
 
           // typecast qty
           qty *= 1;
@@ -58,7 +64,7 @@ angular.module('app.components.directives.validation.readableBytes', [
           }
           else {
             ngModel.$setValidity('readableBytes', true);
-            return qty * levels[unit];
+            return Math.round(qty * levels[unit]);
           }
         }
         else {
