@@ -15,8 +15,11 @@ Uses the `bower.json` and `package.json` files:
 
 ### Use Gulp tasks
 
+* `gulp serve` to launch a browser sync server (default=localhost:9000) on the source files
+ * To run the server on a different port, run `PORT=19000 gulp serve`
+ * If your gateway is running on a port other than 3390, override it like so: `GATEWAY_PORT=9090 gulp serve`
+ * Note that you can combine the two overrides above. For example: `GATEWAY_PORT=9090 PORT=19000 gulp serve`
 * `gulp` or `gulp build` to build an optimized version of the application in `/dist`
-* `gulp serve` to launch a browser sync server on the source files
 * `gulp serve:dist` to launch a server on the optimized application
 * `gulp test` to launch unit tests with Karma
 

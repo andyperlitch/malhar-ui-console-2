@@ -2,10 +2,11 @@
   "name": "ngconsole",
   "version": "0.0.0",
   "dependencies": {
-    "underscore": "^1.6.0",
     "express": "^4.6.1",
+    "gulp-html2js": "^0.1.0",
     "less-middleware": "^1.0.3",
-    "gulp-html2js": "^0.1.0"
+    "run-sequence": "^0.3.6",
+    "underscore": "^1.6.0"
   },
   "devDependencies": {
     "connect": "^2.14.4",
