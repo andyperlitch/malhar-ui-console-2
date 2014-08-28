@@ -68,7 +68,11 @@ describe('Controller: ContainerLogCtrl', function() {
     $controller('ContainerLogCtrl', {
       $scope: $scope,
       $routeParams: $routeParams,
-      dtText: {},
+      dtText: {
+        get: function(key) {
+          return key;
+        }
+      },
       $location: $location
     });
   }));
