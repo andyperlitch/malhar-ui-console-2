@@ -12,8 +12,7 @@
       <span dt-text>download file</span>
     </a>
   </h1>
-
-  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="performQuery()">
+  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="grep_form.$valid && performQuery()">
 
     <div class="form-group">
       <div class="input-group">
@@ -30,12 +29,19 @@
         
       <div class="input-group">
         <span class="input-group-addon">to</span>
-        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.end">
+        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.start">
         <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.readableBytes ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
           <div class="popover-content" ng-message="readableBytes">
             <p dt-text>Enter an ending byte offset, like "12mb" or "8 kb."</p>
+          </div>
+        </div>
+        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.greaterThan ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
+          <div class="popover-content" ng-message="greaterThan">
+            <p dt-text>This offset must be greater than the "from" offset.</p>
           </div>
         </div>
       </div>
@@ -44,14 +50,19 @@
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon">grep</span>
-        <input type="text" class="form-control" placeholder="string" ng-model="logContent.grep">
+        <input type="text" class="form-control" placeholder="string" ng-model="logContent.manualGrep">
       </div>
     </div>
     <div class="form-group">
-      <select class="form-control" ng-model="logContent.grepMode" ng-options="mode.value as mode.description for mode in logContent.grepModes"></select>
+      <select 
+        class="form-control"
+        ng-model="logContent.grepMode"
+        ng-options="mode.value as mode.description for mode in logContent.grepModes"
+        ng-show="logContent.manualGrep">
+      </select>
     </div>
 
-    <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'">
+    <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'" ng-disabled="!grep_form.$valid">
       <span class="glyphicon glyphicon-search"></span>
     </button>
 

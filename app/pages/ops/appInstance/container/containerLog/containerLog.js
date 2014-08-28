@@ -168,7 +168,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
         { value: 'range', description: 'within specified range' }, 
         { value: 'entire', description: 'over entire log' }
       ],
-      manualRange: {}
+      manualRange: {},
+      manualGrep: ''
     };
 
     $scope.$watch('logContent.start', function(newValue) {
@@ -262,11 +263,13 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
         // Ensure we have something to add
         if (angular.isArray(linesToPrepend) && linesToPrepend.length) {
 
-          // connect that first line of the current
-          // collection to the last line to prepend.
-          var currentFirstLine = $scope.logContent.lines.shift();
-          var lastLineToPrepend = linesToPrepend[linesToPrepend.length -1];
-          lastLineToPrepend.line += currentFirstLine.line;
+          if (params.grep) {
+            // connect that first line of the current
+            // collection to the last line to prepend.
+            var currentFirstLine = $scope.logContent.lines.shift();
+            var lastLineToPrepend = linesToPrepend[linesToPrepend.length -1];
+            lastLineToPrepend.line += currentFirstLine.line;
+          }
 
           // Get current scroll position
           var $el = $('#container-log-viewer');
@@ -347,10 +350,13 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
           var linesToAppend = res.data.lines;
           // Ensure we have something to add
           if (angular.isArray(linesToAppend) && linesToAppend.length) {
-            // Join last line of current and first line of new
-            var currentLastLine = $scope.logContent.lines[$scope.logContent.lines.length - 1];
-            var firstLineToAppend = linesToAppend.shift();
-            currentLastLine.line += firstLineToAppend.line;
+
+            if (params.grep) {
+              // Join last line of current and first line of new
+              var currentLastLine = $scope.logContent.lines[$scope.logContent.lines.length - 1];
+              var firstLineToAppend = linesToAppend.shift();
+              currentLastLine.line += firstLineToAppend.line;
+            }
 
             // Update lines
             $scope.logContent.lines = $scope.logContent.lines.concat(linesToAppend);
@@ -396,13 +402,14 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       };
       
       // Set up parameters
-      var params = { grep: $scope.logContent.grep, includeOffset: true };
+      var params = { includeOffset: true };
 
       // Cache grep value
-      var grep = $scope.logContent.grep;
+      var grep = $scope.logContent.grep = $scope.logContent.manualGrep;
 
       if (grep && $scope.logContent.grepMode === 'entire') {
         params.start = 0;
+        params.grep = grep;
       }
       else {
         params.start = $scope.logContent.manualRange.start;
@@ -443,6 +450,10 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
         start: start,
         end: end
       });
+    };
+
+    $scope.setLines = function() {
+
     };
 
   }); 
