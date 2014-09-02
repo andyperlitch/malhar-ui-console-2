@@ -20,6 +20,7 @@ angular.module('app.components.resources.LogicalPlanResource', ['app.components.
   .factory('LogicalPlanResource', function(BaseModel) {
 
     var LogicalPlanResource = BaseModel.extend({
+      debugName: 'Logical Plan',
       urlKey: 'LogicalPlan'
     });
 

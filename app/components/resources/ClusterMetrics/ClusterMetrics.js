@@ -20,6 +20,7 @@ angular.module('app.components.resources.ClusterMetrics', ['app.components.resou
 .factory('ClusterMetrics', function(BaseModel) {
   
   var ClusterMetrics = BaseModel.extend({
+    debugName: 'Cluster Metrics',
     urlKey: 'ClusterMetrics',
     topicKey: 'ClusterMetrics'
   });

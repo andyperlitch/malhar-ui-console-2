@@ -22,7 +22,7 @@ angular.module('app.components.resources.PhysicalOperatorCollection', [
 .factory('PhysicalOperatorCollection', function (BaseCollection, PhysicalOperatorModel) {
 
   var PhysicalOperatorCollection = BaseCollection.extend({
-
+    debugName: 'Physical Operators',
     constructor: function(options) {
       BaseCollection.apply(this, arguments);
 

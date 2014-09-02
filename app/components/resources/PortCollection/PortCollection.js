@@ -21,6 +21,7 @@ angular.module('app.components.resources.PortCollection', [
 ])
 .factory('PortCollection', function(BaseCollection, PortModel) {
   var PortCollection = BaseCollection.extend({
+    debugName: 'Ports',
     urlKey: 'PhysicalOperator',
     topicKey: 'PhysicalOperators',
     transformResponse: function(raw) {

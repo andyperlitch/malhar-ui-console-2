@@ -21,6 +21,7 @@ angular.module('app.components.resources.LogicalStreamCollection', [
 ])
 .factory('LogicalStreamCollection', function(BaseCollection, LogicalStreamModel) {
   var LogicalStreamCollection = BaseCollection.extend({
+    debugName: 'Logical Streams',
     urlKey: 'LogicalPlan',
     transformResponse: 'streams',
     model: LogicalStreamModel

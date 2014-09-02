@@ -25,6 +25,7 @@ angular.module('app.components.resources.ApplicationCollection', [
 .factory('ApplicationCollection', function(BaseCollection, ApplicationModel, settings) {
 
   var ApplicationCollection = BaseCollection.extend({
+    debugName: 'Application Instances',
     urlKey: 'Application',
     topicKey: 'Applications',
     transformResponse: 'apps',

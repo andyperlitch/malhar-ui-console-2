@@ -22,7 +22,7 @@ angular.module('app.components.resources.ContainerLogCollection', [
 .factory('ContainerLogCollection', function(BaseCollection, ContainerLogModel) {
 
   var ContainerLogCollection = BaseCollection.extend({
-
+    debugName: 'Container Logs',
     urlKey: 'ContainerLog',
     model: ContainerLogModel,
     transformResponse: 'logs'
