@@ -17,7 +17,27 @@
 
 describe('Controller: ContainerLogCtrl', function() {
 
-  var $scope, $routeParams, breadcrumbs;
+  var $scope, $routeParams, $location, breadcrumbs, ContainerLogCollection, ContainerLogModel, fetchCallback;
+
+  beforeEach(function() {
+    $routeParams = {
+      appId: 'app1',
+      containerId: 'ctnr1',
+      logName: 'log1'
+    };
+    $location = {
+      path: jasmine.createSpy()
+    };
+    ContainerLogCollection = function() {};
+    ContainerLogCollection.prototype.fetch = function() {
+      return { then: function (fn) {
+        fetchCallback = fn;
+      }};
+    };
+    ContainerLogModel = function() {
+
+    };
+  });
 
   beforeEach(module('app.pages.ops.appInstance.container.containerLog', function($provide) {
     $provide.value('webSocket', {
@@ -27,20 +47,45 @@ describe('Controller: ContainerLogCtrl', function() {
     $provide.value('breadcrumbs', breadcrumbs = {
       options: {}
     });
+    $provide.constant('settings', {
+      pages: {
+        ContainerLog: '/ws/v1/applications/:appId/:containerId/:logName'
+      },
+      urls: {
+        ContainerLog: ''
+      },
+      containerLogs: {
+        DEFAULT_START_OFFSET: -1000
+      }
+    });
+    // $provide.value('ContainerLogModel', ContainerLogModel);
+    $provide.value('ContainerLogCollection', ContainerLogCollection);
   }));
 
   beforeEach(inject(function($rootScope, $controller){
     $scope = $rootScope.$new();
-    $routeParams = {
-      appId: 'app1',
-      containerId: 'ctnr1',
-      logName: 'log1'
-    };
+    
     $controller('ContainerLogCtrl', {
       $scope: $scope,
       $routeParams: $routeParams,
-      dtText: {}
+      dtText: {
+        get: function(key) {
+          return key;
+        }
+      },
+      $location: $location
     });
   }));
+
+  it('should set the container log object with the result from the collection being fetched', function() {
+    var logs = [
+      {name: 'log0'},
+      {name: 'log1', length: 10000},
+      {name: 'log2'},
+      {name: 'log3'}
+    ];
+    fetchCallback(logs);
+    expect($scope.log.data.length).toEqual(10000);
+  });
 
 });

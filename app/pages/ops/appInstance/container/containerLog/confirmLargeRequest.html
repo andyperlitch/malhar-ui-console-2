@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h3 class="modal-title" dt-text>Confirm large request</h3>
+</div>
+<div class="modal-body">
+  Are you sure you want to load {{ params.bytes | byte }} into the browser?
+  This could result in a serious performance hit, and may even crash your browser.
+  <br>
+  <br>
+  You can also <a ng-href="{{ params.downloadHref }}" class="btn btn-success btn-xs">download</a> the log directly.
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close()">Yes</button>
+    <button class="btn btn-warning" ng-click="$dismiss()">Cancel</button>
+</div>

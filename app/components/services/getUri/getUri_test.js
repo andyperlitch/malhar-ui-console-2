@@ -131,6 +131,10 @@ describe('Service: getUri', function () {
     it('should interpolate given parameters', function() {
       expect(getUri.page('Test2', {param: 'xyz'}) === '#/some/xyz/page').toEqual(true);
     });
+
+    it('should have a third argument to disable the hashtag in front of the url', function() {
+      expect(getUri.page('Test2', {param: 'xyz'}, true) === '/some/xyz/page').toEqual(true);
+    });
   });
 
 });

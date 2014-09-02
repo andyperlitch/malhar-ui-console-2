@@ -23,7 +23,7 @@ angular.module('app.components.services.confirm', ['ui.bootstrap.modal'])
     return $modal.open({
       // Use the confirm controller and template
       controller: 'ConfirmServiceController',
-      templateUrl: 'components/services/confirm/confirm.html',
+      templateUrl: params.templateUrl || 'components/services/confirm/confirm.html',
       resolve: {
         // inject params into template
         params: function() {

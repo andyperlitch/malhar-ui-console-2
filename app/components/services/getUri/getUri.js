@@ -48,9 +48,9 @@ angular.module('app.components.services.getUri', ['app.settings'])
       var template = settings.topics[key];
       return interpolateParams(template, angular.extend({v: settings.GATEWAY_API_VERSION}, params));
     },
-    page: function(key, params) {
+    page: function(key, params, excludeHash) {
       var template = settings.pages[key];
-      return '#' + interpolateParams(template, angular.extend({}, params));
+      return (excludeHash ? '' : '#') + interpolateParams(template, angular.extend({}, params));
     },
     breadcrumb: function(key, params) {
       var template = settings.breadcrumbs[key];

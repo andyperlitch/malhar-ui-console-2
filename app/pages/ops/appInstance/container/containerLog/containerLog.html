@@ -1,1 +1,81 @@
-hello
+<div id="container-log-view-page">
+  
+  <h1>
+    <span ng-if="logs.fetching" dt-text class="text-muted">loading...</span>
+    <span ng-if="!logs.fetching && log.fetchError" dt-text class="text-danger">failed to load log</span>
+    <span ng-if="!logs.fetching && !log.fetchError" class="container-log-title">
+      {{ log.data.name }}
+      <span class="text-muted" ng-bind="log.data.length | byte"></span>
+    </span>
+    <a ng-href="{{downloadHref}}" class="btn btn-xs btn-success">
+      <span class="glyphicon glyphicon-arrow-down"></span>
+      <span dt-text>download file</span>
+    </a>
+  </h1>
+  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="grep_form.$valid && performQuery()">
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">from</span>
+        <input name="from" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.start" readable-bytes>
+        <div class="popover bottom" ng-messages="grep_form.from.$error" ng-style="{ display: grep_form.from.$error.readableBytes ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "from" offset</h3>
+          <div class="popover-content" ng-message="readableBytes">
+            <p dt-text>Enter a starting byte offset, like "10mb" or "0 kb."</p>
+          </div>
+        </div>
+      </div>
+        
+      <div class="input-group">
+        <span class="input-group-addon">to</span>
+        <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.start">
+        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.readableBytes ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
+          <div class="popover-content" ng-message="readableBytes">
+            <p dt-text>Enter an ending byte offset, like "12mb" or "8 kb."</p>
+          </div>
+        </div>
+        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.greaterThan ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
+          <div class="popover-content" ng-message="greaterThan">
+            <p dt-text>This offset must be greater than the "from" offset.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">grep</span>
+        <input type="text" class="form-control" placeholder="string" ng-model="logContent.manualGrep">
+      </div>
+    </div>
+    <div class="form-group">
+      <select 
+        class="form-control"
+        ng-model="logContent.grepMode"
+        ng-options="mode.value as mode.description for mode in logContent.grepModes"
+        ng-show="logContent.manualGrep">
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary" ng-if="logContent.grepMode !== 'current'" ng-disabled="!grep_form.$valid">
+      <span class="glyphicon glyphicon-search"></span>
+    </button>
+
+  </form>
+
+  <div class="well well-sm" id="container-log-viewer" container-log-viewer msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
+    <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
+
+    <div class="log-content" ng-repeat="line in logContent.lines track by $index"><span class="glyphicon glyphicon-eye-open go-to-log-location" ng-click="goToLogLocation(line)"></span>{{ line.line }}</div>
+
+    <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
+    <div ng-if="appendMessage" ng-class="'loading-msg prepend alert alert-' + appendMessage.type">{{ appendMessage.message }}</div>
+  </div>
+
+
+</div>
