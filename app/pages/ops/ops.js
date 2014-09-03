@@ -51,6 +51,7 @@ angular.module('app.pages.ops', [
   ) {
     var widgetDefinitions = [
       new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
+      /*
       {
         name: 'Line Chart',
         title: 'Line Chart',
@@ -84,6 +85,7 @@ angular.module('app.pages.ops', [
           width: '250px'
         }
       },
+      */
       new AppsListWidget({ name: 'AppList' })
     ];
 
