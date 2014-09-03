@@ -1,0 +1,11 @@
+<h4 ng-dblclick="editName(operator)" ng-if="!editing.name">
+    {{ operator.name }}
+</h4>
+<input
+  type="text"
+  class="form-control h4"
+  ng-if="editing.name"
+  ng-model="operator.name"
+  ng-blur="editing.name = false"
+>
+<h5 class="operator-class-name">{{ operator.opClass.name | camel2spaces }}</h5>
