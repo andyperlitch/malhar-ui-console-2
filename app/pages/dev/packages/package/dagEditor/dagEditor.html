@@ -1,0 +1,37 @@
+<div class="container-fluid">
+  <div class="col-xs-2" id="operator-class-list">
+    <h2>Operator Classes</h2>
+    <form name="operator-search-form" novalidate>
+      <p>
+        <input type="text" class="form-control" placeholder="search" ng-model="operatorClassSearch.term">
+      </p>
+    </form>
+
+    <!-- operator classes -->
+    <div class="well well-sm operator-class" draggable ng-attr-data-classname="{{ opClass.name }}" ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}">
+      <h3 class="h4">{{ opClass.name | pascal2spaces }}</h3>
+      <p>
+        <span ng-repeat="cat in opClass.categories">
+          <span class="label label-primary">{{ cat }}</span>
+        </span>
+      </p>
+      <p>{{ opClass.description }}</p>
+      <div>
+        {{ opClass.inputPorts ? opClass.inputPorts.length : 0 }} <span class="glyphicon glyphicon-log-in"></span>
+        &nbsp;&nbsp;&nbsp;
+        {{ opClass.outputPorts ? opClass.outputPorts.length : 0 }} <span class="glyphicon glyphicon-log-out"></span>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-xs-8" id="dag-palette-container">
+    <h2>DAG Palette</h2>
+    <div id="dag-palette" class="dag-palette" droppable operator-classes="operatorClasses" operators="operators" jsplumb-container>
+      <div class="dag-operator" ng-repeat="operator in operators" dag-operator="operator"></div>
+    </div>
+  </div>
+  <div class="col-xs-2" id="dag-inspector">
+    <h2>Inspector</h2>
+    
+  </div>
+</div>

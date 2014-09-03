@@ -100,13 +100,18 @@ angular.module('app.settings', [])
     // This is the single source of truth
     // for routes.
     pages: {
+      // Operations
       AppInstance              :'/ops/apps/:appId',
+      Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
+      ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
+      LogicalStream            :'/ops/apps/:appId/logicalPlan/streams/:streamName',
       PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
       Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portId',
-      LogicalStream            :'/ops/apps/:appId/logicalPlan/streams/:streamName',
-      Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
-      ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName'
+
+      // Development
+      DagEditor                :'/dev/packages/:packageName/dagEditor'
+
     },
 
     breadcrumbs: {
@@ -116,7 +121,8 @@ angular.module('app.settings', [])
       physicalOperator         :':operatorId',
       logicalStream            :':streamName',
       containerLog             :':logName',
-      port                     :':portId'
+      port                     :':portId',
+      packageName              :':packageName'
     },
 
     stramEvents: {
