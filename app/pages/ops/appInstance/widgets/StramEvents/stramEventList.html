@@ -73,7 +73,7 @@
 
 
 </form>
-<div class="event-list-container" ui-resizable resizable-options="resizableOptions" on-resize="onResize(event, ui)" ng-style="{ height: listHeight + 'px' }">
+<div class="event-list-container" ui-resizable resizable-options="resizableOptions" on-resize="onResize" ng-style="{ height: listHeight + 'px' }">
   <button
     ng-class="{ btn: true, 'btn-default': !followEvents, 'follow-events-btn': true, 'btn-success': followEvents }"
     ng-click="followEvents = !followEvents"

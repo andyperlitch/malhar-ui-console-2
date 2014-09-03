@@ -15,21 +15,12 @@
 */
 'use strict';
 
-angular.module('app.components.directives.uiResizable', [])
-.directive('uiResizable', function() {
-  return {
-    restrict: 'A',
-    link: function postLink(scope, elem, attrs) {
-      
-      var resizableOptions = scope.$eval(attrs.resizableOptions);
-      elem.resizable(resizableOptions);
+angular.module('app.components.services.jsPlumb', [])
 
-      elem.on('resizestop', function (event, ui) {
-        if (attrs.onResize) {
-          var callback = scope.$eval(attrs.onResize);
-          callback(event, ui);
-        }
-      });
-    }
-  };
+/**
+ * A simple wrapper for jsPlumb to improve
+ * testability.
+ */
+.factory('$jsPlumb', function($window) {
+  return $window.jsPlumb;
 });

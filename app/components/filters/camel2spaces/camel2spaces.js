@@ -15,21 +15,15 @@
 */
 'use strict';
 
-angular.module('app.components.directives.uiResizable', [])
-.directive('uiResizable', function() {
-  return {
-    restrict: 'A',
-    link: function postLink(scope, elem, attrs) {
-      
-      var resizableOptions = scope.$eval(attrs.resizableOptions);
-      elem.resizable(resizableOptions);
-
-      elem.on('resizestop', function (event, ui) {
-        if (attrs.onResize) {
-          var callback = scope.$eval(attrs.onResize);
-          callback(event, ui);
-        }
-      });
-    }
+angular.module('app.components.filters.camel2spaces', [])
+/**
+ * Converts camel- and pascal- case strings to
+ * space-separated words. 
+ *   e.g. PascalCase => Pascal Case
+ *        camelCase  => camel Case
+ */
+.filter('camel2spaces', function() {
+  return function(str) {
+    return $.trim(str.replace(/([A-Z])(?=[a-z])/g, ' $1'));
   };
 });

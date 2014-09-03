@@ -52,6 +52,8 @@ angular.module('app', [
   'app.pages.ops.appInstance.container.containerLog',
   'app.pages.ops.appInstance.logicalStream',
 
+  'app.pages.dev.packages.package.dagEditor',
+
   // misc
   'app.settings'
 ])
