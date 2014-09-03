@@ -32,7 +32,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     templateUrl: 'pages/dev/packages/package/dagEditor/dagEditor.html',
     label: 'edit DAG'
   });
-
 })
 
 // Controller
@@ -51,7 +50,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.paletteResizeOptions = {
     handles: 's'
   };
-  
 })
 
 // Factory: default appearance/functionality options
@@ -203,6 +201,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 })
+
+// Directive: sets the jsPlumb container
 .directive('jsplumbContainer', function($jsPlumb) {
   return {
     link: function(scope, element) {
@@ -210,6 +210,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 })
+
+// Directive: operator on the palette
 .directive('dagOperator', function($jsPlumb, dagEditorOptions) {
 
   function getYPosition(len, idx) {
@@ -299,6 +301,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 })
+
+// Controller: for operators on the palette
 .controller('DagOperatorCtrl', function($scope) {
   $scope.editName = function() {
     $scope.editing.name = true;
