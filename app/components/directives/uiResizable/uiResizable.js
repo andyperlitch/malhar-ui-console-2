@@ -19,15 +19,15 @@ angular.module('app.components.directives.uiResizable', [])
 .directive('uiResizable', function() {
   return {
     restrict: 'A',
-    scope: {
-      callback: '&onResize',
-      resizableOptions: '='
-    },
     link: function postLink(scope, elem, attrs) {
-      elem.resizable(scope.resizableOptions);
+      
+      var resizableOptions = scope.$eval(attrs.resizableOptions);
+      elem.resizable(resizableOptions);
+
       elem.on('resizestop', function (event, ui) {
         if (attrs.onResize) {
-          scope.callback({ event: event, ui: ui });
+          var callback = scope.$eval(attrs.onResize);
+          callback(event, ui);
         }
       });
     }
