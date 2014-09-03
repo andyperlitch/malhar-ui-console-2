@@ -20,7 +20,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   'app.pages.dev.packages.package.dagEditor.mockOperatorsData',
 
   'app.components.services.jsPlumb',
-  'app.components.filters.camel2spaces'
+  'app.components.filters.camel2spaces',
+  'app.components.directives.uiResizable'
 ])
 
 // Routing
@@ -45,6 +46,11 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   
   // Chosen Operators
   $scope.operators = [];
+
+  // Palette resizable options
+  $scope.paletteResizeOptions = {
+    handles: 's'
+  };
   
 })
 
@@ -294,7 +300,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 })
 .controller('DagOperatorCtrl', function($scope) {
-  $scope.editName = function(operator) {
+  $scope.editName = function() {
     $scope.editing.name = true;
   };
 });
