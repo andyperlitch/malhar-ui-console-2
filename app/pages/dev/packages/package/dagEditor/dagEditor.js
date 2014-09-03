@@ -18,7 +18,9 @@
 angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // MOCK DATA: FOR TESTING ONLY
-  'app.pages.dev.packages.package.dagEditor.mockOperatorsData'
+  'app.pages.dev.packages.package.dagEditor.mockOperatorsData',
+
+  'app.components.filters.camel2spaces'
 
 ])
 

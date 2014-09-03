@@ -9,7 +9,7 @@
 
     <!-- operator classes -->
     <div class="well well-sm operator-class" draggable ng-attr-data-classname="{{ opClass.name }}" ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}">
-      <h3 class="h4">{{ opClass.name | pascal2spaces }}</h3>
+      <h3 class="h4">{{ opClass.name | camel2spaces }}</h3>
       <p>
         <span ng-repeat="cat in opClass.categories">
           <span class="label label-primary">{{ cat }}</span>
@@ -32,6 +32,6 @@
   </div>
   <div class="col-xs-2" id="dag-inspector">
     <h2>Inspector</h2>
-    
+
   </div>
 </div>
