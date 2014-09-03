@@ -20,6 +20,7 @@ angular.module('app.components.resources.LogicalStreamModel', [
 ])
 .factory('LogicalStreamModel', function(BaseModel) {
   var LogicalStreamModel = BaseModel.extend({
+    debugName: 'Logical Stream',
     urlKey: 'LogicalPlan',
     idAttribute: 'name',
     doNotAppendIdAttribute: true,

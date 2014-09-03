@@ -20,6 +20,7 @@ angular.module('app.components.resources.LogicalOperatorModel', [
 ])
 .factory('LogicalOperatorModel', function(BaseModel) {
   var LogicalOperatorModel = BaseModel.extend({
+    debugName: 'Logical Operator',
     urlKey: 'LogicalOperator',
     idAttribute: 'name',
     topicKey: 'LogicalOperators',

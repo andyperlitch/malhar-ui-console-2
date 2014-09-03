@@ -21,8 +21,8 @@ angular.module('app.components.resources.LogicalOperatorCollection', [
 ])
 .factory('LogicalOperatorCollection', function(BaseCollection, LogicalOperatorModel) {
   var LogicalOperatorCollection = BaseCollection.extend({
-
-    urlKey: 'LogicalPlan',
+    debugName: 'Logical Operators',
+    urlKey: 'LogicalOperator',
     topicKey: 'LogicalOperators',
     transformResponse: 'operators',
     model: LogicalOperatorModel

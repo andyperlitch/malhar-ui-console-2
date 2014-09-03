@@ -20,6 +20,7 @@ angular.module('app.components.resources.OpPropertiesModel', [
 ])
   .factory('OpPropertiesModel', function(BaseModel) {
     var OpProperties = BaseModel.extend({
+      debugName: 'Logical Operator Properties',
       urlKey: 'OpProperties'
     });
     return OpProperties;

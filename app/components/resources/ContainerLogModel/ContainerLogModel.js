@@ -21,7 +21,7 @@ angular.module('app.components.resources.ContainerLogModel', [
 .factory('ContainerLogModel', function(BaseModel) {
 
   var ContainerLogModel = BaseModel.extend({
-
+    debugName: 'Container Log',
     urlKey: 'ContainerLog',
     idAttribute: 'name',
     doNotAppendIdAttribute: true,

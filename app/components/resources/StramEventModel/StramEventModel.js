@@ -20,6 +20,7 @@ angular.module('app.components.resources.StramEventModel', [
 ])
 .factory('StramEventModel', function(BaseModel) {
   var StramEventModel = BaseModel.extend({
+    debugName: 'Stram Event',
     urlKey: 'StramEvent'
   });
   return StramEventModel;

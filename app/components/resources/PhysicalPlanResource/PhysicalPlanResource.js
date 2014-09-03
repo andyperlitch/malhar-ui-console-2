@@ -20,6 +20,7 @@ angular.module('app.components.resources.PhysicalPlanResource', ['app.components
   .factory('PhysicalPlanResource', function(BaseModel) {
 
     var PhysicalPlanResource = BaseModel.extend({
+      debugName: 'Physical Plan',
       urlKey: 'PhysicalPlan'
     });
 

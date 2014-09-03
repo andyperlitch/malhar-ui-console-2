@@ -21,7 +21,7 @@ angular.module('app.components.resources.PhysicalOperatorModel', [
 .factory('PhysicalOperatorModel', function(BaseModel) {
 
   var PhysicalOperatorModel = BaseModel.extend({
-
+    debugName: 'Physical Operator',
     urlKey: 'PhysicalOperator',
     topicKey: 'PhysicalOperators',
     transformResponse: function(raw, type) {

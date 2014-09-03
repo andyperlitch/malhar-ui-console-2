@@ -22,6 +22,7 @@ angular.module('app.components.resources.StramEventCollection', [
 .factory('StramEventCollection', function(BaseCollection, StramEventModel) {
 
   var StramEventCollection = BaseCollection.extend({
+    debugName: 'Stram Events',
     urlKey: 'StramEvent',
     topicKey: 'StramEvents',
     transformResponse: function(raw, type) {

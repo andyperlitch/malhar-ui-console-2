@@ -54,6 +54,9 @@ angular.module('app.components.resources.BaseResource', [
       // Set fetching property
       this.fetching = true;
 
+      // Log request
+      $log.info(this.debugName + ' requested. URL: ' + this.url + ', Options: ', options);
+
       // Store in data on return
       httpPromise.then(
         function(response) {
@@ -66,6 +69,9 @@ angular.module('app.components.resources.BaseResource', [
           var transformed = self._getTransformed(response.data, 'fetch');
           self.set(transformed);
           
+          // Log Response
+          $log.info(self.debugName + ' retrieved. Transformed: ', transformed, ', Raw Response: ', response);
+
           // Resolve deferred
           deferred.resolve(transformed);
         },
@@ -146,8 +152,8 @@ angular.module('app.components.resources.BaseResource', [
       throw new TypeError('The set method must be implemented in a child class of BaseResource!');
     },
 
-    onFetchError: function() {
-      $log.error(this.debugName + ' failed to load from the server!');
+    onFetchError: function(response) {
+      $log.error(this.debugName + ' failed to load from the server. Response: ', response);
     },
 
     /**

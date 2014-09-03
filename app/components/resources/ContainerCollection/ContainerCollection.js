@@ -22,7 +22,7 @@ angular.module('app.components.resources.ContainerCollection', [
 .factory('ContainerCollection', function(BaseCollection, ContainerModel) {
 
   var ContainerCollection = BaseCollection.extend({
-
+    debugName: 'Containers',
     urlKey: 'Container',
     topicKey: 'Containers',
     model: ContainerModel,

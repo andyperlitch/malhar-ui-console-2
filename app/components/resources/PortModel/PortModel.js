@@ -20,6 +20,7 @@ angular.module('app.components.resources.PortModel',[
 ])
 .factory('PortModel', function(BaseModel) {
   var PortModel = BaseModel.extend({
+    debugName: 'Port',
     idAttribute: 'name'
   });
   return PortModel;

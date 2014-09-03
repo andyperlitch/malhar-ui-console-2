@@ -21,6 +21,7 @@ angular.module('app.components.resources.ContainerModel', [
 .factory('ContainerModel', function(BaseModel) {
 
   var ContainerModel = BaseModel.extend({
+    debugName: 'Container',
     urlKey: 'Container',
     topicKey: 'Containers',
     transformResponse: function(raw, type) {

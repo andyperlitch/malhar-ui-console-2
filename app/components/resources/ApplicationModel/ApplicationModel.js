@@ -29,45 +29,28 @@ angular.module('app.components.resources.ApplicationModel', [
 .factory('ApplicationModel', function(BaseModel) {
 
   var ApplicationModel = BaseModel.extend({
-
+    debugName: 'Application Instance',
     urlKey: 'Application',
-    
     topicKey: 'Application',
-
     transformResponse: function(raw, type) {
-
       var updates;
-
       switch(type) {
-
         case 'subscribe':
-
           updates = {};
-
           // Move attributes to main object where applicable
           _.each(['recoveryWindowId', 'currentWindowId', 'state'], function(key) {
             updates[key] = raw[key];
             delete raw[key];
           }, this);
-          
           updates.stats = raw;
-
           break;
-
         default:
-
           updates = raw;
-
           break;
-
       }
-
       return updates;
-
     }
-
   });
-
-  return ApplicationModel;
   
+  return ApplicationModel;
 });
