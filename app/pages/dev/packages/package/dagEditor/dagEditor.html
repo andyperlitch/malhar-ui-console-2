@@ -34,19 +34,26 @@
       class="dag-palette"
       operator-classes="operatorClasses"
       operators="operators"
+      selected="selected"
       jsplumb-container
       ng-click="deselectAll($event)"
-    >
-      <div
-        ng-repeat="operator in operators"
-        dag-operator="operator"
-        operators="operators"
-        selected="selected">
-      </div>
+    ></div>
+  </div>
+  <form class="col-xs-2 dag-inspector" ng-if="!selected" ng-controller="DagAppInspectorCtrl" name="dag_app_inspector">
+    <h2 class="h4">App Inspector</h2>
+    <div class="form-group">
+      <label for=""></label>
     </div>
-  </div>
-  <div class="col-xs-2" id="dag-inspector">
-    <h2 class="h4">Inspector</h2>
-
-  </div>
+  </form>
+  <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'operator'" ng-controller="DagOperatorInspectorCtrl" name="dag_operator_inspector">
+    <h2 class="h4">Operator Inspector</h2>
+    <div class="form-group">
+      <label for="class" dt-text>Class Name:</label>
+      <input type="text" class="form-control" readonly ng-model="selected.opClass.name">
+    </div>
+    <div class="form-group">
+      <label for="name" dt-text>Operator Name:</label>
+      <input type="text" class="form-control" ng-model="selected.name">
+    </div>
+  </form>
 </div>

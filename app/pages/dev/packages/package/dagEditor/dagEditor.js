@@ -37,6 +37,18 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 // Controller
 .controller('DagEditorCtrl', function($scope, mockOperatorsData) {
 
+  // Deselects everything
+  $scope.deselectAll = function() {
+    $scope.selected = null;
+    $scope.selected_type = null;
+  };
+
+  // Listen for entity selections
+  $scope.$on('selectEntity', function(event, type, entity) {
+    $scope.selected = entity;
+    $scope.selected_type = type;
+  });
+
   // Search object
   $scope.operatorClassSearch = { term: '' };
   
@@ -54,18 +66,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     handles: 's'
   };
 
-  // Holds selection
-  $scope.selected = null;
-
-  // Deselects everything
-  $scope.deselectAll = function() {
-    $scope.selected = null;
-  };
-
-  // Listen for entity selections
-  $scope.$on('selectEntity', function(event, entity) {
-    $scope.selected = entity;
-  });
+  // Initialize selection info
+  $scope.deselectAll();
 
 })
 
@@ -148,11 +150,15 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   return {
     restrict: 'A',
+    templateUrl: 'pages/dev/packages/package/dagEditor/dagPalette.html',
     scope: {
       operatorClasses: '=',
-      operators: '='
+      operators: '=',
+      selected: '='
     },
     link: function(scope, element){
+
+      // TODO: check for streams
 
       /**
        * helper function to get the operatorClass 
@@ -175,7 +181,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           y: y
         };
         scope.operators.push(operator);
-        scope.$emit('selectEntity', operator);
+        scope.$emit('selectEntity', 'operator', operator);
         scope.$digest();
       }
 
@@ -380,7 +386,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       return o !== operator && o.name === newName;
     });
 
-    console.log(current);
+    if (current) {
+      console.log('operator exists with that name!', current);
+      return;
+    }
 
     operator.name = newName;
 
@@ -392,6 +401,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
   $scope.selectOperator = function($event) {
     $event.stopPropagation();
-    $scope.$emit('selectEntity', $scope.operator);
+    $scope.$emit('selectEntity', 'operator', $scope.operator);
   };
+})
+
+// Controller: Inspector for application
+.controller('DagAppInspectorCtrl', function() {
+
+})
+
+// Controller: Inspector for operator
+.controller('DagOperatorInspectorCtrl', function() {
+
 });
