@@ -18,11 +18,11 @@
 
 angular.module('app.components.widgets.dag.base',
   [
-    'app.components.directives.logicalDag.LogicalDagRenderer',
+    'app.components.widgets.dag.DagRenderer',
     'app.components.directives.logicalDag.MetricModelFactory',
     'app.components.widgets.dag.DagHelper'
   ])
-  .directive('dtDag', function (LogicalDagRenderer, DagHelper) {
+  .directive('dtDag', function (DagRenderer, DagHelper) {
     return {
       restrict: 'A',
       templateUrl: 'components/widgets/dag/base/dagDirective.html',
@@ -34,7 +34,7 @@ angular.module('app.components.widgets.dag.base',
 
         angular.extend(this, {
           renderDag: function (logicalPlan) {
-            $scope.renderer = new LogicalDagRenderer($element, logicalPlan);
+            $scope.renderer = new DagRenderer($element, logicalPlan);
             $scope.renderer.displayGraph();
           }
         });
