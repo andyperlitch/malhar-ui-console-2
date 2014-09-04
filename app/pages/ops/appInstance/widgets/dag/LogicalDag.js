@@ -19,6 +19,7 @@
 angular.module('app.pages.ops.appInstance.widgets.dag.LogicalDag', [
   'app.settings',
   'app.components.widgets.dag.physical.logicalDag',
+  //'app.components.widgets.dag.base',
   'app.components.directives.dtSelect',
   'app.components.resources.LogicalPlanResource'
 ])
@@ -77,6 +78,7 @@ angular.module('app.pages.ops.appInstance.widgets.dag.LogicalDag', [
       defaults: {
         title: 'Logical DAG',
         directive: 'dt-logical-dag',
+        //directive: 'dt-dag',
         dataModelType: LogicalDagWidgetDataModel
       }
     });
