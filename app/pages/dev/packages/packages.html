@@ -2,10 +2,14 @@
     <tr>
         <th>Package Name</th>
         <th>Version</th>
+        <th>Owner</th>
+        <th>Modification Time</th>
     </tr>
     <tr ng-repeat="package in packages.data">
-        <td>{{package.appPackageName}}</td>
+        <td><a href="#">{{package.appPackageName}}</a></td>
         <td>{{package.appPackageVersion}}</td>
+        <td>{{package.owner}}</td>
+        <td>{{package.modificationTime|date:'yyyy-mm-dd HH:mm'}}</td>
     </tr>
 </table>
 
