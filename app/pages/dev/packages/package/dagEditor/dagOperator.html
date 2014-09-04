@@ -1,7 +1,7 @@
 <div
   ng-click="selectOperator($event)"
   class="dag-operator"
-  ng-class="{ 'selected': operator.selected }">
+  ng-class="{ 'selected': operator === selected }">
   <button type="button" class="close" ng-click="remove($event)">
     <span aria-hidden="true">&times;</span>
     <span class="sr-only">Close</span>

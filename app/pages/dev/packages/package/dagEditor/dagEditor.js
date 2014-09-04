@@ -54,20 +54,17 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     handles: 's'
   };
 
+  // Holds selection
+  $scope.selected = null;
+
   // Deselects everything
   $scope.deselectAll = function() {
-    _.each([$scope.operators, $scope.streams], function(collection) {
-      _.each(collection, function(ent) {
-        ent.selected = false;
-      });
-    });
+    $scope.selected = null;
   };
 
   // Listen for entity selections
   $scope.$on('selectEntity', function(event, entity) {
-    console.log('selectEntity triggered');
-    $scope.deselectAll();
-    entity.selected = true;
+    $scope.selected = entity;
   });
 
 })
@@ -171,12 +168,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       }
 
       function addOperator(opClass, x, y) {
-        scope.operators.push({
+        var operator = {
           name: 'Untitled',
           opClass: opClass,
           x: x,
           y: y
-        });
+        };
+        scope.operators.push(operator);
+        scope.$emit('selectEntity', operator);
         scope.$digest();
       }
 
@@ -308,7 +307,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     replace: true,
     scope: {
       operator: '=dagOperator',
-      operators: '='
+      operators: '=',
+      selected: '='
     },
     controller: 'DagOperatorCtrl',
     link: function(scope, element) {
