@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-2" id="operator-class-list">
-    <h2>Operator Classes</h2>
+    <h2 class="h4">Operator Classes</h2>
     <form name="operator-search-form" novalidate>
       <p>
         <input type="text" class="form-control" placeholder="search" ng-model="operatorClassSearch.term">
@@ -8,7 +8,7 @@
     </form>
 
     <!-- operator classes -->
-    <div class="well well-sm operator-class" dag-operator-class ng-attr-data-classname="{{ opClass.name }}" ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}">
+    <div class="alert alert-info operator-class" dag-operator-class ng-attr-data-classname="{{ opClass.name }}" ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}">
       <h3 class="h4">{{ opClass.name | camel2spaces }}</h3>
       <p>
         <span ng-repeat="cat in opClass.categories">
@@ -25,7 +25,7 @@
 
   </div>
   <div class="col-xs-8" id="dag-palette-container">
-    <h2>DAG Palette</h2>
+    <h2 class="h4">DAG Palette</h2>
     <div
       dag-palette
       ui-resizable
@@ -36,11 +36,11 @@
       operators="operators"
       jsplumb-container
     >
-      <div class="dag-operator" ng-repeat="operator in operators" dag-operator="operator"></div>
+      <div class="dag-operator" ng-repeat="operator in operators" dag-operator="operator" operators="operators"></div>
     </div>
   </div>
   <div class="col-xs-2" id="dag-inspector">
-    <h2>Inspector</h2>
+    <h2 class="h4">Inspector</h2>
 
   </div>
 </div>

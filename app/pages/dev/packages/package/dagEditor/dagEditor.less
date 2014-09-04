@@ -1,6 +1,19 @@
 /* Put your css in here */
 
+.operator-class, .dag-operator {
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+
+  &.ui-draggable-dragging {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;    
+  }
+}
+
 .operator-class {
+  padding: 0.5em;
   margin-bottom: 4px;
   h3 {
     margin: 0;
@@ -11,13 +24,18 @@
 }
 .dag-palette {
   border: 1px solid #DEDEDE;
-  min-height: 600px;
+  height: 650px;
   position: relative;
   background: #FFF;
-  display: flex;
+  overflow: auto;
+
+  .ui-resizable-s {
+    bottom: 0;
+  }
 }
 
 .dag-operator {
+  position: relative;
   width: 150px;
   height: 150px;
   border: 1px solid #CCC;
@@ -25,9 +43,25 @@
   border-radius: 3px;
   position: absolute;
   text-align: center;
+  h1, h2, h3, h4, h5 {
+    cursor: text;
+  }
+  .close {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    line-height: 0.6;
+  }
 }
 
 .dag-operator .operator-class-name {
   padding: 0 1em;
   font-size: 11px;
+}
+
+.edit-name-form {
+  input {
+    font: inherit;
+    text-align: center;
+  }
 }
