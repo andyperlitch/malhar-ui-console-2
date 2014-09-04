@@ -35,7 +35,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData) {
+.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -54,12 +54,15 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   
   // Operator Classes:
   $scope.operatorClasses = mockOperatorsData;
-  
-  // Chosen Operators
-  $scope.operators = [];
 
-  // Created Streams
-  $scope.streams = [];
+  // Expose appName to scope
+  $scope.appName = $routeParams.appName;
+  
+  // Models the application
+  $scope.app = {
+    operators: [],
+    streams: []
+  };
 
   // Palette resizable options
   $scope.paletteResizeOptions = {
@@ -153,7 +156,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     templateUrl: 'pages/dev/packages/package/dagEditor/dagPalette.html',
     scope: {
       operatorClasses: '=',
-      operators: '=',
+      app: '=',
       selected: '='
     },
     link: function(scope, element){
@@ -180,7 +183,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           x: x,
           y: y
         };
-        scope.operators.push(operator);
+        scope.app.operators.push(operator);
         scope.$emit('selectEntity', 'operator', operator);
         scope.$digest();
       }
@@ -313,7 +316,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     replace: true,
     scope: {
       operator: '=dagOperator',
-      operators: '=',
+      app: '=',
       selected: '='
     },
     controller: 'DagOperatorCtrl',
@@ -382,7 +385,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     var newName = $scope.changes.name;
 
     // check if an operator with that name exists
-    var current = _.find($scope.operators, function(o) {
+    var current = _.find($scope.app.operators, function(o) {
       return o !== operator && o.name === newName;
     });
 
@@ -396,8 +399,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.editing.name = false;
   };
   $scope.remove = function() {
-    var index = $scope.operators.indexOf($scope.operator);
-    $scope.operators.splice(index, 1);
+    var index = $scope.app.operators.indexOf($scope.operator);
+    $scope.app.operators.splice(index, 1);
   };
   $scope.selectOperator = function($event) {
     $event.stopPropagation();
