@@ -110,8 +110,8 @@ angular.module('app.settings', [])
       Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portId',
 
       // Development
-      DagEditor                :'/dev/packages/:packageName/applications/:appName/dagEditor'
-
+      Packages                 :'/packages',
+      DagEditor                :'/dev/packages/:packageName/dagEditor'
     },
 
     breadcrumbs: {
