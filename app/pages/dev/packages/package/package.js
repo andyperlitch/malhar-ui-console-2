@@ -15,23 +15,27 @@
  */
 'use strict';
 
-angular.module('app.pages.dev.packages', [
-  'app.components.resources.PackageCollection'
+angular.module('app.pages.dev.packages.package', [
+  'app.components.resources.PackageModel',
+  'app.components.resources.PackageApplicationCollection'
 ])
 
 // Routing
   .config(function($routeProvider, settings) {
 
-    $routeProvider.when(settings.pages.Packages, {
-      controller: 'PackagesCtrl',
-      templateUrl: 'pages/dev/packages/packages.html',
-      label: 'Packages'
+    $routeProvider.when(settings.pages.Package, {
+      controller: 'PackageCtrl',
+      templateUrl: 'pages/dev/packages/package/package.html',
+      label: 'Package'
     });
 
   })
 
 // Controller
-  .controller('PackagesCtrl', function($scope, PackageCollection) {
-    $scope.packages = new PackageCollection();
-    $scope.packages.fetch();
+  .controller('PackageCtrl', function($scope, $routeParams, PackageApplicationCollection) {
+    $scope.apps = new PackageApplicationCollection({
+      package: $routeParams.package,
+      packageVersion: $routeParams.packageVersion
+    });
+    $scope.apps.fetch();
   });

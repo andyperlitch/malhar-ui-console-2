@@ -6,7 +6,7 @@
         <th>Modification Time</th>
     </tr>
     <tr ng-repeat="package in packages.data">
-        <td><a href="#">{{package.appPackageName}}</a></td>
+        <td><a href="#/packages/{{package.appPackageName}}/{{package.appPackageVersion}}">{{package.appPackageName}}</a></td>
         <td>{{package.appPackageVersion}}</td>
         <td>{{package.owner}}</td>
         <td>{{package.modificationTime|date:'yyyy-mm-dd HH:mm'}}</td>

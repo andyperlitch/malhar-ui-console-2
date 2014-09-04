@@ -64,7 +64,9 @@ angular.module('app.settings', [])
       StramEvent               :'/ws/:v/applications/:appId/events',
       PhysicalStream           :'/ws/:v/applications/:appId/physicalPlan/streams',
       User                     :'/ws/:v/profile/user',
-      Packages                 :'/ws/:v/appPackages'
+      Packages                 :'/ws/:v/appPackages',
+      Package                  :'/ws/:v/appPackages/:package/:packageVersion',
+      PackageApplications      :'/ws/:v/appPackages/:package/:packageVersion/applications'
     },
     
     actions: {
@@ -111,6 +113,7 @@ angular.module('app.settings', [])
 
       // Development
       Packages                 :'/packages',
+      Package                  :'/packages/:package/:packageVersion',
       DagEditor                :'/packages/:packageName/applications/:appName/dagEditor'
     },
 
