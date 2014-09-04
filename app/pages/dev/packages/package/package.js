@@ -33,11 +33,11 @@ angular.module('app.pages.dev.packages.package', [
 
 // Controller
   .controller('PackageCtrl', function($scope, $routeParams, PackageApplicationCollection) {
-    $scope.packageName = $routeParams.package;
+    $scope.packageName = $routeParams.packageName;
     $scope.packageVersion = $routeParams.packageVersion;
 
     $scope.apps = new PackageApplicationCollection({
-      package: $routeParams.package,
+      packageName: $routeParams.packageName,
       packageVersion: $routeParams.packageVersion
     });
     $scope.apps.fetch();

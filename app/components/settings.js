@@ -65,8 +65,9 @@ angular.module('app.settings', [])
       PhysicalStream           :'/ws/:v/applications/:appId/physicalPlan/streams',
       User                     :'/ws/:v/profile/user',
       Packages                 :'/ws/:v/appPackages',
-      Package                  :'/ws/:v/appPackages/:package/:packageVersion',
-      PackageApplications      :'/ws/:v/appPackages/:package/:packageVersion/applications'
+      Package                  :'/ws/:v/appPackages/:packageName/:packageVersion',
+      PackageApplications      :'/ws/:v/appPackages/:packageName/:packageVersion/applications',
+      PackageApplication       :'/ws/:v/appPackages/:packageName/:packageVersion/applications/:appName'
     },
     
     actions: {
@@ -113,8 +114,8 @@ angular.module('app.settings', [])
 
       // Development
       Packages                 :'/packages',
-      Package                  :'/packages/:package/:packageVersion',
-      PackageApplication       :'/packages/:package/:packageVersion/applications/:appName',
+      Package                  :'/packages/:packageName/:packageVersion',
+      PackageApplication       :'/packages/:packageName/:packageVersion/applications/:appName',
       DagEditor                :'/packages/:packageName/applications/:appName/dagEditor'
     },
 
