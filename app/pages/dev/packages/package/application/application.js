@@ -15,30 +15,29 @@
  */
 'use strict';
 
-angular.module('app.pages.dev.packages.package', [
-  'app.components.resources.PackageModel',
-  'app.components.resources.PackageApplicationCollection'
+angular.module('app.pages.dev.packages.package.application', [
+  'app.components.resources.PackageApplicationModel'
 ])
 
 // Routing
   .config(function($routeProvider, settings) {
 
-    $routeProvider.when(settings.pages.Package, {
-      controller: 'PackageCtrl',
-      templateUrl: 'pages/dev/packages/package/package.html',
-      label: 'Package'
+    $routeProvider.when(settings.pages.PackageApplication, {
+      controller: 'PackageApplicationCtrl',
+      templateUrl: 'pages/dev/packages/package/application/application.html',
+      label: 'Application'
     });
 
   })
 
 // Controller
-  .controller('PackageCtrl', function($scope, $routeParams, PackageApplicationCollection) {
-    $scope.packageName = $routeParams.package;
-    $scope.packageVersion = $routeParams.packageVersion;
-
-    $scope.apps = new PackageApplicationCollection({
+  .controller('PackageApplicationCtrl', function($scope, $routeParams, PackageApplicationModel) {
+    var app = new PackageApplicationModel({
       package: $routeParams.package,
-      packageVersion: $routeParams.packageVersion
+      packageVersion: $routeParams.packageVersion,
+      appName: $routeParams.appName
     });
-    $scope.apps.fetch();
+    app.fetch(function (app) {
+      console.log(app);
+    });
   });
