@@ -32,7 +32,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     templateUrl: 'pages/dev/packages/package/dagEditor/dagEditor.html',
     label: 'edit DAG'
   });
-
 })
 
 // Controller
@@ -51,7 +50,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.paletteResizeOptions = {
     handles: 's'
   };
-  
 })
 
 // Factory: default appearance/functionality options
@@ -203,6 +201,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 })
+
+// Directive: sets the jsPlumb container
 .directive('jsplumbContainer', function($jsPlumb) {
   return {
     link: function(scope, element) {
@@ -210,7 +210,22 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 })
+
+// Directive: operator on the palette
 .directive('dagOperator', function($jsPlumb, dagEditorOptions) {
+
+  var portTypes = {
+    inputPorts: {
+      position: 0,
+      incident: -1,
+      options: dagEditorOptions.inputEndpointOptions
+    },
+    outputPorts: {
+      position: 1,
+      incident: 1,
+      options: dagEditorOptions.outputEndpointOptions
+    }
+  };
 
   function getYPosition(len, idx) {
     if (len === 1) {
@@ -224,18 +239,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   function setPortEndpoints(operator, element) {
 
-    var portTypes = {
-      inputPorts: {
-        position: 0,
-        incident: -1,
-        options: dagEditorOptions.inputEndpointOptions
-      },
-      outputPorts: {
-        position: 1,
-        incident: 1,
-        options: dagEditorOptions.outputEndpointOptions
-      }
-    };
+    var endpoints = [];
 
     _.each(portTypes, function(type, portKey) {
 
@@ -264,9 +268,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // // DO NOT MODIFY THIS ATTRIBUTE IN ANY WAY
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
+
+        endpoints.push(endpoint);
       }
 
     });
+
+    return endpoints;
 
   }
 
@@ -274,13 +282,17 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     restrict: 'A',
     templateUrl: 'pages/dev/packages/package/dagEditor/dagOperator.html',
     scope: {
-      operator: '=dagOperator'
+      operator: '=dagOperator',
+      operators: '='
     },
     controller: 'DagOperatorCtrl',
     link: function(scope, element) {
 
       // Set the editing state on the scope
       scope.editing = {};
+
+      // Holds new values
+      scope.changes = {};
 
       // Set the initial position
       element.css({
@@ -294,13 +306,63 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       });
 
       // Set the ports as anchors/endpoints
-      setPortEndpoints(scope.operator, element);
+      scope.endpoints = setPortEndpoints(scope.operator, element);
+      scope.editName({
+        target: element.find('.dag-operator-name')[0]
+      }, scope.operator);
 
+      // destroy event
+      scope.$on('$destroy', function() {
+        $jsPlumb.detachAllConnections(element);
+        _.each(scope.endpoints, function(ep) {
+          $jsPlumb.deleteEndpoint(ep);
+        });
+      });
     }
   };
 })
-.controller('DagOperatorCtrl', function($scope) {
-  $scope.editName = function() {
+
+// Controller: for operators on the palette
+.controller('DagOperatorCtrl', function($scope, $timeout) {
+  $scope.editName = function($event) {
+    var operator = $scope.operator;
     $scope.editing.name = true;
+    $scope.changes.name = operator.name;
+    var $trg = $($event.target);
+    var $input = $trg.next('.edit-name-form').find('input');
+    $timeout(function() {
+      var len = $input.val().length;
+      $input.focus();
+      $input[0].setSelectionRange(0, len);
+    });
+  };
+  $scope.saveName = function($event, checkForEnter) {
+
+    // prevent saving when editing.name is false
+    if (!$scope.editing.name) {
+      return;
+    }
+
+    var operator = $scope.operator;
+    if (checkForEnter && $event.which !== 13) {
+      return;
+    }
+
+    var newName = $scope.changes.name;
+
+    // check if an operator with that name exists
+    var current = _.find($scope.operators, function(o) {
+      return o !== operator && o.name === newName;
+    });
+
+    console.log(current);
+
+    operator.name = newName;
+
+    $scope.editing.name = false;
+  };
+  $scope.remove = function() {
+    var index = $scope.operators.indexOf($scope.operator);
+    $scope.operators.splice(index, 1);
   };
 });
