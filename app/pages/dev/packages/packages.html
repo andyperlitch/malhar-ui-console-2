@@ -1,6 +1,12 @@
-<h1>Applications/Package List Page</h1>
+<table class="table" style="width:auto;">
+    <tr>
+        <th>Package Name</th>
+        <th>Version</th>
+    </tr>
+    <tr ng-repeat="package in packages.data">
+        <td>{{package.appPackageName}}</td>
+        <td>{{package.appPackageVersion}}</td>
+    </tr>
+</table>
 
-<div ng-repeat="package in list">
-    <p>{{package}}</p>
-</div>
 

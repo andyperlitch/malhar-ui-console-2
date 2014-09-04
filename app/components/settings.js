@@ -63,8 +63,8 @@ angular.module('app.settings', [])
       RecordingTuples          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/:startTime/tuples',
       StramEvent               :'/ws/:v/applications/:appId/events',
       PhysicalStream           :'/ws/:v/applications/:appId/physicalPlan/streams',
-      User                     :'/ws/:v/profile/user'
-
+      User                     :'/ws/:v/profile/user',
+      Packages                 :'/ws/:v/appPackages'
     },
     
     actions: {
@@ -111,7 +111,7 @@ angular.module('app.settings', [])
 
       // Development
       Packages                 :'/packages',
-      DagEditor                :'/dev/packages/:packageName/dagEditor'
+      DagEditor                :'/packages/:packageName/applications/:appName/dagEditor'
     },
 
     breadcrumbs: {
