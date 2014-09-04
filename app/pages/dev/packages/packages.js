@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.pages.dev.packages', [
+  'app.components.resources.PackageCollection'
 ])
 
 // Routing
@@ -24,12 +25,13 @@ angular.module('app.pages.dev.packages', [
     $routeProvider.when(settings.pages.Packages, {
       controller: 'PackagesCtrl',
       templateUrl: 'pages/dev/packages/packages.html',
-      label: 'edit DAG'
+      label: 'Applications'
     });
 
   })
 
 // Controller
-  .controller('PackagesCtrl', function($scope) {
-    $scope.list = ['package 1', 'package 2', 'package 3'];
+  .controller('PackagesCtrl', function($scope, PackageCollection) {
+    $scope.packages = new PackageCollection();
+    $scope.packages.fetch();
   });
