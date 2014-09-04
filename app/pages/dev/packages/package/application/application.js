@@ -33,7 +33,7 @@ angular.module('app.pages.dev.packages.package.application', [
 // Controller
   .controller('PackageApplicationCtrl', function($scope, $routeParams, PackageApplicationModel) {
     var app = new PackageApplicationModel({
-      package: $routeParams.package,
+      packageName: $routeParams.packageName,
       packageVersion: $routeParams.packageVersion,
       appName: $routeParams.appName
     });
