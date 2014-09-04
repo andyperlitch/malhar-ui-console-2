@@ -22,19 +22,24 @@ angular.module('app.components.directives.validation.greaterThan', [])
     require: 'ngModel',
     link: function(scope, element, attrs, ngModel) {
       
-      var setValidity = function() {
-        var minimumValue = scope.$eval(attrs.greaterThan) * 1;
-        var currentValue = scope.$eval(attrs.ngModel) * 1;
-        if (minimumValue >= currentValue) {
-          ngModel.$setValidity('greaterThan', false);
-        }
-        else {
-          ngModel.$setValidity('greaterThan', true); 
-        }
-      };
+      // Re-run the parsers when the value being compared to
+      // has changed.
+      scope.$watch(attrs.greaterThan, function() {
+        // hack to get $parsers to trigger
+        // @see http://stackoverflow.com/questions/16284878/how-to-trigger-angular-parsers-without-inputing-anything-in-the-field
+        var val = ngModel.$viewValue; 
+        ngModel.$setViewValue(null);
+        ngModel.$setViewValue(val);
+      });
 
-      scope.$watch(attrs.ngModel, setValidity);
-      scope.$watch(attrs.greaterThan, setValidity);
+      // Ensure this is at the end of the parsers
+      ngModel.$parsers.push(function(currentValue) {
+        var minimumValue = scope.$eval(attrs.greaterThan) * 1;
+        var valid = minimumValue < currentValue;
+        ngModel.$setValidity('greaterThan', valid);
+        return currentValue;
+      });
+
     }
   };
 });
