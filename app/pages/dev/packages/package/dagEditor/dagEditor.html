@@ -35,8 +35,13 @@
       operator-classes="operatorClasses"
       operators="operators"
       jsplumb-container
+      ng-click="deselectAll($event)"
     >
-      <div class="dag-operator" ng-repeat="operator in operators" dag-operator="operator" operators="operators"></div>
+      <div
+        ng-repeat="operator in operators"
+        dag-operator="operator"
+        operators="operators">
+      </div>
     </div>
   </div>
   <div class="col-xs-2" id="dag-inspector">

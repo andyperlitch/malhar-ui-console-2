@@ -46,10 +46,30 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Chosen Operators
   $scope.operators = [];
 
+  // Created Streams
+  $scope.streams = [];
+
   // Palette resizable options
   $scope.paletteResizeOptions = {
     handles: 's'
   };
+
+  // Deselects everything
+  $scope.deselectAll = function() {
+    _.each([$scope.operators, $scope.streams], function(collection) {
+      _.each(collection, function(ent) {
+        ent.selected = false;
+      });
+    });
+  };
+
+  // Listen for entity selections
+  $scope.$on('selectEntity', function(event, entity) {
+    console.log('selectEntity triggered');
+    $scope.deselectAll();
+    entity.selected = true;
+  });
+
 })
 
 // Factory: default appearance/functionality options
@@ -83,7 +103,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     paintStyle:{
         strokeStyle:'#1da8db',
       fillStyle:'transparent',
-      radius:7,
+      radius:9,
       lineWidth:2
     },
     hoverPaintStyle:options.endpointHoverStyle,
@@ -103,11 +123,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     maxConnections: -1,
     paintStyle:{ 
       fillStyle:'#64c539',
-      radius:8
+      radius:10
     },        
     isSource:true,
-    connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],                                
-      connectorStyle: options.connectorPaintStyle,
+    // connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],
+    // connector:[ 'StateMachine', { margin: 30, curviness: 150, proximityLimit: 200 } ],
+    connector:[ 'Bezier', { curviness: 150 } ],
+    connectorStyle: options.connectorPaintStyle,
     hoverPaintStyle: options.endpointHoverStyle,
       connectorHoverStyle: options.connectorHoverStyle,
       dragOptions:{},
@@ -258,7 +280,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             getYPosition(len, i),
             type.incident,
             0
-          ]
+          ],
+          // scope
+          scope: port.type
         };
 
         var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, type.options);
@@ -281,6 +305,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   return {
     restrict: 'A',
     templateUrl: 'pages/dev/packages/package/dagEditor/dagOperator.html',
+    replace: true,
     scope: {
       operator: '=dagOperator',
       operators: '='
@@ -364,5 +389,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.remove = function() {
     var index = $scope.operators.indexOf($scope.operator);
     $scope.operators.splice(index, 1);
+  };
+  $scope.selectOperator = function($event) {
+    $event.stopPropagation();
+    $scope.$emit('selectEntity', $scope.operator);
   };
 });
