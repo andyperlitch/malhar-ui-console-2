@@ -1,5 +1,17 @@
 /* Put your css in here */
 
+.operator-class, .dag-operator {
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+
+  &.ui-draggable-dragging {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;    
+  }
+}
+
 .operator-class {
   padding: 0.5em;
   margin-bottom: 4px;
@@ -12,10 +24,14 @@
 }
 .dag-palette {
   border: 1px solid #DEDEDE;
-  min-height: 600px;
+  height: 650px;
   position: relative;
   background: #FFF;
-  display: flex;
+  overflow: auto;
+
+  .ui-resizable-s {
+    bottom: 0;
+  }
 }
 
 .dag-operator {
@@ -27,6 +43,9 @@
   border-radius: 3px;
   position: absolute;
   text-align: center;
+  h1, h2, h3, h4, h5 {
+    cursor: text;
+  }
   .close {
     position: absolute;
     top: 1px;
