@@ -114,6 +114,7 @@ angular.module('app.settings', [])
       // Development
       Packages                 :'/packages',
       Package                  :'/packages/:package/:packageVersion',
+      PackageApplication       :'/packages/:package/:packageVersion/applications/:appName',
       DagEditor                :'/packages/:packageName/applications/:appName/dagEditor'
     },
 
