@@ -29,7 +29,7 @@ angular.module('app.components.widgets.dag.DagHelper', [])
         });
       },
 
-      setupActions: function (scope) {
+      setupShowLocalityAction: function (scope) {
         scope.showLocality = false;
 
         scope.toggleLocality = function (event) {
@@ -47,13 +47,20 @@ angular.module('app.components.widgets.dag.DagHelper', [])
             }
           }
         };
+      },
 
+      setupResetPositionAction: function (scope) {
         scope.resetPosition = function (event) {
           event.preventDefault();
           if (scope.renderer) {
             scope.renderer.resetPosition();
           }
         };
+      },
+
+      setupActions: function (scope) {
+        this.setupShowLocalityAction(scope);
+        this.setupResetPositionAction(scope);
       }
     };
   });

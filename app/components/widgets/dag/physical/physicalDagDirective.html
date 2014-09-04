@@ -1,4 +1,4 @@
-<div class="app-dag logical-dag">
+<div class="app-dag">
     <div class="options-controls">
         <div class="form-inline">
             <a href="#" class="btn btn-link"
@@ -12,19 +12,6 @@
             </a>
         </div>
     </div>
-    <div ng-show="showLocality" class="dag-legend-container">
-        <div class="dag-legend">
-            <svg height="130" width="370" class="svg-legend">
-                <g transform="translate(10, 10)">
-                </g>
-            </svg>
-        </div>
-    </div>
-    <svg height="110" class="svg-main">
-        <filter id="f1" x="0" y="0" height="150%">
-            <feOffset result="offOut" in="SourceGraphic" dx="5" dy="5"/>
-            <feBlend in="SourceGraphic" in2="offOut" mode="normal"/>
-        </filter>
-        <g transform="translate(20, 40)"/>
-    </svg>
+    <div ng-include="'components/widgets/dag/base/dagLegend.html'"></div>
+    <div ng-include="'components/widgets/dag/base/dagsvg.html'"></div>
 </div>
