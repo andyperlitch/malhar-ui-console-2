@@ -16,7 +16,8 @@
 'use strict';
 
 angular.module('app.pages.dev.packages.package.application', [
-  'app.components.resources.PackageApplicationModel'
+  'app.components.resources.PackageApplicationModel',
+  'app.components.widgets.dag.base'
 ])
 
 // Routing
@@ -37,7 +38,15 @@ angular.module('app.pages.dev.packages.package.application', [
       packageVersion: $routeParams.packageVersion,
       appName: $routeParams.appName
     });
-    app.fetch(function (app) {
-      console.log(app);
-    });
+    $scope.appName = $routeParams.appName;
+
+    $scope.$on('registerController', function (event, ctrl) {
+      console.log('_r');
+      event.stopPropagation();
+
+      app.fetch().then(function (logicalPlan) {
+        console.log(logicalPlan);
+        ctrl.renderDag(logicalPlan);
+      });
+    }.bind(this));
   });

@@ -35,6 +35,32 @@ angular.module('app.components.widgets.dag.DagRenderer', [])
         this.renderGraph(this.graph, this.svgMain.get(0)); //TODO no jQuery
       },
 
+      buildGraph: function (data) {
+        var nodes = [];
+
+        _.each(data.operators, function (value) {
+          var node = { id: value.name, value: { label: value.name } };
+          nodes.push(node);
+        });
+
+        var links = [];
+
+        _.each(data.streams, function (stream) {
+          var source = stream.source.operatorName;
+          _.each(stream.sinks, function (sink) {
+            var target = sink.operatorName;
+            var link = { u: source, v: target, value: { label: stream.name } };
+            links.push(link);
+          });
+        });
+
+        var graph = { nodes: nodes, links: links };
+        return graph;
+      },
+
+      postRender: function() {
+      },
+
       updateHeight: function () {
         this.updateSvgMainHeight();
 
