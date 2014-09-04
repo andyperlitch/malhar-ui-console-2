@@ -1,11 +1,7 @@
-<h4 ng-dblclick="editName(operator)" ng-if="!editing.name">
+<h4 class="dag-operator-name" ng-dblclick="editName($event,operator)" ng-show="!editing.name">
     {{ operator.name }}
 </h4>
-<input
-  type="text"
-  class="form-control h4"
-  ng-if="editing.name"
-  ng-model="operator.name"
-  ng-blur="editing.name = false"
->
+<form action="" class="h4 edit-name-form" ng-show="editing.name">
+  <input type="text" class="form-control h4" ng-model="changes.name" ng-blur="saveName($event)" ng-keyup="saveName($event, true)">
+</form>
 <h5 class="operator-class-name">{{ operator.opClass.name | camel2spaces }}</h5>
