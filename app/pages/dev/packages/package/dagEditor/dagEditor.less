@@ -19,6 +19,7 @@
 }
 
 .dag-operator {
+  position: relative;
   width: 150px;
   height: 150px;
   border: 1px solid #CCC;
@@ -26,6 +27,12 @@
   border-radius: 3px;
   position: absolute;
   text-align: center;
+  .close {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    line-height: 0.6;
+  }
 }
 
 .dag-operator .operator-class-name {

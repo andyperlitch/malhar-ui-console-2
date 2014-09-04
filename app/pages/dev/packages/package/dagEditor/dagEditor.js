@@ -239,6 +239,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   function setPortEndpoints(operator, element) {
 
+    var endpoints = [];
+
     _.each(portTypes, function(type, portKey) {
 
       var ports = operator.opClass[portKey];
@@ -266,9 +268,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // // DO NOT MODIFY THIS ATTRIBUTE IN ANY WAY
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
+
+        endpoints.push(endpoint);
       }
 
     });
+
+    return endpoints;
 
   }
 
@@ -300,10 +306,18 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       });
 
       // Set the ports as anchors/endpoints
-      setPortEndpoints(scope.operator, element);
+      scope.endpoints = setPortEndpoints(scope.operator, element);
       scope.editName({
         target: element.find('.dag-operator-name')[0]
       }, scope.operator);
+
+      // destroy event
+      scope.$on('$destroy', function() {
+        $jsPlumb.detachAllConnections(element);
+        _.each(scope.endpoints, function(ep) {
+          $jsPlumb.deleteEndpoint(ep);
+        });
+      });
     }
   };
 })
@@ -346,5 +360,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     operator.name = newName;
 
     $scope.editing.name = false;
+  };
+  $scope.remove = function() {
+    var index = $scope.operators.indexOf($scope.operator);
+    $scope.operators.splice(index, 1);
   };
 });
