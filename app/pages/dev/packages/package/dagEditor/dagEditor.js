@@ -149,7 +149,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: DAG editor palette
-.directive('dagPalette', function() {
+.directive('dagPalette', function(settings) {
 
   return {
     restrict: 'A',
@@ -162,6 +162,26 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     link: function(scope, element){
 
       // TODO: check for streams
+
+      function generateNewName(key, collection, defaultName) {
+        var name = defaultName;
+        var i = 0;
+        var existing;
+
+        var finder = function(o) {
+          return o[key] === name;
+        };
+
+        do {
+          existing = _.find(collection, finder);
+          if (existing) {
+            i++;
+            name = name.replace(/\s+\d+$/, '') + ' ' + i;
+          }  
+        } while (existing);
+
+        return name;
+      }
 
       /**
        * helper function to get the operatorClass 
@@ -176,9 +196,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         });
       }
 
+      /**
+       * Adds an operator to the application.
+       *  
+       * @param {Object} opClass Operator Class object
+       * @param {Number} x       Position to put the operator
+       * @param {Number} y       Position to put the operator
+       */
       function addOperator(opClass, x, y) {
         var operator = {
-          name: 'Untitled',
+          name: generateNewName('name', scope.app.operators, settings.dagEditor.DEFAULT_OPERATOR_NAME),
           opClass: opClass,
           x: x,
           y: y
@@ -373,7 +400,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.saveName = function($event, checkForEnter) {
 
     // prevent saving when editing.name is false
-    if (!$scope.editing.name) {
+    if (!$scope.editing.name || $scope.dag_operator_name_form.$invalid) {
       return;
     }
 
@@ -383,16 +410,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
 
     var newName = $scope.changes.name;
-
-    // check if an operator with that name exists
-    var current = _.find($scope.app.operators, function(o) {
-      return o !== operator && o.name === newName;
-    });
-
-    if (current) {
-      console.log('operator exists with that name!', current);
-      return;
-    }
 
     operator.name = newName;
 
@@ -416,4 +433,37 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 // Controller: Inspector for operator
 .controller('DagOperatorInspectorCtrl', function() {
 
+})
+
+// Directive: check for unique name in collection
+.directive('uniqueInSet', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      var collection = scope.$eval(attrs.uniqueInSet);
+      var key = attrs.uniqueKey;
+
+      if (!collection || !key) {
+        return;
+      }
+
+      var exclude = scope.$eval(attrs.exclude);
+      if (exclude) {
+        exclude = [].concat(exclude);
+      }
+
+      ngModel.$parsers.unshift(function(value) {
+        var unique = !_.any(collection, function(o) {
+          if (exclude && exclude.indexOf(o) > -1) {
+            return false;
+          }
+          return key ? o[key] === value : o === value;
+        });
+        ngModel.$setValidity('uniqueInSet', unique);
+        // return unique ? value : undefined;
+        return value;
+      });
+    }
+  };
 });
