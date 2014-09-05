@@ -17,6 +17,7 @@
 
 angular.module('app.pages.dev.packages.package', [
   'app.components.resources.PackageModel',
+  'app.components.resources.PackageApplicationModel',
   'app.components.resources.PackageApplicationCollection'
 ])
 
@@ -32,7 +33,7 @@ angular.module('app.pages.dev.packages.package', [
   })
 
 // Controller
-  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationCollection) {
+  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection) {
     $scope.packageName = $routeParams.packageName;
     $scope.packageVersion = $routeParams.packageVersion;
 
@@ -48,7 +49,13 @@ angular.module('app.pages.dev.packages.package', [
     });
     $scope.apps.fetch();
 
-    $scope.launch = function (event, app) {
-      console.log(app);
+    $scope.launch = function (event, name) {
+      var app = new PackageApplicationModel({
+        packageName: $routeParams.packageName,
+        packageVersion: $routeParams.packageVersion,
+        appName: name
+      });
+
+      app.launch();
     };
   });
