@@ -16,7 +16,7 @@
         <td><a href="#/packages/{{packageName}}/{{packageVersion}}/applications/{{app.name}}">{{app.name}}</a></td>
         <td>{{app.jarName}}</td>
         <td>
-            <button class="btn btn-xs btn-primary" ng-click="launch();">
+            <button class="btn btn-xs btn-primary" ng-click="launch($event, app);">
                 <span class="glyphicon glyphicon-play"></span>
                 <span dt-text="launch">launch</span>
             </button>
