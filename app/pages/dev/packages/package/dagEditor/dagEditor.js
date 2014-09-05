@@ -149,7 +149,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: DAG editor palette
-.directive('dagPalette', function(settings) {
+.directive('dagPalette', function(settings, $log) {
 
   return {
     restrict: 'A',
@@ -225,7 +225,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           // if dragged item has class menu-item and dropped div has class drop-container, add module 
           if (dragEl.hasClass('operator-class') && dropEl.hasClass('dag-palette')) {
             var opClass = getClass(dragEl.data('classname'));
-            console.log('Dropped class', opClass);
+            $log.info('Operator class dropped on DAG palette: ', opClass);
             var droppedOffset = ui.offset;
             var droppableOffset = dropEl.offset();
             var x = droppedOffset.left - droppableOffset.left;
@@ -269,7 +269,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: operator on the palette
-.directive('dagOperator', function($jsPlumb, dagEditorOptions) {
+.directive('dagOperator', function($jsPlumb, dagEditorOptions, $log) {
 
   var portTypes = {
     inputPorts: {
@@ -368,6 +368,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var position = ui.position;
           scope.operator.x = position.left;
           scope.operator.y = position.top;
+          $log.info('Operator moved on DAG palette: ', position, scope.operator);
         }
       });
 
