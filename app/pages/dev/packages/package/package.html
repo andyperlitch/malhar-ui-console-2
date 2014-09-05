@@ -10,18 +10,23 @@
        type="{{alert.type}}"
        close="closeAlert($index);"
        class="notification">
-    {{alert.msg}}
+    <span ng-if="alert.include">
+        <span ng-include="alert.include"></span>
+    </span>
+    <span ng-if="!alert.include">{{alert.msg}}</span>
 </alert>
 
 <table class="table" style="width:auto;">
     <tr>
         <th>Application Name</th>
-        <th>JAR Name</th>
+        <th>Type</th>
+        <th>File</th>
         <th>Actions</th>
     </tr>
     <tr ng-repeat="app in apps.data">
         <td><a href="#/packages/{{packageName}}/{{packageVersion}}/applications/{{app.name}}">{{app.name}}</a></td>
-        <td>{{app.jarName}}</td>
+        <td>{{app.type}}</td>
+        <td>{{app.file}}</td>
         <td>
             <button class="btn btn-xs btn-primary" ng-click="launch($event, app.name);">
                 <span class="glyphicon glyphicon-play"></span>
