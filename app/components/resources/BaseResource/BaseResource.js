@@ -95,6 +95,11 @@ angular.module('app.components.resources.BaseResource', [
 
     },
 
+    post: function (payload, action) {
+      var url = action ? (this.url + '/' + action) : this.url;
+      return $http.post(url, payload);
+    },
+
     /**
      * Subscribes to this.topic for updates.
      * A scope can optionally be passed in order

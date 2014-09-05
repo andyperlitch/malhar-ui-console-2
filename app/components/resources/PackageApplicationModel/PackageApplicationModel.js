@@ -21,7 +21,12 @@ angular.module('app.components.resources.PackageApplicationModel',[
   .factory('PackageApplicationModel', function(BaseModel) {
     var PackageApplicationModel = BaseModel.extend({
       debugName: 'PackageApplicationModel',
-      urlKey: 'PackageApplication'
+      urlKey: 'PackageApplication',
+
+      launch: function () {
+        console.log('launch ' + this.url);
+        return this.post({}, 'launch');
+      }
     });
     return PackageApplicationModel;
   });

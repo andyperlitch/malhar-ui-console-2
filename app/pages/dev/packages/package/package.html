@@ -6,6 +6,13 @@
     <label>Class Path:</label> {{package.data.info.classPath}}
 </p>
 
+<alert ng-repeat="alert in alerts"
+       type="{{alert.type}}"
+       close="closeAlert($index);"
+       class="notification">
+    {{alert.msg}}
+</alert>
+
 <table class="table" style="width:auto;">
     <tr>
         <th>Application Name</th>
@@ -16,7 +23,7 @@
         <td><a href="#/packages/{{packageName}}/{{packageVersion}}/applications/{{app.name}}">{{app.name}}</a></td>
         <td>{{app.jarName}}</td>
         <td>
-            <button class="btn btn-xs btn-primary" ng-click="launch($event, app);">
+            <button class="btn btn-xs btn-primary" ng-click="launch($event, app.name);">
                 <span class="glyphicon glyphicon-play"></span>
                 <span dt-text="launch">launch</span>
             </button>
