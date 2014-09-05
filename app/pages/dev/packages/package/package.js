@@ -47,4 +47,8 @@ angular.module('app.pages.dev.packages.package', [
       packageVersion: $routeParams.packageVersion
     });
     $scope.apps.fetch();
+
+    $scope.launch = function (event, app) {
+      console.log(app);
+    };
   });
