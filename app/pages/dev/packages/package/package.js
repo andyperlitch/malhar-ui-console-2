@@ -62,7 +62,7 @@ angular.module('app.pages.dev.packages.package', [
       $scope.alerts.push({
         id: infoMsgId,
         type: 'info',
-        msg: 'Application ' + name + ' launch request is submitted.'
+        msg: 'Application ' + name + ' launch request is submitted. Waiting for status...'
       });
 
       app.launch().success(function (response) {
@@ -73,7 +73,9 @@ angular.module('app.pages.dev.packages.package', [
 
         $scope.alerts.push({
           type: 'success',
-          msg: 'Application ' + name + ' is successfully launch. Application ID: ' + response.appId
+          appName: name,
+          appId: response.appId,
+          include: 'pages/dev/packages/package/msgLaunch.html'
         });
       });
     };

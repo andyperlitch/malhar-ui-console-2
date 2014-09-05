@@ -10,7 +10,10 @@
        type="{{alert.type}}"
        close="closeAlert($index);"
        class="notification">
-    {{alert.msg}}
+    <span ng-if="alert.include">
+        <span ng-include="alert.include"></span>
+    </span>
+    <span ng-if="!alert.include">{{alert.msg}}</span>
 </alert>
 
 <table class="table" style="width:auto;">
