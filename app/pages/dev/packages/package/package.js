@@ -26,7 +26,7 @@ angular.module('app.pages.dev.packages.package', [
     $routeProvider.when(settings.pages.Package, {
       controller: 'PackageCtrl',
       templateUrl: 'pages/dev/packages/package/package.html',
-      label: 'Package'
+      label: 'packageName'
     });
 
   })
