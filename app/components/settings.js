@@ -127,7 +127,8 @@ angular.module('app.settings', [])
       logicalStream            :':streamName',
       containerLog             :':logName',
       port                     :':portId',
-      packageName              :':packageName'
+      packageName              :':packageName :packageVersion',
+      appName                  :':appName'
     },
 
     stramEvents: {
