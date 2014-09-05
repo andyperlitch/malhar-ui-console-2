@@ -24,7 +24,8 @@ angular.module('app.components.resources.PackageApplicationModel',[
       urlKey: 'PackageApplication',
 
       launch: function () {
-        console.log('launch');
+        console.log('launch ' + this.url);
+        return this.post({}, 'launch');
       }
     });
     return PackageApplicationModel;

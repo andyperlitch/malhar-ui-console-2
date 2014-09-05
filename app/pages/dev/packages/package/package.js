@@ -49,13 +49,36 @@ angular.module('app.pages.dev.packages.package', [
     });
     $scope.apps.fetch();
 
+    $scope.alerts = [];
+    var msgIds = 0;
+
     $scope.launch = function (event, name) {
       var app = new PackageApplicationModel({
         packageName: $routeParams.packageName,
         packageVersion: $routeParams.packageVersion,
         appName: name
       });
+      var infoMsgId = msgIds++;
+      $scope.alerts.push({
+        id: infoMsgId,
+        type: 'info',
+        msg: 'Application ' + name + ' launch request is submitted.'
+      });
 
-      app.launch();
+      app.launch().success(function (response) {
+        // remove info msg
+        $scope.alerts = _.reject($scope.alerts, function (alert) {
+          return alert.id === infoMsgId;
+        });
+
+        $scope.alerts.push({
+          type: 'success',
+          msg: 'Application ' + name + ' is successfully launch. Application ID: ' + response.appId
+        });
+      });
+    };
+
+    $scope.closeAlert = function (index) {
+      $scope.alerts.splice(index, 1);
     };
   });
