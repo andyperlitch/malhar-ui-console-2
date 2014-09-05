@@ -1,0 +1,22 @@
+form {
+  .popover-group {
+    position: relative;
+
+    .popover {
+      &.bottom {
+        top: 100%;
+      }
+      &.top {
+        top: auto;
+        bottom: 100%;
+        margin-bottom: @popover-arrow-outer-width;
+      }
+      .popover-content {
+
+        p {
+          font-size: @font-size-base;
+        }
+      }
+    }
+  }
+}
