@@ -35,21 +35,43 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData) {
+.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams) {
+
+  // Deselects everything
+  $scope.deselectAll = function() {
+    $scope.selected = null;
+    $scope.selected_type = null;
+  };
+
+  // Listen for entity selections
+  $scope.$on('selectEntity', function(event, type, entity) {
+    $scope.selected = entity;
+    $scope.selected_type = type;
+  });
 
   // Search object
   $scope.operatorClassSearch = { term: '' };
   
   // Operator Classes:
   $scope.operatorClasses = mockOperatorsData;
+
+  // Expose appName to scope
+  $scope.appName = $routeParams.appName;
   
-  // Chosen Operators
-  $scope.operators = [];
+  // Models the application
+  $scope.app = {
+    operators: [],
+    streams: []
+  };
 
   // Palette resizable options
   $scope.paletteResizeOptions = {
     handles: 's'
   };
+
+  // Initialize selection info
+  $scope.deselectAll();
+
 })
 
 // Factory: default appearance/functionality options
@@ -83,7 +105,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     paintStyle:{
         strokeStyle:'#1da8db',
       fillStyle:'transparent',
-      radius:7,
+      radius:9,
       lineWidth:2
     },
     hoverPaintStyle:options.endpointHoverStyle,
@@ -103,11 +125,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     maxConnections: -1,
     paintStyle:{ 
       fillStyle:'#64c539',
-      radius:8
+      radius:10
     },        
     isSource:true,
-    connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],                                
-      connectorStyle: options.connectorPaintStyle,
+    // connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],
+    // connector:[ 'StateMachine', { margin: 30, curviness: 150, proximityLimit: 200 } ],
+    connector:[ 'Bezier', { curviness: 150 } ],
+    connectorStyle: options.connectorPaintStyle,
     hoverPaintStyle: options.endpointHoverStyle,
       connectorHoverStyle: options.connectorHoverStyle,
       dragOptions:{},
@@ -125,15 +149,39 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: DAG editor palette
-.directive('dagPalette', function() {
+.directive('dagPalette', function(settings) {
 
   return {
     restrict: 'A',
+    templateUrl: 'pages/dev/packages/package/dagEditor/dagPalette.html',
     scope: {
       operatorClasses: '=',
-      operators: '='
+      app: '=',
+      selected: '='
     },
     link: function(scope, element){
+
+      // TODO: check for streams
+
+      function generateNewName(key, collection, defaultName) {
+        var name = defaultName;
+        var i = 0;
+        var existing;
+
+        var finder = function(o) {
+          return o[key] === name;
+        };
+
+        do {
+          existing = _.find(collection, finder);
+          if (existing) {
+            i++;
+            name = name.replace(/\s+\d+$/, '') + ' ' + i;
+          }  
+        } while (existing);
+
+        return name;
+      }
 
       /**
        * helper function to get the operatorClass 
@@ -148,13 +196,22 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         });
       }
 
+      /**
+       * Adds an operator to the application.
+       *  
+       * @param {Object} opClass Operator Class object
+       * @param {Number} x       Position to put the operator
+       * @param {Number} y       Position to put the operator
+       */
       function addOperator(opClass, x, y) {
-        scope.operators.push({
-          name: 'Untitled',
+        var operator = {
+          name: generateNewName('name', scope.app.operators, settings.dagEditor.DEFAULT_OPERATOR_NAME),
           opClass: opClass,
           x: x,
           y: y
-        });
+        };
+        scope.app.operators.push(operator);
+        scope.$emit('selectEntity', 'operator', operator);
         scope.$digest();
       }
 
@@ -258,7 +315,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             getYPosition(len, i),
             type.incident,
             0
-          ]
+          ],
+          // scope
+          scope: port.type
         };
 
         var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, type.options);
@@ -281,9 +340,11 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   return {
     restrict: 'A',
     templateUrl: 'pages/dev/packages/package/dagEditor/dagOperator.html',
+    replace: true,
     scope: {
       operator: '=dagOperator',
-      operators: '='
+      app: '=',
+      selected: '='
     },
     controller: 'DagOperatorCtrl',
     link: function(scope, element) {
@@ -338,31 +399,75 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
   $scope.saveName = function($event, checkForEnter) {
 
-    // prevent saving when editing.name is false
-    if (!$scope.editing.name) {
-      return;
-    }
-
-    var operator = $scope.operator;
+    // If we are checking for enter, this is probably
+    // a keyup event, so nothing should happen if it
+    // is not the enter key.
     if (checkForEnter && $event.which !== 13) {
       return;
     }
 
+    // prevent saving when editing.name is false
+    if (!$scope.editing.name || $scope.dag_operator_name_form.$invalid) {
+      $scope.editing.name = false;
+      return;
+    }
+
+    var operator = $scope.operator;
+
     var newName = $scope.changes.name;
-
-    // check if an operator with that name exists
-    var current = _.find($scope.operators, function(o) {
-      return o !== operator && o.name === newName;
-    });
-
-    console.log(current);
 
     operator.name = newName;
 
     $scope.editing.name = false;
   };
   $scope.remove = function() {
-    var index = $scope.operators.indexOf($scope.operator);
-    $scope.operators.splice(index, 1);
+    var index = $scope.app.operators.indexOf($scope.operator);
+    $scope.app.operators.splice(index, 1);
+  };
+  $scope.selectOperator = function($event) {
+    $event.stopPropagation();
+    $scope.$emit('selectEntity', 'operator', $scope.operator);
+  };
+})
+
+// Controller: Inspector for application
+.controller('DagAppInspectorCtrl', function() {
+
+})
+
+// Controller: Inspector for operator
+.controller('DagOperatorInspectorCtrl', function() {
+
+})
+
+// Directive: check for unique name in collection
+.directive('uniqueInSet', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      var collection = scope.$eval(attrs.uniqueInSet);
+      var key = attrs.uniqueKey;
+
+      if (!collection || !key) {
+        return;
+      }
+
+      var exclude = scope.$eval(attrs.exclude);
+      if (exclude) {
+        exclude = [].concat(exclude);
+      }
+
+      ngModel.$parsers.unshift(function(value) {
+        var unique = !_.any(collection, function(o) {
+          if (exclude && exclude.indexOf(o) > -1) {
+            return false;
+          }
+          return key ? o[key] === value : o === value;
+        });
+        ngModel.$setValidity('uniqueInSet', unique);
+        return unique ? value : ngModel.$modelValue;
+      });
+    }
   };
 });

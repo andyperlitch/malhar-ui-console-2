@@ -33,14 +33,53 @@
       id="dag-palette"
       class="dag-palette"
       operator-classes="operatorClasses"
-      operators="operators"
+      app="app"
+      selected="selected"
       jsplumb-container
-    >
-      <div class="dag-operator" ng-repeat="operator in operators" dag-operator="operator" operators="operators"></div>
-    </div>
+      ng-click="deselectAll($event)"
+    ></div>
   </div>
-  <div class="col-xs-2" id="dag-inspector">
-    <h2 class="h4">Inspector</h2>
 
-  </div>
+  <!-- application inspector -->
+  <form class="col-xs-2 dag-inspector" ng-if="!selected" ng-controller="DagAppInspectorCtrl" name="dag_app_inspector">
+    <h2 class="h4">Application Inspector</h2>
+    <div class="form-group">
+      <label for="appName" dt-text>Name</label>
+      <input type="text" readonly ng-model="appName" name="app_name" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="app_description" dt-text>Description</label>
+      <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
+    </div>
+  </form>
+
+  <!-- operator inspector -->
+  <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'operator'" ng-controller="DagOperatorInspectorCtrl" name="dag_operator_inspector">
+    <h2 class="h4">Operator Inspector</h2>
+    <div class="form-group">
+      <label for="class" dt-text>Class Name</label>
+      <input name="class" type="text" class="form-control" readonly ng-model="selected.opClass.name">
+    </div>
+    <div class="form-group">
+      <label for="name" dt-text>Operator Name</label>
+      <div class="popover-group">
+        <input name="name"
+          type="text"
+          class="form-control"
+          unique-in-set="app.operators"
+          unique-key="name"
+          exclude="operator"
+          required
+        ng-model="selected.name">
+        <div class="popover left" ng-messages="dag_operator_inspector.name.$error" ng-style="{ display: dag_operator_inspector.name.$invalid ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid operator name</h3>
+          <div class="popover-content">
+            <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
+            <p ng-message="required" dt-text>An operator name is required</p>
+          </div>
+        </div>         
+      </div>
+    </div>
+  </form>
 </div>

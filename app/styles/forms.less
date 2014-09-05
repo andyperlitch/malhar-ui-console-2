@@ -1,0 +1,32 @@
+form {
+  .popover-group {
+    position: relative;
+
+    .popover {
+      &.bottom {
+        top: 100%;
+      }
+      &.top {
+        top: auto;
+        bottom: 100%;
+        margin-bottom: @popover-arrow-outer-width;
+      }
+      &.left {
+        top: -35px;
+        right: 100%;
+        left: auto;
+        min-width: 200px;
+        margin-right: @popover-arrow-outer-width;
+        .arrow {
+          top:50px;
+        }
+      }
+      .popover-content {
+
+        p {
+          font-size: @font-size-base;
+        }
+      }
+    }
+  }
+}

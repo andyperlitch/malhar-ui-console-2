@@ -1,5 +1,13 @@
-/* Put your css in here */
+/* General jsPlumb css */
+._jsPlumb_endpoint {
+  z-index: 1;
+}
+._jsPlumb_overlay {
+  z-index: 2;
+}
 
+
+/* DAG Creator-specific */
 .operator-class, .dag-operator {
   cursor: grab;
   cursor: -webkit-grab;
@@ -29,6 +37,11 @@
   background: #FFF;
   overflow: auto;
 
+  svg {
+    width: auto;
+    height: auto;
+  } 
+
   .ui-resizable-s {
     bottom: 0;
   }
@@ -45,6 +58,10 @@
   text-align: center;
   h1, h2, h3, h4, h5 {
     cursor: text;
+  }
+  &.selected {
+    box-shadow: 0 0 7px lighten(@brand-primary, 50%);
+    background-color: desaturate(lighten(@brand-primary, 60%), 50%);
   }
   .close {
     position: absolute;

@@ -69,6 +69,7 @@ angular.module('app.components.directives.validation.readableBytes', [
         }
         else {
           ngModel.$setValidity('readableBytes', false);
+          return text;
         }
       }
 
