@@ -11,6 +11,16 @@ form {
         bottom: 100%;
         margin-bottom: @popover-arrow-outer-width;
       }
+      &.left {
+        top: -35px;
+        right: 100%;
+        left: auto;
+        min-width: 200px;
+        margin-right: @popover-arrow-outer-width;
+        .arrow {
+          top:50px;
+        }
+      }
       .popover-content {
 
         p {

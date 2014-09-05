@@ -399,15 +399,20 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
   $scope.saveName = function($event, checkForEnter) {
 
+    // If we are checking for enter, this is probably
+    // a keyup event, so nothing should happen if it
+    // is not the enter key.
+    if (checkForEnter && $event.which !== 13) {
+      return;
+    }
+
     // prevent saving when editing.name is false
     if (!$scope.editing.name || $scope.dag_operator_name_form.$invalid) {
+      $scope.editing.name = false;
       return;
     }
 
     var operator = $scope.operator;
-    if (checkForEnter && $event.which !== 13) {
-      return;
-    }
 
     var newName = $scope.changes.name;
 
@@ -461,8 +466,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           return key ? o[key] === value : o === value;
         });
         ngModel.$setValidity('uniqueInSet', unique);
-        // return unique ? value : undefined;
-        return value;
+        return unique ? value : ngModel.$modelValue;
       });
     }
   };
