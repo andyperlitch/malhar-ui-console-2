@@ -139,6 +139,10 @@ angular.module('app.settings', [])
       CONFIRM_REQUEST_THRESHOLD_KB: 8 * 1024 // in byes
     },
 
+    dagEditor: {
+      DEFAULT_OPERATOR_NAME: 'Operator'
+    },
+
     dag: {
       edges: {
         NONE: {
