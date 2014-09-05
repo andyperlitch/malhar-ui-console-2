@@ -1,10 +1,29 @@
+<p>
+    <label>Package:</label> {{package.data.info.appPackageName}} {{package.data.info.appPackageVersion}}
+    <label>DT Engine:</label> {{package.data.info.dtEngineVersion}}
+</p>
+<p>
+    <label>Class Path:</label> {{package.data.info.classPath}}
+</p>
+
 <table class="table" style="width:auto;">
     <tr>
         <th>Application Name</th>
         <th>JAR Name</th>
+        <th>Actions</th>
     </tr>
     <tr ng-repeat="app in apps.data">
         <td><a href="#/packages/{{packageName}}/{{packageVersion}}/applications/{{app.name}}">{{app.name}}</a></td>
         <td>{{app.jarName}}</td>
+        <td>
+            <button class="btn btn-xs btn-primary" ng-click="launch();">
+                <span class="glyphicon glyphicon-play"></span>
+                <span dt-text="launch">launch</span>
+            </button>
+            <a href="#/packages/{{packageName}}/applications/{{app.name}}/dagEditor" class="btn btn-xs btn-info">
+                <span class="glyphicon glyphicon-edit"></span>
+                <span dt-text="edit">edit</span>
+            </a>
+        </td>
     </tr>
 </table>
