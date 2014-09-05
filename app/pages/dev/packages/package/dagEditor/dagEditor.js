@@ -363,7 +363,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       // Make it draggable via jsPlumb
       $jsPlumb.draggable(element, {
-        containment: element.parent()
+        containment: element.parent(),
+        stop: function(event, ui) {
+          var position = ui.position;
+          scope.operator.x = position.left;
+          scope.operator.y = position.top;
+        }
       });
 
       // Set the ports as anchors/endpoints
