@@ -149,7 +149,17 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: DAG editor palette
-.directive('dagPalette', function(settings, $log, $jsPlumb) {
+.directive('dagPalette', function(settings, $log, $jsPlumb, $compile) {
+
+  function angularizeSinkConnection(connection, stream, scope) {
+    // console.log(connection.canvas);
+    // console.log(connection.canvas);
+    var streamScope = scope.$new();
+    streamScope.stream = stream;
+    streamScope.connection = connection;
+    connection.canvas.setAttribute('dag-stream', 'true');
+    $compile(connection.canvas)(streamScope);
+  }
 
   return {
     restrict: 'A',
@@ -236,6 +246,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
               }
             ]
           };
+
+          angularizeSinkConnection(sinkConnection, stream, scope);
+
           scope.app.streams.push(stream);
           scope.$emit('selectEntity', 'stream', stream);
           scope.$apply();
@@ -254,6 +267,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             port: sinkPort,
             connection: sinkConnection
           });
+
+          angularizeSinkConnection(sinkConnection, stream, scope);
         }
 
         // Select the stream
@@ -494,6 +509,34 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         _.each(scope.endpoints, function(ep) {
           $jsPlumb.deleteEndpoint(ep);
         });
+      });
+    }
+  };
+})
+
+.directive('dagStream', function() {
+  return {
+    link: function(scope, element, attrs) {
+      
+      // Set the stream label
+      scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
+
+      // Get it for use in the listener
+      var overlay = scope.connection.getOverlay('streamLabel');
+
+      // Update label as needed
+      scope.$watch('stream.name', function(name) {
+        if (name) {
+          overlay.setLabel(name);
+        }
+      });
+
+      // Listen for clicks on the connection
+      scope.connection.bind('click', function(conn, event) {
+        console.log('testing');
+        event.stopPropagation();
+        scope.$emit('selectEntity', 'stream', scope.stream);
+        scope.$apply();
       });
     }
   };
