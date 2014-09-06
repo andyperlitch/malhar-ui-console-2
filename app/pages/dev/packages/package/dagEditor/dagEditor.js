@@ -213,77 +213,86 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$digest();
       }
 
+      function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, sinkConnection) {
+
+        // Check for existing stream
+        var stream = _.find(scope.app.streams, function(s) {
+          return s.source.operator === sourceOperator && s.source.port === sourcePort;
+        });
+
+        if (!stream) {
+          // No existing
+          stream = {
+            name: generateNewName('name', scope.app.streams, settings.dagEditor.DEFAULT_STREAM_NAME),
+            source: {
+              operator: sourceOperator,
+              port: sourcePort
+            },
+            sinks: [
+              {
+                operator: sinkOperator,
+                port: sinkPort,
+                connection: sinkConnection
+              }
+            ]
+          };
+          scope.app.streams.push(stream);
+          scope.$emit('selectEntity', 'stream', stream);
+          scope.$apply();
+          return stream;
+        }
+
+        // Stream exists, check for sink
+        var sink = _.find(stream.sinks, function(k) {
+          return k.operator === sinkOperator && k.port === sinkPort;
+        });
+
+        // Add sink
+        if (!sink) {
+          stream.sinks.push({
+            operator: sinkOperator,
+            port: sinkPort,
+            connection: sinkConnection
+          });
+        }
+
+        // Select the stream
+        scope.$emit('selectEntity', 'stream', stream);
+        scope.$apply();
+        return stream;
+
+      }
+
+      // function addSinkToStream(stream, sinkOperator, sinkPort) {
+      //   // First check if this is not already a sink
+      //   var exists = _.find(stream.sinks, function(sink) {
+      //     return sink.operatorName === sinkOperator && sink.portName === sinkPort;
+      //   });
+
+      //   if (exists) {
+      //     return;
+      //   }
+
+      //   stream.sinks.push({
+      //     operatorName: sinkOperator,
+      //     portName: sinkPort
+      //   });
+      //   scope.$emit('selectEntity', 'stream', stream);
+      //   scope.$apply();
+      // }
+
       /**
-       * Looks in app.streams for one whose source operator and 
-       * source operator port matches the names passed as arguments.
-       * @param  {String} sourceOperator Name of source operator
-       * @param  {String} sourcePort     Name of source operator port
-       * @return {Object}                Stream, or undefined if not found.
+       * Listeners for connections
        */
-      function getStream(sourceOperator, sourcePort) {
-        return _.find(scope.app.streams, function(s) {
-          return s.source.operatorName === sourceOperator && s.source.portName === sourcePort;
-        });
-      }
-
-
-      function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort) {
-        var stream = {
-          name: generateNewName('name', scope.app.streams, settings.dagEditor.DEFAULT_STREAM_NAME),
-          source: {
-            operatorName: sourceOperator,
-            portName: sourcePort
-          },
-          sinks: [
-            {
-              operatorName: sinkOperator,
-              portName: sinkPort  
-            }
-          ]
-        };
-        scope.app.streams.push(stream);
-        scope.$emit('selectEntity', 'stream', stream);
-        scope.$apply();
-      }
-
-      function addSinkToStream(stream, sinkOperator, sinkPort) {
-        // First check if this is not already a sink
-        var exists = _.find(stream.sinks, function(sink) {
-          return sink.operatorName === sinkOperator && sink.portName === sinkPort;
-        });
-
-        if (exists) {
-          return;
-        }
-
-        stream.sinks.push({
-          operatorName: sinkOperator,
-          portName: sinkPort
-        });
-        scope.$emit('selectEntity', 'stream', stream);
-        scope.$apply();
-      }
-
-      /* Listeners for connections */
       $jsPlumb.bind('connection', function(info, originalEvent) {
+
         $log.info('Stream connection made: ', info, originalEvent);
-        var sourceOperatorName = info.sourceEndpoint.operator.name;
-        var sourcePortName = info.sourceEndpoint.port.name;
-        var sinkOperatorName = info.targetEndpoint.operator.name;
-        var sinkPortName = info.targetEndpoint.port.name;
+        var sourceOperator = info.sourceEndpoint.operator;
+        var sourcePort = info.sourceEndpoint.port;
+        var sinkOperator = info.targetEndpoint.operator;
+        var sinkPort = info.targetEndpoint.port;
 
-        // Look for existing stream with this source
-        var existing = getStream(sourceOperatorName, sourcePortName);
-
-        // If existing, just add the sink
-        if (existing) {
-          addSinkToStream(existing, sinkOperatorName, sinkPortName);
-        }
-
-        // If not, create the stream model
-        else {
-          addStream(sourceOperatorName, sourcePortName, sinkOperatorName, sinkPortName);
-        }
+        addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, info.connection);
 
       });
 
@@ -544,6 +553,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
 // Controller: Inspector for operator
 .controller('DagOperatorInspectorCtrl', function() {
+
+})
+
+.controller('DagStreamInspectorCtrl', function() {
 
 })
 

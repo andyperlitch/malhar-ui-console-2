@@ -68,7 +68,7 @@
           class="form-control"
           unique-in-set="app.operators"
           unique-key="name"
-          exclude="operator"
+          exclude="selected"
           required
         ng-model="selected.name">
         <div class="popover left" ng-messages="dag_operator_inspector.name.$error" ng-style="{ display: dag_operator_inspector.name.$invalid ? 'block' : 'none' }">
@@ -82,6 +82,32 @@
       </div>
     </div>
   </form>
+
+  <!-- stream inspector -->
+  <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'stream'" ng-controller="DagStreamInspectorCtrl" name="dag_stream_inspector">
+    <h2 class="h4">Stream Inspector</h2>
+    <div class="form-group">
+      <label for="name" dt-text>Stream Name</label>
+      <div class="popover-group">
+        <input name="name"
+          type="text"
+          class="form-control"
+          unique-in-set="app.streams"
+          unique-key="name"
+          exclude="selected"
+          required
+        ng-model="selected.name">
+        <div class="popover left" ng-messages="dag_stream_inspector.name.$error" ng-style="{ display: dag_stream_inspector.name.$invalid ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid stream name</h3>
+          <div class="popover-content">
+            <p ng-message="uniqueInSet" dt-text>You must choose a unique stream name</p>
+            <p ng-message="required" dt-text>A stream name is required</p>
+          </div>
+        </div>         
+      </div>
+    </div>
+  </form>  
 </div>
-<h3>app structure</h3>
-<pre class="well">{{ app | json }}</pre>
+<!-- <h3>app structure</h3> -->
+<!-- <pre class="well">{{ app | json }}</pre> -->
