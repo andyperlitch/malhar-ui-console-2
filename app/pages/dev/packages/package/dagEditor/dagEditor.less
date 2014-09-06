@@ -1,3 +1,8 @@
+@dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
+@dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
+@dag-editor-selected-stream-color: #deea18;
+@dag-editor-selected-stream-highlight: #CCD356;
+
 /* General jsPlumb css */
 ._jsPlumb_endpoint {
   z-index: 1;
@@ -60,8 +65,8 @@
     cursor: text;
   }
   &.selected {
-    box-shadow: 0 0 7px lighten(@brand-primary, 50%);
-    background-color: desaturate(lighten(@brand-primary, 60%), 50%);
+    box-shadow: 0 0 7px @dag-editor-selected-operator-highlight;
+    background-color: @dag-editor-selected-operator-color;
   }
   .close {
     position: absolute;
@@ -71,10 +76,30 @@
   }
 }
 
+.dag-stream {
+  cursor: pointer;
+  &.selected {
+    path:nth-child(1) {
+      // -webkit-filter: drop-shadow( 0 0 5px @dag-editor-selected-stream-highlight );
+      // filter: drop-shadow( 0 0 5px @dag-editor-selected-stream-highlight );
+      stroke: @dag-editor-selected-stream-highlight;
+    }
+    path:nth-child(2) {
+      stroke: @dag-editor-selected-stream-color;
+    }
+  }
+}
+
 .stream-label {
+  cursor: pointer;
   background: rgba(255, 255, 255, 0.95);
   padding: 3px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  &.selected {
+    color: #FFF;
+    background: @brand-primary;
+    box-shadow: 0 0 20px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
+  }
 }
 
 .dag-operator .operator-class-name {

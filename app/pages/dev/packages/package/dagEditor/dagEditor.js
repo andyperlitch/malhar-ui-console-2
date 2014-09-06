@@ -89,7 +89,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   options.connectorHoverStyle = {
     lineWidth:4,
-    strokeStyle:'#deea18',
+    strokeStyle:'#7dcdff',
     outlineWidth:2,
     outlineColor:'white'
   };
@@ -516,7 +516,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
 .directive('dagStream', function() {
   return {
-    link: function(scope, element, attrs) {
+    link: function(scope) {
+
+      // Add dag-stream class
+      scope.connection.addClass('dag-stream');
       
       // Set the stream label
       scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
@@ -531,9 +534,20 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         }
       });
 
+      // Watch to see if the selected stream is this one
+      scope.$watch('selected', function(selected) {
+        if (selected === scope.stream) {
+          overlay.addClass('selected');
+          scope.connection.addClass('selected');
+        }
+        else {
+          overlay.removeClass('selected');
+          scope.connection.removeClass('selected');
+        }
+      });
+
       // Listen for clicks on the connection
       scope.connection.bind('click', function(conn, event) {
-        console.log('testing');
         event.stopPropagation();
         scope.$emit('selectEntity', 'stream', scope.stream);
         scope.$apply();
