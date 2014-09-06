@@ -149,7 +149,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: DAG editor palette
-.directive('dagPalette', function(settings, $log) {
+.directive('dagPalette', function(settings, $log, $jsPlumb) {
 
   return {
     restrict: 'A',
@@ -160,8 +160,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       selected: '='
     },
     link: function(scope, element){
-
-      // TODO: check for streams
 
       function generateNewName(key, collection, defaultName) {
         var name = defaultName;
@@ -215,7 +213,101 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$digest();
       }
 
+      /**
+       * Looks in app.streams for one whose source operator and 
+       * source operator port matches the names passed as arguments.
+       * @param  {String} sourceOperator Name of source operator
+       * @param  {String} sourcePort     Name of source operator port
+       * @return {Object}                Stream, or undefined if not found.
+       */
+      function getStream(sourceOperator, sourcePort) {
+        return _.find(scope.app.streams, function(s) {
+          return s.source.operatorName === sourceOperator && s.source.portName === sourcePort;
+        });
+      }
+
+
+      function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort) {
+        var stream = {
+          name: generateNewName('name', scope.app.streams, settings.dagEditor.DEFAULT_STREAM_NAME),
+          source: {
+            operatorName: sourceOperator,
+            portName: sourcePort
+          },
+          sinks: [
+            {
+              operatorName: sinkOperator,
+              portName: sinkPort  
+            }
+          ]
+        };
+        scope.app.streams.push(stream);
+        scope.$emit('selectEntity', 'stream', stream);
+        scope.$apply();
+      }
+
+      function addSinkToStream(stream, sinkOperator, sinkPort) {
+        // First check if this is not already a sink
+        var exists = _.find(stream.sinks, function(sink) {
+          return sink.operatorName === sinkOperator && sink.portName === sinkPort;
+        });
+
+        if (exists) {
+          return;
+        }
+
+        stream.sinks.push({
+          operatorName: sinkOperator,
+          portName: sinkPort
+        });
+        scope.$emit('selectEntity', 'stream', stream);
+        scope.$apply();
+      }
+
+      /* Listeners for connections */
+      $jsPlumb.bind('connection', function(info, originalEvent) {
+        $log.info('Stream connection made: ', info, originalEvent);
+        var sourceOperatorName = info.sourceEndpoint.operator.name;
+        var sourcePortName = info.sourceEndpoint.port.name;
+        var sinkOperatorName = info.targetEndpoint.operator.name;
+        var sinkPortName = info.targetEndpoint.port.name;
+
+        // Look for existing stream with this source
+        var existing = getStream(sourceOperatorName, sourcePortName);
+
+        // If existing, just add the sink
+        if (existing) {
+          addSinkToStream(existing, sinkOperatorName, sinkPortName);
+        }
+
+        // If not, create the stream model
+        else {
+          addStream(sourceOperatorName, sourcePortName, sinkOperatorName, sinkPortName);
+        }
+
+      });
+
+      $jsPlumb.bind('connectionDetached', function(info, originalEvent) {
+        $log.info('Stream connection detached: ', info, originalEvent);
+      });
+
+      $jsPlumb.bind('connectionMoved', function(info, originalEvent) {
+        $log.info('Stream connection moved:' , info, originalEvent);
+      });
+
+
+
+
+      // Sets up the droppable state of the palette.
       element.droppable({
+
+        /**
+         * Listens for operator classes being dropped
+         * onto the palette.
+         *  
+         * @param  {Object} event DOM event from the drop.
+         * @param  {Object} ui    The jquery UI event, holding information on where it was dropped, etc.
+         */
         drop:function(event,ui) {
           // angular uses angular.element to get jQuery element, subsequently data() of jQuery is used to get
           // the data-identifier attribute
@@ -236,6 +328,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
           scope.$apply();
         }
+      });
+
+
+
+      scope.$on('$destroy', function() {
+        $jsPlumb.unbind();
       });
     }
   };
@@ -327,6 +425,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // // DO NOT MODIFY THIS ATTRIBUTE IN ANY WAY
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
+
+        endpoint.port = port;
+        endpoint.operator = operator;
 
         endpoints.push(endpoint);
       }

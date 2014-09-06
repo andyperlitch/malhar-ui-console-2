@@ -146,7 +146,8 @@ angular.module('app.settings', [])
     },
 
     dagEditor: {
-      DEFAULT_OPERATOR_NAME: 'Operator'
+      DEFAULT_OPERATOR_NAME: 'Operator',
+      DEFAULT_STREAM_NAME: 'Stream'
     },
 
     dag: {
