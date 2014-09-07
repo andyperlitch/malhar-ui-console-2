@@ -43,11 +43,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.selected_type = null;
   };
 
-  // Listen for entity selections
-  $scope.$on('selectEntity', function(event, type, entity) {
+  $scope.selectEntity = function($event, type, entity) {
+    if (typeof $event.preventDefault === 'function') {
+      $event.preventDefault();
+    }
     $scope.selected = entity;
     $scope.selected_type = type;
-  });
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  };
+
+  // Listen for entity selections
+  $scope.$on('selectEntity', $scope.selectEntity);
 
   // Search object
   $scope.operatorClassSearch = { term: '' };
@@ -251,7 +259,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
           scope.app.streams.push(stream);
           scope.$emit('selectEntity', 'stream', stream);
-          scope.$apply();
           return stream;
         }
 
@@ -273,7 +280,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
         // Select the stream
         scope.$emit('selectEntity', 'stream', stream);
-        scope.$apply();
         return stream;
 
       }
@@ -293,7 +299,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       //     portName: sinkPort
       //   });
       //   scope.$emit('selectEntity', 'stream', stream);
-      //   scope.$apply();
       // }
 
       /**
@@ -313,6 +318,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       $jsPlumb.bind('connectionDetached', function(info, originalEvent) {
         $log.info('Stream connection detached: ', info, originalEvent);
+        scope.$broadcast('connectionDetached', info.connection);
       });
 
       $jsPlumb.bind('connectionMoved', function(info, originalEvent) {
@@ -514,7 +520,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 })
 
-.directive('dagStream', function() {
+.directive('dagStream', function($log) {
   return {
     link: function(scope) {
 
@@ -550,8 +556,46 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       scope.connection.bind('click', function(conn, event) {
         event.stopPropagation();
         scope.$emit('selectEntity', 'stream', scope.stream);
-        scope.$apply();
       });
+
+      scope.$on('connectionDetached', function(event, connection) {
+        if (connection === scope.connection) {
+
+          // Remove all listeners
+          connection.unbind();
+
+          // Check if sink is there
+          var index;
+          var sink = _.find(scope.stream.sinks, function(s, i) {
+            index = i;
+            return s.connection === connection;
+          });
+
+          // If so, remove it
+          if (sink) {
+            scope.stream.sinks.splice(index, 1);
+          }
+
+          // If this was the only sink, remove the stream
+          if (scope.stream.sinks.length === 0) {
+            $log.info('Stream removed from app: ', scope.stream);
+            var streamIndex = scope.app.streams.indexOf(scope.stream);
+            if (streamIndex > -1) {
+              scope.$emit('selectEntity'); // deselect all
+              scope.app.streams.splice(streamIndex, 1);
+            } else {
+              $log.warn('Stream expected to be in app.streams, but was not found! app.streams: ', scope.app.streams, 'stream: ', scope.stream);
+            }
+          }
+          scope.stream = null;
+          
+          // Defer destruction of this scope
+          _.defer(function() {
+            scope.$destroy();
+          });
+        }
+      });
+
     }
   };
 })

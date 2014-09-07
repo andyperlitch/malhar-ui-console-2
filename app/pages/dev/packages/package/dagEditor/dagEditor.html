@@ -51,6 +51,12 @@
       <label for="app_description" dt-text>Description</label>
       <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
     </div>
+    <h5>Operators</h5>
+    <ul>
+      <li ng-repeat="op in app.operators track by op.name">
+        <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
+      </li>
+    </ul>
   </form>
 
   <!-- operator inspector -->
