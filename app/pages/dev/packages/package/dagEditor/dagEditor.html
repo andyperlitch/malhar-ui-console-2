@@ -51,11 +51,20 @@
       <label for="app_description" dt-text>Description</label>
       <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
     </div>
+    <h4>Topology</h4>
     <h5>Operators</h5>
     <ul>
       <li ng-repeat="op in app.operators track by op.name">
         <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
       </li>
+      <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
+    </ul>
+    <h5>Streams</h5>
+    <ul>
+      <li ng-repeat="str in app.streams track by str.name">
+        <a href="#" ng-click="selectEntity($event, 'stream', str)">{{ str.name }} <span class="text-muted">({{ str.sinks.length }} sink{{ str.sinks.length === 1 ? '' : 's' }})</span></a>
+      </li>
+      <li ng-if="!app.streams.length" class="text-muted" dt-text>no streams</li>
     </ul>
   </form>
 
