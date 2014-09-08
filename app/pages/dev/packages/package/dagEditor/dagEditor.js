@@ -449,6 +449,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           ],
           // scope
           scope: port.type
+          // activeClass: 'dragActive'
         };
 
         var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, type.options);
