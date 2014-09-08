@@ -27,6 +27,11 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'name': 'output', 
           'type': 'String',
           'optional': false
+        },
+        { 
+          'name': 'output2long name', 
+          'type': 'String',
+          'optional': false
         }
       ],
       'properties': [
@@ -45,7 +50,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
       'categories': [ 'parse', 'transform' ],
       'inputPorts': [
         {
-          'name': 'input',
+          'name': 'long input port',
           'type': 'String',
           'optional': false
         }

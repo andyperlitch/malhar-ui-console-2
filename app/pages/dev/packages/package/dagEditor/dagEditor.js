@@ -126,7 +126,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     isTarget:true,      
       overlays:[
         [ 'Label', { 
-            location:[0, -0.5], 
+            location:[-1, 0.5], 
             label:'Drop', 
             cssClass:'endpointTargetLabel', 
             id: 'label'
@@ -150,7 +150,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       dragOptions:{},
       overlays:[
         [ 'Label', { 
-            location:[1, 1.5], 
+            location:[2.2, 0.5], 
             label:'Drag',
             cssClass:'endpointSourceLabel',
             id: 'label'
@@ -458,6 +458,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, type.options);
         var label = endpoint.getOverlay('label');
         label.setLabel(port.name);
+
+        // Set better location for labels
+        var width = $(label.getElement()).outerWidth();
+        var x_pos;
+        var radius = type.options.paintStyle.radius;
+        if (type.options.paintStyle.lineWidth) {
+          radius += type.options.paintStyle.lineWidth;
+        }
+        x_pos = width / (radius * 4);
+        x_pos += type.position + 0.3;
+        x_pos *= type.incident;
+        // label.setLocation([leftOffset + 'px', 0.5]);
+        label.setLocation([ x_pos , 0.5 ]);
 
         // // DO NOT MODIFY THIS ATTRIBUTE IN ANY WAY
         // // connection detection relies on this being the exact portname
