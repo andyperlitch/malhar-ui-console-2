@@ -1,3 +1,9 @@
+@dag-editor-operator-side-length: 130px;
+@dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
+@dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
+@dag-editor-selected-stream-color: #deea18;
+@dag-editor-selected-stream-highlight: #CCD356;
+
 /* General jsPlumb css */
 ._jsPlumb_endpoint {
   z-index: 1;
@@ -49,8 +55,8 @@
 
 .dag-operator {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: @dag-editor-operator-side-length;
+  height: @dag-editor-operator-side-length;
   border: 1px solid #CCC;
   background-color: #EFEFEF;
   border-radius: 3px;
@@ -60,14 +66,84 @@
     cursor: text;
   }
   &.selected {
-    box-shadow: 0 0 7px lighten(@brand-primary, 50%);
-    background-color: desaturate(lighten(@brand-primary, 60%), 50%);
+    box-shadow: 0 0 7px @dag-editor-selected-operator-highlight;
+    background-color: @dag-editor-selected-operator-color;
   }
   .close {
     position: absolute;
     top: 1px;
     right: 1px;
     line-height: 0.6;
+  }
+}
+
+.dag-stream {
+  cursor: pointer;
+
+  // path:nth-child(1) {
+  //   stroke: @dag-editor-selected-stream-highlight;
+  // }
+  path:nth-child(2) {
+    stroke-dasharray: 30,5,15,5,5,5;
+    stroke: #AAA;
+  }
+
+  &.selected {
+    path:nth-child(1) {
+      stroke: @dag-editor-selected-stream-highlight;
+    }
+    path:nth-child(2) {
+      stroke: @dag-editor-selected-stream-color !important;
+    }
+  }
+  &.THREAD_LOCAL {
+    path:nth-child(1) {
+      // stroke-dasharray:10, 5;
+    }
+    path:nth-child(2) {
+      stroke-dasharray:none;
+      stroke: spin(#6ab956, 10);
+    }
+  }
+  &.CONTAINER_LOCAL {
+    path:nth-child(1) {
+      // stroke-dasharray:40, 5;
+    }
+    path:nth-child(2) {
+      stroke-dasharray:5,2;
+      stroke: #2caf65;
+    } 
+  }
+  &.NODE_LOCAL {
+    path:nth-child(1) {
+      // stroke-dasharray:30, 5;
+    }
+    path:nth-child(2) {
+      stroke-dasharray:10,5;
+      stroke: #94b951;
+    }
+  }
+  &.RACK_LOCAL {
+    path:nth-child(1) {
+      // stroke-dasharray:40, 5;
+    }
+    path:nth-child(2) {
+      stroke-dasharray:30,10;
+      stroke: #b99a37;
+    } 
+  }
+
+}
+
+.stream-label {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  &.selected {
+    color: #FFF;
+    background: @brand-primary;
+    box-shadow: 0 0 20px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
   }
 }
 

@@ -35,7 +35,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams) {
+.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -43,11 +43,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.selected_type = null;
   };
 
-  // Listen for entity selections
-  $scope.$on('selectEntity', function(event, type, entity) {
+  $scope.selectEntity = function($event, type, entity) {
+    if (typeof $event.preventDefault === 'function') {
+      $event.preventDefault();
+    }
     $scope.selected = entity;
     $scope.selected_type = type;
-  });
+    if(!$scope.$$phase) {
+      $scope.$apply();
+    }
+  };
+
+  // Listen for entity selections
+  $scope.$on('selectEntity', $scope.selectEntity);
 
   // Search object
   $scope.operatorClassSearch = { term: '' };
@@ -69,6 +77,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     handles: 's'
   };
 
+  // Stream localities
+  $scope.streamLocalities = settings.STREAM_LOCALITIES;
+
   // Initialize selection info
   $scope.deselectAll();
 
@@ -89,7 +100,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   options.connectorHoverStyle = {
     lineWidth:4,
-    strokeStyle:'#deea18',
+    strokeStyle:'#7dcdff',
     outlineWidth:2,
     outlineColor:'white'
   };
@@ -149,7 +160,17 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: DAG editor palette
-.directive('dagPalette', function(settings) {
+.directive('dagPalette', function(settings, $log, $jsPlumb, $compile) {
+
+  function angularizeSinkConnection(connection, stream, scope) {
+    // console.log(connection.canvas);
+    // console.log(connection.canvas);
+    var streamScope = scope.$new();
+    streamScope.stream = stream;
+    streamScope.connection = connection;
+    connection.canvas.setAttribute('dag-stream', 'true');
+    $compile(connection.canvas)(streamScope);
+  }
 
   return {
     restrict: 'A',
@@ -160,8 +181,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       selected: '='
     },
     link: function(scope, element){
-
-      // TODO: check for streams
 
       function generateNewName(key, collection, defaultName) {
         var name = defaultName;
@@ -215,7 +234,113 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$digest();
       }
 
+      function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, sinkConnection) {
+
+        // Check for existing stream
+        var stream = _.find(scope.app.streams, function(s) {
+          return s.source.operator === sourceOperator && s.source.port === sourcePort;
+        });
+
+        if (!stream) {
+          // No existing
+          stream = {
+            name: generateNewName('name', scope.app.streams, settings.dagEditor.DEFAULT_STREAM_NAME),
+            source: {
+              operator: sourceOperator,
+              port: sourcePort
+            },
+            sinks: [
+              {
+                operator: sinkOperator,
+                port: sinkPort,
+                connection: sinkConnection
+              }
+            ]
+          };
+
+          angularizeSinkConnection(sinkConnection, stream, scope);
+
+          scope.app.streams.push(stream);
+          scope.$emit('selectEntity', 'stream', stream);
+          return stream;
+        }
+
+        // Stream exists, check for sink
+        var sink = _.find(stream.sinks, function(k) {
+          return k.operator === sinkOperator && k.port === sinkPort;
+        });
+
+        // Add sink
+        if (!sink) {
+          stream.sinks.push({
+            operator: sinkOperator,
+            port: sinkPort,
+            connection: sinkConnection
+          });
+
+          angularizeSinkConnection(sinkConnection, stream, scope);
+        }
+
+        // Select the stream
+        scope.$emit('selectEntity', 'stream', stream);
+        return stream;
+
+      }
+
+      // function addSinkToStream(stream, sinkOperator, sinkPort) {
+      //   // First check if this is not already a sink
+      //   var exists = _.find(stream.sinks, function(sink) {
+      //     return sink.operatorName === sinkOperator && sink.portName === sinkPort;
+      //   });
+
+      //   if (exists) {
+      //     return;
+      //   }
+
+      //   stream.sinks.push({
+      //     operatorName: sinkOperator,
+      //     portName: sinkPort
+      //   });
+      //   scope.$emit('selectEntity', 'stream', stream);
+      // }
+
+      /**
+       * Listeners for connections
+       */
+      $jsPlumb.bind('connection', function(info, originalEvent) {
+
+        $log.info('Stream connection made: ', info, originalEvent);
+        var sourceOperator = info.sourceEndpoint.operator;
+        var sourcePort = info.sourceEndpoint.port;
+        var sinkOperator = info.targetEndpoint.operator;
+        var sinkPort = info.targetEndpoint.port;
+
+        addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, info.connection);
+
+      });
+
+      $jsPlumb.bind('connectionDetached', function(info, originalEvent) {
+        $log.info('Stream connection detached: ', info, originalEvent);
+        scope.$broadcast('connectionDetached', info.connection);
+      });
+
+      $jsPlumb.bind('connectionMoved', function(info, originalEvent) {
+        $log.info('Stream connection moved:' , info, originalEvent);
+      });
+
+
+
+
+      // Sets up the droppable state of the palette.
       element.droppable({
+
+        /**
+         * Listens for operator classes being dropped
+         * onto the palette.
+         *  
+         * @param  {Object} event DOM event from the drop.
+         * @param  {Object} ui    The jquery UI event, holding information on where it was dropped, etc.
+         */
         drop:function(event,ui) {
           // angular uses angular.element to get jQuery element, subsequently data() of jQuery is used to get
           // the data-identifier attribute
@@ -225,7 +350,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           // if dragged item has class menu-item and dropped div has class drop-container, add module 
           if (dragEl.hasClass('operator-class') && dropEl.hasClass('dag-palette')) {
             var opClass = getClass(dragEl.data('classname'));
-            console.log('Dropped class', opClass);
+            $log.info('Operator class dropped on DAG palette: ', opClass);
             var droppedOffset = ui.offset;
             var droppableOffset = dropEl.offset();
             var x = droppedOffset.left - droppableOffset.left;
@@ -236,6 +361,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
           scope.$apply();
         }
+      });
+
+
+
+      scope.$on('$destroy', function() {
+        $jsPlumb.unbind();
       });
     }
   };
@@ -269,7 +400,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: operator on the palette
-.directive('dagOperator', function($jsPlumb, dagEditorOptions) {
+.directive('dagOperator', function($jsPlumb, dagEditorOptions, $log) {
 
   var portTypes = {
     inputPorts: {
@@ -328,6 +459,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
 
+        endpoint.port = port;
+        endpoint.operator = operator;
+
         endpoints.push(endpoint);
       }
 
@@ -368,6 +502,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var position = ui.position;
           scope.operator.x = position.left;
           scope.operator.y = position.top;
+          $log.info('Operator moved on DAG palette: ', position, scope.operator);
         }
       });
 
@@ -384,6 +519,94 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           $jsPlumb.deleteEndpoint(ep);
         });
       });
+    }
+  };
+})
+
+.directive('dagStream', function($log, settings) {
+  return {
+    link: function(scope) {
+
+      // Add dag-stream class
+      scope.connection.addClass('dag-stream');
+      
+      // Set the stream label
+      scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
+
+      // Get it for use in the listener
+      var overlay = scope.connection.getOverlay('streamLabel');
+
+      // Update label as needed
+      scope.$watch('stream.name', function(name) {
+        if (name) {
+          overlay.setLabel(name);
+        }
+      });
+
+      // Update cssClass as locality changes
+      scope.$watch('stream.locality', function(locality) {
+        scope.connection.removeClass(settings.STREAM_LOCALITIES.join(' '));
+        if (locality) {
+          scope.connection.addClass(locality);
+        }
+      });
+
+      // Watch to see if the selected stream is this one
+      scope.$watch('selected', function(selected) {
+        if (selected === scope.stream) {
+          overlay.addClass('selected');
+          scope.connection.addClass('selected');
+        }
+        else {
+          overlay.removeClass('selected');
+          scope.connection.removeClass('selected');
+        }
+      });
+
+      // Listen for clicks on the connection
+      scope.connection.bind('click', function(conn, event) {
+        event.stopPropagation();
+        scope.$emit('selectEntity', 'stream', scope.stream);
+      });
+
+      scope.$on('connectionDetached', function(event, connection) {
+        if (connection === scope.connection) {
+
+          // Remove all listeners
+          connection.unbind();
+
+          // Check if sink is there
+          var index;
+          var sink = _.find(scope.stream.sinks, function(s, i) {
+            index = i;
+            return s.connection === connection;
+          });
+
+          // If so, remove it
+          if (sink) {
+            scope.stream.sinks.splice(index, 1);
+          }
+
+          // If this was the only sink, remove the stream
+          if (scope.stream.sinks.length === 0) {
+            $log.info('Stream removed from app: ', scope.stream);
+            var streamIndex = scope.app.streams.indexOf(scope.stream);
+            if (streamIndex > -1) {
+              scope.$emit('selectEntity'); // deselect all
+              scope.app.streams.splice(streamIndex, 1);
+            } else {
+              $log.warn('Stream expected to be in app.streams, but was not found! app.streams: ', scope.app.streams, 'stream: ', scope.stream);
+            }
+          }
+          scope.stream = null;
+          
+          // Defer destruction of this scope
+          _.defer(function() {
+            scope.$destroy();
+          });
+        }
+      });
+
     }
   };
 })
@@ -442,6 +665,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
 // Controller: Inspector for operator
 .controller('DagOperatorInspectorCtrl', function() {
+
+})
+
+.controller('DagStreamInspectorCtrl', function() {
 
 })
 
