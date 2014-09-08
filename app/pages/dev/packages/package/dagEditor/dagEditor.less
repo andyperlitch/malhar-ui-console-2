@@ -1,7 +1,7 @@
 @dag-editor-operator-side-length: 130px;
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
 @dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
-@dag-editor-selected-stream-color: #deea18;
+@dag-editor-selected-stream-color: #f9ff9c;
 @dag-editor-selected-stream-highlight: #CCD356;
 @dag-editor-active-endpoint-color: #ee3000;
 
@@ -15,7 +15,7 @@
 
 
 /* DAG Creator-specific */
-.operator-class, .dag-operator {
+.operator-class, .dag-operator, .dag-operator .operator-class-name {
   cursor: grab;
   cursor: -webkit-grab;
   cursor: -moz-grab;
@@ -85,7 +85,8 @@
   //   stroke: @dag-editor-selected-stream-highlight;
   // }
   path:nth-child(2) {
-    stroke-dasharray: 30,5,15,5,5,5;
+    // stroke-dasharray: 30,5,15,5,5,5;
+    stroke-dasharray: 20,1,2,1,2,1,2,1,2,1;
     stroke: #AAA;
   }
 
@@ -103,7 +104,7 @@
     }
     path:nth-child(2) {
       stroke-dasharray:none;
-      stroke: spin(#6ab956, 10);
+      stroke: #4fb998;
     }
   }
   &.CONTAINER_LOCAL {
@@ -112,7 +113,7 @@
     }
     path:nth-child(2) {
       stroke-dasharray:5,2;
-      stroke: #2caf65;
+      stroke: #4aaeaf;
     } 
   }
   &.NODE_LOCAL {
@@ -121,7 +122,7 @@
     }
     path:nth-child(2) {
       stroke-dasharray:10,5;
-      stroke: #94b951;
+      stroke: #5fa7b9;
     }
   }
   &.RACK_LOCAL {
@@ -130,7 +131,7 @@
     }
     path:nth-child(2) {
       stroke-dasharray:30,10;
-      stroke: #b99a37;
+      stroke: #3c88b9;
     } 
   }
 
@@ -157,6 +158,12 @@
   input {
     font: inherit;
     text-align: center;
+  }
+}
+
+.dag-inspector {
+  label {
+    font-size: 11px;
   }
 }
 

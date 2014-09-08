@@ -227,7 +227,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           name: generateNewName('name', scope.app.operators, settings.dagEditor.DEFAULT_OPERATOR_NAME),
           opClass: opClass,
           x: x,
-          y: y
+          y: y,
+          properties: {}
         };
         scope.app.operators.push(operator);
         scope.$emit('selectEntity', 'operator', operator);
