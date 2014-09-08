@@ -21,7 +21,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   'app.components.services.jsPlumb',
   'app.components.filters.camel2spaces',
-  'app.components.directives.uiResizable'
+  'app.components.directives.uiResizable',
+  'app.components.services.confirm',
+  'app.components.services.dtText'
 ])
 
 // Routing
@@ -614,7 +616,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Controller: for operators on the palette
-.controller('DagOperatorCtrl', function($scope, $timeout) {
+.controller('DagOperatorCtrl', function($scope, $timeout, confirm, dtText) {
   $scope.editName = function($event) {
     var operator = $scope.operator;
     $scope.editing.name = true;
@@ -651,6 +653,37 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.editing.name = false;
   };
   $scope.remove = function() {
+
+    // Check if streams will be destroyed
+    var destroyed_streams = _.map($scope.app.streams, function(stream) {
+
+      // check if source is this operator
+      if (stream.source.operator === $scope.operator) {
+        return stream.name;
+      }
+
+      // check if all sinks are from this operator
+      if (_.every(stream.sinks, function(sink) {
+        return sink.operator === $scope.operator;
+      })) {
+        return stream.name;
+      }
+
+    });
+
+    destroyed_streams = _.filter(destroyed_streams);
+
+    if (destroyed_streams.length) {
+      return confirm({
+        title: dtText.get('Delete this operator?'),
+        body: dtText.get('Are you sure you want to delete this operator? Doing so will delete the following streams: ') + destroyed_streams.join(', ') + '.'
+      })
+      .then(function() {
+        var index = $scope.app.operators.indexOf($scope.operator);
+        $scope.app.operators.splice(index, 1);        
+      });
+    }
+
     var index = $scope.app.operators.indexOf($scope.operator);
     $scope.app.operators.splice(index, 1);
   };
