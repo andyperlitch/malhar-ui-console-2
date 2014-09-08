@@ -71,10 +71,12 @@
   <!-- operator inspector -->
   <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'operator'" ng-controller="DagOperatorInspectorCtrl" name="dag_operator_inspector">
     <h2 class="h4">Operator Inspector</h2>
+    
     <div class="form-group">
       <label for="class" dt-text>Class Name</label>
       <input name="class" type="text" class="form-control" readonly ng-model="selected.opClass.name">
     </div>
+    
     <div class="form-group">
       <label for="name" dt-text>Operator Name</label>
       <div class="popover-group">
@@ -96,6 +98,17 @@
         </div>         
       </div>
     </div>
+
+    <hr>
+    <h5 ng-if="selected.opClass.properties && selected.opClass.properties.length">Properties</h5>
+    <div ng-repeat="prop in selected.opClass.properties" class="form-group">
+      <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
+      <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
+      <div class="help-block">{{prop.description}}</div>
+    </div>
+
+    <!-- <pre>{{selected | json }}</pre> -->
+
   </form>
 
   <!-- stream inspector -->
