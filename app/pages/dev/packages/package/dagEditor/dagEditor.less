@@ -3,6 +3,7 @@
 @dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
 @dag-editor-selected-stream-color: #deea18;
 @dag-editor-selected-stream-highlight: #CCD356;
+@dag-editor-active-endpoint-color: #ee3000;
 
 /* General jsPlumb css */
 ._jsPlumb_endpoint {
@@ -157,4 +158,14 @@
     font: inherit;
     text-align: center;
   }
+}
+
+
+._jsPlumb_endpoint.active svg circle {
+  stroke-width: 4px;
+  stroke: @dag-editor-active-endpoint-color;
+}
+
+._jsPlumb_endpoint.active._jsPlumb_endpoint_drop_allowed svg circle {
+  fill: @dag-editor-active-endpoint-color;
 }
