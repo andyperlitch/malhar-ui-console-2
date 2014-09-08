@@ -101,6 +101,7 @@
   <!-- stream inspector -->
   <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'stream'" ng-controller="DagStreamInspectorCtrl" name="dag_stream_inspector">
     <h2 class="h4">Stream Inspector</h2>
+
     <div class="form-group">
       <label for="name" dt-text>Stream Name</label>
       <div class="popover-group">
@@ -122,6 +123,14 @@
         </div>         
       </div>
     </div>
+
+    <div class="form-group">
+      <label for="locality" dt-text dt-text-tooltip="You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'">Stream Locality</label>
+      <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
+        <option value="">AUTOMATIC</option>
+      </select>
+    </div>
+
   </form>  
 </div>
 <!-- <h3>app structure</h3> -->

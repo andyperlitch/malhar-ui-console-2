@@ -35,7 +35,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams) {
+.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -76,6 +76,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.paletteResizeOptions = {
     handles: 's'
   };
+
+  // Stream localities
+  $scope.streamLocalities = settings.STREAM_LOCALITIES;
 
   // Initialize selection info
   $scope.deselectAll();
@@ -520,7 +523,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 })
 
-.directive('dagStream', function($log) {
+.directive('dagStream', function($log, settings) {
   return {
     link: function(scope) {
 
@@ -537,6 +540,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       scope.$watch('stream.name', function(name) {
         if (name) {
           overlay.setLabel(name);
+        }
+      });
+
+      // Update cssClass as locality changes
+      scope.$watch('stream.locality', function(locality) {
+        scope.connection.removeClass(settings.STREAM_LOCALITIES.join(' '));
+        if (locality) {
+          scope.connection.addClass(locality);
         }
       });
 
