@@ -36,7 +36,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   });
 })
 
-// Controller
+// Page Controller
 .controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
 
   // Deselects everything
@@ -45,6 +45,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.selected_type = null;
   };
 
+  // Selects an entity in the DAG
   $scope.selectEntity = function($event, type, entity) {
     if (typeof $event.preventDefault === 'function') {
       $event.preventDefault();
@@ -234,7 +235,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         };
         scope.app.operators.push(operator);
         scope.$emit('selectEntity', 'operator', operator);
-        scope.$digest();
       }
 
       function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, sinkConnection) {
@@ -267,7 +267,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           scope.$emit('selectEntity', 'stream', stream);
           return stream;
         }
-
+        
         // Stream exists, check for sink
         var sink = _.find(stream.sinks, function(k) {
           return k.operator === sinkOperator && k.port === sinkPort;
@@ -289,23 +289,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         return stream;
 
       }
-
-      // function addSinkToStream(stream, sinkOperator, sinkPort) {
-      //   // First check if this is not already a sink
-      //   var exists = _.find(stream.sinks, function(sink) {
-      //     return sink.operatorName === sinkOperator && sink.portName === sinkPort;
-      //   });
-
-      //   if (exists) {
-      //     return;
-      //   }
-
-      //   stream.sinks.push({
-      //     operatorName: sinkOperator,
-      //     portName: sinkPort
-      //   });
-      //   scope.$emit('selectEntity', 'stream', stream);
-      // }
 
       /**
        * Listeners for connections
@@ -472,10 +455,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // label.setLocation([leftOffset + 'px', 0.5]);
         label.setLocation([ x_pos , 0.5 ]);
 
-        // // DO NOT MODIFY THIS ATTRIBUTE IN ANY WAY
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
 
+        // Set references to port and operator models
         endpoint.port = port;
         endpoint.operator = operator;
 
@@ -525,6 +508,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       // Set the ports as anchors/endpoints
       scope.endpoints = setPortEndpoints(scope.operator, element);
+      
+      // Start by editing name
       scope.editName({
         target: element.find('.dag-operator-name')[0]
       }, scope.operator);
@@ -712,10 +697,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Controller: Inspector for operator
-.controller('DagOperatorInspectorCtrl', function() {
-
+.controller('DagOperatorInspectorCtrl', function($scope) {
+  $scope.canSetFilter = function(prop) {
+    return prop.canSet;
+  };
 })
 
+// Controller: Inspector for stream
 .controller('DagStreamInspectorCtrl', function() {
 
 })
