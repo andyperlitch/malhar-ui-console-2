@@ -5,16 +5,7 @@
 @dag-editor-selected-stream-highlight: #CCD356;
 @dag-editor-active-endpoint-color: #ee3000;
 
-/* General jsPlumb css */
-._jsPlumb_endpoint {
-  z-index: 1;
-}
-._jsPlumb_overlay {
-  z-index: 2;
-}
-
-
-/* DAG Creator-specific */
+// Set these elements to cursor:grab/grabbing
 .operator-class, .dag-operator, .dag-operator .operator-class-name {
   cursor: grab;
   cursor: -webkit-grab;
@@ -27,6 +18,8 @@
   }
 }
 
+// Operators in the left panel, i.e. 
+// instantiable operators
 .operator-class {
   padding: 0.5em;
   margin-bottom: 4px;
@@ -37,6 +30,9 @@
     margin: 1px 0;
   }
 }
+
+// The palette or "canvas" where operators
+// get placed and arranged into the DAG.
 .dag-palette {
   border: 1px solid #DEDEDE;
   height: 650px;
@@ -54,6 +50,8 @@
   }
 }
 
+// Operators that have been placed on the
+// dag-palette
 .dag-operator {
   position: relative;
   width: @dag-editor-operator-side-length;
@@ -81,6 +79,7 @@
   }
 }
 
+// Streams on the dag-palette
 .dag-stream {
   cursor: pointer;
 
@@ -137,9 +136,10 @@
       stroke: #3c88b9;
     } 
   }
-
 }
 
+// The actual label on a given stream in the
+// dag palette
 .stream-label {
   cursor: pointer;
   background: rgba(255, 255, 255, 0.95);
@@ -152,6 +152,7 @@
   }
 }
 
+// Port label styles
 ._jsPlumb_overlay.endpointTargetLabel,._jsPlumb_overlay.endpointSourceLabel {
   background: rgba(255, 255, 255, 0.7);
   padding: 0 3px;
@@ -160,11 +161,15 @@
   cursor: default;
 }
 
+// The class name that shows up on
+// dag-operators placed on the dag palette
 .dag-operator .operator-class-name {
   padding: 0 1em;
   font-size: 11px;
 }
 
+// Form that contains the in-place
+// editable name field on a dag-operator
 .edit-name-form {
   input {
     font: inherit;
@@ -172,25 +177,32 @@
   }
 }
 
+// The panel/form whose content changes based on 
+// what is currently selected on the dag-palette.
+// If nothing is selected, this is the app inspector.
 .dag-inspector {
   label {
     font-size: 11px;
   }
+
+  // the div that holds information about a 
+  // stream's source or sinks
+  .stream-inspector-source-sink {
+    margin-bottom: 5px;
+    p {
+      margin-bottom: 5px;
+    }
+  }
 }
 
 
+// Output port (endpoint) styles when one can
+// accept the type that a stream emits.
 ._jsPlumb_endpoint.active svg circle {
   stroke-width: 4px;
   stroke: @dag-editor-active-endpoint-color;
 }
-
 ._jsPlumb_endpoint.active._jsPlumb_endpoint_drop_allowed svg circle {
   fill: @dag-editor-active-endpoint-color;
 }
 
-.stream-inspector-source-sink {
-  margin-bottom: 5px;
-  p {
-    margin-bottom: 5px;
-  }
-}
