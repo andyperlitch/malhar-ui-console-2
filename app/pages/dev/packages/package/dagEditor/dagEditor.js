@@ -698,7 +698,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
 // Controller: Inspector for operator
 .controller('DagOperatorInspectorCtrl', function($scope) {
-  $scope.canSetFilter = function(prop, key) {
+  $scope.canSetFilter = function(prop) {
     return prop.canSet;
   };
 })
