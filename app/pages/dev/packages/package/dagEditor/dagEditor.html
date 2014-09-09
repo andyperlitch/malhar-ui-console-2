@@ -144,6 +144,20 @@
       </select>
     </div>
 
+    <hr>
+
+    <h5>Source</h5>
+    <div class="well well-sm stream-inspector-source-sink">
+      <p><strong>operator:</strong> {{selected.source.operator.name}}</p>
+      <p><strong>port:</strong> {{selected.source.port.name}}</p>      
+    </div>
+
+    <h5>Sinks</h5>
+    <div ng-repeat="sink in selected.sinks" class="well well-sm stream-inspector-source-sink">
+      <p><strong>operator:</strong> {{sink.operator.name}}</p>
+      <p><strong>port:</strong> {{sink.port.name}}</p>      
+    </div>
+
   </form>  
 </div>
 <!-- <h3>app structure</h3> -->
