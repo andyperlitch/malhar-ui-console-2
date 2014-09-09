@@ -22,7 +22,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
       'name': 'InputOperator',
       'description': 'Takes some input.',
       'categories': [ 'messaging', 'input' ],
-      'outputPorts': [ 
+      'outputPorts': [
         { 
           'name': 'output', 
           'type': 'String',
@@ -94,6 +94,13 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'name':'metrics',
           'canGet': true,
           'canSet': true,
+          'type':'String',
+          'description': 'The metrics to aggregate.'
+        },
+        {
+          'name':'nonsettable_property',
+          'canGet': true,
+          'canSet': false,
           'type':'String',
           'description': 'The metrics to aggregate.'
         }
