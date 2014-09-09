@@ -1,31 +1,60 @@
+<!-- This .row consists of three "columns":
+  - list of operator classes
+  - dag palette
+  - inspector panel -->
 <div class="row">
+
+  <!-- *** LIST OF OPERATOR CLASSES *** -->
   <div class="col-xs-2" id="operator-class-list">
     <h2 class="h4">Operator Classes</h2>
+
+    <!-- use this form to search for specific operators -->
     <form name="operator-search-form" novalidate>
       <p>
+        <!-- ngModel: operatorClassSearch.term -->
         <input type="text" class="form-control" placeholder="search" ng-model="operatorClassSearch.term">
       </p>
     </form>
 
-    <!-- operator classes -->
-    <div class="alert alert-info operator-class" dag-operator-class ng-attr-data-classname="{{ opClass.name }}" ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}">
+    <!-- operator class repeater -->
+    <div dag-operator-class 
+      ng-attr-data-classname="{{ opClass.name }}"
+      class="alert alert-info operator-class"
+      ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}"
+    >
+
+      <!-- class name -->
       <h3 class="h4">{{ opClass.name | camel2spaces }}</h3>
+
+      <!-- tags/categories -->
       <p>
         <span ng-repeat="cat in opClass.categories">
           <span class="label label-primary">{{ cat }}</span>
         </span>
       </p>
+
+      <!-- class description -->
       <p>{{ opClass.description }}</p>
+
+      <!-- input/output port counts -->
       <div>
         {{ opClass.inputPorts ? opClass.inputPorts.length : 0 }} <span class="glyphicon glyphicon-log-in"></span>
         &nbsp;&nbsp;&nbsp;
         {{ opClass.outputPorts ? opClass.outputPorts.length : 0 }} <span class="glyphicon glyphicon-log-out"></span>
       </div>
     </div>
+  </div><!-- end .operator-class-list -->
 
-  </div>
+  <!-- *** DAG PALETTE *** -->
   <div class="col-xs-8" id="dag-palette-container">
     <h2 class="h4">DAG Palette</h2>
+
+    <!-- The palette div:
+    - dag-palette directive
+    - jquery ui resizable with paletteResizeOptions
+    - operatorClasses, app model, and selected passed in
+    - set as the jsPlumb container with jsplumb-container directive. @see http://www.jsplumb.org/doc/home.html, look for Container heading
+    - deselect all entities on click event -->
     <div
       dag-palette
       ui-resizable
@@ -40,125 +69,167 @@
     ></div>
   </div>
 
-  <!-- application inspector -->
-  <form class="col-xs-2 dag-inspector" ng-if="!selected" ng-controller="DagAppInspectorCtrl" name="dag_app_inspector">
-    <h2 class="h4">Application Inspector</h2>
-    <div class="form-group">
-      <label for="appName" dt-text>Name</label>
-      <input type="text" readonly ng-model="appName" name="app_name" class="form-control">
-    </div>
-    <div class="form-group">
-      <label for="app_description" dt-text>Description</label>
-      <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
-    </div>
-    <h4>Topology</h4>
-    <h5>Operators</h5>
-    <ul>
-      <li ng-repeat="op in app.operators track by op.name">
-        <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
-      </li>
-      <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
-    </ul>
-    <h5>Streams</h5>
-    <ul>
-      <li ng-repeat="str in app.streams track by str.name">
-        <a href="#" ng-click="selectEntity($event, 'stream', str)">{{ str.name }} <span class="text-muted">({{ str.sinks.length }} sink{{ str.sinks.length === 1 ? '' : 's' }})</span></a>
-      </li>
-      <li ng-if="!app.streams.length" class="text-muted" dt-text>no streams</li>
-    </ul>
-  </form>
+  <!-- *** INSPECTOR PANEL *** -->
+  <div class="col-xs-2 dag-inspector">
+    <!-- Note: only one of these forms should show up at any given time,
+    based on what is currently `selected` -->
 
-  <!-- operator inspector -->
-  <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'operator'" ng-controller="DagOperatorInspectorCtrl" name="dag_operator_inspector">
-    <h2 class="h4">Operator Inspector</h2>
-    
-    <div class="form-group">
-      <label for="class" dt-text>Class Name</label>
-      <input name="class" type="text" class="form-control" readonly ng-model="selected.opClass.name">
-    </div>
-    
-    <div class="form-group">
-      <label for="name" dt-text>Operator Name</label>
-      <div class="popover-group">
-        <input name="name"
-          type="text"
-          class="form-control"
-          unique-in-set="app.operators"
-          unique-key="name"
-          exclude="selected"
-          required
-        ng-model="selected.name">
-        <div class="popover left" ng-messages="dag_operator_inspector.name.$error" ng-style="{ display: dag_operator_inspector.name.$invalid ? 'block' : 'none' }">
-          <div class="arrow"></div>
-          <h3 class="popover-title" dt-text>Invalid operator name</h3>
-          <div class="popover-content">
-            <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
-            <p ng-message="required" dt-text>An operator name is required</p>
-          </div>
-        </div>         
+    <!-- Note: the `selected` object in this scope will either be nothing,
+    in which case the application inspector will be shown, or it will
+    have an operator, stream, or port object (model). Also, `selected_type`
+    will reflect the "type" that is selected: either "operator", "stream", or
+    "port" -->
+
+    <!-- application inspector -->
+    <form name="dag_app_inspector"
+      ng-if="!selected"
+      ng-controller="DagAppInspectorCtrl"
+    >
+      <!-- inspector title -->
+      <h2 class="h4">Application Inspector</h2>
+
+      <!-- app name -->
+      <!-- Note: This is not editable because it is
+      taken from the URL. -->
+      <div class="form-group">
+        <label for="appName" dt-text>Name</label>
+        <input type="text" readonly ng-model="appName" name="app_name" class="form-control">
       </div>
-    </div>
 
-    <hr>
-    <h5 ng-if="selected.opClass.properties && selected.opClass.properties.length">Properties</h5>
-    <div ng-repeat="prop in selected.opClass.properties" class="form-group">
-      <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
-      <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
-      <div class="help-block">{{prop.description}}</div>
-    </div>
-
-    <!-- <pre>{{selected | json }}</pre> -->
-
-  </form>
-
-  <!-- stream inspector -->
-  <form class="col-xs-2 dag-inspector" ng-if="selected && selected_type === 'stream'" ng-controller="DagStreamInspectorCtrl" name="dag_stream_inspector">
-    <h2 class="h4">Stream Inspector</h2>
-
-    <div class="form-group">
-      <label for="name" dt-text>Stream Name</label>
-      <div class="popover-group">
-        <input name="name"
-          type="text"
-          class="form-control"
-          unique-in-set="app.streams"
-          unique-key="name"
-          exclude="selected"
-          required
-        ng-model="selected.name">
-        <div class="popover left" ng-messages="dag_stream_inspector.name.$error" ng-style="{ display: dag_stream_inspector.name.$invalid ? 'block' : 'none' }">
-          <div class="arrow"></div>
-          <h3 class="popover-title" dt-text>Invalid stream name</h3>
-          <div class="popover-content">
-            <p ng-message="uniqueInSet" dt-text>You must choose a unique stream name</p>
-            <p ng-message="required" dt-text>A stream name is required</p>
-          </div>
-        </div>         
+      <!-- app description -->
+      <!-- ngModel: app.description -->
+      <div class="form-group">
+        <label for="app_description" dt-text>Description</label>
+        <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="locality" dt-text dt-text-tooltip="You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'">Stream Locality</label>
-      <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
-        <option value="">AUTOMATIC</option>
-      </select>
-    </div>
+      <!-- DAG Topology: lists operators and streams -->
+      <h4>Topology</h4>
+      <h5>Operators</h5>
+      <ul>
+        <li ng-repeat="op in app.operators track by op.name">
+          <!-- clicking on this selects the operator in the dag-palette -->
+          <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
+        </li>
+        <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
+      </ul>
+      <h5>Streams</h5>
+      <ul>
+        <li ng-repeat="str in app.streams track by str.name">
+          <!-- clicking on this selects the stream in the dag-palette -->
+          <a href="#" ng-click="selectEntity($event, 'stream', str)">{{ str.name }} <span class="text-muted">({{ str.sinks.length }} sink{{ str.sinks.length === 1 ? '' : 's' }})</span></a>
+        </li>
+        <li ng-if="!app.streams.length" class="text-muted" dt-text>no streams</li>
+      </ul>
+    </form>
 
-    <hr>
+    <!-- operator inspector -->
+    <form name="dag_operator_inspector"
+      ng-if="selected && selected_type === 'operator'"
+      ng-controller="DagOperatorInspectorCtrl"
+    >
+      <!-- inspector title -->
+      <h2 class="h4">Operator Inspector</h2>
+      
+      <!-- operator class name (readonly) -->
+      <div class="form-group">
+        <label for="class" dt-text>Class Name</label>
+        <input name="class" type="text" class="form-control" readonly ng-model="selected.opClass.name">
+      </div>
+      
+      <!-- operator name -->
+      <div class="form-group">
+        <label for="name" dt-text>Operator Name</label>
+        <div class="popover-group">
+          <!-- ngModel: selected.name -->
+          <input name="name"
+            type="text"
+            class="form-control"
+            unique-in-set="app.operators"
+            unique-key="name"
+            exclude="selected"
+            required
+          ng-model="selected.name">
+          <!-- validation errors here -->
+          <div class="popover left" ng-messages="dag_operator_inspector.name.$error" ng-style="{ display: dag_operator_inspector.name.$invalid ? 'block' : 'none' }">
+            <div class="arrow"></div>
+            <h3 class="popover-title" dt-text>Invalid operator name</h3>
+            <div class="popover-content">
+              <!-- when not unique in app.operators -->
+              <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
+              <!-- when empty -->
+              <p ng-message="required" dt-text>An operator name is required</p>
+            </div>
+          </div>         
+        </div>
+      </div>
 
-    <h5>Source</h5>
-    <div class="well well-sm stream-inspector-source-sink">
-      <p><strong>operator:</strong> {{selected.source.operator.name}}</p>
-      <p><strong>port:</strong> {{selected.source.port.name}}</p>      
-    </div>
+      <hr>
+      <!-- Operator properties -->
+      <h5 ng-if="selected.opClass.properties && selected.opClass.properties.length">Properties</h5>
+      <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
+        <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
+        <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
+        <div class="help-block">{{prop.description}}</div>
+      </div>
 
-    <h5>Sinks</h5>
-    <div ng-repeat="sink in selected.sinks" class="well well-sm stream-inspector-source-sink">
-      <p><strong>operator:</strong> {{sink.operator.name}}</p>
-      <p><strong>port:</strong> {{sink.port.name}}</p>      
-    </div>
+      <!-- <pre>{{selected | json }}</pre> -->
 
-  </form>  
+    </form>
+
+    <!-- stream inspector -->
+    <form name="dag_stream_inspector"
+      ng-if="selected && selected_type === 'stream'"
+      ng-controller="DagStreamInspectorCtrl"
+    >
+      <h2 class="h4">Stream Inspector</h2>
+
+      <div class="form-group">
+        <label for="name" dt-text>Stream Name</label>
+        <div class="popover-group">
+          <input name="name"
+            type="text"
+            class="form-control"
+            unique-in-set="app.streams"
+            unique-key="name"
+            exclude="selected"
+            required
+          ng-model="selected.name">
+          <div class="popover left" ng-messages="dag_stream_inspector.name.$error" ng-style="{ display: dag_stream_inspector.name.$invalid ? 'block' : 'none' }">
+            <div class="arrow"></div>
+            <h3 class="popover-title" dt-text>Invalid stream name</h3>
+            <div class="popover-content">
+              <p ng-message="uniqueInSet" dt-text>You must choose a unique stream name</p>
+              <p ng-message="required" dt-text>A stream name is required</p>
+            </div>
+          </div>         
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="locality" dt-text dt-text-tooltip="You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'">Stream Locality</label>
+        <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
+          <option value="">AUTOMATIC</option>
+        </select>
+      </div>
+
+      <hr>
+
+      <h5>Source</h5>
+      <div class="well well-sm stream-inspector-source-sink">
+        <p><strong>operator:</strong> {{selected.source.operator.name}}</p>
+        <p><strong>port:</strong> {{selected.source.port.name}}</p>      
+      </div>
+
+      <h5>Sinks</h5>
+      <div ng-repeat="sink in selected.sinks" class="well well-sm stream-inspector-source-sink">
+        <p><strong>operator:</strong> {{sink.operator.name}}</p>
+        <p><strong>port:</strong> {{sink.port.name}}</p>      
+      </div>
+
+    </form> 
+  </div>
+     
 </div>
 <!-- <h3>app structure</h3> -->
-<!-- <pre class="well">{{ app | json }}</pre> -->
+<!-- <pre class="well">{{ app | json }}</pre>
