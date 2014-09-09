@@ -22,7 +22,12 @@ angular.module('app.settings', [])
     alertUrlRoot: '/alerts',
     GATEWAY_WEBSOCKET_HOST: null,
     GATEWAY_API_VERSION: 'v1',
-    STREAM_LOCALITIES: ['THREAD_LOCAL', 'CONTAINER_LOCAL', 'NODE_LOCAL', 'RACK_LOCAL'],
+    STREAM_LOCALITIES: [
+      'THREAD_LOCAL',
+      'CONTAINER_LOCAL',
+      'NODE_LOCAL'
+      // 'RACK_LOCAL'
+    ],
     maxAlertActions: 3,
     statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],
     NONENDED_APP_STATES: ['SUBMITTED','ACCEPTED','RUNNING'],
