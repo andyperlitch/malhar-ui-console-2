@@ -77,7 +77,7 @@ angular.module('app.pages.dev.packages', [
         }, function () {
           $scope.alerts.push({
             type: 'danger',
-            msg: 'Failed to delete application package"' + appPackage.appPackageName + ' ' + appPackage.appPackageVersion + '"'
+            msg: 'Failed to remove application package"' + appPackage.appPackageName + ' ' + appPackage.appPackageVersion + '"'
           });
         });
       },
