@@ -36,8 +36,18 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   });
 })
 
+.factory('serializeDagModel', function() {
+  function serializeDagModel(appModel) {
+    // return serialized copy of appModel
+    console.log("ZZZZZZARGH");
+    console.log(appModel);
+    return true;
+  }
+  return serializeDagModel;
+})
+
 // Page Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
+.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings, serializeDagModel) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -85,6 +95,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // Initialize selection info
   $scope.deselectAll();
+
+  $scope.$watch("app", function() {
+     //  //scope.serializedModel = serializeDagModel(newVal);
+     // update the representation we send to the server
+     serializeDagModel($scope.app);
+   }, true);
 
 })
 
