@@ -1,8 +1,13 @@
 <p>
-<button class="btn btn-primary">
-    Upload
-</button>
+    <button class="btn btn-primary" ng-click="upload();">Upload</button>
 </p>
+
+<alert ng-repeat="alert in alerts"
+       type="{{alert.type}}"
+       close="closeAlert($index);"
+       class="notification">
+    {{alert.msg}}
+</alert>
 
 <table class="table" style="width:auto;">
     <tr>

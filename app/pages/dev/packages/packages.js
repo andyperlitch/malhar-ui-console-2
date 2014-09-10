@@ -16,7 +16,8 @@
 'use strict';
 
 angular.module('app.pages.dev.packages', [
-  'app.components.resources.PackageCollection'
+  'app.components.resources.PackageCollection',
+  'app.components.widgets.fileUpload'
 ])
 
 // Routing
@@ -31,7 +32,31 @@ angular.module('app.pages.dev.packages', [
   })
 
 // Controller
-  .controller('PackagesCtrl', function($scope, PackageCollection) {
+  .controller('PackagesCtrl', function($scope, PackageCollection, FileUploadModal) {
     $scope.packages = new PackageCollection();
     $scope.packages.fetch();
+
+    $scope.alerts = [];
+
+    $scope.fileUploadOptions = {
+      url: $scope.packages.url,
+      success: function (fileItem) {
+        $scope.alerts.push({
+          type: 'success',
+          msg: '"' + fileItem.name + '" uploaded'
+        });
+
+        $scope.packages = new PackageCollection();
+        $scope.packages.fetch();
+      }
+    };
+
+    $scope.upload = function () {
+      var modal = new FileUploadModal($scope.fileUploadOptions);
+      modal.open();
+    };
+
+    $scope.closeAlert = function (index) {
+      $scope.alerts.splice(index, 1);
+    };
   });
