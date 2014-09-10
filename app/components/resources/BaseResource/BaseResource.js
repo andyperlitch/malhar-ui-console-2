@@ -100,6 +100,10 @@ angular.module('app.components.resources.BaseResource', [
       return $http.post(url, payload);
     },
 
+    remove: function () {
+      return $http.delete(this.url);
+    },
+
     /**
      * Subscribes to this.topic for updates.
      * A scope can optionally be passed in order
