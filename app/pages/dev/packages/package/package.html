@@ -32,7 +32,8 @@
                 <span class="glyphicon glyphicon-play"></span>
                 <span dt-text="launch">launch</span>
             </button>
-            <a href="#/packages/{{packageName}}/applications/{{app.name}}/dagEditor" class="btn btn-xs btn-info">
+            <a href="#/packages/{{packageName}}/applications/{{app.name}}/dagEditor" class="btn btn-xs btn-info"
+                    ng-if="app.type === 'json'">
                 <span class="glyphicon glyphicon-edit"></span>
                 <span dt-text="edit">edit</span>
             </a>
