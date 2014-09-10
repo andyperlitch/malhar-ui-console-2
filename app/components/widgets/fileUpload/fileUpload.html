@@ -1,0 +1,30 @@
+<div class="upload-zone">
+    <div class="drop-zone"
+         ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="drop-zone-over"
+         ng-if="!uploading">
+        <div>
+            <div ng-if="alert" class="alert-container">
+                <alert type="{{alert.type}}" close="closeAlert();">
+                    <div>{{alert.msg}}</div>
+                    <div nf-if="alert.details">{{alert.details}}</div>
+                </alert>
+            </div>
+
+            <p class="drop-zone-message">Drag a file here</p>
+            <p>or, if you prefer</p>
+            <div>
+                <button class="btn btn-primary"
+                        ng-file-select="onFileSelect($files)">
+                    Select a file from your computer
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="upload-progress-zone"
+         ng-if="uploading">
+        <div>
+            Uploading...
+        </div>
+        <progressbar value="progress" class="progress-striped active">{{progress}}%</progressbar>
+    </div>
+</div>

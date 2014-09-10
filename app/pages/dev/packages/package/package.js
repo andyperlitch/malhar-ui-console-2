@@ -62,7 +62,7 @@ angular.module('app.pages.dev.packages.package', [
       $scope.alerts.push({
         id: infoMsgId,
         type: 'info',
-        msg: 'Application ' + name + ' launch request is submitted. Waiting for status...'
+        include: 'pages/dev/packages/package/msgSubmit.html'
       });
 
       app.launch().success(function (response) {
