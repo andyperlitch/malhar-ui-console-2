@@ -287,7 +287,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
               {
                 operator: sinkOperator,
                 port: sinkPort,
-                connection: sinkConnection
+                // connection: sinkConnection
               }
             ]
           };
@@ -309,7 +309,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           stream.sinks.push({
             operator: sinkOperator,
             port: sinkPort,
-            connection: sinkConnection
+            // connection: sinkConnection
           });
 
           angularizeSinkConnection(sinkConnection, stream, scope);
@@ -605,6 +605,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       scope.$on('connectionDetached', function(event, connection) {
         if (connection === scope.connection) {
 
+          // Get operator:port combinations
+          var e1 = connection.endpoints[0];
+          var e2 = connection.endpoints[1];
+          var o1 = e1.operator;
+          var o2 = e2.operator;
+          var p1 = e1.port;
+          var p2 = e2.port;
+
           // Remove all listeners
           connection.unbind();
 
@@ -612,7 +620,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var index;
           var sink = _.find(scope.stream.sinks, function(s, i) {
             index = i;
-            return s.connection === connection;
+            var o0 = s.operator;
+            var p0 = s.port;
+            return (o1 === o0 && p1 === p0) || (o2 === o0 && p2 === p0);
           });
 
           // If so, remove it
