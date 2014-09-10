@@ -635,8 +635,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             $log.info('Stream removed from app: ', scope.stream);
             var streamIndex = scope.app.streams.indexOf(scope.stream);
             if (streamIndex > -1) {
-              scope.$emit('selectEntity'); // deselect all
               scope.app.streams.splice(streamIndex, 1);
+              scope.$emit('selectEntity'); // deselect all
             } else {
               $log.warn('Stream expected to be in app.streams, but was not found! app.streams: ', scope.app.streams, 'stream: ', scope.stream);
             }
