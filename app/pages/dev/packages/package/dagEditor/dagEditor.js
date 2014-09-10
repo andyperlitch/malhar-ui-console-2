@@ -75,8 +75,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     streams: []
   };
 
-  // Palette resizable options
-  $scope.paletteResizeOptions = {
+  // Canvas resizable options
+  $scope.canvasResizeOptions = {
     handles: 's'
   };
 
@@ -162,8 +162,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   return options;
 })
 
-// Directive: DAG editor palette
-.directive('dagPalette', function(settings, $log, $jsPlumb, $compile) {
+// Directive: DAG editor canvas
+.directive('dagCanvas', function(settings, $log, $jsPlumb, $compile) {
 
   function angularizeSinkConnection(connection, stream, scope) {
     // console.log(connection.canvas);
@@ -177,7 +177,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   return {
     restrict: 'A',
-    templateUrl: 'pages/dev/packages/package/dagEditor/dagPalette.html',
+    templateUrl: 'pages/dev/packages/package/dagEditor/dagCanvas.html',
     scope: {
       operatorClasses: '=',
       app: '=',
@@ -207,7 +207,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       /**
        * helper function to get the operatorClass 
-       * that got dropped onto the palette.
+       * that got dropped onto the canvas.
        * 
        * @param  {String} name The className of the operator
        * @return {Object}      The class object
@@ -317,12 +317,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
 
 
-      // Sets up the droppable state of the palette.
+      // Sets up the droppable state of the canvas.
       element.droppable({
 
         /**
          * Listens for operator classes being dropped
-         * onto the palette.
+         * onto the canvas.
          *  
          * @param  {Object} event DOM event from the drop.
          * @param  {Object} ui    The jquery UI event, holding information on where it was dropped, etc.
@@ -334,9 +334,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var dropEl = angular.element(this);
 
           // if dragged item has class menu-item and dropped div has class drop-container, add module 
-          if (dragEl.hasClass('operator-class') && dropEl.hasClass('dag-palette')) {
+          if (dragEl.hasClass('operator-class') && dropEl.hasClass('dag-canvas')) {
             var opClass = getClass(dragEl.data('classname'));
-            $log.info('Operator class dropped on DAG palette: ', opClass);
+            $log.info('Operator class dropped on DAG canvas: ', opClass);
             var droppedOffset = ui.offset;
             var droppableOffset = dropEl.offset();
             var x = droppedOffset.left - droppableOffset.left;
@@ -385,7 +385,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 })
 
-// Directive: operator on the palette
+// Directive: operator on the canvas
 .directive('dagOperator', function($jsPlumb, dagEditorOptions, $log) {
 
   var portTypes = {
@@ -502,7 +502,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var position = ui.position;
           scope.operator.x = position.left;
           scope.operator.y = position.top;
-          $log.info('Operator moved on DAG palette: ', position, scope.operator);
+          $log.info('Operator moved on DAG canvas: ', position, scope.operator);
         }
       });
 
@@ -613,7 +613,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 })
 
-// Controller: for operators on the palette
+// Controller: for operators on the canvas
 .controller('DagOperatorCtrl', function($scope, $timeout, confirm, dtText) {
   $scope.editName = function($event) {
     var operator = $scope.operator;
