@@ -1,6 +1,6 @@
 <!-- This .row consists of three "columns":
   - list of operator classes
-  - dag palette
+  - dag canvas
   - inspector panel -->
 <div class="row">
 
@@ -45,22 +45,22 @@
     </div>
   </div><!-- end .operator-class-list -->
 
-  <!-- *** DAG PALETTE *** -->
-  <div class="col-xs-8" id="dag-palette-container">
-    <h2 class="h4">DAG Palette</h2>
+  <!-- *** DAG CANVAS *** -->
+  <div class="col-xs-8" id="dag-canvas-container">
+    <h2 class="h4">DAG Canvas</h2>
 
-    <!-- The palette div:
-    - dag-palette directive
-    - jquery ui resizable with paletteResizeOptions
+    <!-- The canvas div:
+    - dag-canvas directive
+    - jquery ui resizable with canvasResizeOptions
     - operatorClasses, app model, and selected passed in
     - set as the jsPlumb container with jsplumb-container directive. @see http://www.jsplumb.org/doc/home.html, look for Container heading
     - deselect all entities on click event -->
     <div
-      dag-palette
+      dag-canvas
       ui-resizable
-      resizable-options="paletteResizeOptions"
-      id="dag-palette"
-      class="dag-palette"
+      resizable-options="canvasResizeOptions"
+      id="dag-canvas"
+      class="dag-canvas"
       operator-classes="operatorClasses"
       app="app"
       selected="selected"
@@ -108,7 +108,7 @@
       <h5>Operators</h5>
       <ul>
         <li ng-repeat="op in app.operators track by op.name">
-          <!-- clicking on this selects the operator in the dag-palette -->
+          <!-- clicking on this selects the operator in the dag-canvas -->
           <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
         </li>
         <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
@@ -116,7 +116,7 @@
       <h5>Streams</h5>
       <ul>
         <li ng-repeat="str in app.streams track by str.name">
-          <!-- clicking on this selects the stream in the dag-palette -->
+          <!-- clicking on this selects the stream in the dag-canvas -->
           <a href="#" ng-click="selectEntity($event, 'stream', str)">{{ str.name }} <span class="text-muted">({{ str.sinks.length }} sink{{ str.sinks.length === 1 ? '' : 's' }})</span></a>
         </li>
         <li ng-if="!app.streams.length" class="text-muted" dt-text>no streams</li>

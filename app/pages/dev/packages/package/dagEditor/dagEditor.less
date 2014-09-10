@@ -31,9 +31,9 @@
   }
 }
 
-// The palette or "canvas" where operators
-// get placed and arranged into the DAG.
-.dag-palette {
+// The canvas where operators get placed
+// and arranged into the DAG.
+.dag-canvas {
   border: 1px solid #DEDEDE;
   height: 650px;
   position: relative;
@@ -51,7 +51,7 @@
 }
 
 // Operators that have been placed on the
-// dag-palette
+// dag-canvas
 .dag-operator {
   position: relative;
   width: @dag-editor-operator-side-length;
@@ -79,7 +79,7 @@
   }
 }
 
-// Streams on the dag-palette
+// Streams on the dag-canvas
 .dag-stream {
   cursor: pointer;
 
@@ -139,7 +139,7 @@
 }
 
 // The actual label on a given stream in the
-// dag palette
+// dag canvas
 .stream-label {
   cursor: pointer;
   background: rgba(255, 255, 255, 0.95);
@@ -162,7 +162,7 @@
 }
 
 // The class name that shows up on
-// dag-operators placed on the dag palette
+// dag-operators placed on the dag canvas
 .dag-operator .operator-class-name {
   padding: 0 1em;
   font-size: 11px;
@@ -178,7 +178,7 @@
 }
 
 // The panel/form whose content changes based on 
-// what is currently selected on the dag-palette.
+// what is currently selected on the dag-canvas.
 // If nothing is selected, this is the app inspector.
 .dag-inspector {
   label {
