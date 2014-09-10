@@ -62,6 +62,7 @@ angular.module('app.pages.dev.packages.package', [
       $scope.alerts.push({
         id: infoMsgId,
         type: 'info',
+        appName: name,
         include: 'pages/dev/packages/package/msgSubmit.html'
       });
 
