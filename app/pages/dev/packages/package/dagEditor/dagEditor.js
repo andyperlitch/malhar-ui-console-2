@@ -175,6 +175,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $compile(connection.canvas)(streamScope);
   }
 
+  function copyPorts(ports) {
+    if (typeof ports === 'undefined') {
+      return [];
+    }
+    return _.map(ports, function(port) {
+      console.log(port);
+      return {
+        name: port.name,
+        attributes: {}
+      };
+    });
+  }
+
   return {
     restrict: 'A',
     templateUrl: 'pages/dev/packages/package/dagEditor/dagCanvas.html',
@@ -231,7 +244,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           opClass: opClass,
           x: x,
           y: y,
-          properties: {}
+          properties: {},
+          inputPorts: copyPorts(opClass.inputPorts),
+          outputPorts: copyPorts(opClass.outputPorts)
         };
         scope.app.operators.push(operator);
         scope.$emit('selectEntity', 'operator', operator);
