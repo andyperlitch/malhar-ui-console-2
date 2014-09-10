@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.pages.dev.packages', [
+  'app.components.resources.PackageModel',
   'app.components.resources.PackageCollection',
   'app.components.widgets.fileUpload'
 ])
@@ -32,11 +33,13 @@ angular.module('app.pages.dev.packages', [
   })
 
 // Controller
-  .controller('PackagesCtrl', function($scope, PackageCollection, FileUploadModal) {
-    $scope.packages = new PackageCollection();
-    $scope.packages.fetch();
+  .controller('PackagesCtrl', function($scope, PackageModel, PackageCollection, FileUploadModal) {
+    function fetchPackages() {
+      $scope.packages = new PackageCollection();
+      $scope.packages.fetch();
+    }
 
-    $scope.alerts = [];
+    fetchPackages();
 
     $scope.fileUploadOptions = {
       url: $scope.packages.url,
@@ -46,17 +49,41 @@ angular.module('app.pages.dev.packages', [
           msg: '"' + fileItem.name + '" uploaded'
         });
 
-        $scope.packages = new PackageCollection();
-        $scope.packages.fetch();
+        fetchPackages();
       }
     };
 
-    $scope.upload = function () {
-      var modal = new FileUploadModal($scope.fileUploadOptions);
-      modal.open();
-    };
+    angular.extend($scope, {
+      alerts: [],
 
-    $scope.closeAlert = function (index) {
-      $scope.alerts.splice(index, 1);
-    };
+      upload: function () {
+        var modal = new FileUploadModal($scope.fileUploadOptions);
+        modal.open();
+      },
+
+      remove: function (appPackage) {
+        var packageModel = new PackageModel({
+          packageName: appPackage.appPackageName,
+          packageVersion: appPackage.appPackageVersion
+        });
+
+        packageModel.remove().then(function () {
+          $scope.alerts.push({
+            type: 'success',
+            msg: 'Application package"' + appPackage.appPackageName + ' ' + appPackage.appPackageVersion + '" is deleted'
+          });
+
+          fetchPackages();
+        }, function () {
+          $scope.alerts.push({
+            type: 'danger',
+            msg: 'Failed to delete application package"' + appPackage.appPackageName + ' ' + appPackage.appPackageVersion + '"'
+          });
+        });
+      },
+
+      closeAlert: function (index) {
+        $scope.alerts.splice(index, 1);
+      }
+    });
   });

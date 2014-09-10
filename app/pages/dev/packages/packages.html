@@ -15,12 +15,16 @@
         <th>Version</th>
         <th>Owner</th>
         <th>Modification Time</th>
+        <th></th>
     </tr>
-    <tr ng-repeat="package in packages.data">
-        <td><a href="#/packages/{{package.appPackageName}}/{{package.appPackageVersion}}">{{package.appPackageName}}</a></td>
-        <td>{{package.appPackageVersion}}</td>
-        <td>{{package.owner}}</td>
-        <td>{{package.modificationTime|date:'yyyy-mm-dd HH:mm'}}</td>
+    <tr ng-repeat="appPackage in packages.data">
+        <td><a href="#/packages/{{appPackage.appPackageName}}/{{appPackage.appPackageVersion}}">{{appPackage.appPackageName}}</a></td>
+        <td>{{appPackage.appPackageVersion}}</td>
+        <td>{{appPackage.owner}}</td>
+        <td>{{appPackage.modificationTime|date:'yyyy-mm-dd HH:mm'}}</td>
+        <td ng-click="remove(appPackage);" class="action-cursor">
+            <span class="glyphicon glyphicon-remove-sign"></span>
+        </td>
     </tr>
 </table>
 
