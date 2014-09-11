@@ -61,7 +61,7 @@ angular.module('app.components.widgets.fileUpload', [
 
     angular.extend(UploadStatus.prototype, {
       success: function (response) {
-        if (!this.options.`) {
+        if (!this.options.keepProgressOnSuccess) {
           this.scope.uploading = false;
           this.updateProgress(0);
 
