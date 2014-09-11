@@ -33,16 +33,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'type': 'String',
           'optional': false
         },
-        { 
-          'name': 'output3', 
-          'type': 'String',
-          'optional': false
-        },
-        { 
-          'name': 'output4', 
-          'type': 'String',
-          'optional': false
-        },
+        // { 
+        //   'name': 'output3', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output4', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
         // { 
         //   'name': 'output5', 
         //   'type': 'String',
@@ -93,7 +93,22 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'name': 'long input port',
           'type': 'String',
           'optional': false
-        }
+        },
+        {
+          'name': 'input2',
+          'type': 'String',
+          'optional': false
+        },
+        // {
+        //   'name': 'input3',
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // {
+        //   'name': 'input4',
+        //   'type': 'String',
+        //   'optional': false
+        // }
       ],
       'outputPorts': [ 
         { 

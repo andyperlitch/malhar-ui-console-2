@@ -439,13 +439,21 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   }
 
   function getYPosition(len, idx) {
-    if (len === 1) {
-      return 0.5;
-    }
-    if (len === 2) {
-      return idx === 0 ? 0.33 : 0.67;
-    }
-    return (1 / (len - 1)) * idx;
+    var theta = Math.PI / (len + 1);
+    var angle = theta * (idx + 1);
+    var h = 0.5;
+    var cos = Math.cos(angle)
+    var a = h * cos
+    return 0.5 + a;
+  }
+
+  function getXPosition(incident, len, idx) {
+    var theta = Math.PI / (len + 1);
+    var angle = theta * (idx + 1);
+    var h = 0.5;
+    var sin = Math.sin(angle)
+    var o = h * sin
+    return 0.5 + incident * o;
   }
 
   function setPortEndpoints(operator, element, scope) {
@@ -462,11 +470,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       for (var i = 0, len = ports.length; i < len; i++) {
         var port = ports[i];
+        var y_pos = getYPosition(len, i);
+        // var x_pos = y_pos;
+        var x_pos = getXPosition(type.incident, len, i);
         var endpointOptions = { 
           // anchor placement
           anchor: [
-            type.position,
-            getYPosition(len, i),
+            x_pos,
+            y_pos,
             type.incident,
             0
           ],
