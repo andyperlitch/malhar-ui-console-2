@@ -43,36 +43,45 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     // set up the skeleton object to fill with cherry-picking from our
     // internal operator object
     var serializedModel = {
-      "displayName": scope.appName,
+      "displayName": undefined,
       "description": scope.app.description,
       // collect the list of operators
-      "operators": _.collect(scope.app.operators, function(operator) {
+      "operators": _.map(scope.app.operators, function(operator)
+      {
+        // make one array from output and input ports
+        var allports = [];
+        if (!!operator.opClass.outputPorts) {
+          allports = allports.concat(operator.opClass.outputPorts);
+        }
+        if (!!operator.opClass.inputPorts) {
+          allports = allports.concat(operator.opClass.inputPorts);
+        }
+
+        // hash representing one operator
         return {
           "name": operator.name,
           "attributes":  {},
           "class": operator.opClass.name,
           // collect the list of operator ports
-          "ports": _.collect(operator.opClass.outputPorts, function(port) {
+          "ports": _.map(allports, function (port) {
+            console.log("PORT ATTRS: ", port.attributes);
             return {
               "name": port.name,
-              "attributes":  {
-                "optional": port.optional,
-                "type": port.type
-              }
+              "attributes": _(port.attributes).clone()
             };
           }),
-          "properties": operator.properties,
+          "properties": _(operator.properties).clone(),
           "x": operator.x,
           "y": operator.y
         };
       }),
       // collect the list of streams
-      "streams": _.collect(scope.app.streams, function(stream) {
+      "streams": _.map(scope.app.streams, function(stream) {
         return {
           "name": stream.name,
           "locality": stream.locality,
           // collect the list of sinks
-          "sinks": _.collect(stream.sinks, function(sink) {
+          "sinks": _.map(stream.sinks, function(sink) {
             return {
                 "operatorName": sink.operator.name,
                 "portName": sink.port.name
@@ -88,7 +97,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     console.log("serialized model: ", serializedModel)
     return serializedModel;
   }
-  return serializeDagModel;
+  return _.debounce(serializeDagModel, 500);
 })
 
 // Page Controller
