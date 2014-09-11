@@ -202,8 +202,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     link: function(scope, element){
 
       function generateNewName(key, collection, defaultName) {
-        var name = defaultName;
-        var i = 0;
+        var i = 1;
+        var name = defaultName + ' ' + i;
         var existing;
 
         var finder = function(o) {
