@@ -112,13 +112,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 
   options.inputEndpointOptions = {
+    cssClass: 'inputEndpoint',
     endpoint:'Dot',
     maxConnections: 1,     
     paintStyle:{
-        strokeStyle:'#1da8db',
+      strokeStyle:'#1da8db',
       fillStyle:'transparent',
       radius:9,
-      lineWidth:2
+      lineWidth:3
     },
     hoverPaintStyle:options.endpointHoverStyle,
     dropOptions:{ hoverClass:'hover', activeClass:'active' },
@@ -133,11 +134,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       ]
   };
   options.outputEndpointOptions = {
+    cssClass: 'outputEndpoint',
     endpoint:'Dot',
     maxConnections: -1,
     paintStyle:{ 
+      strokeStyle:'#1da8db',
       fillStyle:'#64c539',
-      radius:10
+      radius:9,
+      lineWidth:3
     },        
     isSource:true,
     // connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],

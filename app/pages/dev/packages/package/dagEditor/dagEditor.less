@@ -1,9 +1,29 @@
 @dag-editor-operator-side-length: 130px;
+
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
 @dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
+
 @dag-editor-selected-stream-color: #fff553;
 @dag-editor-selected-stream-highlight: #d3ba30;
-@dag-editor-active-endpoint-color: #ee3000;
+
+@dag-editor-inputEndpoint-fill: transparent;
+@dag-editor-inputEndpoint-stroke: #1da8db;
+@dag-editor-outputEndpoint-fill: transparent;
+@dag-editor-outputEndpoint-stroke: #64c539;
+
+@dag-editor-selected-endpoint-fill: @dag-editor-selected-stream-color;
+@dag-editor-selected-endpoint-stroke: #FFF;
+
+@dag-editor-active-endpoint-stroke: #1da8db;
+@dag-editor-active-endpoint-fill: #1da8db;
+@dag-editor-active-hover-endpoint-stroke: saturate(@dag-editor-active-endpoint-stroke, 30%);
+@dag-editor-active-hover-endpoint-fill: saturate(@dag-editor-active-endpoint-fill, 30%);
+
+@dag-editor-selected-endpoint-highlight: #eacc15;
+
+.endpoint-dropshadow(@color) {
+  box-shadow: 0 2px 8px 1px @color,0 0 10px @color, 0 0 12px @color;
+}
 
 // Set these elements to cursor:grab/grabbing
 .operator-class, .dag-operator, .dag-operator .operator-class-name {
@@ -200,15 +220,84 @@
 
 // jsPlumb elements inside of dag-canvas
 .dag-canvas {
-  // Output port (endpoint) styles when one can
-  // accept the type that a stream emits.
-  ._jsPlumb_endpoint.active svg circle {
-    stroke-width: 4px;
-    stroke: @dag-editor-active-endpoint-color;
+
+  // ---------------
+  // PORTS/ENDPOINTS
+  // ---------------
+  
+  // inputEndpoint
+  ._jsPlumb_endpoint.inputEndpoint {
+    svg circle {
+      fill: @dag-editor-inputEndpoint-fill;
+      stroke: @dag-editor-inputEndpoint-stroke;
+    }
+    &:hover {
+      svg circle {
+        fill: @dag-editor-inputEndpoint-stroke;
+        stroke: #FFF;
+      }
+    }
   }
+
+  // outputEndpoint
+  ._jsPlumb_endpoint.outputEndpoint {
+    svg circle {
+      fill: @dag-editor-outputEndpoint-fill;
+      stroke: @dag-editor-outputEndpoint-stroke;
+    }
+    &:hover {
+      svg circle {
+        fill: @dag-editor-outputEndpoint-stroke;
+        stroke: #FFF;
+      }
+    }
+  }
+
   ._jsPlumb_endpoint.active._jsPlumb_endpoint_drop_allowed svg circle {
-    fill: @dag-editor-active-endpoint-color;
+    fill: @dag-editor-active-endpoint-fill;
   }
+
+  // Selected styles
+  ._jsPlumb_endpoint {
+    border-radius: 50%;
+    
+    &:hover {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    &.selected {
+      .endpoint-dropshadow(@dag-editor-selected-endpoint-highlight);
+      svg circle {
+        fill: @dag-editor-selected-endpoint-fill;
+        stroke: @dag-editor-selected-endpoint-stroke;
+      }
+      &:hover {
+        .endpoint-dropshadow(@dag-editor-selected-endpoint-highlight);
+        svg circle {
+          fill: @dag-editor-selected-endpoint-fill;
+        }
+      }
+    }
+    &.active {
+      .endpoint-dropshadow(@dag-editor-active-endpoint-stroke);
+
+      &._jsPlumb_endpoint_drop_allowed {
+        stroke-width: 5px;
+        stroke: @dag-editor-active-hover-endpoint-stroke;
+        fill: @dag-editor-active-hover-endpoint-fill;
+      }
+
+      svg circle {
+        stroke-width: 4px;
+        stroke: @dag-editor-active-endpoint-stroke;
+        fill: @dag-editor-active-endpoint-fill;
+      }
+    }
+  }
+
+  // ----------
+  // CONNECTORS
+  // ----------
 
   // Default connector outline
   ._jsPlumb_connector path:nth-child(1){
@@ -218,16 +307,5 @@
   // Default inner connector line
   ._jsPlumb_connector path:nth-child(2){
     stroke: #5C96BC;
-  }
-
-  ._jsPlumb_endpoint {
-    border-radius: 50%;
-    &.selected {
-      box-shadow: 0 0 0 2px #FFF, 0 2px 8px 1px #eacc15,0 0 10px #eacc15, 0 0 12px #eacc15;
-      circle {
-        fill: @dag-editor-selected-stream-color;
-        stroke: #FFF;
-      }
-    }
   }
 }
