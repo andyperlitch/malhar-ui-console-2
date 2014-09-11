@@ -16,8 +16,8 @@
 
 @dag-editor-active-endpoint-stroke: #1da8db;
 @dag-editor-active-endpoint-fill: #1da8db;
-@dag-editor-active-hover-endpoint-stroke: saturate(@dag-editor-active-endpoint-stroke, 30%);
-@dag-editor-active-hover-endpoint-fill: saturate(@dag-editor-active-endpoint-fill, 30%);
+@dag-editor-active-hover-endpoint-stroke: #FFF;
+@dag-editor-active-hover-endpoint-fill: #FFF;
 
 @dag-editor-selected-endpoint-highlight: #eacc15;
 
@@ -282,9 +282,11 @@
       .endpoint-dropshadow(@dag-editor-active-endpoint-stroke);
 
       &._jsPlumb_endpoint_drop_allowed {
-        stroke-width: 5px;
-        stroke: @dag-editor-active-hover-endpoint-stroke;
-        fill: @dag-editor-active-hover-endpoint-fill;
+        svg circle {
+          stroke-width: 5px;
+          stroke: @dag-editor-active-hover-endpoint-stroke;
+          fill: @dag-editor-active-hover-endpoint-fill;
+        }
       }
 
       svg circle {
