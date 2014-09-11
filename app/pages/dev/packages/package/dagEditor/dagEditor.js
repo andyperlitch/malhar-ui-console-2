@@ -680,14 +680,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       // set the port class
       scope.endpoint.addClass('dag-port');
 
+      // get the overlay
+      var overlay = scope.endpoint.getOverlay('label');
+
       // Watch to see if selected is this port
       scope.$watch('selected', function(selected) {
         if (selected === scope.port) {
           // debugger;
           scope.endpoint.addClass('selected');
+          overlay.addClass('selected');
         }
         else {
           scope.endpoint.removeClass('selected');
+          overlay.removeClass('selected');
         }
       });
 
