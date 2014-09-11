@@ -28,6 +28,15 @@ angular.module('app.settings', [])
       'NODE_LOCAL'
       // 'RACK_LOCAL'
     ],
+    PORT_ATTRIBUTES: [
+      { name: 'AUTO_RECORD', type: 'Boolean' },
+      { name: 'IS_OUTPUT_UNIFIED', type: 'Boolean' },
+      { name: 'PARTITION_PARALLEL', type: 'String' },
+      { name: 'QUEUE_CAPACITY', type: 'Integer' },
+      { name: 'SPIN_MILLIS', type: 'Integer' },
+      { name: 'STREAM_CODEC', type: 'String' },
+      { name: 'UNIFIER_LIMIT', type: 'Integer' }
+    ],
     maxAlertActions: 3,
     statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],
     NONENDED_APP_STATES: ['SUBMITTED','ACCEPTED','RUNNING'],

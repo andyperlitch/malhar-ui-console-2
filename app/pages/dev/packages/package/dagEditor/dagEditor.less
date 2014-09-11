@@ -1,8 +1,8 @@
 @dag-editor-operator-side-length: 130px;
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
 @dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
-@dag-editor-selected-stream-color: #f9ff9c;
-@dag-editor-selected-stream-highlight: #CCD356;
+@dag-editor-selected-stream-color: #fff553;
+@dag-editor-selected-stream-highlight: #d3ba30;
 @dag-editor-active-endpoint-color: #ee3000;
 
 // Set these elements to cursor:grab/grabbing
@@ -65,8 +65,9 @@
     cursor: text;
   }
   &.selected {
-    box-shadow: 0 0 7px @dag-editor-selected-operator-highlight;
-    background-color: @dag-editor-selected-operator-color;
+    box-shadow: 0 0 7px @dag-editor-selected-stream-highlight;
+    background-color: @dag-editor-selected-stream-color;
+    border-color: @dag-editor-selected-stream-color;
   }
   .dag-operator-name {
     margin-top: 20px;
@@ -80,7 +81,7 @@
 }
 
 // Streams on the dag-canvas
-.dag-stream {
+.dag-canvas .dag-stream._jsPlumb_connector{
   cursor: pointer;
 
   // path:nth-child(1) {
@@ -195,14 +196,38 @@
   }
 }
 
+  
 
-// Output port (endpoint) styles when one can
-// accept the type that a stream emits.
-._jsPlumb_endpoint.active svg circle {
-  stroke-width: 4px;
-  stroke: @dag-editor-active-endpoint-color;
-}
-._jsPlumb_endpoint.active._jsPlumb_endpoint_drop_allowed svg circle {
-  fill: @dag-editor-active-endpoint-color;
-}
+// jsPlumb elements inside of dag-canvas
+.dag-canvas {
+  // Output port (endpoint) styles when one can
+  // accept the type that a stream emits.
+  ._jsPlumb_endpoint.active svg circle {
+    stroke-width: 4px;
+    stroke: @dag-editor-active-endpoint-color;
+  }
+  ._jsPlumb_endpoint.active._jsPlumb_endpoint_drop_allowed svg circle {
+    fill: @dag-editor-active-endpoint-color;
+  }
 
+  // Default connector outline
+  ._jsPlumb_connector path:nth-child(1){
+    stroke: #eaedef;
+  }
+
+  // Default inner connector line
+  ._jsPlumb_connector path:nth-child(2){
+    stroke: #5C96BC;
+  }
+
+  ._jsPlumb_endpoint {
+    border-radius: 50%;
+    &.selected {
+      box-shadow: 0 0 0 2px #FFF, 0 2px 8px 1px #eacc15,0 0 10px #eacc15, 0 0 12px #eacc15;
+      circle {
+        fill: @dag-editor-selected-stream-color;
+        stroke: #FFF;
+      }
+    }
+  }
+}
