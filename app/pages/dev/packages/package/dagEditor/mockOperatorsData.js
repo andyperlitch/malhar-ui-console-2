@@ -28,11 +28,11 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'type': 'String',
           'optional': false
         },
-        { 
-          'name': 'output2long name', 
-          'type': 'String',
-          'optional': false
-        },
+        // { 
+        //   'name': 'output2long name', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
         // { 
         //   'name': 'output3', 
         //   'type': 'String',
@@ -89,13 +89,13 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
       'description': 'Parses JSON strings into a one-level-deep hash map.',
       'categories': [ 'parse', 'transform' ],
       'inputPorts': [
+        // {
+        //   'name': 'long input port',
+        //   'type': 'String',
+        //   'optional': false
+        // },
         {
-          'name': 'long input port',
-          'type': 'String',
-          'optional': false
-        },
-        {
-          'name': 'input2',
+          'name': 'input',
           'type': 'String',
           'optional': false
         },

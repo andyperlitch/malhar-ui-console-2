@@ -6,10 +6,10 @@
 @dag-editor-selected-stream-color: #fff553;
 @dag-editor-selected-stream-highlight: #e8b22b;
 
-@dag-editor-inputEndpoint-fill: transparent;
-@dag-editor-inputEndpoint-stroke: #1da8db;
-@dag-editor-outputEndpoint-fill: transparent;
-@dag-editor-outputEndpoint-stroke: #64c539;
+@dag-editor-inputEndpoint-fill: #1da8db;
+@dag-editor-inputEndpoint-stroke: #FDFDFD;
+@dag-editor-outputEndpoint-fill: #64c539;
+@dag-editor-outputEndpoint-stroke: #FDFDFD;
 
 @dag-editor-selected-endpoint-fill: @dag-editor-selected-stream-color;
 @dag-editor-selected-endpoint-stroke: #FFF;
@@ -22,7 +22,7 @@
 @dag-editor-selected-endpoint-highlight: #eacc15;
 
 .endpoint-dropshadow(@color) {
-  box-shadow: 0 2px 8px 1px @color,0 0 10px @color, 0 0 12px @color;
+  box-shadow: 0 2px 6px 1px @color,0 0 8px @color, 0 0 9px @color;
 }
 
 // Set these elements to cursor:grab/grabbing
@@ -243,12 +243,6 @@
       fill: @dag-editor-inputEndpoint-fill;
       stroke: @dag-editor-inputEndpoint-stroke;
     }
-    &:hover {
-      svg circle {
-        fill: @dag-editor-inputEndpoint-stroke;
-        stroke: #FFF;
-      }
-    }
   }
 
   // outputEndpoint
@@ -256,12 +250,6 @@
     svg circle {
       fill: @dag-editor-outputEndpoint-fill;
       stroke: @dag-editor-outputEndpoint-stroke;
-    }
-    &:hover {
-      svg circle {
-        fill: @dag-editor-outputEndpoint-stroke;
-        stroke: #FFF;
-      }
     }
   }
 
@@ -272,9 +260,9 @@
   // Selected styles
   ._jsPlumb_endpoint {
     border-radius: 50%;
-    
-    &:hover {
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 3px 0px rgba(0,0,0,0.5);
+    &:hover svg circle {
+      fill: @dag-editor-selected-endpoint-highlight;
     }
 
     &.selected {
@@ -295,7 +283,7 @@
 
       &._jsPlumb_endpoint_drop_allowed {
         svg circle {
-          stroke-width: 5px;
+          // stroke-width: 3px;
           stroke: @dag-editor-active-hover-endpoint-stroke;
           fill: @dag-editor-active-hover-endpoint-fill;
         }
