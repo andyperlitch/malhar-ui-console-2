@@ -4,7 +4,7 @@
 @dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
 
 @dag-editor-selected-stream-color: #fff553;
-@dag-editor-selected-stream-highlight: #d3ba30;
+@dag-editor-selected-stream-highlight: #e8b22b;
 
 @dag-editor-inputEndpoint-fill: transparent;
 @dag-editor-inputEndpoint-stroke: #1da8db;
@@ -79,23 +79,26 @@
   height: @dag-editor-operator-side-length;
   border: 1px solid #CCC;
   background-color: #EFEFEF;
-  border-radius: 3px;
+  border-radius: 50%;
+  box-shadow: inset 0 -@dag-editor-operator-side-length/20 @dag-editor-operator-side-length/4 rgba(0,0,0,0.2);
   position: absolute;
   text-align: center;
   h1, h2, h3, h4, h5 {
     cursor: text;
   }
   &.selected {
-    box-shadow: 0 4px 20px -3px @dag-editor-selected-stream-highlight;
+    box-shadow: 
+      inset 0 -@dag-editor-operator-side-length/20 @dag-editor-operator-side-length/4 @dag-editor-selected-stream-highlight,
+      0 4px 20px -3px @dag-editor-selected-stream-color;
     background-color: @dag-editor-selected-stream-color;
   }
   .dag-operator-name {
-    margin-top: 20px;
+    margin-top: 27px;
   }
   .close {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 7px;
+    left: 45%;
     line-height: 0.6;
   }
 }
@@ -197,7 +200,7 @@
 // Form that contains the in-place
 // editable name field on a dag-operator
 .edit-name-form {
-  margin: 0 0.3em;
+  margin: 22px 0.3em 0;
   input {
     padding: 0.1em;
     font: inherit;
