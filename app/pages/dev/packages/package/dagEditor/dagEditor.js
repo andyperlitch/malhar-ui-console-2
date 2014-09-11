@@ -613,6 +613,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         var $el = $('form[name="dag_stream_inspector"] input[name="name"]');
         var el = $el[0];
         if ($el) {
+          $el.parent().effect('bounce', {}, 'slow');
           $el.focus();
           el.setSelectionRange(0, 9999);
         }
