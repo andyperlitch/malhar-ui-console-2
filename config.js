@@ -5,7 +5,7 @@ config.gateway = {};
 config.web.host = 'localhost';
 config.web.port = process.env.PORT || 9000;
 config.web.useDist = process.env.USE_DIST || false;
-config.gateway.host = 'localhost';
+config.gateway.host = process.env.GATEWAY_HOST || 'localhost';
 config.gateway.port = process.env.GATEWAY_PORT || 3390;
 
 config.kafka = {};
