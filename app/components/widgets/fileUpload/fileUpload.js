@@ -61,13 +61,15 @@ angular.module('app.components.widgets.fileUpload', [
 
     angular.extend(UploadStatus.prototype, {
       success: function (response) {
-        this.scope.uploading = false;
-        this.updateProgress(0);
+        if (!this.options.`) {
+          this.scope.uploading = false;
+          this.updateProgress(0);
 
-        this.scope.alert = {
-          type: 'success',
-          msg: 'File "' + this.file.name + '" is successfully uploaded'
-        };
+          this.scope.alert = {
+            type: 'success',
+            msg: 'File "' + this.file.name + '" is successfully uploaded'
+          };
+        }
 
         if (this.options.success) {
           this.options.success(this.file, response);
@@ -129,6 +131,10 @@ angular.module('app.components.widgets.fileUpload', [
     $scope.fileUploadOptions = {};
 
     angular.extend($scope.fileUploadOptions, fileUploadOptions);
+
+    if (_.isUndefined($scope.fileUploadOptions.keepProgressOnSuccess)) {
+      $scope.fileUploadOptions.keepProgressOnSuccess = true; // don't show success message since modal is closed on success
+    }
 
     //override success callback to close the modal
     angular.extend($scope.fileUploadOptions, {
