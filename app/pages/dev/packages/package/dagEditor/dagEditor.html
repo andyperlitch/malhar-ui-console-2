@@ -262,9 +262,19 @@
         <input name="class" type="text" class="form-control" readonly ng-model="selected.name">
       </div>
 
-      <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES">
+      <hr>
+
+      <h5>Attributes</h5>
+
+      <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
         <label ng-attr-for="port_attr_{{attr.name}}">{{attr.name}}</label>
-        <input type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        <!-- Boolean -->
+        <input ng-if="attr.type === 'Boolean'" type="checkbox" ng-model="selected.attributes[attr.name]">
+        <!-- Integer -->
+        <input ng-if="attr.type === 'Integer'" type="number" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        <!-- Default -->
+        <input ng-if="attr.type !== 'Integer' && attr.type !== 'Boolean'" type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        <p class="help-block" ng-if="attr.description">{{ attr.description }}</p>
       </div>
 
     </form>

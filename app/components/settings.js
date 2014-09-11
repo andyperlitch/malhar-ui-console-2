@@ -29,13 +29,23 @@ angular.module('app.settings', [])
       // 'RACK_LOCAL'
     ],
     PORT_ATTRIBUTES: [
-      { name: 'AUTO_RECORD', type: 'Boolean' },
-      { name: 'IS_OUTPUT_UNIFIED', type: 'Boolean' },
-      { name: 'PARTITION_PARALLEL', type: 'String' },
-      { name: 'QUEUE_CAPACITY', type: 'Integer' },
-      { name: 'SPIN_MILLIS', type: 'Integer' },
-      { name: 'STREAM_CODEC', type: 'String' },
-      { name: 'UNIFIER_LIMIT', type: 'Integer' }
+      { name: 'AUTO_RECORD',        type: 'Boolean', description: 'Whether or not to auto record the tuples.' },
+      { name: 'PARTITION_PARALLEL', type: 'Boolean', portType: 'input', description: 
+        'Input port attribute. Extend partitioning of an upstream operator w/o intermediate merge. ' +
+        'Can be used to form parallel partitions that span a group of operators. ' +
+        'Defined on input port to allow for stream to be shared with non-partitioned sinks. ' +
+        'If multiple ports of an operator have the setting, incoming streams must track back to ' +
+        'a common root partition, i.e. the operator join forks of the same origin.'
+      },
+      { name: 'QUEUE_CAPACITY',     type: 'Integer', description: 'Number of tuples the poll buffer can cache without blocking the input stream to the port.' },
+      { name: 'SPIN_MILLIS',        type: 'Integer', description: 'Poll period in milliseconds when the port buffer reaches its limits.' },
+      { name: 'UNIFIER_LIMIT',      type: 'Integer', portType: 'output', description: 
+        'Attribute of output port to specify how many partitions should be merged by a single unifier instance. If the ' +
+        'number of partitions exceeds the limit set, a cascading unifier plan will be created. For example, 4 partitions ' +
+        'with the limit set to 2 will result in 3 unifiers arranged in 2 levels. The setting can be used to cap the ' +
+        'network I/O or other resource requirement for each unifier container (depends on the specific functionality of ' +
+        'the unifier), enabling horizontal scale by overcoming the single unifier bottleneck.'
+      }
     ],
     maxAlertActions: 3,
     statusOrder: ['SUBMITTED','ACCEPTED','RUNNING','FAILED','FINISHED','KILLED'],
