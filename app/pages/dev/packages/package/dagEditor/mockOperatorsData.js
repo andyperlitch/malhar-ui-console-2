@@ -32,7 +32,47 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'name': 'output2long name', 
           'type': 'String',
           'optional': false
-        }
+        },
+        { 
+          'name': 'output3', 
+          'type': 'String',
+          'optional': false
+        },
+        { 
+          'name': 'output4', 
+          'type': 'String',
+          'optional': false
+        },
+        // { 
+        //   'name': 'output5', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output6', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output7', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output8', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output9', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output10', 
+        //   'type': 'String',
+        //   'optional': false
+        // }
       ],
       'properties': [
         { 
