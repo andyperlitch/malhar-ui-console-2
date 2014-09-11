@@ -607,11 +607,23 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$emit('selectEntity', 'stream', scope.stream);
       });
 
+      // Listen for double clicks on label, focus on name field in
+      // inspector.
+      overlay.bind('dblclick', function() {
+        var $el = $('form[name="dag_stream_inspector"] input[name="name"]');
+        var el = $el[0];
+        if ($el) {
+          $el.focus();
+          el.setSelectionRange(0, 9999);
+        }
+      });
+
       scope.$on('connectionDetached', function(event, connection) {
         if (connection === scope.connection) {
 
           // Remove all listeners
           connection.unbind();
+          overlay.unbind();
 
           // Check if sink is there
           var index;
