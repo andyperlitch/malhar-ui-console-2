@@ -36,8 +36,63 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   });
 })
 
+.factory('serializeDagModel', function() {
+  // return serialized copy of app model
+  function serializeDagModel(scope) {
+    console.log("original model: ", scope)
+    // set up the skeleton object to fill with cherry-picking from our
+    // internal operator object
+    var serializedModel = {
+      "displayName": scope.appName,
+      "description": scope.app.description,
+      // collect the list of operators
+      "operators": _.collect(scope.app.operators, function(operator) {
+        return {
+          "name": operator.name,
+          "attributes":  {},
+          "class": operator.opClass.name,
+          // collect the list of operator ports
+          "ports": _.collect(operator.opClass.outputPorts, function(port) {
+            return {
+              "name": port.name,
+              "attributes":  {
+                "optional": port.optional,
+                "type": port.type
+              }
+            };
+          }),
+          "properties": operator.properties,
+          "x": operator.x,
+          "y": operator.y
+        };
+      }),
+      // collect the list of streams
+      "streams": _.collect(scope.app.streams, function(stream) {
+        return {
+          "name": stream.name,
+          "locality": stream.locality,
+          // collect the list of sinks
+          "sinks": _.collect(stream.sinks, function(sink) {
+            return {
+                "operatorName": sink.operator.name,
+                "portName": sink.port.name
+            };
+          }),
+          "source": {
+            "operatorName": stream.source.operator.name,
+            "portName": stream.source.port.name
+          }
+        };
+      })
+    };
+    console.log("serialized model: ", serializedModel)
+    return serializedModel;
+  }
+  return serializeDagModel;
+})
+
 // Page Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
+.controller('DagEditorCtrl', function($scope, mockOperatorsData,  $routeParams, settings, serializeDagModel) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -86,6 +141,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Initialize selection info
   $scope.deselectAll();
 
+  $scope.$watch("app", function() {
+    // update the representation we send to the server
+    serializeDagModel($scope);
+  }, true); // true set here to do deep equality check on $scope
 })
 
 // Factory: default appearance/functionality options
@@ -275,7 +334,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
               {
                 operator: sinkOperator,
                 port: sinkPort,
-                connection: sinkConnection
+                connection_id: sinkConnection.id
               }
             ]
           };
@@ -286,7 +345,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           scope.$emit('selectEntity', 'stream', stream);
           return stream;
         }
-        
+
         // Stream exists, check for sink
         var sink = _.find(stream.sinks, function(k) {
           return k.operator === sinkOperator && k.port === sinkPort;
@@ -297,7 +356,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           stream.sinks.push({
             operator: sinkOperator,
             port: sinkPort,
-            connection: sinkConnection
+            connection_id: sinkConnection.id
           });
 
           angularizeSinkConnection(sinkConnection, stream, scope);
@@ -533,7 +592,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     },
     controller: 'DagOperatorCtrl',
     link: function(scope, element) {
-
       // Set the editing state on the scope
       scope.editing = {};
 
@@ -651,7 +709,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var index;
           var sink = _.find(scope.stream.sinks, function(s, i) {
             index = i;
-            return s.connection === connection;
+            return s.connection_id === connection.id;
           });
 
           // If so, remove it
