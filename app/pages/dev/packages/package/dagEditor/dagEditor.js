@@ -442,8 +442,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     var theta = Math.PI / (len + 1);
     var angle = theta * (idx + 1);
     var h = 0.5;
-    var cos = Math.cos(angle)
-    var a = h * cos
+    var cos = Math.cos(angle);
+    var a = h * cos;
     return 0.5 + a;
   }
 
@@ -451,8 +451,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     var theta = Math.PI / (len + 1);
     var angle = theta * (idx + 1);
     var h = 0.5;
-    var sin = Math.sin(angle)
-    var o = h * sin
+    var sin = Math.sin(angle);
+    var o = h * sin;
     return 0.5 + incident * o;
   }
 
@@ -492,7 +492,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
         // Set better location for labels
         var width = $(label.getElement()).outerWidth();
-        var x_pos;
         var radius = type.options.paintStyle.radius;
         if (type.options.paintStyle.lineWidth) {
           radius += type.options.paintStyle.lineWidth;
