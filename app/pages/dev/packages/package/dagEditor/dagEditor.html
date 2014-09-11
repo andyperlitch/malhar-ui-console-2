@@ -228,6 +228,25 @@
       </div>
 
     </form> 
+
+    <!-- port inspector -->
+    <form name="dag_port_inspector"
+      ng-if="selected && selected_type === 'port'"
+      ng-controller="DagPortInspectorCtrl"
+    >
+      <h2 class="h4">Port Inspector</h2>
+
+      <div class="form-group">
+        <label for="class" dt-text>Port Name</label>
+        <input name="class" type="text" class="form-control" readonly ng-model="selected.name">
+      </div>
+
+      <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES">
+        <label ng-attr-for="port_attr_{{attr.name}}">{{attr.name}}</label>
+        <input type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+      </div>
+
+    </form>
   </div>
      
 </div>

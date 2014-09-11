@@ -95,7 +95,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   options.connectorPaintStyle = {
     lineWidth:4,
-    strokeStyle:'#5C96BC',
+    // strokeStyle:'#5C96BC',
     joinstyle:'round',
     outlineColor:'#eaedef',
     outlineWidth:2
@@ -103,7 +103,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   options.connectorHoverStyle = {
     lineWidth:4,
-    strokeStyle:'#7dcdff',
+    // strokeStyle:'#7dcdff',
     outlineWidth:2,
     outlineColor:'white'
   };
@@ -175,6 +175,20 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $compile(connection.canvas)(streamScope);
   }
 
+  function copyPorts(ports) {
+    if (typeof ports === 'undefined') {
+      return [];
+    }
+    return _.map(ports, function(port) {
+      return {
+        name: port.name,
+        attributes: {},
+        type: port.type,
+        optional: port.optional
+      };
+    });
+  }
+
   return {
     restrict: 'A',
     templateUrl: 'pages/dev/packages/package/dagEditor/dagCanvas.html',
@@ -231,7 +245,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           opClass: opClass,
           x: x,
           y: y,
-          properties: {}
+          properties: {},
+          inputPorts: copyPorts(opClass.inputPorts),
+          outputPorts: copyPorts(opClass.outputPorts)
         };
         scope.app.operators.push(operator);
         scope.$emit('selectEntity', 'operator', operator);
@@ -386,7 +402,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Directive: operator on the canvas
-.directive('dagOperator', function($jsPlumb, dagEditorOptions, $log) {
+.directive('dagOperator', function($jsPlumb, dagEditorOptions, $log, $compile) {
 
   var portTypes = {
     inputPorts: {
@@ -401,6 +417,23 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 
+  function angularizeEndpoint(endpoint, port, operator, scope) {
+    
+    // Get the element
+    var element = endpoint.canvas;
+
+    // create the scope to be attached to the endpoint.
+    var epScope = scope.$new();
+    // attach the port and operator
+    epScope.port = port;
+    epScope.operator = operator;
+    epScope.endpoint = endpoint;
+
+    // apply the directive
+    element.setAttribute('dag-port', 'true');
+    $compile(element)(epScope);
+  }
+
   function getYPosition(len, idx) {
     if (len === 1) {
       return 0.5;
@@ -411,13 +444,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     return (1 / (len - 1)) * idx;
   }
 
-  function setPortEndpoints(operator, element) {
+  function setPortEndpoints(operator, element, scope) {
 
     var endpoints = [];
 
     _.each(portTypes, function(type, portKey) {
 
-      var ports = operator.opClass[portKey];
+      var ports = operator[portKey];
 
       if (!ports || !ports.length) {
         return true;
@@ -462,6 +495,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         endpoint.port = port;
         endpoint.operator = operator;
 
+        // Angularize the endpoint
+        angularizeEndpoint(endpoint, port, operator, scope);
+
+        // Push to result array
         endpoints.push(endpoint);
       }
 
@@ -507,7 +544,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       });
 
       // Set the ports as anchors/endpoints
-      scope.endpoints = setPortEndpoints(scope.operator, element);
+      scope.endpoints = setPortEndpoints(scope.operator, element, scope);
       
       // Start by editing name
       scope.editName({
@@ -518,6 +555,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       scope.$on('$destroy', function() {
         $jsPlumb.detachAllConnections(element);
         _.each(scope.endpoints, function(ep) {
+          ep.fire('destroy');
           $jsPlumb.deleteEndpoint(ep);
         });
       });
@@ -607,6 +645,38 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             scope.$destroy();
           });
         }
+      });
+
+    }
+  };
+})
+
+.directive('dagPort', function() {
+  return {
+    link: function(scope) {
+      
+      // set the port class
+      scope.endpoint.addClass('dag-port');
+
+      // Watch to see if selected is this port
+      scope.$watch('selected', function(selected) {
+        if (selected === scope.port) {
+          // debugger;
+          scope.endpoint.addClass('selected');
+        }
+        else {
+          scope.endpoint.removeClass('selected');
+        }
+      });
+
+      // Set click listener to endpoint
+      scope.endpoint.bind('click', function(endpoint, event) {
+        event.stopPropagation();
+        scope.$emit('selectEntity', 'port', scope.port);
+      });
+
+      scope.endpoint.bind('destroy', function() {
+        scope.$destroy();
       });
 
     }
@@ -706,6 +776,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 // Controller: Inspector for stream
 .controller('DagStreamInspectorCtrl', function() {
 
+})
+
+.controller('DagPortInspectorCtrl', function($scope, settings) {
+  $scope.PORT_ATTRIBUTES = settings.PORT_ATTRIBUTES;
 })
 
 // Directive: check for unique name in collection
