@@ -246,8 +246,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         var operator = {
           name: generateNewName('name', scope.app.operators, settings.dagEditor.DEFAULT_OPERATOR_NAME),
           opClass: opClass,
-          x: x,
-          y: y,
+          x: Math.max(0, x),
+          y: Math.max(0, y),
           properties: {},
           inputPorts: copyPorts(opClass.inputPorts, 'input'),
           outputPorts: copyPorts(opClass.outputPorts, 'output')
