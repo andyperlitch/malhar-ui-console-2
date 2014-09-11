@@ -16,4 +16,8 @@ config.kafka.topic = {};
 config.kafka.topic.in = process.env.KAFKA_TOPIC_IN || 'test';
 config.kafka.topic.out = process.env.KAFKA_TOPIC_OUT || 'test';
 
-module.exports = config
+config.kafka.devserver = {};
+config.kafka.devserver.host = 'localhost';
+config.kafka.devserver.port = 3003;
+
+module.exports = config;

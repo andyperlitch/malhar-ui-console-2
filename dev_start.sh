@@ -1,5 +1,5 @@
 #!/bin/sh
-export PORT=3004
+export PORT=3003
 export GATEWAY_HOST=localhost
 export GATEWAY_PORT=9090
 
