@@ -1,9 +1,29 @@
 @dag-editor-operator-side-length: 130px;
+
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
 @dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
+
 @dag-editor-selected-stream-color: #fff553;
-@dag-editor-selected-stream-highlight: #d3ba30;
-@dag-editor-active-endpoint-color: #ee3000;
+@dag-editor-selected-stream-highlight: #e8b22b;
+
+@dag-editor-inputEndpoint-fill: #1da8db;
+@dag-editor-inputEndpoint-stroke: #FDFDFD;
+@dag-editor-outputEndpoint-fill: #64c539;
+@dag-editor-outputEndpoint-stroke: #FDFDFD;
+
+@dag-editor-selected-endpoint-fill: @dag-editor-selected-stream-color;
+@dag-editor-selected-endpoint-stroke: #FFF;
+
+@dag-editor-active-endpoint-stroke: #1da8db;
+@dag-editor-active-endpoint-fill: #1da8db;
+@dag-editor-active-hover-endpoint-stroke: #FFF;
+@dag-editor-active-hover-endpoint-fill: #FFF;
+
+@dag-editor-selected-endpoint-highlight: #eacc15;
+
+.endpoint-dropshadow(@color) {
+  box-shadow: 0 2px 6px 1px @color,0 0 8px @color, 0 0 9px @color;
+}
 
 // Set these elements to cursor:grab/grabbing
 .operator-class, .dag-operator, .dag-operator .operator-class-name {
@@ -39,6 +59,7 @@
   position: relative;
   background: #FFF;
   overflow: auto;
+  margin: 0 -15px;
 
   svg {
     width: auto;
@@ -58,24 +79,26 @@
   height: @dag-editor-operator-side-length;
   border: 1px solid #CCC;
   background-color: #EFEFEF;
-  border-radius: 3px;
+  border-radius: 50%;
+  box-shadow: inset 0 -@dag-editor-operator-side-length/20 @dag-editor-operator-side-length/4 rgba(0,0,0,0.2);
   position: absolute;
   text-align: center;
   h1, h2, h3, h4, h5 {
     cursor: text;
   }
   &.selected {
-    box-shadow: 0 0 7px @dag-editor-selected-stream-highlight;
+    box-shadow: 
+      inset 0 -@dag-editor-operator-side-length/20 @dag-editor-operator-side-length/4 @dag-editor-selected-stream-highlight,
+      0 4px 20px -3px @dag-editor-selected-stream-color;
     background-color: @dag-editor-selected-stream-color;
-    border-color: @dag-editor-selected-stream-color;
   }
   .dag-operator-name {
-    margin-top: 20px;
+    margin-top: 27px;
   }
   .close {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 7px;
+    left: 45%;
     line-height: 0.6;
   }
 }
@@ -159,7 +182,12 @@
   padding: 0 3px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   font-size: 11px;
-  cursor: default;
+  cursor: pointer;
+  &.selected {
+    color: #FFF;
+    background: @brand-primary;
+    box-shadow: 0 0 15px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
+  }
 }
 
 // The class name that shows up on
@@ -172,9 +200,12 @@
 // Form that contains the in-place
 // editable name field on a dag-operator
 .edit-name-form {
+  margin: 22px 0.3em 0;
   input {
+    padding: 0.1em;
     font: inherit;
     text-align: center;
+    background-color: rgba(255,255,255,0.4);
   }
 }
 
@@ -190,6 +221,7 @@
   // stream's source or sinks
   .stream-inspector-source-sink {
     margin-bottom: 5px;
+    border-bottom: 1px solid #CCC;
     p {
       margin-bottom: 5px;
     }
@@ -200,15 +232,74 @@
 
 // jsPlumb elements inside of dag-canvas
 .dag-canvas {
-  // Output port (endpoint) styles when one can
-  // accept the type that a stream emits.
-  ._jsPlumb_endpoint.active svg circle {
-    stroke-width: 4px;
-    stroke: @dag-editor-active-endpoint-color;
+
+  // ---------------
+  // PORTS/ENDPOINTS
+  // ---------------
+  
+  // inputEndpoint
+  ._jsPlumb_endpoint.inputEndpoint {
+    svg circle {
+      fill: @dag-editor-inputEndpoint-fill;
+      stroke: @dag-editor-inputEndpoint-stroke;
+    }
   }
+
+  // outputEndpoint
+  ._jsPlumb_endpoint.outputEndpoint {
+    svg circle {
+      fill: @dag-editor-outputEndpoint-fill;
+      stroke: @dag-editor-outputEndpoint-stroke;
+    }
+  }
+
   ._jsPlumb_endpoint.active._jsPlumb_endpoint_drop_allowed svg circle {
-    fill: @dag-editor-active-endpoint-color;
+    fill: @dag-editor-active-endpoint-fill;
   }
+
+  // Selected styles
+  ._jsPlumb_endpoint {
+    border-radius: 50%;
+    box-shadow: 0 1px 3px 0px rgba(0,0,0,0.5);
+    &:hover svg circle {
+      fill: @dag-editor-selected-endpoint-highlight;
+    }
+
+    &.selected {
+      .endpoint-dropshadow(@dag-editor-selected-endpoint-highlight);
+      svg circle {
+        fill: @dag-editor-selected-endpoint-fill;
+        stroke: @dag-editor-selected-endpoint-stroke;
+      }
+      &:hover {
+        .endpoint-dropshadow(@dag-editor-selected-endpoint-highlight);
+        svg circle {
+          fill: @dag-editor-selected-endpoint-fill;
+        }
+      }
+    }
+    &.active {
+      .endpoint-dropshadow(@dag-editor-active-endpoint-stroke);
+
+      &._jsPlumb_endpoint_drop_allowed {
+        svg circle {
+          // stroke-width: 3px;
+          stroke: @dag-editor-active-hover-endpoint-stroke;
+          fill: @dag-editor-active-hover-endpoint-fill;
+        }
+      }
+
+      svg circle {
+        stroke-width: 4px;
+        stroke: @dag-editor-active-endpoint-stroke;
+        fill: @dag-editor-active-endpoint-fill;
+      }
+    }
+  }
+
+  // ----------
+  // CONNECTORS
+  // ----------
 
   // Default connector outline
   ._jsPlumb_connector path:nth-child(1){
@@ -218,16 +309,5 @@
   // Default inner connector line
   ._jsPlumb_connector path:nth-child(2){
     stroke: #5C96BC;
-  }
-
-  ._jsPlumb_endpoint {
-    border-radius: 50%;
-    &.selected {
-      box-shadow: 0 0 0 2px #FFF, 0 2px 8px 1px #eacc15,0 0 10px #eacc15, 0 0 12px #eacc15;
-      circle {
-        fill: @dag-editor-selected-stream-color;
-        stroke: #FFF;
-      }
-    }
   }
 }
