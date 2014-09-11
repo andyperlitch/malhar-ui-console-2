@@ -166,7 +166,10 @@
 
       <hr>
       <!-- Operator properties -->
-      <h5 ng-if="selected.opClass.properties && selected.opClass.properties.length">Properties</h5>
+      <h5>Properties</h5>
+      <p class="text-muted" ng-if="!selected.opClass.properties || !(selected.opClass.properties | filter:canSetFilter).length" dt-text>
+        No settable properties
+      </p>
       <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
         <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
         <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
