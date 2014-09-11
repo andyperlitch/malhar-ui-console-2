@@ -330,6 +330,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       $jsPlumb.bind('connectionMoved', function(info, originalEvent) {
         $log.info('Stream connection moved:' , info, originalEvent);
+        scope.$broadcast('connectionDetached', info.connection, true);
       });
 
 
@@ -572,11 +573,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       // Add dag-stream class
       scope.connection.addClass('dag-stream');
       
-      // Set the stream label
-      scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
+      var overlay;
 
-      // Get it for use in the listener
-      var overlay = scope.connection.getOverlay('streamLabel');
+      // First check for existing
+      overlay = scope.connection.getOverlay('streamLabel');
+
+      if (!overlay) {
+        // Set the stream label
+        scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);  
+        overlay = scope.connection.getOverlay('streamLabel');
+      }
 
       // Update label as needed
       scope.$watch('stream.name', function(name) {
@@ -647,14 +653,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             $log.info('Stream removed from app: ', scope.stream);
             var streamIndex = scope.app.streams.indexOf(scope.stream);
             if (streamIndex > -1) {
-              scope.$emit('selectEntity'); // deselect all
               scope.app.streams.splice(streamIndex, 1);
+              scope.$emit('selectEntity'); // deselect all
             } else {
               $log.warn('Stream expected to be in app.streams, but was not found! app.streams: ', scope.app.streams, 'stream: ', scope.stream);
             }
           }
           scope.stream = null;
-          
+
           // Defer destruction of this scope
           _.defer(function() {
             scope.$destroy();
