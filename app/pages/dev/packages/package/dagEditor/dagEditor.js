@@ -95,7 +95,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   options.connectorPaintStyle = {
     lineWidth:4,
-    // strokeStyle:'#5C96BC',
     joinstyle:'round',
     outlineColor:'#eaedef',
     outlineWidth:2
@@ -103,7 +102,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   options.connectorHoverStyle = {
     lineWidth:4,
-    // strokeStyle:'#7dcdff',
     outlineWidth:2,
     outlineColor:'white'
   };
