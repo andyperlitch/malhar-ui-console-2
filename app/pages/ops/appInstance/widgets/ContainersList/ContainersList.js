@@ -81,8 +81,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
         params: {
           states: settings.NONENDED_CONTAINER_STATES.join(',')
         }
-      });
-      this.resource.subscribe(scope);
+      }, { remove: false });
+      this.resource.subscribe(scope, undefined, { remove: false });
       scope.resource = this.resource;
       scope.selected = [];
       scope.table_options = tableOptionsFactory({

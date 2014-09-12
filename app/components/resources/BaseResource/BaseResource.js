@@ -40,7 +40,7 @@ angular.module('app.components.resources.BaseResource', [
      * @param  {object} options   (optional) The config object to be past to $http.get().
      * @return {Promise}          The original $http promise.
      */
-    fetch: function(options) {
+    fetch: function(options, setOptions) {
 
       // Set up custom deferred
       var deferred = $q.defer();
@@ -67,7 +67,7 @@ angular.module('app.components.resources.BaseResource', [
 
           // Transform and store response data
           var transformed = self._getTransformed(response.data, 'fetch');
-          self.set(transformed);
+          self.set(transformed, setOptions);
           
           // Log Response
           $log.info(self.debugName + ' retrieved. Transformed: ', transformed, ', Raw Response: ', response);
@@ -109,7 +109,7 @@ angular.module('app.components.resources.BaseResource', [
      * A scope can optionally be passed in order
      * to call $digest on updates. Highly recommended.
      */
-    subscribe: function(scope, callback) {
+    subscribe: function(scope, callback, setOptions) {
       // Ensure there is a topic to subscribe to
       // before continuing
       if (!this.topic) {
@@ -122,7 +122,7 @@ angular.module('app.components.resources.BaseResource', [
       // will share the same handler function.
       this.__subscribeFn__ = _.bind(function(data) {
         var transformed = this._getTransformed(data, 'subscribe');
-        this.set(transformed);
+        this.set(transformed, setOptions);
         if (callback) {
           callback(transformed);
         }
