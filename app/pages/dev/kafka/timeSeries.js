@@ -29,6 +29,7 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
       },
       controller: function ($scope) {
         var filter = $filter('date');
+        var numberFilter = $filter('number');
 
         $scope.summaryDateFormat = 'yyyy/MM/dd HH:mm:ss';
         $scope.dateFormat = 'HH:mm';
@@ -42,6 +43,17 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
 
           return function (d) {
             return filter(d, format);
+          };
+        };
+
+        $scope.yAxisTickFormatFunction = function () {
+          return function (d) {
+            if (d > 999) {
+              var value = Math.round(d/1000);
+              return numberFilter(value) + 'k';
+            } else {
+              return numberFilter(d);
+            }
           };
         };
 

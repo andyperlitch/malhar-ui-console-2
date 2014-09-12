@@ -248,6 +248,13 @@ angular.module('app.pages.dev.kafka', [
               this.series[index].values = values;
             }.bind(this));
 
+            /*
+            var max = _.max(data, function (point) {
+              return point.impressions;
+            });
+            console.log(max.impressions);
+            */
+
             this.updateScope(_.clone(this.series));
           } else {
             this.updateScope(null);
