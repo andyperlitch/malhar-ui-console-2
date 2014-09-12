@@ -103,9 +103,10 @@
         <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
       </div>
 
+      <hr>
       <!-- DAG Topology: lists operators and streams -->
-      <h4>Topology</h4>
-      <h5>Operators</h5>
+      <h5>Topology</h5>
+      <h6>Operators</h6>
       <ul>
         <li ng-repeat="op in app.operators track by op.name">
           <!-- clicking on this selects the operator in the dag-canvas -->
@@ -113,7 +114,7 @@
         </li>
         <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
       </ul>
-      <h5>Streams</h5>
+      <h6>Streams</h6>
       <ul>
         <li ng-repeat="str in app.streams track by str.name">
           <!-- clicking on this selects the stream in the dag-canvas -->
@@ -166,11 +167,28 @@
 
       <hr>
       <!-- Operator properties -->
-      <h5 ng-if="selected.opClass.properties && selected.opClass.properties.length">Properties</h5>
+      <h5>Properties</h5>
+      <p class="text-muted" ng-if="!selected.opClass.properties || !(selected.opClass.properties | filter:canSetFilter).length" dt-text>
+        No settable properties
+      </p>
       <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
         <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
         <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
         <div class="help-block">{{prop.description}}</div>
+      </div>
+
+      <hr>
+      <!-- Ports -->
+      <h5>Ports</h5>
+      <div ng-repeat="port in selected.inputPorts">
+        <a href="#" ng-click="selectEntity($event, 'port', port)">
+          <span class="glyphicon glyphicon-log-in"></span> {{port.name}}
+        </a>
+      </div>
+      <div ng-repeat="port in selected.outputPorts">
+        <a href="#" ng-click="selectEntity($event, 'port', port)">
+          <span class="glyphicon glyphicon-log-out"></span> {{port.name}}
+        </a>
       </div>
 
       <!-- <pre>{{selected | json }}</pre> -->
@@ -211,20 +229,29 @@
         <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
           <option value="">AUTOMATIC</option>
         </select>
+        <p class="help-block" dt-text>
+          Locality setting affects how operators are scheduled for deployment by
+          the platform. The setting serves as hint to the planner and can yield
+          significant performance gains. Optimizations are subject to resource
+          availability.
+        </p>
       </div>
 
       <hr>
 
       <h5>Source</h5>
-      <div class="well well-sm stream-inspector-source-sink">
-        <p><strong>operator:</strong> {{selected.source.operator.name}}</p>
-        <p><strong>port:</strong> {{selected.source.port.name}}</p>      
+      <div class="stream-inspector-source-sink">
+        <p>
+          <small class="text-muted">operator</small> <a href="#" ng-click="selectEntity($event, 'operator', selected.source.operator)">{{selected.source.operator.name}}</a>, <small class="text-muted">port</small> <a href="#" ng-click="selectEntity($event, 'port', selected.source.port)">{{selected.source.port.name}}</a>
+        </p>
       </div>
 
       <h5>Sinks</h5>
-      <div ng-repeat="sink in selected.sinks" class="well well-sm stream-inspector-source-sink">
-        <p><strong>operator:</strong> {{sink.operator.name}}</p>
-        <p><strong>port:</strong> {{sink.port.name}}</p>      
+      <div ng-repeat="sink in selected.sinks" class="stream-inspector-source-sink">
+        <p>
+          <small class="text-muted">operator</small> <a href="#" ng-click="selectEntity($event, 'operator', sink.operator)">{{sink.operator.name}}</a>
+          , <small class="text-muted">port</small> <a href="#" ng-click="selectEntity($event, 'port', sink.port)">{{sink.port.name}}</a>
+        </p>
       </div>
 
     </form> 
@@ -241,9 +268,19 @@
         <input name="class" type="text" class="form-control" readonly ng-model="selected.name">
       </div>
 
-      <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES">
+      <hr>
+
+      <h5>Attributes</h5>
+
+      <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
         <label ng-attr-for="port_attr_{{attr.name}}">{{attr.name}}</label>
-        <input type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        <!-- Boolean -->
+        <input ng-if="attr.type === 'Boolean'" type="checkbox" ng-model="selected.attributes[attr.name]">
+        <!-- Integer -->
+        <input ng-if="attr.type === 'Integer'" type="number" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        <!-- Default -->
+        <input ng-if="attr.type !== 'Integer' && attr.type !== 'Boolean'" type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        <p class="help-block" ng-if="attr.description">{{ attr.description }}</p>
       </div>
 
     </form>

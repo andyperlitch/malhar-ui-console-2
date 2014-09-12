@@ -112,13 +112,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 
   options.inputEndpointOptions = {
+    cssClass: 'inputEndpoint',
     endpoint:'Dot',
     maxConnections: 1,     
     paintStyle:{
-        strokeStyle:'#1da8db',
+      strokeStyle:'#1da8db',
       fillStyle:'transparent',
       radius:9,
-      lineWidth:2
+      lineWidth:3
     },
     hoverPaintStyle:options.endpointHoverStyle,
     dropOptions:{ hoverClass:'hover', activeClass:'active' },
@@ -133,11 +134,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       ]
   };
   options.outputEndpointOptions = {
+    cssClass: 'outputEndpoint',
     endpoint:'Dot',
     maxConnections: -1,
     paintStyle:{ 
+      strokeStyle:'#1da8db',
       fillStyle:'#64c539',
-      radius:10
+      radius:9,
+      lineWidth:3
     },        
     isSource:true,
     // connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],
@@ -173,7 +177,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $compile(connection.canvas)(streamScope);
   }
 
-  function copyPorts(ports) {
+  function copyPorts(ports, portType) {
     if (typeof ports === 'undefined') {
       return [];
     }
@@ -182,7 +186,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         name: port.name,
         attributes: {},
         type: port.type,
-        optional: port.optional
+        optional: port.optional,
+        portType: portType
       };
     });
   }
@@ -198,8 +203,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     link: function(scope, element){
 
       function generateNewName(key, collection, defaultName) {
-        var name = defaultName;
-        var i = 0;
+        var i = 1;
+        var name = defaultName + ' ' + i;
         var existing;
 
         var finder = function(o) {
@@ -241,11 +246,11 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         var operator = {
           name: generateNewName('name', scope.app.operators, settings.dagEditor.DEFAULT_OPERATOR_NAME),
           opClass: opClass,
-          x: x,
-          y: y,
+          x: Math.max(0, x),
+          y: Math.max(0, y),
           properties: {},
-          inputPorts: copyPorts(opClass.inputPorts),
-          outputPorts: copyPorts(opClass.outputPorts)
+          inputPorts: copyPorts(opClass.inputPorts, 'input'),
+          outputPorts: copyPorts(opClass.outputPorts, 'output')
         };
         scope.app.operators.push(operator);
         scope.$emit('selectEntity', 'operator', operator);
@@ -326,6 +331,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       $jsPlumb.bind('connectionMoved', function(info, originalEvent) {
         $log.info('Stream connection moved:' , info, originalEvent);
+        scope.$broadcast('connectionDetached', info.connection, true);
       });
 
 
@@ -433,13 +439,21 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   }
 
   function getYPosition(len, idx) {
-    if (len === 1) {
-      return 0.5;
-    }
-    if (len === 2) {
-      return idx === 0 ? 0.33 : 0.67;
-    }
-    return (1 / (len - 1)) * idx;
+    var theta = Math.PI / (len + 1);
+    var angle = theta * (idx + 1);
+    var h = 0.5;
+    var cos = Math.cos(angle);
+    var a = h * cos;
+    return 0.5 + a;
+  }
+
+  function getXPosition(incident, len, idx) {
+    var theta = Math.PI / (len + 1);
+    var angle = theta * (idx + 1);
+    var h = 0.5;
+    var sin = Math.sin(angle);
+    var o = h * sin;
+    return 0.5 + incident * o;
   }
 
   function setPortEndpoints(operator, element, scope) {
@@ -456,11 +470,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       for (var i = 0, len = ports.length; i < len; i++) {
         var port = ports[i];
+        var y_pos = getYPosition(len, i);
+        // var x_pos = y_pos;
+        var x_pos = getXPosition(type.incident, len, i);
         var endpointOptions = { 
           // anchor placement
           anchor: [
-            type.position,
-            getYPosition(len, i),
+            x_pos,
+            y_pos,
             type.incident,
             0
           ],
@@ -475,7 +492,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
         // Set better location for labels
         var width = $(label.getElement()).outerWidth();
-        var x_pos;
         var radius = type.options.paintStyle.radius;
         if (type.options.paintStyle.lineWidth) {
           radius += type.options.paintStyle.lineWidth;
@@ -568,11 +584,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       // Add dag-stream class
       scope.connection.addClass('dag-stream');
       
-      // Set the stream label
-      scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
+      var overlay;
 
-      // Get it for use in the listener
-      var overlay = scope.connection.getOverlay('streamLabel');
+      // First check for existing
+      overlay = scope.connection.getOverlay('streamLabel');
+
+      if (!overlay) {
+        // Set the stream label
+        scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);  
+        overlay = scope.connection.getOverlay('streamLabel');
+      }
 
       // Update label as needed
       scope.$watch('stream.name', function(name) {
@@ -607,11 +628,24 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$emit('selectEntity', 'stream', scope.stream);
       });
 
+      // Listen for double clicks on label, focus on name field in
+      // inspector.
+      overlay.bind('dblclick', function() {
+        var $el = $('form[name="dag_stream_inspector"] input[name="name"]');
+        var el = $el[0];
+        if ($el) {
+          $el.parent().effect('bounce', {}, 'slow');
+          $el.focus();
+          el.setSelectionRange(0, 9999);
+        }
+      });
+
       scope.$on('connectionDetached', function(event, connection) {
         if (connection === scope.connection) {
 
           // Remove all listeners
           connection.unbind();
+          overlay.unbind();
 
           // Check if sink is there
           var index;
@@ -630,14 +664,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
             $log.info('Stream removed from app: ', scope.stream);
             var streamIndex = scope.app.streams.indexOf(scope.stream);
             if (streamIndex > -1) {
-              scope.$emit('selectEntity'); // deselect all
               scope.app.streams.splice(streamIndex, 1);
+              scope.$emit('selectEntity'); // deselect all
             } else {
               $log.warn('Stream expected to be in app.streams, but was not found! app.streams: ', scope.app.streams, 'stream: ', scope.stream);
             }
           }
           scope.stream = null;
-          
+
           // Defer destruction of this scope
           _.defer(function() {
             scope.$destroy();
@@ -656,14 +690,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       // set the port class
       scope.endpoint.addClass('dag-port');
 
+      // get the overlay
+      var overlay = scope.endpoint.getOverlay('label');
+
       // Watch to see if selected is this port
       scope.$watch('selected', function(selected) {
         if (selected === scope.port) {
           // debugger;
           scope.endpoint.addClass('selected');
+          overlay.addClass('selected');
         }
         else {
           scope.endpoint.removeClass('selected');
+          overlay.removeClass('selected');
         }
       });
 

@@ -28,11 +28,51 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
           'type': 'String',
           'optional': false
         },
-        { 
-          'name': 'output2long name', 
-          'type': 'String',
-          'optional': false
-        }
+        // { 
+        //   'name': 'output2long name', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output3', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output4', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output5', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output6', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output7', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output8', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output9', 
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // { 
+        //   'name': 'output10', 
+        //   'type': 'String',
+        //   'optional': false
+        // }
       ],
       'properties': [
         { 
@@ -49,11 +89,26 @@ angular.module('app.pages.dev.packages.package.dagEditor.mockOperatorsData', [])
       'description': 'Parses JSON strings into a one-level-deep hash map.',
       'categories': [ 'parse', 'transform' ],
       'inputPorts': [
+        // {
+        //   'name': 'long input port',
+        //   'type': 'String',
+        //   'optional': false
+        // },
         {
-          'name': 'long input port',
+          'name': 'input',
           'type': 'String',
           'optional': false
-        }
+        },
+        // {
+        //   'name': 'input3',
+        //   'type': 'String',
+        //   'optional': false
+        // },
+        // {
+        //   'name': 'input4',
+        //   'type': 'String',
+        //   'optional': false
+        // }
       ],
       'outputPorts': [ 
         { 

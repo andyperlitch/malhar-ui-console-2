@@ -161,7 +161,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
 
       this.resource = new ApplicationCollection();
       this.resource.fetch();
-      this.resource.subscribe(scope);
+      this.resource.subscribe(scope, undefined, { remove: false });
       scope.resource = this.resource;
       scope.endApp = appManager.endApp;
     },
