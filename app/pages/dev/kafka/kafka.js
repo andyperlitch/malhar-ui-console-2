@@ -248,7 +248,7 @@ angular.module('app.pages.dev.kafka', [
               this.series[index].values = values;
             }.bind(this));
 
-            this.updateScope(this.series);
+            this.updateScope(_.clone(this.series));
           } else {
             this.updateScope(null);
           }
