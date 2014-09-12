@@ -22,6 +22,10 @@ angular.module('app.components.resources.BaseCollection', [
 ])
 .factory('BaseCollection', function(getUri, BaseResource, BaseModel) {
 
+  var defaultSetOptions = {
+    remove: true
+  };
+
   var BaseCollection = BaseResource.extend({
     /**
      * Constructor for collections. Expects this.urlKey and/or this.topicKey
@@ -43,25 +47,45 @@ angular.module('app.components.resources.BaseCollection', [
      * 
      * @param  {object} data  The transformed data from the server.
      */
-    set: function(updates) {
+    set: function(updates, options) {
+
+      // Ensure options is an object
+      options = options || {};
+
+      // Add default options
+      _.defaults(options, defaultSetOptions);
 
       // References to data and context
       var data = this.data;
       var self = this;
+      var idAttribute = this._idAttribute_;
+
+      var updatedIds = {};
 
       _.each(updates, function(m) {
 
         // Look for existent model
         var current = self.get(m[self._idAttribute_]);
         if (current) {
+          updatedIds[current[idAttribute]] = true;
           _.extend(current, m);
         }
         // Otherwise just add to collection
         else {
+          updatedIds[m[idAttribute]] = true;
           data.push(m);
         }
 
       });
+
+      // Remove items that have not been updated, if necessary
+      if (options.remove) {
+        for (var i = data.length -1; i >= 0; i--) {
+          if (!updatedIds[data[i][idAttribute]]) {
+            data.splice(i, 1);
+          }
+        }
+      }
     },
 
     /**
