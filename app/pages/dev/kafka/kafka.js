@@ -34,21 +34,11 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function (
-    $scope,
-    KafkaRestService,
-    KafkaTimeSeriesWidgetDataModel,
-    ClusterMetricsWidget,
-    AppsListWidget,
-    RandomPercentageDataModel,
-    RandomNVD3TimeSeriesDataModel,
-    RandomMinutesDataModel,
-    dashboardOptionsFactory
-    ) {
+  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
     var widgetDefinitions = [
       {
-        name: 'Time Series Chart',
-        title: 'Time Series Chart',
+        name: 'Time Series Bar Chart',
+        title: 'Time Series Bar Chart',
         directive: 'wt-time-series',
         dataAttrName: 'data',
         dataModelType: KafkaTimeSeriesWidgetDataModel,
@@ -57,6 +47,21 @@ angular.module('app.pages.dev.kafka', [
         },
         attrs: {
           'metric-value': 'metricValue'
+        },
+        size: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'Time Series Line Chart',
+        title: 'Time Series Line Chart',
+        directive: 'wt-nvd3-line-chart',
+        dataAttrName: 'data',
+        dataModelType: KafkaMetricsWidgetDataModel,
+        //dataModelType: RandomNVD3TimeSeriesDataModel,
+        attrs: {
+          style: 'height:300px',
+          metrics: 'metrics'
         },
         size: {
           width: '50%'
@@ -166,7 +171,7 @@ angular.module('app.pages.dev.kafka', [
       $scope.kafkaService.unsubscribe();
     });
   })
-  .factory('KafkaTimeSeriesWidgetDataModel', function(WidgetDataModel) {
+  .factory('KafkaTimeSeriesWidgetDataModel', function (WidgetDataModel) {
     function KafkaTimeSeriesWidgetDataModel() {
     }
 
@@ -174,7 +179,7 @@ angular.module('app.pages.dev.kafka', [
     KafkaTimeSeriesWidgetDataModel.prototype.constructor = WidgetDataModel;
 
     angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
-      init: function() {
+      init: function () {
         if (this.dataModelOptions && this.dataModelOptions.metric) {
           this.widgetScope.metricValue = this.dataModelOptions.metric;
         }
@@ -196,10 +201,73 @@ angular.module('app.pages.dev.kafka', [
         }.bind(this));
       },
 
-      destroy: function() {
+      destroy: function () {
         //TODO
       }
     });
 
     return KafkaTimeSeriesWidgetDataModel;
+  })
+  .factory('KafkaMetricsWidgetDataModel', function (WidgetDataModel) {
+    function MetricsWidgetDataModel() {
+    }
+
+    MetricsWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    MetricsWidgetDataModel.prototype.constructor = MetricsWidgetDataModel;
+
+    angular.extend(MetricsWidgetDataModel.prototype, {
+      init: function () {
+        this.series = [];
+        this.widgetScope.$on('kafkaMessage', function (event, data) {
+          if (data && data.length > 0) {
+            var sampleObject = angular.copy(data[0]);
+            delete sampleObject.timestamp;
+            var metrics = _.keys(sampleObject);
+            metrics = _.sortBy(metrics, function (key) {
+              return key;
+            });
+
+            //TODO
+            _.each(metrics, function (metric, index) {
+              if (!this.series[index]) {
+                this.series[index] = {
+                  key: metric
+                };
+              }
+            }.bind(this));
+
+            _.each(metrics, function (metric, index) {
+              var values = _.map(data, function (point) {
+                return {
+                  timestamp: point.timestamp,
+                  //value: Math.round(parseInt(point[metric], 10))
+                  value: point[metric]
+                };
+              });
+
+              this.series[index].values = values;
+            }.bind(this));
+
+            this.updateScope(this.series);
+          } else {
+            this.updateScope(null);
+          }
+        }.bind(this));
+
+        this.widgetScope.metrics = [
+          {
+            key: 'impressions'
+          },
+          {
+            key: 'revenue'
+          }
+        ];
+      },
+
+      destroy: function () {
+      }
+    })
+    ;
+
+    return MetricsWidgetDataModel;
   });
