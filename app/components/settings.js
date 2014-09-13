@@ -141,7 +141,7 @@ angular.module('app.settings', [])
       Packages                 :'/packages',
       Package                  :'/packages/:packageName/:packageVersion',
       PackageApplication       :'/packages/:packageName/:packageVersion/applications/:appName',
-      DagEditor                :'/packages/:packageName/applications/:appName/dagEditor'
+      DagEditor                :'/packages/:packageName/:packageVersion/applications/:appName/dagEditor'
     },
 
     breadcrumbs: {
