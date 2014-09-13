@@ -33,10 +33,22 @@ var proxy = httpProxy.createProxyServer({
   }
 });
 
+var proxy2 = httpProxy.createProxyServer({
+  target: {
+    host: config.kafka.devserver.host,
+    port: config.kafka.devserver.port
+  }
+});
+
 
 // proxy Gateway REST API calls
 function gatewayMiddleware(req, res, next) {
+  if (req.originalUrl.indexOf('/data') === 0) {
+    console.log(req.method + ' ' + req.originalUrl);
+    proxy2.proxyRequest(req, res);
+  } else
   if (req.originalUrl.indexOf('/ws/') === 0) {
+    console.log(req.method + ' ' + req.originalUrl);
     proxy.proxyRequest(req, res);
   } else {
     next();

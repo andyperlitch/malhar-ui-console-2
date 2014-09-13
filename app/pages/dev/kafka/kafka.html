@@ -1,0 +1,50 @@
+<div class="container">
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Time Series</p>
+            </div>
+            <div class="panel-body">
+                <div wt-time-series="" data="barChart" mode="mode" style="height: 300px;"></div>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <p>Debug - Kafka Consumer</p>
+            </div>
+            <div class="panel-body">
+                <p>Kafka Message</p>
+                <p>
+                <div class="alert alert-info">
+                    <pre>{{kafkaMessage|json}}</pre>
+                </div>
+                </p>
+
+                <p>Data</p>
+                <div class="alert alert-info">
+                    <pre style="max-height: 200px;overflow: auto;">{{kafkaMessageValue|json}}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Debug - Kafka Producer</div>
+            <div class="panel-body">
+                <p>Request:</p>
+                <p>
+                    <textarea style="height: 200px; width: 100%;" ng-model="requestText"></textarea>
+                </p>
+                <p><button class="btn btn-primary" ng-click="sendRequest();">send request</button></p>
+                <div class="alert alert-info" ng-if="request">
+                    <pre>{{request|json}}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
