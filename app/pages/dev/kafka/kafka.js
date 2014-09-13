@@ -58,10 +58,9 @@ angular.module('app.pages.dev.kafka', [
         directive: 'wt-nvd3-line-chart',
         dataAttrName: 'data',
         dataModelType: KafkaMetricsWidgetDataModel,
-        //dataModelType: RandomNVD3TimeSeriesDataModel,
         attrs: {
           style: 'height:300px',
-          metrics: 'metrics'
+          'show-legend': true
         },
         size: {
           width: '50%'
@@ -249,11 +248,11 @@ angular.module('app.pages.dev.kafka', [
             }.bind(this));
 
             /*
-            var max = _.max(data, function (point) {
-              return point.impressions;
-            });
-            console.log(max.impressions);
-            */
+             var max = _.max(data, function (point) {
+             return point.impressions;
+             });
+             console.log(max.impressions);
+             */
 
             this.updateScope(_.clone(this.series));
           } else {
