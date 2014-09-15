@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.pages.dev.packages.package.dagEditor', [
+  'ui.grid',
   'app.components.resources.PackageOperatorClassCollection',
   'app.components.services.jsPlumb',
   'app.components.filters.camel2spaces',
@@ -58,9 +59,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Listen for entity selections
   $scope.$on('selectEntity', $scope.selectEntity);
 
-  // Search object
-  $scope.operatorClassSearch = { term: '' };
-  
   // Operator Classes:
   $scope.operatorClassesResource = new PackageOperatorClassCollection({
     packageName: $routeParams.packageName,
@@ -68,6 +66,18 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   });
   $scope.operatorClasses = $scope.operatorClassesResource.data;
   $scope.operatorClassesResource.fetch();
+
+  // ng-grid options for operator class list
+  $scope.opClassListOptions = {
+    data: 'operatorClasses',
+    columnDefs: [
+      // Package Name
+      {
+        field: 'name',
+        filter: { term: 'datatorrent' }
+      }
+    ]
+  };
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;
