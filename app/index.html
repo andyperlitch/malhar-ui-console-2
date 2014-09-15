@@ -83,6 +83,12 @@
                   <span class="glyphicon nav-icon glyphicon-th"></span>
               </a>
             </li>
+              <li data-match-route="/kafka">
+                  <a href="#/kafka">
+                      <span class="nav-text">Packages</span>
+                      <span class="glyphicon nav-icon glyphicon-random"></span>
+                  </a>
+              </li>
             <li data-match-route="/ops">
               <a href="#/ops">
                 <span class="nav-text">Operations</span>
@@ -257,10 +263,13 @@
     <script src="components/widgets/dag/logical/logicalDagDirective.js"></script>
     <script src="components/widgets/dag/physical/PhysicalDagRenderer.js"></script>
     <script src="components/widgets/dag/physical/physicalDagDirective.js"></script>
-    <script src="components/widgets/fileUpload/fileUploadConfig.js"></script>
     <script src="components/widgets/fileUpload/fileUpload.js"></script>
+    <script src="components/widgets/fileUpload/fileUploadConfig.js"></script>
     <script src="pages/dev/apache-log/apache-log-controller.js"></script>
     <script src="pages/dev/etl/etl-controller.js"></script>
+    <script src="pages/dev/kafka/kafka.js"></script>
+    <script src="pages/dev/kafka/kafkaRestService.js"></script>
+    <script src="pages/dev/kafka/timeSeries.js"></script>
     <script src="pages/dev/packages/package/application/application.js"></script>
     <script src="pages/dev/packages/package/dagEditor/dagEditor.js"></script>
     <script src="pages/dev/packages/package/dagEditor/mockOperatorsData.js"></script>
