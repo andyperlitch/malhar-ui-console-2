@@ -16,9 +16,7 @@
 'use strict';
 
 angular.module('app.pages.dev.packages.package.dagEditor', [
-  // MOCK DATA: FOR TESTING ONLY
-  'app.pages.dev.packages.package.dagEditor.mockOperatorsData',
-
+  'app.components.resources.PackageOperatorClassCollection',
   'app.components.services.jsPlumb',
   'app.components.filters.camel2spaces',
   'app.components.directives.uiResizable',
@@ -37,7 +35,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Page Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
+.controller('DagEditorCtrl', function($scope, PackageOperatorClassCollection, $routeParams, settings) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -64,7 +62,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.operatorClassSearch = { term: '' };
   
   // Operator Classes:
-  $scope.operatorClasses = mockOperatorsData;
+  $scope.operatorClassesResource = new PackageOperatorClassCollection({
+    packageName: $routeParams.packageName,
+    packageVersion: $routeParams.packageVersion
+  });
+  $scope.operatorClasses = $scope.operatorClassesResource.data;
+  $scope.operatorClassesResource.fetch();
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;
