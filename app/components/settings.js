@@ -81,6 +81,7 @@ angular.module('app.settings', [])
       LogicalPlan              :'/ws/:v/applications/:appId/logicalPlan',
       LogicalStream            :'/ws/:v/applications/:appId/logicalPlan/streams',
       OpProperties             :'/ws/:v/applications/:appId/logicalPlan/operators/:operatorName/properties',
+      PackageOperatorClass     :'/ws/:v/appPackages/:packageName/:packageVersion/operators',
       PhysicalOperator         :'/ws/:v/applications/:appId/physicalPlan/operators',
       PhysicalPlan             :'/ws/:v/applications/:appId/physicalPlan',
       Port                     :'/ws/:v/applications/:appid/physicalPlan/operators/:operatorId/ports',
