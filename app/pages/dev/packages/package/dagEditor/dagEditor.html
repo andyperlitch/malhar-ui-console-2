@@ -20,11 +20,11 @@
     <div dag-operator-class 
       ng-attr-data-classname="{{ opClass.name }}"
       class="alert alert-info operator-class"
-      ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}"
+      ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term} | limitTo: 20"
     >
 
       <!-- class name -->
-      <h3 class="h4">{{ opClass.name | camel2spaces }}</h3>
+      <h3 class="h4">{{ opClass.name }}</h3>
 
       <!-- tags/categories -->
       <p>
