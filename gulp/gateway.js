@@ -46,6 +46,18 @@ function gatewayMiddleware(req, res, next) {
 function startServer(baseDirs, port) {
   var app = express();
 
+  // ------------------------------------------
+  // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
+  // ------------------------------------------
+  app.get('/ws/v1/appPackages/mydtapp/1.0-SNAPSHOT/operators', function(req, res) {
+    setTimeout(function() {
+      res.json(require('../mock/mockOperatorClasses.json'));
+    }, 1000);
+  });
+  // ------------------------------------------
+  // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
+  // ------------------------------------------
+
   app.use(livereload({ port: 35729 }));
 
   baseDirs.forEach(function (dir) {
