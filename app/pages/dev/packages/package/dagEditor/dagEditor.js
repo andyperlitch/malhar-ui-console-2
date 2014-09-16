@@ -70,12 +70,42 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // ng-grid options for operator class list
   $scope.opClassListOptions = {
     data: 'operatorClasses',
+    enableFiltering: true,
+    groups: ['packageName'],
+    rowTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/rowTemplate.html',
     columnDefs: [
-      // Package Name
+      // Simple (Class) Name
       {
-        field: 'name',
-        filter: { term: 'datatorrent' }
-      }
+        groupable: false,
+        name: 'simpleName',
+        displayName: 'class',
+        field: 'simpleName'
+      },
+      // Package Name
+      // {
+      //   groupable: true,
+      //   name: 'package',
+      //   displayName: 'package',
+      //   field: 'packageName'
+      // },
+      // Input Ports
+      {
+        name: 'inputPorts',
+        field: 'inputPorts',
+        displayName: 'i',
+        cellTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/inputPortsTemplate.html',
+        width: 60,
+        filter: false
+      },
+      // Output Ports
+      {
+        name: 'outputPorts',
+        field: 'outputPorts',
+        displayName: 'o',
+        cellTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/outputPortsTemplate.html',
+        width: 60,
+        filter: false
+      },
     ]
   };
 
