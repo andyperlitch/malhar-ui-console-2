@@ -520,6 +520,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         return true;
       }
 
+      var lastOptions = $.extend(true, {}, type.options);
+
+      if (ports.length > 10) {
+        lastOptions.paintStyle.radius = 6;
+        lastOptions.paintStyle.lineWidth = 1;
+      }
+
       for (var i = 0, len = ports.length; i < len; i++) {
         var port = ports[i];
         var y_pos = getYPosition(len, i);
@@ -538,21 +545,20 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           // activeClass: 'dragActive'
         };
 
-        var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, type.options);
+        var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, lastOptions);
         var label = endpoint.getOverlay('label');
         label.setLabel(port.name);
 
         // Set better location for labels
         var width = $(label.getElement()).outerWidth();
-        var radius = type.options.paintStyle.radius;
-        if (type.options.paintStyle.lineWidth) {
-          radius += type.options.paintStyle.lineWidth;
+        var radius = lastOptions.paintStyle.radius;
+        if (lastOptions.paintStyle.lineWidth) {
+          radius += lastOptions.paintStyle.lineWidth;
         }
-        x_pos = width / (radius * 4);
-        x_pos += type.position + 0.3;
-        x_pos *= type.incident;
-        // label.setLocation([leftOffset + 'px', 0.5]);
-        label.setLocation([ x_pos , 0.5 ]);
+        var label_x_pos = width / (radius * 4);
+        label_x_pos += type.position + 0.3;
+        label_x_pos *= type.incident;
+        label.setLocation([ label_x_pos , 0.5 ]);
 
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
