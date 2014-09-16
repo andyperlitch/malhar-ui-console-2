@@ -402,7 +402,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // let it go back to its original position
         revert:true,
         revertDuration: 0,
-        zIndex: 1
+        zIndex: 1,
+        helper: function(event) {
+          var classname = event.currentTarget.getAttribute('data-classname');
+          return $('<div class="dag-operator selected">'+
+            '<h4 class="dag-operator-name">Operator</h4>'+
+            '<h5 class="operator-class-name">' + classname + '</h5>'+
+          '</div>');
+        },
+        appendTo: 'body',
+        cursorAt: { left: 130/2, top: 130/2 }
       });
 
     }
