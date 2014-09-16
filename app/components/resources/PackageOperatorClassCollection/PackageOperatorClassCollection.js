@@ -23,7 +23,14 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
   var PackageOperatorClassCollection = BaseCollection.extend({
     debugName: 'Package Operators',
     urlKey: 'PackageOperatorClass',
-    transformResponse: 'operatorClasses',
+    transformResponse: function(raw, type) {
+      _.each(raw.operatorClasses, function(op) {
+        // Add packageName and className to operator object
+        op.packageName = op.name.replace(/\.[^\.]+$/, '');
+        op.simpleName = op.name.replace(/.*(?=\.)\./, '');
+      });
+      return raw.operatorClasses;
+    },
     model: PackageOperatorClassModel
   });
   return PackageOperatorClassCollection;
