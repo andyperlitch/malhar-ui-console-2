@@ -161,7 +161,7 @@
               <!-- when empty -->
               <p ng-message="required" dt-text>An operator name is required</p>
             </div>
-          </div>         
+          </div>
         </div>
       </div>
 
@@ -172,9 +172,9 @@
         No settable properties
       </p>
       <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
+        <div class="pull-right help-icon"><span class="glyphicon glyphicon-question-sign" title="{{prop.description}}"></span></div>
         <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
         <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
-        <div class="help-block">{{prop.description}}</div>
       </div>
 
       <hr>
@@ -220,21 +220,16 @@
               <p ng-message="uniqueInSet" dt-text>You must choose a unique stream name</p>
               <p ng-message="required" dt-text>A stream name is required</p>
             </div>
-          </div>         
+          </div>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="locality" dt-text dt-text-tooltip="You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'">Stream Locality</label>
+        <div class="pull-right help-icon"><span class="glyphicon glyphicon-question-sign" title="Locality setting affects how operators are scheduled for deployment by the platform. The setting serves as hint to the planner and can yield significant performance gains. Optimizations are subject to resource availability. You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'."></span></div>
+        <label for="locality">Stream Locality</label>
         <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
           <option value="">AUTOMATIC</option>
         </select>
-        <p class="help-block" dt-text>
-          Locality setting affects how operators are scheduled for deployment by
-          the platform. The setting serves as hint to the planner and can yield
-          significant performance gains. Optimizations are subject to resource
-          availability.
-        </p>
       </div>
 
       <hr>
@@ -242,15 +237,16 @@
       <h5>Source</h5>
       <div class="stream-inspector-source-sink">
         <p>
-          <small class="text-muted">operator</small> <a href="#" ng-click="selectEntity($event, 'operator', selected.source.operator)">{{selected.source.operator.name}}</a>, <small class="text-muted">port</small> <a href="#" ng-click="selectEntity($event, 'port', selected.source.port)">{{selected.source.port.name}}</a>
+          <a href="#" ng-click="selectEntity($event, 'operator', selected.source.operator)">{{selected.source.operator.name}}</a>
+          <a href="#" ng-click="selectEntity($event, 'port', selected.source.port)"><span class="glyphicon glyphicon-log-out"></span> {{selected.source.port.name}}</a>
         </p>
       </div>
 
       <h5>Sinks</h5>
       <div ng-repeat="sink in selected.sinks" class="stream-inspector-source-sink">
         <p>
-          <small class="text-muted">operator</small> <a href="#" ng-click="selectEntity($event, 'operator', sink.operator)">{{sink.operator.name}}</a>
-          , <small class="text-muted">port</small> <a href="#" ng-click="selectEntity($event, 'port', sink.port)">{{sink.port.name}}</a>
+          <a href="#" ng-click="selectEntity($event, 'operator', sink.operator)">{{sink.operator.name}}</a>
+          <a href="#" ng-click="selectEntity($event, 'port', sink.port)"><span class="glyphicon glyphicon-log-in"></span> {{sink.port.name}}</a>
         </p>
       </div>
 
@@ -273,14 +269,17 @@
       <h5>Attributes</h5>
 
       <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
+        <div ng-if="attr.description" class="pull-right help-icon"><span class="glyphicon glyphicon-question-sign" title="{{ attr.description }}"></span></div>
         <label ng-attr-for="port_attr_{{attr.name}}">{{attr.name}}</label>
         <!-- Boolean -->
-        <input ng-if="attr.type === 'Boolean'" type="checkbox" ng-model="selected.attributes[attr.name]">
+        <div ng-if="attr.type === 'Boolean'">
+          <input id="port_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
+          <label ng-attr-for="port_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
+        </div>
         <!-- Integer -->
         <input ng-if="attr.type === 'Integer'" type="number" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
         <!-- Default -->
         <input ng-if="attr.type !== 'Integer' && attr.type !== 'Boolean'" type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
-        <p class="help-block" ng-if="attr.description">{{ attr.description }}</p>
       </div>
 
     </form>
@@ -288,4 +287,4 @@
      
 </div>
 <!-- <h3>app structure</h3> -->
-<!-- <pre class="well">{{ app | json }}</pre>
+<pre class="well">{{ app | json }}</pre>
