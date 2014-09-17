@@ -172,7 +172,7 @@
         No settable properties
       </p>
       <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
-        <div class="pull-right help-icon"><span class="glyphicon glyphicon-question-sign" title="{{prop.description}}"></span></div>
+        <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{prop.description}}"></span>
         <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
         <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
       </div>
@@ -225,7 +225,7 @@
       </div>
 
       <div class="form-group">
-        <div class="pull-right help-icon"><span class="glyphicon glyphicon-question-sign" title="Locality setting affects how operators are scheduled for deployment by the platform. The setting serves as hint to the planner and can yield significant performance gains. Optimizations are subject to resource availability. You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'."></span></div>
+        <span class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="The locality setting affects how operators are scheduled for deployment by the platform. The setting serves as hint to the planner and can yield significant performance gains. Optimizations are subject to resource availability. You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'."></span>
         <label for="locality">Stream Locality</label>
         <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
           <option value="">AUTOMATIC</option>
@@ -269,7 +269,7 @@
       <h5>Attributes</h5>
 
       <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
-        <div ng-if="attr.description" class="pull-right help-icon"><span class="glyphicon glyphicon-question-sign" title="{{ attr.description }}"></span></div>
+        <span ng-if="attr.description" class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{ attr.description }}"></span>
         <label ng-attr-for="port_attr_{{attr.name}}">{{attr.name}}</label>
         <!-- Boolean -->
         <div ng-if="attr.type === 'Boolean'">
@@ -284,7 +284,7 @@
 
     </form>
   </div>
-     
+
 </div>
 <!-- <h3>app structure</h3> -->
 <pre class="well">{{ app | json }}</pre>

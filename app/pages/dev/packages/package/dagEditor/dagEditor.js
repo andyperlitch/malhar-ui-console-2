@@ -143,7 +143,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       // now set up ports in the new operator
       _.each(["input", "output"], function(portType) {
         // handle input or output ports
-        newOperator[portType + "Ports"] = _.map( portType == "input" ? opClass.inputPorts : opClass.outputPorts, function(port) {
+        var portList = portType == "input" ? opClass.inputPorts : opClass.outputPorts;
+        newOperator[portType + "Ports"] = _.map(portList, function(port) {
           var frozenPort = _.find(frozenOperator.ports, function(frozenPort) {
             return frozenPort.name === port.name;
           });
