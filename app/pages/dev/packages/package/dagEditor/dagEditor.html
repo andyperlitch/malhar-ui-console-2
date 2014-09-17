@@ -5,48 +5,15 @@
 <div class="row">
 
   <!-- *** LIST OF OPERATOR CLASSES *** -->
-  <div class="col-xs-2" id="operator-class-list">
+  <div class="col-md-2" id="operator-class-list">
     <h2 class="h4">Operator Classes</h2>
 
-    <!-- use this form to search for specific operators -->
-    <form name="operator-search-form" novalidate>
-      <p>
-        <!-- ngModel: operatorClassSearch.term -->
-        <input type="text" class="form-control" placeholder="search" ng-model="operatorClassSearch.term">
-      </p>
-    </form>
+    <div ui-grid="opClassListOptions" class="operator-class-grid"></div>
 
-    <!-- operator class repeater -->
-    <div dag-operator-class 
-      ng-attr-data-classname="{{ opClass.name }}"
-      class="alert alert-info operator-class"
-      ng-repeat="opClass in operatorClasses | filter:{name: operatorClassSearch.term}"
-    >
-
-      <!-- class name -->
-      <h3 class="h4">{{ opClass.name | camel2spaces }}</h3>
-
-      <!-- tags/categories -->
-      <p>
-        <span ng-repeat="cat in opClass.categories">
-          <span class="label label-primary">{{ cat }}</span>
-        </span>
-      </p>
-
-      <!-- class description -->
-      <p>{{ opClass.description }}</p>
-
-      <!-- input/output port counts -->
-      <div>
-        {{ opClass.inputPorts ? opClass.inputPorts.length : 0 }} <span class="glyphicon glyphicon-log-in"></span>
-        &nbsp;&nbsp;&nbsp;
-        {{ opClass.outputPorts ? opClass.outputPorts.length : 0 }} <span class="glyphicon glyphicon-log-out"></span>
-      </div>
-    </div>
   </div><!-- end .operator-class-list -->
 
   <!-- *** DAG CANVAS *** -->
-  <div class="col-xs-8" id="dag-canvas-container">
+  <div class="col-md-8" id="dag-canvas-container">
     <h2 class="h4">DAG Canvas</h2>
 
     <!-- The canvas div:
@@ -70,7 +37,7 @@
   </div>
 
   <!-- *** INSPECTOR PANEL *** -->
-  <div class="col-xs-2 dag-inspector">
+  <div class="col-md-2 dag-inspector">
     <!-- Note: only one of these forms should show up at any given time,
     based on what is currently `selected` -->
 

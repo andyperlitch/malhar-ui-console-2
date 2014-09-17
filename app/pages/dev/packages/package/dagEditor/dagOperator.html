@@ -29,10 +29,10 @@
             <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
             <p ng-message="required" dt-text>An operator name is required</p>
           </div>
-        </div>
-      </div>
+        </div>      
+      </div>    
     </form>
-    <h5 class="operator-class-name">{{ operator.opClass.name | camel2spaces }}</h5>
+    <h5 class="operator-class-name">{{ operator.opClass.name }}</h5>
   </div>
   <button type="button" class="close" ng-click="remove($event)">
     <span aria-hidden="true">&times;</span>
