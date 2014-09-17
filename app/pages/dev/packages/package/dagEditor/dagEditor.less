@@ -1,29 +1,30 @@
 @dag-editor-operator-side-length: 130px;
 
+// datatorrent colors
+@dt-yellow: rgb(219,226,56);
+@dt-lightblue: rgb(36,163,220);
+@dt-green: rgb(151,202,69);
+@dt-pink: rgb(216,48,148);
+
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
-@dag-editor-selected-operator-color: desaturate(lighten(@brand-primary, 60%), 50%);
+@dag-editor-selected-operator-color: lighten(@dt-green, 20%);
 
-@dag-editor-selected-stream-color: #fff553;
-@dag-editor-selected-stream-highlight: #e8b22b;
+@dag-editor-selected-stream-color: lighten(@dt-green, 20%);
 
-@dag-editor-inputEndpoint-fill: #1da8db;
-@dag-editor-inputEndpoint-stroke: #FDFDFD;
-@dag-editor-outputEndpoint-fill: #64c539;
-@dag-editor-outputEndpoint-stroke: #FDFDFD;
+@dag-editor-inputEndpoint-fill: @dt-lightblue;
+@dag-editor-inputEndpoint-stroke: #FFF;
+@dag-editor-outputEndpoint-fill: @dt-pink;
+@dag-editor-outputEndpoint-stroke: #FFF;
 
 @dag-editor-selected-endpoint-fill: @dag-editor-selected-stream-color;
 @dag-editor-selected-endpoint-stroke: #FFF;
 
-@dag-editor-active-endpoint-stroke: #1da8db;
-@dag-editor-active-endpoint-fill: #1da8db;
+@dag-editor-active-endpoint-stroke: @dt-lightblue;
+@dag-editor-active-endpoint-fill: @dt-lightblue;
 @dag-editor-active-hover-endpoint-stroke: #FFF;
 @dag-editor-active-hover-endpoint-fill: #FFF;
 
-@dag-editor-selected-endpoint-highlight: #eacc15;
-
-.endpoint-dropshadow(@color) {
-  box-shadow: 0 2px 6px 1px @color,0 0 8px @color, 0 0 9px @color;
-}
+@dag-editor-selected-endpoint-highlight: @dt-yellow;
 
 // Set these elements to cursor:grab/grabbing
 .operator-class, .dag-operator, .dag-operator .operator-class-name {
@@ -44,6 +45,7 @@
   padding: 0.5em;
   margin-bottom: 4px;
   h3 {
+    font-size:11px;
     margin: 0;
   }
   p {
@@ -77,29 +79,38 @@
   position: relative;
   width: @dag-editor-operator-side-length;
   height: @dag-editor-operator-side-length;
-  border: 1px solid #CCC;
-  background-color: #EFEFEF;
+  padding:5px;
+  border: none;
+  background-color: #EEE;
   border-radius: 50%;
-  box-shadow: inset 0 -@dag-editor-operator-side-length/20 @dag-editor-operator-side-length/4 rgba(0,0,0,0.2);
   position: absolute;
   text-align: center;
   h1, h2, h3, h4, h5 {
     cursor: text;
   }
   &.selected {
-    box-shadow: 
-      inset 0 -@dag-editor-operator-side-length/20 @dag-editor-operator-side-length/4 @dag-editor-selected-stream-highlight,
-      0 4px 20px -3px @dag-editor-selected-stream-color;
     background-color: @dag-editor-selected-stream-color;
+    border: none;
   }
-  .dag-operator-name {
-    margin-top: 27px;
+  // center text vertically in operator container
+  .dag-operator-content {
+    position: relative;
+    top: 50%;
+    transform: translateY(-60%);
   }
   .close {
+    visibility: hidden;
     position: absolute;
     top: 7px;
     left: 45%;
     line-height: 0.6;
+    &:hover {
+      background:transparent;
+      color:#600;
+    }
+  }
+  &:hover .close {
+    visibility: visible;
   }
 }
 
@@ -107,57 +118,34 @@
 .dag-canvas .dag-stream._jsPlumb_connector{
   cursor: pointer;
 
-  // path:nth-child(1) {
-  //   stroke: @dag-editor-selected-stream-highlight;
-  // }
   path:nth-child(2) {
-    // stroke-dasharray: 30,5,15,5,5,5;
-    stroke-dasharray: 20,1,2,1,2,1,2,1,2,1;
+    stroke-dasharray:none;
     stroke: #AAA;
   }
 
   &.selected {
-    path:nth-child(1) {
-      stroke: @dag-editor-selected-stream-highlight;
-    }
     path:nth-child(2) {
       stroke: @dag-editor-selected-stream-color !important;
     }
   }
   &.THREAD_LOCAL {
-    path:nth-child(1) {
-      // stroke-dasharray:10, 5;
-    }
     path:nth-child(2) {
-      stroke-dasharray:none;
-      stroke: #4fb998;
+      stroke-dasharray: 20,1,2,1,2,1,2,1,2,1;
     }
   }
   &.CONTAINER_LOCAL {
-    path:nth-child(1) {
-      // stroke-dasharray:40, 5;
-    }
     path:nth-child(2) {
       stroke-dasharray:5,2;
-      stroke: #4aaeaf;
     } 
   }
   &.NODE_LOCAL {
-    path:nth-child(1) {
-      // stroke-dasharray:30, 5;
-    }
     path:nth-child(2) {
       stroke-dasharray:10,5;
-      stroke: #5fa7b9;
     }
   }
   &.RACK_LOCAL {
-    path:nth-child(1) {
-      // stroke-dasharray:40, 5;
-    }
     path:nth-child(2) {
       stroke-dasharray:30,10;
-      stroke: #3c88b9;
     } 
   }
 }
@@ -166,27 +154,24 @@
 // dag canvas
 .stream-label {
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 3px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 3px 8px;
+  border-radius: 10px;
   &.selected {
-    color: #FFF;
-    background: @brand-primary;
-    box-shadow: 0 0 20px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
+    background: @dag-editor-selected-stream-color;
   }
 }
 
 // Port label styles
-._jsPlumb_overlay.endpointTargetLabel,._jsPlumb_overlay.endpointSourceLabel {
-  background: rgba(255, 255, 255, 0.7);
-  padding: 0 3px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+._jsPlumb_overlay.endpointTargetLabel,
+._jsPlumb_overlay.endpointSourceLabel {
+  padding: 0 5px;
+  background-color:rgba(255, 255, 255, 0.75);
+  border-radius:5px;
   font-size: 11px;
   cursor: pointer;
   &.selected {
-    color: #FFF;
-    background: @brand-primary;
-    box-shadow: 0 0 15px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
+    background: @dag-editor-selected-stream-color;
   }
 }
 
@@ -200,7 +185,6 @@
 // Form that contains the in-place
 // editable name field on a dag-operator
 .edit-name-form {
-  margin: 22px 0.3em 0;
   input {
     padding: 0.1em;
     font: inherit;
@@ -226,9 +210,16 @@
       margin-bottom: 5px;
     }
   }
-}
 
-  
+  .form-group .help-icon {
+    font-size: 13px;
+    margin-top: 3px;
+    color:#CCC;
+    :hover {
+      color: @dt-yellow;
+    }
+  }
+}
 
 // jsPlumb elements inside of dag-canvas
 .dag-canvas {
@@ -243,6 +234,12 @@
       fill: @dag-editor-inputEndpoint-fill;
       stroke: @dag-editor-inputEndpoint-stroke;
     }
+    &.selected {
+      svg circle {
+        stroke-width: 3px;
+        fill: @dag-editor-selected-stream-color;
+      }
+    }
   }
 
   // outputEndpoint
@@ -250,6 +247,12 @@
     svg circle {
       fill: @dag-editor-outputEndpoint-fill;
       stroke: @dag-editor-outputEndpoint-stroke;
+    }
+    &.selected {
+      svg circle {
+        stroke-width: 3px;
+        fill: @dag-editor-selected-stream-color;
+      }
     }
   }
 
@@ -260,37 +263,21 @@
   // Selected styles
   ._jsPlumb_endpoint {
     border-radius: 50%;
-    box-shadow: 0 1px 3px 0px rgba(0,0,0,0.5);
     &:hover svg circle {
       fill: @dag-editor-selected-endpoint-highlight;
     }
 
-    &.selected {
-      .endpoint-dropshadow(@dag-editor-selected-endpoint-highlight);
-      svg circle {
-        fill: @dag-editor-selected-endpoint-fill;
-        stroke: @dag-editor-selected-endpoint-stroke;
-      }
-      &:hover {
-        .endpoint-dropshadow(@dag-editor-selected-endpoint-highlight);
-        svg circle {
-          fill: @dag-editor-selected-endpoint-fill;
-        }
-      }
-    }
     &.active {
-      .endpoint-dropshadow(@dag-editor-active-endpoint-stroke);
-
       &._jsPlumb_endpoint_drop_allowed {
         svg circle {
-          // stroke-width: 3px;
-          stroke: @dag-editor-active-hover-endpoint-stroke;
-          fill: @dag-editor-active-hover-endpoint-fill;
+          stroke-width: 3px;
+          stroke: @dag-editor-inputEndpoint-fill;
+          fill:white;
         }
       }
 
       svg circle {
-        stroke-width: 4px;
+        stroke-width: 3px;
         stroke: @dag-editor-active-endpoint-stroke;
         fill: @dag-editor-active-endpoint-fill;
       }
@@ -303,11 +290,11 @@
 
   // Default connector outline
   ._jsPlumb_connector path:nth-child(1){
-    stroke: #eaedef;
+    stroke: none;
   }
 
   // Default inner connector line
   ._jsPlumb_connector path:nth-child(2){
-    stroke: #5C96BC;
+    stroke: @dt-lightblue;
   }
 }
