@@ -23,7 +23,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
   var PackageOperatorClassCollection = BaseCollection.extend({
     debugName: 'Package Operators',
     urlKey: 'PackageOperatorClass',
-    transformResponse: function(raw, type) {
+    transformResponse: function(raw) {
       _.each(raw.operatorClasses, function(op) {
         // Add packageName and className to operator object
         op.packageName = op.name.replace(/\.[^\.]+$/, '');

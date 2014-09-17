@@ -160,6 +160,7 @@
   border-radius: 10px;
   &.selected {
     background: @dag-editor-selected-stream-color;
+    z-index: 3;
   }
 }
 
@@ -171,8 +172,13 @@
   border-radius:5px;
   font-size: 11px;
   cursor: pointer;
+  &:hover, &.hover {
+    z-index: 3;
+    background: white;
+  }
   &.selected {
     background: @dag-editor-selected-stream-color;
+    z-index: 3;
   }
 }
 

@@ -949,6 +949,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$emit('selectEntity', 'port', scope.port);
       });
 
+      scope.endpoint.bind('mouseenter', function() {
+        overlay.addClass('hover');
+      });
+
+      scope.endpoint.bind('mouseleave', function() {
+        overlay.removeClass('hover');
+      });
+
       scope.endpoint.bind('destroy', function() {
         scope.$destroy();
       });
