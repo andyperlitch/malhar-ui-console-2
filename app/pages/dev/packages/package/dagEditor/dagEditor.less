@@ -1,3 +1,4 @@
+@dag-editor-default-canvas-height: 650px;
 @dag-editor-operator-side-length: 130px;
 
 // datatorrent colors
@@ -39,25 +40,11 @@
   }
 }
 
-// Operators in the left panel, i.e. 
-// instantiable operators
-.operator-class {
-  padding: 0.5em;
-  margin-bottom: 4px;
-  h3 {
-    font-size:11px;
-    margin: 0;
-  }
-  p {
-    margin: 1px 0;
-  }
-}
-
 // The canvas where operators get placed
 // and arranged into the DAG.
 .dag-canvas {
   border: 1px solid #DEDEDE;
-  height: 650px;
+  height: @dag-editor-default-canvas-height;
   position: relative;
   background: #FFF;
   overflow: auto;
@@ -159,6 +146,7 @@
   border-radius: 10px;
   &.selected {
     background: @dag-editor-selected-stream-color;
+    z-index: 3;
   }
 }
 
@@ -170,8 +158,13 @@
   border-radius:5px;
   font-size: 11px;
   cursor: pointer;
+  &:hover, &.hover {
+    z-index: 3;
+    background: white;
+  }
   &.selected {
     background: @dag-editor-selected-stream-color;
+    z-index: 3;
   }
 }
 
@@ -180,6 +173,7 @@
 .dag-operator .operator-class-name {
   padding: 0 1em;
   font-size: 11px;
+  word-break: break-word;
 }
 
 // Form that contains the in-place
@@ -219,6 +213,11 @@
       color: @dt-yellow;
     }
   }
+}
+
+.operator-class-grid {
+  width: 100%;
+  height: @dag-editor-default-canvas-height;
 }
 
 // jsPlumb elements inside of dag-canvas
