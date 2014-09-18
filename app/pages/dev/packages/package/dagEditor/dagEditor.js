@@ -616,10 +616,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         zIndex: 1,
         helper: function(event) {
           var classname = event.currentTarget.getAttribute('data-classname');
-          return $('<div class="dag-operator selected">'+
+          return $('<div class="dag-operator selected"><div class="dag-operator-content">'+
             '<h4 class="dag-operator-name">Operator</h4>'+
             '<h5 class="operator-class-name">' + classname + '</h5>'+
-          '</div>');
+          '</div></div>');
         },
         appendTo: 'body',
         cursorAt: { left: 130/2, top: 130/2 }
