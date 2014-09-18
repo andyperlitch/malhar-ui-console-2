@@ -1,37 +1,41 @@
 <div
   ng-click="selectOperator($event)"
   class="dag-operator"
-  ng-class="{ 'selected': operator === selected }">
+  ng-class="{ 'selected': operator === selected }"
+  operator-name="{{ operator.name }}"
+  >
+  <div class="dag-operator-content">
+    <h4 class="dag-operator-name" ng-dblclick="editName($event,operator)" ng-show="!editing.name">
+        {{ operator.name }}
+    </h4>
+    <form action="" class="h4 edit-name-form" ng-show="editing.name" name="dag_operator_name_form">
+      <div class="popover-group">
+        <input
+          type="text"
+          name="name"
+          class="form-control h4"
+          ng-model="changes.name"
+          ng-blur="saveName($event)"
+          unique-in-set="app.operators"
+          unique-key="name"
+          exclude="operator"
+          required
+        ng-keyup="saveName($event, true)">
+
+        <div class="popover top" ng-messages="dag_operator_name_form.name.$error" ng-style="{ display: dag_operator_name_form.name.$invalid ? 'block' : 'none' }">
+          <div class="arrow"></div>
+          <h3 class="popover-title" dt-text>Invalid operator name</h3>
+          <div class="popover-content">
+            <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
+            <p ng-message="required" dt-text>An operator name is required</p>
+          </div>
+        </div>      
+      </div>    
+    </form>
+    <h5 class="operator-class-name">{{ operator.opClass.name }}</h5>
+  </div>
   <button type="button" class="close" ng-click="remove($event)">
     <span aria-hidden="true">&times;</span>
     <span class="sr-only">Close</span>
   </button>
-  <h4 class="dag-operator-name" ng-dblclick="editName($event,operator)" ng-show="!editing.name">
-      {{ operator.name }}
-  </h4>
-  <form action="" class="h4 edit-name-form" ng-show="editing.name" name="dag_operator_name_form">
-    <div class="popover-group">
-      <input
-        type="text"
-        name="name"
-        class="form-control h4"
-        ng-model="changes.name"
-        ng-blur="saveName($event)"
-        unique-in-set="app.operators"
-        unique-key="name"
-        exclude="operator"
-        required
-      ng-keyup="saveName($event, true)">
-
-      <div class="popover top" ng-messages="dag_operator_name_form.name.$error" ng-style="{ display: dag_operator_name_form.name.$invalid ? 'block' : 'none' }">
-        <div class="arrow"></div>
-        <h3 class="popover-title" dt-text>Invalid operator name</h3>
-        <div class="popover-content">
-          <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
-          <p ng-message="required" dt-text>An operator name is required</p>
-        </div>
-      </div>      
-    </div>    
-  </form>
-  <h5 class="operator-class-name">{{ operator.opClass.name }}</h5>
 </div>

@@ -35,8 +35,190 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   });
 })
 
+.factory('freezeDagModel', function($log) {
+  // return frozen (transformed to API spec) copy of app model
+  function freezeDagModel(scope) {
+    // due to the way events are wired up, we can be thawing and trigger a call to freeze
+    if (scope.thawing) { return; }
+
+    // set up the skeleton object to fill with cherry-picking from our
+    // internal operator object
+    var frozenModel = {
+      "displayName": undefined,
+      "description": scope.app.description,
+      // collect the list of operators
+      "operators": _.map(scope.app.operators, function(operator)
+      {
+        // make one array from output and input ports
+        var allports = [];
+        if (!!operator.outputPorts) {
+          allports = allports.concat(operator.outputPorts);
+        }
+        if (!!operator.inputPorts) {
+          allports = allports.concat(operator.inputPorts);
+        }
+
+        // hash representing one operator
+        return {
+          "name": operator.name,
+          "attributes":  {},
+          "class": operator.opClass.name,
+          // collect the list of operator ports
+          "ports": _.map(allports, function (port) {
+            return {
+              "name": port.name,
+              "attributes": _(port.attributes).clone()
+            };
+          }),
+          "properties": _(operator.properties).clone(),
+          "x": operator.x,
+          "y": operator.y
+        };
+      }),
+      // collect the list of streams
+      "streams": _.map(scope.app.streams, function(stream) {
+        return {
+          "name": stream.name,
+          "locality": stream.locality,
+          // collect the list of sinks
+          "sinks": _.map(stream.sinks, function(sink) {
+            return {
+                "operatorName": sink.operator.name,
+                "portName": sink.port.name
+            };
+          }),
+          "source": {
+            "operatorName": stream.source.operator.name,
+            "portName": stream.source.port.name
+          }
+        };
+      })
+    };
+    $log.info("Froze DAG Model", frozenModel);
+
+    return frozenModel;
+  }
+  return freezeDagModel;
+})
+
+.factory('thawDagModel', function(dagEditorOptions, $log) {
+  // load data from frozenModel back into the scope
+  function thawDagModel(frozenModel, scope, dagEditorOptions) {
+    // no frozenModel stored, so bail
+    if (!frozenModel) { return false; }
+
+    $log.info("Thawing DAG Model");
+
+    scope.thawing = true;
+
+    // empty out streams
+    _.each(jsPlumb.getAllConnections(), function(connection) {
+      if (!!connection) {
+        jsPlumb.detach(connection);
+      }
+    });
+
+    // empty out operators
+    scope.app.operators = [];
+
+    // set up global app scope things
+    scope.app.description = frozenModel.description;
+
+    // set up operators by pushing onto app.operators
+    _.each(frozenModel.operators, function(frozenOperator) {
+      // find original operator class
+      var opClass = _.find(scope.operatorClasses, function(operator) {
+        return operator.name == frozenOperator.class;
+      });
+      // add operator to the canvas
+      var newOperator = {
+        name: frozenOperator.name,
+        x: frozenOperator.x,
+        y: frozenOperator.y,
+        properties: _(frozenOperator.properties).clone(),
+        opClass: opClass,
+      };
+
+      // now set up ports in the new operator
+      _.each(["input", "output"], function(portType) {
+        // handle input or output ports
+        var portList = portType == "input" ? opClass.inputPorts : opClass.outputPorts;
+        newOperator[portType + "Ports"] = _.map(portList, function(port) {
+          var frozenPort = _.find(frozenOperator.ports, function(frozenPort) {
+            return frozenPort.name === port.name;
+          });
+          return {
+            name: port.name,
+            attributes: frozenPort.attributes,
+            type: port.type,
+            optional: port.optional,
+            portType: portType,
+          };
+        });
+      });
+      scope.app.operators.push(newOperator);
+    });
+
+    // need to defer the next block so that Angular can get itself situated
+    // after pushing the operators onto app.operators above
+    _.defer(function() {
+      // build a map of operator -> ports -> endpoint
+      var endpoint_map = {};
+      $("#dag-canvas .dag-operator").each(function(idx) {
+        _.each(jsPlumb.getEndpoints(this), function(endpoint) {
+          if (endpoint_map[endpoint.operator.name] === undefined) {
+            endpoint_map[endpoint.operator.name] = {};
+          }
+          endpoint_map[endpoint.operator.name][endpoint.port.name] = endpoint;
+        });
+      });
+
+      // call jsPlumb API method to make connections
+      _.each(frozenModel.streams, function(frozenStream) {
+        _.each(frozenStream.sinks, function(frozenSink) {
+          // get source and target endpoints
+          var source = endpoint_map[frozenStream.source.operatorName][frozenStream.source.portName];
+          var target = endpoint_map[frozenSink.operatorName][frozenSink.portName];
+          jsPlumb.connect({
+            source: endpoint_map[frozenStream.source.operatorName][frozenStream.source.portName],
+            target: endpoint_map[frozenSink.operatorName][frozenSink.portName]
+          }, dagEditorOptions.outputEndpointOptions);
+          // TODO: set stream name and locality from frozen structure
+        });
+      });
+
+      // need to set up stream name and locality, but must defer it so that
+      // Angular can update scope.app with the stream elements created above
+      _.defer(function() {
+        // set up stream name and locality
+        _.each(frozenModel.streams, function(frozenStream) {
+          // set up app with stream objects
+          var appStream = _.find(scope.app.streams, function(appStream) {
+            return appStream.source.operator.name == frozenStream.source.operatorName &&
+              appStream.source.port.name == frozenStream.source.portName;
+          });
+          appStream.name = frozenStream.name;
+          appStream.locality = frozenStream.locality;
+        });
+
+        // All done now
+
+        // the last operator added ends up being selected
+        scope.$emit('selectEntity'); // deselect all
+
+        // unset the thawing flag then trigger a freeze
+        scope.thawing = false;
+        scope.freeze();
+      });
+
+      $log.info("Thaw Complete");
+    });
+  };
+  return thawDagModel;
+})
+
 // Page Controller
-.controller('DagEditorCtrl', function($scope, PackageOperatorClassCollection, $routeParams, settings) {
+.controller('DagEditorCtrl', function($scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -111,7 +293,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;
-  
+
   // Models the application
   $scope.app = {
     operators: [],
@@ -129,6 +311,26 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Initialize selection info
   $scope.deselectAll();
 
+  $scope.thaw = function() {
+    thawDagModel($scope.frozenModel, $scope, dagEditorOptions);
+  };
+  $scope.freeze = function() {
+    $scope.frozenModel = freezeDagModel($scope);
+  };
+
+  // PUT the frozen model to the gateway
+  var saveFrozen = function() {
+    console.log("SAVE THAT DAG, YO.", $scope.frozenModel);
+  };
+
+  // debounced save function
+  var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);
+
+  $scope.$watch("app", function() {
+    // update the representation we send to the server
+    $scope.freeze();
+    debouncedSaveFrozen();
+  }, true); // true set here to do deep equality check on $scope
 })
 
 // Factory: default appearance/functionality options
@@ -157,7 +359,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   options.inputEndpointOptions = {
     cssClass: 'inputEndpoint',
     endpoint:'Dot',
-    maxConnections: 1,     
+    maxConnections: 1,
     paintStyle:{
       strokeStyle:'#1da8db',
       fillStyle:'transparent',
@@ -166,12 +368,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     },
     hoverPaintStyle:options.endpointHoverStyle,
     dropOptions:{ hoverClass:'hover', activeClass:'active' },
-    isTarget:true,      
+    isTarget:true,
       overlays:[
-        [ 'Label', { 
-            location:[-1, 0.5], 
-            label:'Drop', 
-            cssClass:'endpointTargetLabel', 
+        [ 'Label', {
+            location:[-1, 0.5],
+            label:'Drop',
+            cssClass:'endpointTargetLabel',
             id: 'label'
         } ]
       ]
@@ -180,12 +382,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     cssClass: 'outputEndpoint',
     endpoint:'Dot',
     maxConnections: -1,
-    paintStyle:{ 
+    paintStyle:{
       strokeStyle:'#1da8db',
       fillStyle:'#64c539',
       radius:9,
       lineWidth:3
-    },        
+    },
     isSource:true,
     // connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],
     // connector:[ 'StateMachine', { margin: 30, curviness: 150, proximityLimit: 200 } ],
@@ -195,9 +397,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       connectorHoverStyle: options.connectorHoverStyle,
       dragOptions:{},
       overlays:[
-        [ 'Label', { 
-            location:[2.2, 0.5], 
-            label:'Drag',
+        [ 'Label', {
+            location:[2.2, 0.5],
+            label:'',
             cssClass:'endpointSourceLabel',
             id: 'label'
           } ]
@@ -211,8 +413,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 .directive('dagCanvas', function(settings, $log, $jsPlumb, $compile) {
 
   function angularizeSinkConnection(connection, stream, scope) {
-    // console.log(connection.canvas);
-    // console.log(connection.canvas);
     var streamScope = scope.$new();
     streamScope.stream = stream;
     streamScope.connection = connection;
@@ -230,7 +430,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         attributes: {},
         type: port.type,
         optional: port.optional,
-        portType: portType
+        portType: portType,
       };
     });
   }
@@ -259,7 +459,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           if (existing) {
             i++;
             name = name.replace(/\s+\d+$/, '') + ' ' + i;
-          }  
+          }
         } while (existing);
 
         return name;
@@ -300,7 +500,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       }
 
       function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, sinkConnection) {
-
         // Check for existing stream
         var stream = _.find(scope.app.streams, function(s) {
           return s.source.operator === sourceOperator && s.source.port === sourcePort;
@@ -315,32 +514,23 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
               port: sourcePort
             },
             sinks: [
-              {
-                operator: sinkOperator,
-                port: sinkPort,
-                connection: sinkConnection
-              }
             ]
           };
-
-          angularizeSinkConnection(sinkConnection, stream, scope);
-
+          // push the stream into the app scope
           scope.app.streams.push(stream);
-          scope.$emit('selectEntity', 'stream', stream);
-          return stream;
         }
-        
+
         // Stream exists, check for sink
         var sink = _.find(stream.sinks, function(k) {
           return k.operator === sinkOperator && k.port === sinkPort;
         });
 
-        // Add sink
+        // Add sink if one doesn't exist
         if (!sink) {
           stream.sinks.push({
             operator: sinkOperator,
             port: sinkPort,
-            connection: sinkConnection
+            connection_id: sinkConnection.id
           });
 
           angularizeSinkConnection(sinkConnection, stream, scope);
@@ -349,14 +539,12 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // Select the stream
         scope.$emit('selectEntity', 'stream', stream);
         return stream;
-
       }
 
       /**
        * Listeners for connections
        */
       $jsPlumb.bind('connection', function(info, originalEvent) {
-
         $log.info('Stream connection made: ', info, originalEvent);
         var sourceOperator = info.sourceEndpoint.operator;
         var sourcePort = info.sourceEndpoint.port;
@@ -364,7 +552,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         var sinkPort = info.targetEndpoint.port;
 
         addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, info.connection);
-
       });
 
       $jsPlumb.bind('connectionDetached', function(info, originalEvent) {
@@ -377,12 +564,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         scope.$broadcast('connectionDetached', info.connection, true);
       });
 
-
-
-
       // Sets up the droppable state of the canvas.
       element.droppable({
-
         /**
          * Listens for operator classes being dropped
          * onto the canvas.
@@ -411,8 +594,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           scope.$apply();
         }
       });
-
-
 
       scope.$on('$destroy', function() {
         $jsPlumb.unbind();
@@ -474,7 +655,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   };
 
   function angularizeEndpoint(endpoint, port, operator, scope) {
-    
+
     // Get the element
     var element = endpoint.canvas;
 
@@ -532,7 +713,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         var y_pos = getYPosition(len, i);
         // var x_pos = y_pos;
         var x_pos = getXPosition(type.incident, len, i);
-        var endpointOptions = { 
+        var endpointOptions = {
           // anchor placement
           anchor: [
             x_pos,
@@ -550,7 +731,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         label.setLabel(port.name);
 
         // Set better location for labels
-        var width = $(label.getElement()).outerWidth();
+        var width = $(label.getElement()).outerWidth() - 20;
         var radius = lastOptions.paintStyle.radius;
         if (lastOptions.paintStyle.lineWidth) {
           radius += lastOptions.paintStyle.lineWidth;
@@ -591,7 +772,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     },
     controller: 'DagOperatorCtrl',
     link: function(scope, element) {
-
       // Set the editing state on the scope
       scope.editing = {};
 
@@ -617,11 +797,11 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       // Set the ports as anchors/endpoints
       scope.endpoints = setPortEndpoints(scope.operator, element, scope);
-      
+
       // Start by editing name
-      scope.editName({
-        target: element.find('.dag-operator-name')[0]
-      }, scope.operator);
+      //scope.editName({
+      //  target: element.find('.dag-operator-name')[0]
+      //}, scope.operator);
 
       // destroy event
       scope.$on('$destroy', function() {
@@ -641,7 +821,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       // Add dag-stream class
       scope.connection.addClass('dag-stream');
-      
+
       var overlay;
 
       // First check for existing
@@ -649,7 +829,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
       if (!overlay) {
         // Set the stream label
-        scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);  
+        scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
         overlay = scope.connection.getOverlay('streamLabel');
       }
 
@@ -709,7 +889,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           var index;
           var sink = _.find(scope.stream.sinks, function(s, i) {
             index = i;
-            return s.connection === connection;
+            return s.connection_id === connection.id;
           });
 
           // If so, remove it
@@ -744,7 +924,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 .directive('dagPort', function() {
   return {
     link: function(scope) {
-      
+
       // set the port class
       scope.endpoint.addClass('dag-port');
 
@@ -851,7 +1031,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       })
       .then(function() {
         var index = $scope.app.operators.indexOf($scope.operator);
-        $scope.app.operators.splice(index, 1);        
+        $scope.app.operators.splice(index, 1);
       });
     }
 
