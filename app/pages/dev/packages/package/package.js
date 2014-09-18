@@ -18,7 +18,8 @@
 angular.module('app.pages.dev.packages.package', [
   'app.components.resources.PackageModel',
   'app.components.resources.PackageApplicationModel',
-  'app.components.resources.PackageApplicationCollection'
+  'app.components.resources.PackageApplicationCollection',
+  'app.pages.dev.packages.package.newAppModal'
 ])
 
 // Routing
@@ -33,7 +34,7 @@ angular.module('app.pages.dev.packages.package', [
   })
 
 // Controller
-  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection) {
+  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection, newAppModal) {
     $scope.packageName = $routeParams.packageName;
     $scope.packageVersion = $routeParams.packageVersion;
 
@@ -84,4 +85,18 @@ angular.module('app.pages.dev.packages.package', [
     $scope.closeAlert = function (index) {
       $scope.alerts.splice(index, 1);
     };
+
+    $scope.createNewApp = function() {
+      newAppModal().then(
+        // success
+        function() {
+          // go to the App Editor for new app
+        },
+        // failure
+        function() {
+          // probably do nothing
+        }
+      );
+    };
+
   });
