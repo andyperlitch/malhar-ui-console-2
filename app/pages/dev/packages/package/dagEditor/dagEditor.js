@@ -16,9 +16,8 @@
 'use strict';
 
 angular.module('app.pages.dev.packages.package.dagEditor', [
-  // MOCK DATA: FOR TESTING ONLY
-  'app.pages.dev.packages.package.dagEditor.mockOperatorsData',
-
+  'ui.grid',
+  'app.components.resources.PackageOperatorClassCollection',
   'app.components.services.jsPlumb',
   'app.components.filters.camel2spaces',
   'app.components.directives.uiResizable',
@@ -37,7 +36,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Page Controller
-.controller('DagEditorCtrl', function($scope, mockOperatorsData, $routeParams, settings) {
+.controller('DagEditorCtrl', function($scope, PackageOperatorClassCollection, $routeParams, settings) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -60,11 +59,55 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Listen for entity selections
   $scope.$on('selectEntity', $scope.selectEntity);
 
-  // Search object
-  $scope.operatorClassSearch = { term: '' };
-  
   // Operator Classes:
-  $scope.operatorClasses = mockOperatorsData;
+  $scope.operatorClassesResource = new PackageOperatorClassCollection({
+    packageName: $routeParams.packageName,
+    packageVersion: $routeParams.packageVersion
+  });
+  $scope.operatorClasses = $scope.operatorClassesResource.data;
+  $scope.operatorClassesResource.fetch();
+
+  // ng-grid options for operator class list
+  $scope.opClassListOptions = {
+    data: 'operatorClasses',
+    enableFiltering: true,
+    groups: ['packageName'],
+    rowTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/rowTemplate.html',
+    columnDefs: [
+      // Simple (Class) Name
+      {
+        groupable: false,
+        name: 'simpleName',
+        displayName: 'class',
+        field: 'simpleName'
+      },
+      // Package Name
+      // {
+      //   groupable: true,
+      //   name: 'package',
+      //   displayName: 'package',
+      //   field: 'packageName'
+      // },
+      // Input Ports
+      {
+        name: 'inputPorts',
+        field: 'inputPorts',
+        displayName: 'i',
+        cellTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/inputPortsTemplate.html',
+        width: 60,
+        filter: false
+      },
+      // Output Ports
+      {
+        name: 'outputPorts',
+        field: 'outputPorts',
+        displayName: 'o',
+        cellTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/outputPortsTemplate.html',
+        width: 60,
+        filter: false
+      },
+    ]
+  };
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;
@@ -389,7 +432,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         // let it go back to its original position
         revert:true,
         revertDuration: 0,
-        zIndex: 1
+        zIndex: 1,
+        helper: function(event) {
+          var classname = event.currentTarget.getAttribute('data-classname');
+          return $('<div class="dag-operator selected">'+
+            '<h4 class="dag-operator-name">Operator</h4>'+
+            '<h5 class="operator-class-name">' + classname + '</h5>'+
+          '</div>');
+        },
+        appendTo: 'body',
+        cursorAt: { left: 130/2, top: 130/2 }
       });
 
     }
@@ -468,6 +520,13 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         return true;
       }
 
+      var lastOptions = $.extend(true, {}, type.options);
+
+      if (ports.length > 10) {
+        lastOptions.paintStyle.radius = 6;
+        lastOptions.paintStyle.lineWidth = 1;
+      }
+
       for (var i = 0, len = ports.length; i < len; i++) {
         var port = ports[i];
         var y_pos = getYPosition(len, i);
@@ -486,21 +545,20 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           // activeClass: 'dragActive'
         };
 
-        var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, type.options);
+        var endpoint = $jsPlumb.addEndpoint(element, endpointOptions, lastOptions);
         var label = endpoint.getOverlay('label');
         label.setLabel(port.name);
 
         // Set better location for labels
         var width = $(label.getElement()).outerWidth();
-        var radius = type.options.paintStyle.radius;
-        if (type.options.paintStyle.lineWidth) {
-          radius += type.options.paintStyle.lineWidth;
+        var radius = lastOptions.paintStyle.radius;
+        if (lastOptions.paintStyle.lineWidth) {
+          radius += lastOptions.paintStyle.lineWidth;
         }
-        x_pos = width / (radius * 4);
-        x_pos += type.position + 0.3;
-        x_pos *= type.incident;
-        // label.setLocation([leftOffset + 'px', 0.5]);
-        label.setLocation([ x_pos , 0.5 ]);
+        var label_x_pos = width / (radius * 4);
+        label_x_pos += type.position + 0.3;
+        label_x_pos *= type.incident;
+        label.setLocation([ label_x_pos , 0.5 ]);
 
         // // connection detection relies on this being the exact portname
         endpoint.canvas.title = port.name;
@@ -710,6 +768,14 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       scope.endpoint.bind('click', function(endpoint, event) {
         event.stopPropagation();
         scope.$emit('selectEntity', 'port', scope.port);
+      });
+
+      scope.endpoint.bind('mouseenter', function() {
+        overlay.addClass('hover');
+      });
+
+      scope.endpoint.bind('mouseleave', function() {
+        overlay.removeClass('hover');
       });
 
       scope.endpoint.bind('destroy', function() {

@@ -1,3 +1,4 @@
+@dag-editor-default-canvas-height: 650px;
 @dag-editor-operator-side-length: 130px;
 
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
@@ -38,24 +39,11 @@
   }
 }
 
-// Operators in the left panel, i.e. 
-// instantiable operators
-.operator-class {
-  padding: 0.5em;
-  margin-bottom: 4px;
-  h3 {
-    margin: 0;
-  }
-  p {
-    margin: 1px 0;
-  }
-}
-
 // The canvas where operators get placed
 // and arranged into the DAG.
 .dag-canvas {
   border: 1px solid #DEDEDE;
-  height: 650px;
+  height: @dag-editor-default-canvas-height;
   position: relative;
   background: #FFF;
   overflow: auto;
@@ -170,6 +158,7 @@
   padding: 3px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   &.selected {
+    z-index: 3;
     color: #FFF;
     background: @brand-primary;
     box-shadow: 0 0 20px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
@@ -183,7 +172,12 @@
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   font-size: 11px;
   cursor: pointer;
+  &:hover, &.hover {
+    z-index: 3;
+    background: white;
+  }
   &.selected {
+    z-index: 3;
     color: #FFF;
     background: @brand-primary;
     box-shadow: 0 0 15px @dag-editor-selected-operator-highlight, 0 0 10px @dag-editor-selected-operator-highlight;
@@ -195,6 +189,7 @@
 .dag-operator .operator-class-name {
   padding: 0 1em;
   font-size: 11px;
+  word-break: break-word;
 }
 
 // Form that contains the in-place
@@ -228,7 +223,10 @@
   }
 }
 
-  
+.operator-class-grid {
+  width: 100%;
+  height: @dag-editor-default-canvas-height;
+}
 
 // jsPlumb elements inside of dag-canvas
 .dag-canvas {
