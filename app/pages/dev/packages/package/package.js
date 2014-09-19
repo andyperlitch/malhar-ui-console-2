@@ -19,6 +19,7 @@ angular.module('app.pages.dev.packages.package', [
   'app.components.resources.PackageModel',
   'app.components.resources.PackageApplicationModel',
   'app.components.resources.PackageApplicationCollection',
+  'app.components.services.getUri',
   'app.pages.dev.packages.package.newAppModal'
 ])
 
@@ -34,7 +35,7 @@ angular.module('app.pages.dev.packages.package', [
   })
 
 // Controller
-  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection, newAppModal) {
+  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection, newAppModal, $log, $location, getUri) {
     $scope.packageName = $routeParams.packageName;
     $scope.packageVersion = $routeParams.packageVersion;
 
@@ -89,8 +90,18 @@ angular.module('app.pages.dev.packages.package', [
     $scope.createNewApp = function() {
       newAppModal().then(
         // success
-        function() {
+        function(appName) {
           // go to the App Editor for new app
+          $log.info('App creation modal resolved. new appName:', appName);
+
+          // Navigate to dagEditor
+          var url = getUri.page('DagEditor', {
+            packageName: $routeParams.packageName,
+            packageVersion: $routeParams.packageVersion,
+            appName: appName
+          }, true);
+          console.log('url', url);
+          $location.path(url);
         },
         // failure
         function() {

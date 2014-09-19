@@ -18,6 +18,9 @@
 angular.module('app.components.filters.urlFriendly', [])
 .filter('urlFriendly', function() {
   return function(str) {
+    if (!str) {
+      return '';
+    }
     return str.toLowerCase().replace(/[^\s\-a-z0-9\.]/g, '').replace(/\s/g, '-').replace(/\-+/g, '-');
   };
 });

@@ -1,4 +1,10 @@
 form {
+  input.form-control {
+    &.ng-invalid.ng-dirty:focus, &.ng-invalid.ng-touched:focus {
+      box-shadow: inset 0 1px 1px rgba(255, 0, 0, 0.075), 0 0 8px rgba(255, 105, 133, 0.6);
+      border-color: #AA5555;
+    }
+  }
   .popover-group {
     position: relative;
 
