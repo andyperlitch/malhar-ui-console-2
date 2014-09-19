@@ -66,6 +66,11 @@ function startServer(baseDirs, port) {
       res.json(require('../mock/mockOperatorClasses.json'));
     }, 1000);
   });
+  app.get('/ws/v1/appPackages/mydtapp2/1.0/operators', function(req, res) {
+    setTimeout(function() {
+      res.json(require('../mock/mockOperatorClasses.json'));
+    }, 1000);
+  });
   // ------------------------------------------
   // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
   // ------------------------------------------
