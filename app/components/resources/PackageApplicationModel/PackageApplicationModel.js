@@ -18,11 +18,14 @@
 angular.module('app.components.resources.PackageApplicationModel',[
   'app.components.resources.BaseModel'
 ])
-  .factory('PackageApplicationModel', function(BaseModel) {
+  .factory('PackageApplicationModel', function(BaseModel, $http) {
     var PackageApplicationModel = BaseModel.extend({
       debugName: 'PackageApplicationModel',
       urlKey: 'PackageApplication',
-
+      save: function(errorIfExists) {
+        errorIfExists = !! errorIfExists;
+        return $http.put(this.url, this.data.fileContent, { params: { errorIfExists: errorIfExists } });
+      },
       launch: function () {
         console.log('launch ' + this.url);
         return this.post({}, 'launch');

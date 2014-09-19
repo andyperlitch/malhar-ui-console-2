@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title"><span class="glyphicon glyphicon-plus"></span> <span dt-text>New Application</span></h3>
+</div>
+<div class="modal-body">
+  <p dt-text>Type a name for this new application.</p>
+  <form name="new_app_form">
+    <input type="text" ng-model="app.name" class="form-control" id="new_app_name" name="new_app_name" required reset-validity-on-change="uniqueName">
+    <div ng-messages="new_app_form.new_app_name.$error">
+      <p ng-message="required" class="help-block">
+        <span class="text-danger" dt-text>Please enter a name for your app.</span>
+      </p>
+      <p ng-message="uniqueName" class="help-block">
+        <span class="text-danger" ng-bind="new_app_form.new_app_name.$errorMessages.uniqueName"></span>
+      </p>
+      <p ng-message="serverError" class="help-block">
+        <span class="text-danger">Server error: <span ng-bind="new_app_form.new_app_name.$errorMessages.serverError"></span></span>
+      </p>
+    </div>
+    <p class="help-block text-muted" ng-if="app.name">
+      URL-friendly name: <code>{{ app.name | urlFriendly }}</code>.
+    </p>
+  </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" ng-click="create(new_app_form)" ng-disabled="new_app_form.$invalid || saving">{{ saving ? 'Saving...' : 'Create'}}</button>
+    <button class="btn btn-default" ng-click="$dismiss()" dt-text>Cancel</button>
+</div>
