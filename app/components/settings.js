@@ -153,7 +153,7 @@ angular.module('app.settings', [])
       logicalStream            :':streamName',
       containerLog             :':logName',
       port                     :':portId',
-      packageName              :':packageName :packageVersion',
+      packageName              :':packageName @ :packageVersion',
       appName                  :':appName'
     },
 
