@@ -24,9 +24,9 @@ angular.module('app.pages.dev.packages.package.newAppModal', ['ui.bootstrap.moda
       resolve: {
 
       }
-    });
+    }).result;
   };
 })
-.controller('newAppModalController', function() {
-  
+.controller('newAppModalController', function($scope, $routeParams) {
+  $scope.app = {};
 });
