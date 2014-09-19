@@ -26,7 +26,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
     // no frozenModel stored, so bail
     if (!frozenModel) { return false; }
 
-    $log.info('Thawing DAG Model');
+    $log.info('Thawing DAG Model', frozenModel);
 
     scope.thawing = true;
 
