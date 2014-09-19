@@ -51,7 +51,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $routeProvider.when(settings.pages.DagEditor, {
     controller: 'DagEditorCtrl',
     templateUrl: 'pages/dev/packages/package/dagEditor/dagEditor.html',
-    label: 'edit DAG'
+    label: 'edit'
   });
 })
 
