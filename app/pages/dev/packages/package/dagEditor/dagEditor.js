@@ -92,7 +92,21 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.operatorClassesResource.fetch(),
     $scope.packageApplicationModelResource.fetch()
   ]).then(function() {
-    $scope.thaw();
+    // set up the dag in the UI
+    thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
+      // now that it's thawed, watch the app for changes
+      var first = true; // don't do this the first time.
+      $scope.$watch('app', function() {
+        // update the representation we send to the server
+        if (!first) {
+          $scope.freeze();
+          $scope.saveRequested = true;
+          debouncedSaveFrozen();
+        } else {
+          first = false;
+        }
+      }, true); // true set here to do deep equality check on $scope
+    });
   });
 
 
@@ -158,21 +172,18 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Initialize selection info
   $scope.deselectAll();
 
-  $scope.thaw = function() {
-    thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions);
-  };
   $scope.freeze = function() {
     $scope.packageApplicationModelResource.data.fileContent = freezeDagModel($scope);
   };
 
   // PUT the frozen model to the gateway
   var saveFrozen = function() {
-    $scope.saveRequested = true;
     if (!$scope.saveInProgress) {
       // not currently saving, so unset saveRequested and set saveInProgress
       $scope.saveRequested = false;
       $scope.saveInProgress = true;
       $scope.packageApplicationModelResource.save().then(function(e){
+        $scope.saveLastTimestamp = new Date();
         // unset saveInProgress
         $scope.saveInProgress = false;
         if ($scope.saveRequested) {
@@ -184,10 +195,4 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // debounced save function
   var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);
-
-  $scope.$watch('app', function() {
-    // update the representation we send to the server
-    $scope.freeze();
-    debouncedSaveFrozen();
-  }, true); // true set here to do deep equality check on $scope
 });
