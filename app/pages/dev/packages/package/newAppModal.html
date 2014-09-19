@@ -19,10 +19,9 @@
     <p class="help-block text-muted" ng-if="app.name">
       URL-friendly name: <code>{{ app.name | urlFriendly }}</code>.
     </p>
-    <pre>{{new_app_form.new_app_name | json }}</pre>
   </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-success" ng-click="create(new_app_form)" dt-text ng-disabled="new_app_form.$invalid">Create</button>
+    <button class="btn btn-success" ng-click="create(new_app_form)" ng-disabled="new_app_form.$invalid || saving">{{ saving ? 'Saving...' : 'Create'}}</button>
     <button class="btn btn-default" ng-click="$dismiss()" dt-text>Cancel</button>
 </div>

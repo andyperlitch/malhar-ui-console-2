@@ -24,7 +24,7 @@
         <th>Actions</th>
     </tr>
     <tr ng-repeat="app in apps.data">
-        <td><a href="#/packages/{{packageName}}/{{packageVersion}}/applications/{{app.name}}">{{app.name}}</a></td>
+        <td><a dt-page-href="PackageApplication" params="{ packageName: packageName, packageVersion: packageVersion, appName: app.name }">{{ app.displayName || app.name }}</a></td>
         <td>{{app.type}}</td>
         <td>{{app.file}}</td>
         <td>
@@ -32,7 +32,7 @@
                 <span class="glyphicon glyphicon-play"></span>
                 <span dt-text="launch">launch</span>
             </button>
-            <a href="#/packages/{{packageName}}/applications/{{app.name}}/dagEditor" class="btn btn-xs btn-info"
+            <a dt-page-href="DagEditor" params="{ packageName: packageName, packageVersion: packageVersion, appName: app.name }" class="btn btn-xs btn-info"
                     ng-if="app.type === 'json'">
                 <span class="glyphicon glyphicon-edit"></span>
                 <span dt-text="edit">edit</span>

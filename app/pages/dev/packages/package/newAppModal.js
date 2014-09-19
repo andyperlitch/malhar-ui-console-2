@@ -72,6 +72,9 @@ angular.module('app.pages.dev.packages.package.newAppModal', [
       streams: []
     };
 
+    // Set the saving flag
+    $scope.saving = true;
+
     // Save (true=errorIfExists)
     resource.save(true).then(
       // Successful save
@@ -92,6 +95,9 @@ angular.module('app.pages.dev.packages.package.newAppModal', [
           formCtrl.new_app_name.$setValidity('serverError', false);
           formCtrl.new_app_name.$errorMessages = { serverError: result.data.message };
         }
+
+        // Unset saving flag
+        $scope.saving = false;
       }
     );
 
