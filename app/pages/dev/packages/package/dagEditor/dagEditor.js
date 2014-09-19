@@ -100,32 +100,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         name: 'simpleName',
         displayName: 'class',
         field: 'simpleName'
-      },
-      // Package Name
-      // {
-      //   groupable: true,
-      //   name: 'package',
-      //   displayName: 'package',
-      //   field: 'packageName'
-      // },
-      // Input Ports
-      {
-        name: 'inputPorts',
-        field: 'inputPorts',
-        displayName: 'i',
-        cellTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/inputPortsTemplate.html',
-        width: 60,
-        filter: false
-      },
-      // Output Ports
-      {
-        name: 'outputPorts',
-        field: 'outputPorts',
-        displayName: 'o',
-        cellTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/outputPortsTemplate.html',
-        width: 60,
-        filter: false
-      },
+      }
     ]
   };
 
