@@ -20,13 +20,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
   'app.components.services.jsPlumb'
 ])
 
-.factory('thawDagModel', function(dagEditorOptions, $log, $jsPlumb) {
+.factory('thawDagModel', function($q, dagEditorOptions, $log, $jsPlumb) {
   // load data from frozenModel back into the scope
   function thawDagModel(frozenModel, scope, dagEditorOptions) {
+    // set up the deferred
+    var dfd = $q.defer();
+
     // no frozenModel stored, so bail
     if (!frozenModel) { return false; }
 
-    $log.info('Thawing DAG Model');
+    $log.info('Thawing DAG Model', frozenModel);
 
     scope.thawing = true;
 
@@ -125,10 +128,15 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
         // unset the thawing flag then trigger a freeze
         scope.thawing = false;
         scope.freeze();
+
+        // resolve the deferred
+        dfd.resolve();
       });
 
       $log.info('Thaw Complete');
     });
+    // send back a promise
+    return dfd.promise;
   }
   return thawDagModel;
 });

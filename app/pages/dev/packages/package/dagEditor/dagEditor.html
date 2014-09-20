@@ -14,6 +14,8 @@
 
   <!-- *** DAG CANVAS *** -->
   <div class="col-md-8" id="dag-canvas-container">
+    <span class="pull-right saving" ng-show="saveInProgress">Saving...</span>
+    <span class="pull-right saving" title="Last saved at {{ saveLastTimestamp | relativeTimestamp }}" ng-show="!saveRequested && !saveInProgress && saveLastTimestamp">All changes saved to server</span>
     <h2 class="h4">DAG Canvas</h2>
 
     <!-- The canvas div:

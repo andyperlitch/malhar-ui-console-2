@@ -20,6 +20,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // components
   'app.components.resources.PackageOperatorClassCollection',
+  'app.components.resources.PackageApplicationModel',
 
   // directives
   'app.components.directives.uiResizable',
@@ -56,7 +57,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Page Controller
-.controller('DagEditorCtrl', function($scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions) {
+.controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel) {
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -80,12 +81,34 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.$on('selectEntity', $scope.selectEntity);
 
   // Operator Classes:
-  $scope.operatorClassesResource = new PackageOperatorClassCollection({
-    packageName: $routeParams.packageName,
-    packageVersion: $routeParams.packageVersion
-  });
+  $scope.operatorClassesResource = new PackageOperatorClassCollection($routeParams);
   $scope.operatorClasses = $scope.operatorClassesResource.data;
-  $scope.operatorClassesResource.fetch();
+
+  // DAG Model
+  $scope.packageApplicationModelResource = new PackageApplicationModel($routeParams);
+
+  // Load operators and DAG. Once both are done, thaw the DAG
+  $q.all([
+    $scope.operatorClassesResource.fetch(),
+    $scope.packageApplicationModelResource.fetch()
+  ]).then(function() {
+    // set up the dag in the UI
+    thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
+      // now that it's thawed, watch the app for changes
+      var first = true; // don't do this the first time.
+      $scope.$watch('app', function() {
+        // update the representation we send to the server
+        if (!first) {
+          $scope.freeze();
+          $scope.saveRequested = true;
+          debouncedSaveFrozen();
+        } else {
+          first = false;
+        }
+      }, true); // true set here to do deep equality check on $scope
+    });
+  });
+
 
   // ng-grid options for operator class list
   $scope.opClassListOptions = {
@@ -124,24 +147,27 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Initialize selection info
   $scope.deselectAll();
 
-  $scope.thaw = function() {
-    thawDagModel($scope.frozenModel, $scope, dagEditorOptions);
-  };
   $scope.freeze = function() {
-    $scope.frozenModel = freezeDagModel($scope);
+    $scope.packageApplicationModelResource.data.fileContent = freezeDagModel($scope);
   };
 
   // PUT the frozen model to the gateway
   var saveFrozen = function() {
-    console.log('SAVE THAT DAG, YO.', $scope.frozenModel);
+    if (!$scope.saveInProgress) {
+      // not currently saving, so unset saveRequested and set saveInProgress
+      $scope.saveRequested = false;
+      $scope.saveInProgress = true;
+      $scope.packageApplicationModelResource.save().then(function(e){
+        $scope.saveLastTimestamp = new Date();
+        // unset saveInProgress
+        $scope.saveInProgress = false;
+        if ($scope.saveRequested) {
+          saveFrozen();
+        }
+      });
+    }
   };
 
   // debounced save function
   var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);
-
-  $scope.$watch('app', function() {
-    // update the representation we send to the server
-    $scope.freeze();
-    debouncedSaveFrozen();
-  }, true); // true set here to do deep equality check on $scope
 });
