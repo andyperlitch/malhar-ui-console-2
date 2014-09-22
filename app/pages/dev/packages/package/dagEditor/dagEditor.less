@@ -28,7 +28,7 @@
 @dag-editor-selected-endpoint-highlight: @dt-yellow;
 
 // Set these elements to cursor:grab/grabbing
-.operator-class, .dag-operator, .dag-operator .operator-class-name {
+.operator-class, .dag-operator, .dag-operator .operator-class-name, .control-canvas.pan-control {
   cursor: grab;
   cursor: -webkit-grab;
   cursor: -moz-grab;
@@ -54,7 +54,7 @@
   height: @dag-editor-default-canvas-height;
   position: relative;
   background: #FFF;
-  overflow: auto;
+  overflow: hidden;
   margin: 0 -15px;
 
   svg {
@@ -76,13 +76,17 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(255,0,0, 0.1);
+  background-color: rgba(0,0,255, 0.1);
 
   &.zoom-control {
     cursor: zoom-in;
     &.invert {
       cursor: zoom-out;
     }
+  }
+
+  &.pan-control {
+    background-color: rgba(0,255,0, 0.1);    
   }
 }
 

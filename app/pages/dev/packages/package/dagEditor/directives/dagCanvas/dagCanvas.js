@@ -22,7 +22,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 ])
 
 // Directive: DAG editor canvas
-.directive('dagCanvas', function(settings, $log, $jsPlumb, $compile) {
+.directive('dagCanvas', function(settings, $log, $jsPlumb, $compile, $document) {
 
   function angularizeSinkConnection(connection, stream, scope) {
     var streamScope = scope.$new();
@@ -91,8 +91,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
     var operator = {
       name: generateNewName('name', scope.app.operators, settings.dagEditor.DEFAULT_OPERATOR_NAME),
       opClass: opClass,
-      x: Math.max(0, x),
-      y: Math.max(0, y),
+      x: x,
+      y: y,
       properties: {},
       inputPorts: copyPorts(opClass.inputPorts, 'input'),
       outputPorts: copyPorts(opClass.outputPorts, 'output')
@@ -219,35 +219,39 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       scope.keysPressed = {};
 
       scope.captureKeydown = function(e) {
-        // ignore inputs
-        var trg = e.target.tagName && e.target.tagName.toLowerCase();
-        if ( trg === 'input' ) {
-          return true;
+        if (e.which === 16) {
+          scope.keysPressed.shift = true;
         }
-        console.log('down: ', e.which);
-        e.preventDefault();
-        scope.keysPressed[e.which] = true;
+        if (e.which === 18) {
+          scope.keysPressed.option = true;
+        }
+        if (e.which === 32) {
+          // check input, textarea, select
+          var tagname = e.target.tagName && e.target.tagName.toLowerCase();
+          if (['textarea', 'input', 'select'].indexOf(tagname) === -1) {
+            e.preventDefault();
+            e.stopPropagation();
+            scope.keysPressed.spacebar = true;
+          }
+        }
         scope.$digest();
       };
 
       scope.captureKeyup = function(e) {
-        // ignore inputs
-        var trg = e.target.tagName && e.target.tagName.toLowerCase();
-        if ( trg === 'input' ) {
-          return true;
+        if (e.which === 16) {
+          scope.keysPressed.shift = false;
         }
-        e.preventDefault();
-        console.log('up: ', e.which);
-        scope.keysPressed[e.which] = false;
+        if (e.which === 18) {
+          scope.keysPressed.option = false;
+        }
+        if (e.which === 32) {
+          scope.keysPressed.spacebar = false;
+        }
         scope.$digest();
       };
 
-      element.on('keydown', scope.captureKeydown);
-      element.on('keyup', scope.captureKeyup);
-      element.on('blur', function() {
-        console.log('blurred from dagCanvas');
-        scope.keysPressed = {};
-      });
+      $document.on('keydown', scope.captureKeydown);
+      $document.on('keyup', scope.captureKeyup);
 
       scope.setZoom = function(zoomDelta, controlPoint) {
 
@@ -269,9 +273,17 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           controlPoint[1]/newZoom - realPoint[1]
         ];
 
+        // Update zoom and translate on scope
+        scope.zoom = newZoom;
+        scope.translate = newTranslate;
+        scope.updateTransform();
+        $jsPlumb.setZoom(newZoom);
+      };
+
+      scope.updateTransform = function() {
         var el = $jsPlumb.getContainer();
         var p = [ 'webkit', 'moz', 'ms', 'o' ],
-            s = 'scale(' + newZoom + ') translate(' + (newTranslate[0]) + 'px, ' + (newTranslate[1]) + 'px)',
+            s = 'scale(' + scope.zoom + ') translate(' + (scope.translate[0]) + 'px, ' + (scope.translate[1]) + 'px)',
             oString = '0% 0%';
 
         for (var i = 0; i < p.length; i++) {
@@ -279,31 +291,48 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           el.style[p[i] + 'TransformOrigin'] = oString;
         }
 
-
-
         el.style.transform = s;
         el.style.transformOrigin = oString;
-
-        $jsPlumb.setZoom(newZoom);
-
-        scope.zoom = newZoom;
-        scope.translate = newTranslate;
       };
 
       scope.onZoomWheel = function($event, $delta, $deltaX, $deltaY) {
         $event.preventDefault();
-
         var delta = $deltaY * settings.dagEditor.ZOOM_STEP_MOUSEWHEEL;
-
         var controlCoords = [$event.offsetX, $event.offsetY];
-
         scope.setZoom(delta, controlCoords);
+      };
 
+      scope.onZoomClick = function($event) {
+        var delta = (scope.keysPressed.shift ? -1 : 1) * settings.dagEditor.ZOOM_STEP_CLICK;
+        var controlCoords = [$event.offsetX, $event.offsetY];
+        scope.setZoom(delta, controlCoords);        
+      };
+
+      scope.grabPanCanvas = function($event) {
+        $event.preventDefault();
+        var anchor = [$event.offsetX, $event.offsetY];
+        var initTranslate = scope.translate.slice();
+        
+        var mousemove = function(e) {
+          var delta = [e.offsetX - anchor[0], e.offsetY - anchor[1]];
+          scope.translate = [
+            initTranslate[0] + delta[0]/scope.zoom,
+            initTranslate[1] + delta[1]/scope.zoom
+          ];
+          scope.updateTransform();
+        };
+        var mouseup = function() {
+          $document.off('mousemove', mousemove);
+          $document.off('mousemove', mouseup);
+        };
+        $document.on('mousemove', mousemove);
+        $document.on('mouseup', mouseup);
       };
 
       scope.$on('$destroy', function() {
         $jsPlumb.unbind();
-        element.off('keydown keyup');
+        $document.off('keydown', scope.captureKeydown);
+        $document.off('keyup', scope.captureKeyup);
       });
 
     }
