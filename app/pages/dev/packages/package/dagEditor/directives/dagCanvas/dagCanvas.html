@@ -1,6 +1,9 @@
-<div
-  app="app"
-  ng-repeat="operator in app.operators"
-  dag-operator="operator"
-  selected="selected">
+<div class="real-canvas" jsplumb-container>
+  <div
+    app="app"
+    ng-repeat="operator in app.operators"
+    dag-operator="operator"
+    selected="selected">
+  </div>
 </div>
+<div class="control-canvas zoom-control" ng-class="{ invert: keysPressed[16] }" msd-wheel="onZoomWheel($event, $delta, $deltaX, $deltaY)" ng-show="keysPressed[18]"></div>

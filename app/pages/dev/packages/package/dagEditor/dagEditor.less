@@ -67,6 +67,31 @@
   }
 }
 
+// Element used for capturing panning
+// and zooming events.
+.control-canvas {
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255,0,0, 0.1);
+
+  &.zoom-control {
+    cursor: zoom-in;
+    &.invert {
+      cursor: zoom-out;
+    }
+  }
+}
+
+.real-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 // Operators that have been placed on the
 // dag-canvas
 .dag-operator {

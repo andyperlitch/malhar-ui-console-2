@@ -173,7 +173,10 @@ angular.module('app.settings', [])
 
     dagEditor: {
       DEFAULT_OPERATOR_NAME: 'Operator',
-      DEFAULT_STREAM_NAME: 'Stream'
+      DEFAULT_STREAM_NAME: 'Stream',
+      ZOOM_STEP_MOUSEWHEEL: 0.005,
+      MAX_ZOOM_LEVEL: 5,
+      MIN_ZOOM_LEVEL: 0.1
     },
 
     dag: {

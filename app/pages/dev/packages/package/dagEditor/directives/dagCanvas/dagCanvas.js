@@ -176,7 +176,9 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.$broadcast('connectionDetached', info.connection, true);
       });
 
-      // Sets up the droppable state of the canvas.
+      /**
+       * Sets up the droppable state of the canvas.
+       */
       element.droppable({
         /**
          * Listens for operator classes being dropped
@@ -200,16 +202,110 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
             var x = droppedOffset.left - droppableOffset.left;
             var y = droppedOffset.top - droppableOffset.top;
 
-            addOperator(opClass, x, y, scope);
+            addOperator(opClass, x / scope.zoom - scope.translate[0], y / scope.zoom - scope.translate[1], scope);
           }
 
           scope.$apply();
         }
       });
 
+      
+
+      /**
+       * Keyboard/Zoom controls
+       */
+      scope.zoom = 1;
+      scope.translate = [0,0];
+      scope.keysPressed = {};
+
+      scope.captureKeydown = function(e) {
+        // ignore inputs
+        var trg = e.target.tagName && e.target.tagName.toLowerCase();
+        if ( trg === 'input' ) {
+          return true;
+        }
+        console.log('down: ', e.which);
+        e.preventDefault();
+        scope.keysPressed[e.which] = true;
+        scope.$digest();
+      };
+
+      scope.captureKeyup = function(e) {
+        // ignore inputs
+        var trg = e.target.tagName && e.target.tagName.toLowerCase();
+        if ( trg === 'input' ) {
+          return true;
+        }
+        e.preventDefault();
+        console.log('up: ', e.which);
+        scope.keysPressed[e.which] = false;
+        scope.$digest();
+      };
+
+      element.on('keydown', scope.captureKeydown);
+      element.on('keyup', scope.captureKeyup);
+      element.on('blur', function() {
+        console.log('blurred from dagCanvas');
+        scope.keysPressed = {};
+      });
+
+      scope.setZoom = function(zoomDelta, controlPoint) {
+
+        // The "real" point on the dag canvas coordinate system
+        // realPoint = controlPoint/zoom - translate
+        var realPoint = [
+          controlPoint[0]/scope.zoom - scope.translate[0],
+          controlPoint[1]/scope.zoom - scope.translate[1]
+        ];
+
+        var newZoom = scope.zoom + zoomDelta;
+        newZoom = Math.min(newZoom, settings.dagEditor.MAX_ZOOM_LEVEL);
+        newZoom = Math.max(newZoom, settings.dagEditor.MIN_ZOOM_LEVEL);
+
+        // After zoom, the realPoint should equal the controlPoint
+        // translate = controlPoint - realPoint*zoom
+        var newTranslate = [
+          controlPoint[0]/newZoom - realPoint[0],
+          controlPoint[1]/newZoom - realPoint[1]
+        ];
+
+        var el = $jsPlumb.getContainer();
+        var p = [ 'webkit', 'moz', 'ms', 'o' ],
+            s = 'scale(' + newZoom + ') translate(' + (newTranslate[0]) + 'px, ' + (newTranslate[1]) + 'px)',
+            oString = '0% 0%';
+
+        for (var i = 0; i < p.length; i++) {
+          el.style[p[i] + 'Transform'] = s;
+          el.style[p[i] + 'TransformOrigin'] = oString;
+        }
+
+
+
+        el.style.transform = s;
+        el.style.transformOrigin = oString;
+
+        $jsPlumb.setZoom(newZoom);
+
+        scope.zoom = newZoom;
+        scope.translate = newTranslate;
+      };
+
+      scope.onZoomWheel = function($event, $delta, $deltaX, $deltaY) {
+        $event.preventDefault();
+
+        var delta = $deltaY * settings.dagEditor.ZOOM_STEP_MOUSEWHEEL;
+
+        var controlCoords = [$event.offsetX, $event.offsetY];
+
+        scope.setZoom(delta, controlCoords);
+
+      };
+
       scope.$on('$destroy', function() {
         $jsPlumb.unbind();
+        element.off('keydown keyup');
       });
+
     }
   };
 });
