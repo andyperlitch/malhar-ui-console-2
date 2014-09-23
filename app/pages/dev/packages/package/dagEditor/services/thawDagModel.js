@@ -28,7 +28,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
 
     $log.info('Thawing DAG Model');
 
-    scope.thawing = true;
+    // set flag so other parts of the app know that we are thawing
+    scope.app.thawing = true;
 
     // empty out streams
     _.each($jsPlumb.getAllConnections(), function(connection) {
@@ -123,7 +124,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
         scope.$emit('selectEntity'); // deselect all
 
         // unset the thawing flag then trigger a freeze
-        scope.thawing = false;
+        scope.app.thawing = false;
         scope.freeze();
       });
 
