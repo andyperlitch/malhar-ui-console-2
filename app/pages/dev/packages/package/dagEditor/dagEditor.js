@@ -104,6 +104,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           debouncedSaveFrozen();
         } else {
           first = false;
+          $scope.$broadcast('firstLoadComplete');
         }
       }, true); // true set here to do deep equality check on $scope
     });

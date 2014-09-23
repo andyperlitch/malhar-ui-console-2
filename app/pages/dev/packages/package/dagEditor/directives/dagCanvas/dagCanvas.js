@@ -443,6 +443,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.updateZoomAndTransform();
       };
 
+      scope.$on('firstLoadComplete', scope.fitToContent);
+
       scope.$on('$destroy', function() {
         $jsPlumb.unbind();
         $document.off('keydown', scope.captureKeydown);
