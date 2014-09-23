@@ -33,6 +33,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   'app.pages.dev.packages.package.dagEditor.directives.dagStream',
 
   // services
+  'app.components.services.dtText',
+  'app.components.services.confirm',
   'app.components.services.jsPlumb',
   'app.pages.dev.packages.package.dagEditor.services.freezeDagModel',
   'app.pages.dev.packages.package.dagEditor.services.thawDagModel',
@@ -57,7 +59,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Page Controller
-.controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel) {
+.controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel, dtText, confirm, $location) {
 
   $scope.alerts = [];
   var msgIds = 0;
@@ -131,19 +133,18 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       if ($scope.app.operators && $scope.app.operators.length < 1) {
         // empty app
         $scope.launchPossible = false;
-        $scope.launchImpossibleReason = "The app needs at least one output operator.";
+        $scope.launchImpossibleReason = 'The app needs at least one output operator.';
       } else {
         $scope.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
-        $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : "Application cannot be started for reasons unknown.";
+        $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : 'Application cannot be started for reasons unknown.';
       }
       // now that it's thawed, watch the app for changes
       var first = true; // don't do this the first time.
       $scope.$watch('app', function() {
         // update the representation we send to the server
-        $scope.saveRequested = true;
         if (!first) {
           $scope.launchPossible = false;
-          $scope.launchImpossibleReason = "A save is in progress. Please wait until it is finished.";
+          $scope.launchImpossibleReason = 'A save is in progress. Please wait until it is finished.';
           $scope.freeze();
           $scope.saveRequested = true;
           debouncedSaveFrozen();
@@ -236,10 +237,10 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         if ($scope.app.operators && $scope.app.operators.length < 1) {
           // empty app
           $scope.launchPossible = false;
-          $scope.launchImpossibleReason = "The app needs at least one output operator.";
+          $scope.launchImpossibleReason = 'The app needs at least one output operator.';
         } else {
           $scope.launchPossible = (e.status == 200 && e.data && !e.data.error);
-          $scope.launchImpossibleReason = e.data && e.data.error ? e.data.error : "Application cannot be started for reasons unknown.";
+          $scope.launchImpossibleReason = e.data && e.data.error ? e.data.error : 'Application cannot be started for reasons unknown.';
         }
         $scope.saveLastTimestamp = new Date();
 
@@ -251,11 +252,39 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 
-  $scope.$on('$locationChangeStart', function(event) {
-    if ($scope.saveRequested) {
-      console.log("I would have shown the confirm thing.");
+  var confirmNavigation = function(event, next, current) {
+    if ($scope.saveRequested || $scope.saveInProgress) {
+      // block the navigation change to show the confirm box
+      event.preventDefault();
+
+      // Open a modal confirming the command
+      return confirm({
+        title: dtText.get('Save in Progress...'),
+        body: dtText.get('The streaming application is currently being saved to the server. Are you sure you want to cancel that?')
+      }).then(function() {
+        // User really wants to navigate away
+        $scope.saveRequested = $scope.saveInProgress = false;
+        $location.url($location.url(next).hash());
+      });
     }
-  });
+  };
+
+
+  $scope.$on('$locationChangeStart', confirmNavigation);
+  window.onbeforeunload = function (event) {
+    console.log($scope.saveRequested, $scope.saveInProgress);
+    if ($scope.saveRequested || $scope.saveInProgress) {
+      var message = 'The streaming application is currently being saved to the server.';
+      if (typeof event == 'undefined') {
+        event = window.event;
+      }
+      if (event) {
+        event.returnValue = message;
+      }
+      return message;
+    }
+  }
+
   // debounced save function
   var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);
 });
