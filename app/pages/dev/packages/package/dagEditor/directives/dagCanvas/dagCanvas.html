@@ -1,6 +1,29 @@
-<div
-  app="app"
-  ng-repeat="operator in app.operators"
-  dag-operator="operator"
-  selected="selected">
+<div class="dag-canvas" msd-wheel="onPanWheel($event, $delta, $deltaX, $deltaY)">
+  <div class="real-canvas" jsplumb-container>
+    <div
+      app="app"
+      ng-repeat="operator in app.operators"
+      dag-operator="operator"
+      selected="selected">
+    </div>
+  </div>
+  <div class="control-canvas zoom-control"
+    ng-class="{ invert: keysPressed.shift }"
+    msd-wheel="onZoomWheel($event, $delta, $deltaX, $deltaY)"
+    ng-show="keysPressed.option"
+    ng-click="onZoomClick($event)"
+  >
+    scroll up to zoom in, down to zoom out<br>
+  </div>
+
+  <div class="control-canvas pan-control"
+    ng-mousedown="grabPanCanvas($event)"
+    ng-show="keysPressed.spacebar"
+  >
+    click and drag to pan the canvas
+  </div>
+  <button role="button" class="btn btn-primary fitToContent" ng-click="fitToContent()">
+    <span class="glyphicon glyphicon-picture"></span>
+    <span dt-text>fit to content</span>
+  </a>
 </div>
