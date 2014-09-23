@@ -145,6 +145,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
   return {
     restrict: 'A',
+    replace: true,
     templateUrl: 'pages/dev/packages/package/dagEditor/directives/dagCanvas/dagCanvas.html',
     scope: {
       operatorClasses: '=',
@@ -276,11 +277,10 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         // Update zoom and translate on scope
         scope.zoom = newZoom;
         scope.translate = newTranslate;
-        scope.updateTransform();
-        $jsPlumb.setZoom(newZoom);
+        scope.updateZoomAndTransform();
       };
 
-      scope.updateTransform = function() {
+      scope.updateZoomAndTransform = function() {
         var el = $jsPlumb.getContainer();
         var p = [ 'webkit', 'moz', 'ms', 'o' ],
             s = 'scale(' + scope.zoom + ') translate(' + (scope.translate[0]) + 'px, ' + (scope.translate[1]) + 'px)',
@@ -293,19 +293,33 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
         el.style.transform = s;
         el.style.transformOrigin = oString;
+        $jsPlumb.setZoom(scope.zoom);
       };
 
       scope.onZoomWheel = function($event, $delta, $deltaX, $deltaY) {
         $event.preventDefault();
+        $event.stopPropagation();
         var delta = $deltaY * settings.dagEditor.ZOOM_STEP_MOUSEWHEEL;
         var controlCoords = [$event.offsetX, $event.offsetY];
         scope.setZoom(delta, controlCoords);
       };
 
       scope.onZoomClick = function($event) {
+        $event.preventDefault();
+        $event.originalEvent.preventDefault();
+        $event.stopPropagation();
         var delta = (scope.keysPressed.shift ? -1 : 1) * settings.dagEditor.ZOOM_STEP_CLICK;
         var controlCoords = [$event.offsetX, $event.offsetY];
         scope.setZoom(delta, controlCoords);        
+      };
+
+      scope.onPanWheel = function($event, $delta, $deltaX, $deltaY) {
+        $event.preventDefault();
+        scope.translate = [
+          scope.translate[0] - $deltaX/scope.zoom,
+          scope.translate[1] + $deltaY/scope.zoom
+        ];
+        scope.updateZoomAndTransform();
       };
 
       scope.grabPanCanvas = function($event) {
@@ -319,7 +333,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
             initTranslate[0] + delta[0]/scope.zoom,
             initTranslate[1] + delta[1]/scope.zoom
           ];
-          scope.updateTransform();
+          scope.updateZoomAndTransform();
         };
         var mouseup = function() {
           $document.off('mousemove', mousemove);
@@ -327,6 +341,106 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         };
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
+      };
+
+      scope.fitToContent = function() {
+        if (!scope.app.operators.length) {
+          scope.zoom = 1;
+          scope.translate = [0,0];
+          scope.updateZoomAndTransform();
+          return;
+        }
+        var firstOperator = scope.app.operators[0];
+        var minX = firstOperator.x;
+        var minY = firstOperator.y;
+        var maxX = firstOperator.x;
+        var maxY = firstOperator.y;
+
+        _.each(scope.app.operators, function(o) {
+          minX = Math.min(minX, o.x);
+          maxX = Math.max(maxX, o.x);
+          minY = Math.min(minY, o.y);
+          maxY = Math.max(maxY, o.y);
+        });
+
+        var operatorDiameter = element.find('.dag-operator').outerWidth();
+        var targetLabelWidths = element.find('.endpointTargetLabel').map(function(i,el) {
+          return $(el).width();
+        });
+        var sourceLabelWidths = element.find('.endpointSourceLabel').map(function(i,el) {
+          return $(el).width();
+        });
+
+
+        minX -= Math.max.apply(null, targetLabelWidths) * 2;
+        maxX += operatorDiameter + Math.max.apply(null, sourceLabelWidths) * 2;
+        maxY += operatorDiameter;
+
+        scope.setViewBox([minX, minY], [maxX,maxY]);
+      };
+
+      scope.setViewBox = function(topLeft, bottomRight) {
+
+        var boxWidth = bottomRight[0] - topLeft[0];
+        var boxHeight = bottomRight[1] - topLeft[1];
+        var boxRelHeight = boxHeight/boxWidth;
+        var boxRelWidth = 1/boxRelHeight;
+
+        var viewportWidth = element.width();
+        var viewportHeight = element.height();
+        var viewportRelHeight = viewportHeight/viewportWidth;
+        var viewportRelWidth = 1/viewportRelHeight;
+
+
+        // determine dominant dimension (the side that gets fit)
+        // and recessive dimension (the side that gets centered)
+        // 
+        //  +-------------------------+
+        //  |                         |
+        //  |+-----------------------+| <-+ 
+        //  ||                       ||   |
+        //  ||                       ||   |--= recessive
+        //  ||                       ||   |
+        //  ||                       ||   |
+        //  |+-----------------------+| <-+
+        //  |                         |
+        //  +-------------------------+
+        //   ^                       ^
+        //   |                       |
+        //   +-----------------------+
+        //               |
+        //            dominant
+
+        var dominant = 0;  // default to width
+        var recessive = 1; // default to height
+        var recessiveBoxRealLength = boxHeight;
+        var recessiveBoxRelLength = boxRelHeight;
+        var recessiveViewportRelLength = viewportRelHeight;
+        var newZoom =  viewportWidth / boxWidth;
+
+
+        if (boxRelHeight > viewportRelHeight) {
+          dominant = 1;
+          recessive = 0;
+          recessiveBoxRealLength = boxWidth;
+          recessiveBoxRelLength = boxRelWidth;
+          recessiveViewportRelLength = viewportRelWidth;
+          newZoom = viewportHeight / boxHeight;
+        }
+
+        // Set the translate
+        var newTranslate = [];
+        newTranslate[dominant] = -topLeft[dominant];
+        var adjustedRecessiveLength = (Math.abs(topLeft[recessive] - bottomRight[recessive])/recessiveBoxRelLength)*recessiveViewportRelLength;
+        var amountToAdjust = (adjustedRecessiveLength - recessiveBoxRealLength) / 2;
+        newTranslate[recessive] = -(topLeft[recessive] - amountToAdjust);
+
+
+        // Set the zoom
+        scope.zoom = newZoom;
+
+        scope.translate = newTranslate;
+        scope.updateZoomAndTransform();
       };
 
       scope.$on('$destroy', function() {

@@ -65,6 +65,12 @@
   .ui-resizable-s {
     bottom: 0;
   }
+
+  .fitToContent {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
 }
 
 // Element used for capturing panning
@@ -76,7 +82,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0,0,255, 0.1);
+  font-size: 300%;
+  color: rgba(0,0,0,0.3);
+  text-align: center;
+     -moz-user-select: none;
+  -webkit-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 
   &.zoom-control {
     cursor: zoom-in;
@@ -86,7 +98,6 @@
   }
 
   &.pan-control {
-    background-color: rgba(0,255,0, 0.1);    
   }
 }
 
