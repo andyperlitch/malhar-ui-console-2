@@ -59,6 +59,39 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 // Page Controller
 .controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel) {
 
+  $scope.alerts = [];
+  var msgIds = 0;
+
+  // launch the app
+  $scope.launch = function (event, name) {
+    var app = new PackageApplicationModel({
+      packageName: $routeParams.packageName,
+      packageVersion: $routeParams.packageVersion,
+      appName: name
+    });
+    var infoMsgId = msgIds++;
+    $scope.alerts.push({
+      id: infoMsgId,
+      type: 'info',
+      appName: name,
+      include: 'pages/dev/packages/package/msgSubmit.html'
+    });
+
+    app.launch().success(function (response) {
+      // remove info msg
+      $scope.alerts = _.reject($scope.alerts, function (alert) {
+        return alert.id === infoMsgId;
+      });
+
+      $scope.alerts.push({
+        type: 'success',
+        appName: name,
+        appId: response.appId,
+        include: 'pages/dev/packages/package/msgLaunch.html'
+      });
+    });
+  };
+
   // Deselects everything
   $scope.deselectAll = function() {
     $scope.selected = null;
@@ -93,12 +126,24 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.packageApplicationModelResource.fetch()
   ]).then(function() {
     // set up the dag in the UI
+    if ($scope.app.operators && $scope.app.operators.length < 1) {
+      // empty app
+      $scope.launchPossible = false;
+      $scope.launchImpossibleReason = "The app needs at least one output operator.";
+    } else {
+      $scope.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
+      $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : "Application cannot be started for reasons unknown.";
+    }
+
     thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
       // now that it's thawed, watch the app for changes
       var first = true; // don't do this the first time.
       $scope.$watch('app', function() {
         // update the representation we send to the server
+        $scope.saveRequested = true;
         if (!first) {
+          $scope.launchPossible = false;
+          $scope.launchImpossibleReason = "A save is in progress. Please wait until it is finished.";
           $scope.freeze();
           $scope.saveRequested = true;
           debouncedSaveFrozen();
@@ -172,6 +217,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Initialize selection info
   $scope.deselectAll();
 
+  // Make it possible to call freezeDagModel() from elsewhere
   $scope.freeze = function() {
     $scope.packageApplicationModelResource.data.fileContent = freezeDagModel($scope);
   };
@@ -182,17 +228,34 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       // not currently saving, so unset saveRequested and set saveInProgress
       $scope.saveRequested = false;
       $scope.saveInProgress = true;
-      $scope.packageApplicationModelResource.save().then(function(e){
-        $scope.saveLastTimestamp = new Date();
-        // unset saveInProgress
+      $scope.packageApplicationModelResource.save().then(function(e) {
+        // unset saveInProgress now that we are done
         $scope.saveInProgress = false;
+
+        // set scope vars to indicate saving state and launch possibility
+        if ($scope.app.operators && $scope.app.operators.length < 1) {
+          // empty app
+          $scope.launchPossible = false;
+          $scope.launchImpossibleReason = "The app needs at least one output operator.";
+        } else {
+          $scope.launchPossible = (e.status == 200 && e.data && !e.data.error);
+          $scope.launchImpossibleReason = e.data && e.data.error ? e.data.error : "Application cannot be started for reasons unknown.";
+        }
+        $scope.saveLastTimestamp = new Date();
+
         if ($scope.saveRequested) {
+          // a save was requested since this request was started, so save now
           saveFrozen();
         }
       });
     }
   };
 
+  $scope.$on('$locationChangeStart', function(event) {
+    if ($scope.saveRequested) {
+      console.log("I would have shown the confirm thing.");
+    }
+  });
   // debounced save function
   var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);
 });

@@ -14,8 +14,18 @@
 
   <!-- *** DAG CANVAS *** -->
   <div class="col-md-8" id="dag-canvas-container">
-    <span class="pull-right saving" ng-show="saveInProgress">Saving...</span>
-    <span class="pull-right saving" title="Last saved at {{ saveLastTimestamp | relativeTimestamp }}" ng-show="!saveRequested && !saveInProgress && saveLastTimestamp">All changes saved to server</span>
+    <div id="save-launch-status" class="pull-right">
+      <span class="saving" ng-show="saveInProgress">Saving...</span>
+      <span class="saving" title="Last saved at {{ saveLastTimestamp | relativeTimestamp }}" ng-show="!saveRequested && !saveInProgress && saveLastTimestamp">All changes saved to server</span>
+      <button class="btn btn-xs btn-inverse" ng-show="!launchPossible" ng-click="" tooltip-popup-delay="100" tooltip-placement="bottom" tooltip="{{launchImpossibleReason}}">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+        <span dt-text="launch">launch</span>
+      </button>
+      <button class="btn btn-xs btn-primary" ng-show="launchPossible" ng-click="launch($event, appName);" tooltip-popup-delay="100" tooltip-placement="bottom" tooltip="Launch {{appName}} now.">
+        <span class="glyphicon glyphicon-play"></span>
+        <span dt-text="launch">launch</span>
+      </button>
+    </div>
     <h2 class="h4">DAG Canvas</h2>
 
     <!-- The canvas div:
