@@ -19,6 +19,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
   'app.components.services.jsPlumb',
   'app.components.services.dtText',
   'app.components.services.confirm',
+  'app.components.filters.camel2spaces',
   'app.pages.dev.packages.package.dagEditor.services.dagEditorOptions'
 ])
 // Directive: operator on the canvas
@@ -113,7 +114,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
         var label = endpoint.getOverlay('label');
         label.setLabel(port.name);
 
-        // Set better location for labels
+        // Set location for labels
         var width = $(label.getElement()).outerWidth() - 20;
         var radius = lastOptions.paintStyle.radius;
         if (lastOptions.paintStyle.lineWidth) {
@@ -163,8 +164,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
 
       // Set the initial position
       element.css({
-        left: scope.operator.x,
-        top: scope.operator.y
+        left: scope.operator.x + 'px',
+        top: scope.operator.y + 'px'
       });
 
       // Make it draggable via jsPlumb
