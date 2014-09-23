@@ -2,15 +2,15 @@
 @dag-editor-operator-side-length: 130px;
 
 // datatorrent colors
-@dt-yellow: rgb(219,226,56);
-@dt-lightblue: rgb(36,163,220);
-@dt-green: rgb(151,202,69);
-@dt-pink: rgb(216,48,148);
+@dt-yellow: rgb(221,229,65);
+@dt-lightblue: rgb(41,164,220);
+@dt-green: rgb(147,198,73);
+@dt-pink: rgb(215,54,150);
 
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
-@dag-editor-selected-operator-color: lighten(@dt-green, 20%);
+@dag-editor-selected-operator-color: lighten(@dt-green, 15%);
 
-@dag-editor-selected-stream-color: lighten(@dt-green, 20%);
+@dag-editor-selected-stream-color: lighten(@dt-green, 15%);
 
 @dag-editor-inputEndpoint-fill: @dt-lightblue;
 @dag-editor-inputEndpoint-stroke: #FFF;
@@ -41,10 +41,14 @@
 }
 
 #dag-canvas-container {
-  span.pull-right.saving {
-    font-size: 12px;
-    margin-top: 14px;
-    color: #888;
+  #save-launch-status {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    span.saving {
+      font-size: 12px;
+      color: #888;
+    }
   }
 }
 // The canvas where operators get placed
@@ -207,7 +211,6 @@
   cursor: pointer;
   &:hover, &.hover {
     z-index: 3;
-    background: white;
   }
   &.selected {
     background: @dag-editor-selected-stream-color;
