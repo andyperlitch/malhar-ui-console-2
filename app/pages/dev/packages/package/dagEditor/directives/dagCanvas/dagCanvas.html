@@ -18,7 +18,7 @@
 
   <div class="control-canvas pan-control"
     ng-mousedown="grabPanCanvas($event)"
-    ng-show="keysPressed.spacebar"
+    ng-show="keysPressed.spacebar && !keysPressed.option"
   >
     click and drag to pan the canvas
   </div>
