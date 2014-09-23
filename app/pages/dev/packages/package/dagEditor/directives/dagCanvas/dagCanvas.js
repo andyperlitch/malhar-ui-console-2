@@ -350,7 +350,19 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           scope.updateZoomAndTransform();
           return;
         }
+
+        var operatorDiameter = element.find('.dag-operator').outerWidth();
         var firstOperator = scope.app.operators[0];
+
+        if (scope.app.operators.length === 1) {
+          var halfViewportWidth = (element.width() / 2) - operatorDiameter / 2;
+          var halfViewportHeight = (element.height() / 2) - operatorDiameter / 2;
+          scope.zoom = 1;
+          scope.translate = [ -firstOperator.x + halfViewportWidth , firstOperator.y - halfViewportHeight ];
+          scope.updateZoomAndTransform();
+          return;
+        }
+        
         var minX = firstOperator.x;
         var minY = firstOperator.y;
         var maxX = firstOperator.x;
@@ -363,7 +375,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           maxY = Math.max(maxY, o.y);
         });
 
-        var operatorDiameter = element.find('.dag-operator').outerWidth();
+        
         var targetLabelWidths = element.find('.endpointTargetLabel').map(function(i,el) {
           return $(el).width();
         });
