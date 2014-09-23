@@ -126,16 +126,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.packageApplicationModelResource.fetch()
   ]).then(function() {
     // set up the dag in the UI
-    if ($scope.app.operators && $scope.app.operators.length < 1) {
-      // empty app
-      $scope.launchPossible = false;
-      $scope.launchImpossibleReason = "The app needs at least one output operator.";
-    } else {
-      $scope.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
-      $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : "Application cannot be started for reasons unknown.";
-    }
-
     thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
+      // handle the launch button on DAG load
+      if ($scope.app.operators && $scope.app.operators.length < 1) {
+        // empty app
+        $scope.launchPossible = false;
+        $scope.launchImpossibleReason = "The app needs at least one output operator.";
+      } else {
+        $scope.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
+        $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : "Application cannot be started for reasons unknown.";
+      }
       // now that it's thawed, watch the app for changes
       var first = true; // don't do this the first time.
       $scope.$watch('app', function() {
