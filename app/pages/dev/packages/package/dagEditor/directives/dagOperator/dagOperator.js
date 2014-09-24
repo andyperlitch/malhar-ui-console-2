@@ -170,7 +170,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
 
       // Make it draggable via jsPlumb
       $jsPlumb.draggable(element, {
-        containment: element.parent(),
         stop: function(event, ui) {
           var position = ui.position;
           scope.operator.x = position.left;
