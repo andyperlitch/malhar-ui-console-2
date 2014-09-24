@@ -1,0 +1,38 @@
+<div class="dag-operator-classes">
+  <input class="form-control" type="text" placeholder="quick find" ng-model="search.term">
+
+  <!-- the grouped listing -->
+  <div
+    ng-show="!search.term"
+    ng-repeat="(groupName, group) in groupedClasses"
+    class="operator-class-group"
+  >
+    <div class="operator-class-group-heading" ng-class="{expanded: expandState[groupName]}" ng-click="expandState[groupName] = !expandState[groupName]">
+      <span class="glyphicon glyphicon-plus" ng-if="!expandState[groupName]"></span>
+      <span class="glyphicon glyphicon-minus" ng-if="expandState[groupName]"></span>
+      {{ groupName }} ({{ group.length }})
+    </div>
+    <div 
+      ng-show="expandState[groupName]"
+      ng-repeat="operator in group"
+      dag-operator-class
+      class="operator-class"
+      ng-attr-data-classname="{{ operator.name }}"
+      ng-attr-title="{{ operator.shortDesc }}"
+    >
+      {{operator.displayName}}
+    </div>
+  </div>
+
+  <!-- search listing -->
+  <div 
+    ng-if="search.term"
+    ng-repeat="operator in operatorClasses | filter:search.term"
+    dag-operator-class
+    class="operator-class"
+    ng-attr-data-classname="{{ operator.name }}"
+    ng-attr-title="{{ operator.shortDesc }}"
+  >
+    {{ operator.displayName }}
+  </div>
+</div>

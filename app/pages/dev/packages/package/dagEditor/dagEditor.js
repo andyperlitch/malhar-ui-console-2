@@ -27,6 +27,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   'app.components.directives.jsplumbContainer',
   'app.components.directives.validation.uniqueInSet',
   'app.pages.dev.packages.package.dagEditor.directives.dagCanvas',
+  'app.pages.dev.packages.package.dagEditor.directives.dagOperatorClasses',
   'app.pages.dev.packages.package.dagEditor.directives.dagOperatorClass',
   'app.pages.dev.packages.package.dagEditor.directives.dagOperator',
   'app.pages.dev.packages.package.dagEditor.directives.dagPort',
@@ -155,24 +156,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       }, true); // true set here to do deep equality check on $scope
     });
   });
-
-
-  // ng-grid options for operator class list
-  $scope.opClassListOptions = {
-    data: 'operatorClasses',
-    enableFiltering: true,
-    groups: ['packageName'],
-    rowTemplate: 'pages/dev/packages/package/dagEditor/uiGridTemplates/rowTemplate.html',
-    columnDefs: [
-      // Simple (Class) Name
-      {
-        groupable: false,
-        name: 'simpleName',
-        displayName: 'class',
-        field: 'simpleName'
-      }
-    ]
-  };
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;

@@ -68,7 +68,7 @@ function startServer(baseDirs, port) {
   });
   app.get('/ws/v1/appPackages/mydtapp2/1.0/operators', function(req, res) {
     setTimeout(function() {
-      res.json(require('../mock/mockOperatorClasses.json'));
+      res.json(require('../mock/mockOperatorClasses2.json'));
     }, 1000);
   });
   // ------------------------------------------
