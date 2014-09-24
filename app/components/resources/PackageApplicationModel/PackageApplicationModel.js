@@ -22,6 +22,15 @@ angular.module('app.components.resources.PackageApplicationModel',[
     var PackageApplicationModel = BaseModel.extend({
       debugName: 'PackageApplicationModel',
       urlKey: 'PackageApplication',
+      transformResponse: function(raw) {
+        if (raw.fileContent.operators) {
+          _.each(raw.fileContent.operators, function(o) {
+            o.x *= 1;
+            o.y *= 1;
+          });
+        }
+        return raw;
+      },
       save: function(errorIfExists) {
         errorIfExists = !! errorIfExists;
         return $http.put(this.url, this.data.fileContent, { params: { errorIfExists: errorIfExists } });
