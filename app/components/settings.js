@@ -92,6 +92,7 @@ angular.module('app.settings', [])
       User                     :'/ws/:v/profile/user',
       Packages                 :'/ws/:v/appPackages',
       Package                  :'/ws/:v/appPackages/:packageName/:packageVersion',
+      PackageImport            :'/ws/:v/appPackages/import',
       PackageApplications      :'/ws/:v/appPackages/:packageName/:packageVersion/applications',
       PackageApplication       :'/ws/:v/appPackages/:packageName/:packageVersion/applications/:appName'
     },
@@ -141,6 +142,7 @@ angular.module('app.settings', [])
       // Development
       Packages                 :'/packages',
       Package                  :'/packages/:packageName/:packageVersion',
+      PackageImport            :'/packages/import',
       PackageApplication       :'/packages/:packageName/:packageVersion/applications/:appName',
       DagEditor                :'/packages/:packageName/:packageVersion/applications/:appName/dagEditor'
     },
