@@ -1,0 +1,27 @@
+.dag-operator-classes {
+  height: @dag-editor-default-canvas-height;
+  overflow: auto;
+
+  .operator-class {
+    padding: 0.2em;
+    &:nth-child(odd) {
+      background: #FFF;
+    }
+  }
+
+  .operator-class-group {
+    .operator-class-group-heading {
+      cursor: pointer;
+      padding: 0.2em;
+      border-bottom: 1px solid #DDD;
+      &.expanded {
+        background: #FFF;
+      }
+    } 
+
+    .operator-class {
+      margin-left: 1em;
+    }    
+
+  }
+}
