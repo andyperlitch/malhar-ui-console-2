@@ -62,7 +62,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 // Page Controller
 .controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel, dtText, confirm, $location) {
 
-  $scope.alerts = [];
+  $scope.launchAlerts = [];
   var msgIds = 0;
 
   // launch the app
@@ -73,7 +73,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       appName: name
     });
     var infoMsgId = msgIds++;
-    $scope.alerts.push({
+    $scope.launchAlerts.push({
       id: infoMsgId,
       type: 'info',
       appName: name,
@@ -82,17 +82,22 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
     app.launch().success(function (response) {
       // remove info msg
-      $scope.alerts = _.reject($scope.alerts, function (alert) {
+      $scope.launchAlerts = _.reject($scope.launchAlerts, function (alert) {
         return alert.id === infoMsgId;
       });
 
-      $scope.alerts.push({
+      $scope.launchAlerts.push({
         type: 'success',
         appName: name,
         appId: response.appId,
         include: 'pages/dev/packages/package/msgLaunch.html'
       });
     });
+  };
+
+  // handle closing launch alerts
+  $scope.closeAlert = function (index) {
+    $scope.launchAlerts.splice(index, 1);
   };
 
   // Deselects everything

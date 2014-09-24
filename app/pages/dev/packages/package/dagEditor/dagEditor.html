@@ -25,6 +25,15 @@
         <span class="glyphicon glyphicon-play"></span>
         <span dt-text="launch">launch</span>
       </button>
+      <alert ng-repeat="alert in launchAlerts"
+             type="{{alert.type}}"
+             close="closeAlert($index);"
+             class="notification">
+          <span ng-if="alert.include">
+              <span ng-include="alert.include"></span>
+          </span>
+          <span ng-if="!alert.include">{{alert.msg}}</span>
+      </alert>
     </div>
     <h2 class="h4">Application Canvas</h2>
 
