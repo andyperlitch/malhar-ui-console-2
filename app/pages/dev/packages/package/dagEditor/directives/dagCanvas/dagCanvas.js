@@ -358,7 +358,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           var halfViewportWidth = (element.width() / 2) - operatorDiameter / 2;
           var halfViewportHeight = (element.height() / 2) - operatorDiameter / 2;
           scope.zoom = 1;
-          scope.translate = [ -firstOperator.x + halfViewportWidth , firstOperator.y - halfViewportHeight ];
+          scope.translate = [ -firstOperator.x + halfViewportWidth , -firstOperator.y + halfViewportHeight ];
           scope.updateZoomAndTransform();
           return;
         }
