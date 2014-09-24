@@ -18,6 +18,7 @@
 angular.module('app.pages.dev.packages.import', [
   'ui.grid',
   'ui.grid.selection',
+  'ui.grid.resizeColumns',
   'app.components.resources.PackageImportCollection'
 ])
 
@@ -37,23 +38,26 @@ angular.module('app.pages.dev.packages.import', [
     function fetchPackages() {
       var packages = new PackageImportCollection();
       packages.fetch().then(function (data) {
-        console.log(data);
         $scope.gridOptions.data = data;
       });
     }
 
     $scope.gridOptions = {
+      enableColumnResizing: true,
       enableRowSelection: true,
       multiSelect: true,
       columnDefs: [
         {
-          name: 'file'
+          name: 'file',
+          width: '50%'
         },
         {
-          name: 'displayName'
+          name: 'displayName',
+          width: '30%'
         },
         {
-          name: 'version'
+          name: 'version',
+          width: '20%'
         }
       ]
     };
