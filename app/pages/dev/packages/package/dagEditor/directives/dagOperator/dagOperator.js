@@ -181,10 +181,12 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
       // Set the ports as anchors/endpoints
       scope.endpoints = setPortEndpoints(scope.operator, element, scope);
 
-      // Start by editing name
-      //scope.editName({
-      //  target: element.find('.dag-operator-name')[0]
-      //}, scope.operator);
+      // Start by editing name if this is a real drop (not thawing)
+      if (!scope.app.thawing) {
+        scope.editName({
+          target: element.find('.dag-operator-name')[0]
+        }, scope.operator);
+      }
 
       // destroy event
       scope.$on('$destroy', function() {
