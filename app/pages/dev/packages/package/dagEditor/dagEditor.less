@@ -2,15 +2,15 @@
 @dag-editor-operator-side-length: 130px;
 
 // datatorrent colors
-@dt-yellow: rgb(219,226,56);
-@dt-lightblue: rgb(36,163,220);
-@dt-green: rgb(151,202,69);
-@dt-pink: rgb(216,48,148);
+@dt-yellow: rgb(221,229,65);
+@dt-lightblue: rgb(41,164,220);
+@dt-green: rgb(147,198,73);
+@dt-pink: rgb(215,54,150);
 
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
-@dag-editor-selected-operator-color: lighten(@dt-green, 20%);
+@dag-editor-selected-operator-color: lighten(@dt-green, 15%);
 
-@dag-editor-selected-stream-color: lighten(@dt-green, 20%);
+@dag-editor-selected-stream-color: lighten(@dt-green, 15%);
 
 @dag-editor-inputEndpoint-fill: @dt-lightblue;
 @dag-editor-inputEndpoint-stroke: #FFF;
@@ -28,7 +28,7 @@
 @dag-editor-selected-endpoint-highlight: @dt-yellow;
 
 // Set these elements to cursor:grab/grabbing
-.operator-class, .dag-operator, .dag-operator .operator-class-name {
+.operator-class, .dag-operator, .dag-operator .operator-class-name, .control-canvas.pan-control {
   cursor: grab;
   cursor: -webkit-grab;
   cursor: -moz-grab;
@@ -40,6 +40,17 @@
   }
 }
 
+#dag-canvas-container {
+  #save-launch-status {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    span.saving {
+      font-size: 12px;
+      color: #888;
+    }
+  }
+}
 // The canvas where operators get placed
 // and arranged into the DAG.
 .dag-canvas {
@@ -47,7 +58,7 @@
   height: @dag-editor-default-canvas-height;
   position: relative;
   background: #FFF;
-  overflow: auto;
+  overflow: hidden;
   margin: 0 -15px;
 
   svg {
@@ -58,6 +69,46 @@
   .ui-resizable-s {
     bottom: 0;
   }
+
+  .fitToContent {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+}
+
+// Element used for capturing panning
+// and zooming events.
+.control-canvas {
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 300%;
+  color: rgba(0,0,0,0.3);
+  text-align: center;
+     -moz-user-select: none;
+  -webkit-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+
+  &.zoom-control {
+    cursor: zoom-in;
+    &.invert {
+      cursor: zoom-out;
+    }
+  }
+
+  &.pan-control {
+  }
+}
+
+.real-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 // Operators that have been placed on the
@@ -160,7 +211,6 @@
   cursor: pointer;
   &:hover, &.hover {
     z-index: 3;
-    background: white;
   }
   &.selected {
     background: @dag-editor-selected-stream-color;

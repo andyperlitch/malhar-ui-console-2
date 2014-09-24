@@ -29,7 +29,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperatorC
         revertDuration: 0,
         zIndex: 1,
         helper: function(event) {
-          var classname = event.currentTarget.getAttribute('data-classname');
+          var classname = event.currentTarget.getAttribute('data-classname').split(".").slice(-1)[0].replace(/([A-Z])/g,' $1');
           return $('<div class="dag-operator selected"><div class="dag-operator-content">'+
             '<h4 class="dag-operator-name">Operator</h4>'+
             '<h5 class="operator-class-name">' + classname + '</h5>'+

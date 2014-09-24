@@ -20,6 +20,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // components
   'app.components.resources.PackageOperatorClassCollection',
+  'app.components.resources.PackageApplicationModel',
 
   // directives
   'app.components.directives.uiResizable',
@@ -32,6 +33,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   'app.pages.dev.packages.package.dagEditor.directives.dagStream',
 
   // services
+  'app.components.services.dtText',
+  'app.components.services.confirm',
   'app.components.services.jsPlumb',
   'app.pages.dev.packages.package.dagEditor.services.freezeDagModel',
   'app.pages.dev.packages.package.dagEditor.services.thawDagModel',
@@ -56,7 +59,40 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Page Controller
-.controller('DagEditorCtrl', function($scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions) {
+.controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel, dtText, confirm, $location) {
+
+  $scope.alerts = [];
+  var msgIds = 0;
+
+  // launch the app
+  $scope.launch = function (event, name) {
+    var app = new PackageApplicationModel({
+      packageName: $routeParams.packageName,
+      packageVersion: $routeParams.packageVersion,
+      appName: name
+    });
+    var infoMsgId = msgIds++;
+    $scope.alerts.push({
+      id: infoMsgId,
+      type: 'info',
+      appName: name,
+      include: 'pages/dev/packages/package/msgSubmit.html'
+    });
+
+    app.launch().success(function (response) {
+      // remove info msg
+      $scope.alerts = _.reject($scope.alerts, function (alert) {
+        return alert.id === infoMsgId;
+      });
+
+      $scope.alerts.push({
+        type: 'success',
+        appName: name,
+        appId: response.appId,
+        include: 'pages/dev/packages/package/msgLaunch.html'
+      });
+    });
+  };
 
   // Deselects everything
   $scope.deselectAll = function() {
@@ -80,12 +116,46 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.$on('selectEntity', $scope.selectEntity);
 
   // Operator Classes:
-  $scope.operatorClassesResource = new PackageOperatorClassCollection({
-    packageName: $routeParams.packageName,
-    packageVersion: $routeParams.packageVersion
-  });
+  $scope.operatorClassesResource = new PackageOperatorClassCollection($routeParams);
   $scope.operatorClasses = $scope.operatorClassesResource.data;
-  $scope.operatorClassesResource.fetch();
+
+  // DAG Model
+  $scope.packageApplicationModelResource = new PackageApplicationModel($routeParams);
+
+  // Load operators and DAG. Once both are done, thaw the DAG
+  $q.all([
+    $scope.operatorClassesResource.fetch(),
+    $scope.packageApplicationModelResource.fetch()
+  ]).then(function() {
+    // set up the dag in the UI
+    thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
+      // handle the launch button on DAG load
+      if ($scope.app.operators && $scope.app.operators.length < 1) {
+        // empty app
+        $scope.launchPossible = false;
+        $scope.launchImpossibleReason = 'The app needs at least one output operator.';
+      } else {
+        $scope.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
+        $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : 'Application cannot be started for reasons unknown.';
+      }
+      // now that it's thawed, watch the app for changes
+      var first = true; // don't do this the first time.
+      $scope.$watch('app', function() {
+        // update the representation we send to the server
+        if (!first) {
+          $scope.launchPossible = false;
+          $scope.launchImpossibleReason = 'A save is in progress. Please wait until it is finished.';
+          $scope.freeze();
+          $scope.saveRequested = true;
+          debouncedSaveFrozen();
+        } else {
+          first = false;
+          $scope.$broadcast('firstLoadComplete');
+        }
+      }, true); // true set here to do deep equality check on $scope
+    });
+  });
+
 
   // ng-grid options for operator class list
   $scope.opClassListOptions = {
@@ -124,24 +194,73 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // Initialize selection info
   $scope.deselectAll();
 
-  $scope.thaw = function() {
-    thawDagModel($scope.frozenModel, $scope, dagEditorOptions);
-  };
+  // Make it possible to call freezeDagModel() from elsewhere
   $scope.freeze = function() {
-    $scope.frozenModel = freezeDagModel($scope);
+    $scope.packageApplicationModelResource.data.fileContent = freezeDagModel($scope);
   };
 
   // PUT the frozen model to the gateway
   var saveFrozen = function() {
-    console.log('SAVE THAT DAG, YO.', $scope.frozenModel);
+    if (!$scope.saveInProgress) {
+      // not currently saving, so unset saveRequested and set saveInProgress
+      $scope.saveRequested = false;
+      $scope.saveInProgress = true;
+      $scope.packageApplicationModelResource.save().then(function(e) {
+        // unset saveInProgress now that we are done
+        $scope.saveInProgress = false;
+
+        // set scope vars to indicate saving state and launch possibility
+        if ($scope.app.operators && $scope.app.operators.length < 1) {
+          // empty app
+          $scope.launchPossible = false;
+          $scope.launchImpossibleReason = 'The app needs at least one output operator.';
+        } else {
+          $scope.launchPossible = (e.status == 200 && e.data && !e.data.error);
+          $scope.launchImpossibleReason = e.data && e.data.error ? e.data.error : 'Application cannot be started for reasons unknown.';
+        }
+        $scope.saveLastTimestamp = new Date();
+
+        if ($scope.saveRequested) {
+          // a save was requested since this request was started, so save now
+          saveFrozen();
+        }
+      });
+    }
   };
+
+  var confirmNavigation = function(event, next, current) {
+    if ($scope.saveRequested || $scope.saveInProgress) {
+      // block the navigation change to show the confirm box
+      event.preventDefault();
+
+      // Open a modal confirming the command
+      return confirm({
+        title: dtText.get('Save in Progress...'),
+        body: dtText.get('The streaming application is currently being saved to the server. Are you sure you want to cancel that?')
+      }).then(function() {
+        // User really wants to navigate away
+        $scope.saveRequested = $scope.saveInProgress = false;
+        $location.url($location.url(next).hash());
+      });
+    }
+  };
+
+
+  $scope.$on('$locationChangeStart', confirmNavigation);
+  window.onbeforeunload = function (event) {
+    console.log($scope.saveRequested, $scope.saveInProgress);
+    if ($scope.saveRequested || $scope.saveInProgress) {
+      var message = 'The streaming application is currently being saved to the server.';
+      if (typeof event == 'undefined') {
+        event = window.event;
+      }
+      if (event) {
+        event.returnValue = message;
+      }
+      return message;
+    }
+  }
 
   // debounced save function
   var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);
-
-  $scope.$watch('app', function() {
-    // update the representation we send to the server
-    $scope.freeze();
-    debouncedSaveFrozen();
-  }, true); // true set here to do deep equality check on $scope
 });

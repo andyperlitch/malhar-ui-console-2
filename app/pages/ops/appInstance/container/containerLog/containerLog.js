@@ -19,6 +19,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'ngRoute',
   'app.settings',
   'ngMessages',
+  'monospaced.mousewheel',
   'app.components.resources.ContainerLogModel',
   'app.components.resources.ContainerLogCollection',
   'app.components.directives.validation.readableBytes',
