@@ -56,6 +56,7 @@ angular.module('app', [
   'app.pages.dev.packages',
   'app.pages.dev.packages.package',
   'app.pages.dev.packages.package.application',
+  'app.pages.dev.packages.import',
   'app.pages.dev.packages.package.dagEditor',
 
   // misc
