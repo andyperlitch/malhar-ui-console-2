@@ -1,7 +1,17 @@
 <p>
-<button class="btn btn-primary" ng-click="importPackage();">Import</button>
+    <button class="btn btn-primary" ng-click="importPackage();">Import</button>
 </p>
 
+<alert ng-repeat="alert in alerts"
+       type="{{alert.type}}"
+       close="closeAlert($index);"
+       class="notification">
+    <span ng-if="alert.include">
+        <span ng-include="alert.include"></span>
+    </span>
+    <span ng-if="!alert.include">{{alert.msg}}</span>
+</alert>
+
 <div>
-<div ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns class="import-grid"></div>
+    <div ui-grid="gridOptions" ui-grid-selection ui-grid-resize-columns class="import-grid"></div>
 </div>

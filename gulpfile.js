@@ -28,7 +28,7 @@ var dev = {
     'app/bower_components/malhar-angular-widgets/dist/malhar-angular-widgets.js'
   ],
   images: 'app/images/*',
-  fonts: 'app/bower_components/bootstrap/fonts/*',
+  fonts: ['app/bower_components/bootstrap/fonts/*', 'app/fonts/*'],
   templates: [
     'app/pages/**/*.html',
     'app/components/**/*.html'
@@ -47,19 +47,24 @@ var options = {
   uglify: { mangle: false }
 };
 
-gulp.task('jshint', function () {
-  var testFileCondition = /_test\.js/;
+gulp.task('jshint', ['jshint_main', 'jshint_test']);
 
+var testFileCondition = /_test\.js/;
+
+gulp.task('jshint_main', function () {
   gulp.src(dev.scripts)
     .pipe($.ignore.include(testFileCondition))
     .pipe($.jshint('test/.jshintrc'))
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
+});
 
+gulp.task('jshint_test', function () {
   return gulp.src(dev.scripts)
     .pipe($.ignore.exclude(testFileCondition))
     .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'));
+    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.jshint.reporter('fail'));
 });
 
 gulp.task('test', function () {

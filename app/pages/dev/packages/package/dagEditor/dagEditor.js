@@ -203,7 +203,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           $scope.launchPossible = false;
           $scope.launchImpossibleReason = 'The app needs at least one output operator.';
         } else {
-          $scope.launchPossible = (e.status == 200 && e.data && !e.data.error);
+          $scope.launchPossible = (e.status === 200 && e.data && !e.data.error);
           $scope.launchImpossibleReason = e.data && e.data.error ? e.data.error : 'Application cannot be started for reasons unknown.';
         }
         $scope.saveLastTimestamp = new Date();
@@ -216,7 +216,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 
-  var confirmNavigation = function(event, next, current) {
+  var confirmNavigation = function(event, next) {
     if ($scope.saveRequested || $scope.saveInProgress) {
       // block the navigation change to show the confirm box
       event.preventDefault();
@@ -239,7 +239,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     console.log($scope.saveRequested, $scope.saveInProgress);
     if ($scope.saveRequested || $scope.saveInProgress) {
       var message = 'The streaming application is currently being saved to the server.';
-      if (typeof event == 'undefined') {
+      if (typeof event === 'undefined') {
         event = window.event;
       }
       if (event) {
@@ -247,7 +247,7 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
       }
       return message;
     }
-  }
+  };
 
   // debounced save function
   var debouncedSaveFrozen = _.debounce(saveFrozen, 1000);

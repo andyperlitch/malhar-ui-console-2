@@ -43,6 +43,7 @@ angular.module('app.pages.dev.packages.import', [
     }
 
     $scope.gridOptions = {
+      data: [],
       enableColumnResizing: true,
       enableRowSelection: true,
       multiSelect: true,
@@ -68,9 +69,15 @@ angular.module('app.pages.dev.packages.import', [
     fetchPackages();
 
     angular.extend($scope, {
+      alerts: [],
+
       importPackage: function () {
         var selected = $scope.gridApi.selection.getSelectedRows();
         if (selected && (selected.length > 0)) {
+          $scope.alerts.push({
+            type: 'info',
+            include: 'pages/dev/packages/import/msgImport.html'
+          });
           var files = _.map(selected, function (appPackage) {
             return appPackage.file;
           });
@@ -83,6 +90,11 @@ angular.module('app.pages.dev.packages.import', [
               msg: 'Package(s) successfully imported'
             };
             $location.path(settings.pages.Packages);
+          }, function () {
+            $scope.alerts.push({
+              type: 'danger',
+              msg: 'Failed to import'
+            });
           });
         }
       },
