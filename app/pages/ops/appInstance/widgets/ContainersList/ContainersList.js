@@ -77,10 +77,11 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
       this.resource = new ContainerCollection({
         appId: scope.appId
       });
+
+      var fetchParams = this.dataModelOptions && this.dataModelOptions.loadKilled ? {} : { states: settings.NONENDED_CONTAINER_STATES.join(',') };
+
       this.resource.fetch({
-        params: {
-          states: settings.NONENDED_CONTAINER_STATES.join(',')
-        }
+        params: fetchParams
       }, { remove: false });
       this.resource.subscribe(scope, undefined, { remove: false });
       scope.resource = this.resource;
