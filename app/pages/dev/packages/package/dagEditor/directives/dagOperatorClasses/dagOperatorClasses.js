@@ -26,14 +26,18 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperatorC
       operatorClasses: '=dagOperatorClasses'
     },
     link: function(scope) {
+      scope.classesLoaded = false;
       scope.$watchCollection('operatorClasses', function(newVal) {
+        if (newVal.length <= 0) { return; }
         var grouped = _.groupBy(newVal, 'category');
-        // scope.groupedUndefined = grouped[undefined];
-        // delete grouped[undefined];
         scope.groupedClasses = grouped;
+        scope.classesLoaded = true;
       });
       scope.expandState = {};
       scope.search = {};
+      scope.clearSearch = function() {
+        scope.search.term = '';
+      };
     }
   };
 });

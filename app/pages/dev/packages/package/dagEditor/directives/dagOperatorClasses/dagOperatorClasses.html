@@ -1,38 +1,69 @@
-<div class="dag-operator-classes">
-  <input class="form-control" type="text" placeholder="quick find" ng-model="search.term">
-
-  <!-- the grouped listing -->
-  <div
-    ng-show="!search.term"
-    ng-repeat="(groupName, group) in groupedClasses"
-    class="operator-class-group"
-  >
-    <div class="operator-class-group-heading" ng-class="{expanded: expandState[groupName]}" ng-click="expandState[groupName] = !expandState[groupName]">
-      <span class="glyphicon glyphicon-plus" ng-if="!expandState[groupName]"></span>
-      <span class="glyphicon glyphicon-minus" ng-if="expandState[groupName]"></span>
-      {{ groupName }} ({{ group.length }})
-    </div>
-    <div 
-      ng-show="expandState[groupName]"
-      ng-repeat="operator in group"
-      dag-operator-class
-      class="operator-class"
-      ng-attr-data-classname="{{ operator.name }}"
-      ng-attr-title="{{ operator.shortDesc }}"
-    >
-      {{operator.displayName}}
+<div class="dag-operator-classes-outer">
+  <div class="dag-operator-classes-loading" ng-show="!groupedClasses">
+    <p>Loading operator library...</p>
+    <div class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
     </div>
   </div>
+  <div class="dag-operator-classes" ng-show="!!groupedClasses">
+    <form class="operator-search-form">
+      <input class="form-control" type="text" placeholder="quick find" ng-model="search.term"/>
+      <button ng-if="search.term.length" class="input-button button button-icon ion-android-close" ng-click="clearSearch()" title="Clear Search">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+      </button>
+    </form>
 
-  <!-- search listing -->
-  <div 
-    ng-if="search.term"
-    ng-repeat="operator in operatorClasses | filter:search.term"
-    dag-operator-class
-    class="operator-class"
-    ng-attr-data-classname="{{ operator.name }}"
-    ng-attr-title="{{ operator.shortDesc }}"
-  >
-    {{ operator.displayName }}
+    <!-- the grouped listing -->
+    <div
+      ng-show="!search.term"
+      ng-repeat="(groupName, group) in groupedClasses"
+      class="operator-class-group"
+    >
+      <div class="noselect operator-class-group-heading" ng-class="{expanded: expandState[groupName]}" ng-click="expandState[groupName] = !expandState[groupName]">
+        <div class="norgie">
+          <span class="closed" ng-if="!expandState[groupName]">&#9654;</span>
+          <span class="open" ng-if="expandState[groupName]">&#9660;</span>
+        </div>
+        <span class="pull-right group-length">({{ group.length }})</span>
+        {{ groupName }}
+      </div>
+      <ul class="operator-list">
+        <li 
+          ng-show="expandState[groupName]"
+          ng-repeat="operator in group"
+          dag-operator-class
+          class="operator-class"
+          ng-attr-data-classname="{{ operator.name }}"
+        >
+          <a class="operator-name" ng-click="expandState[groupName + operator.name] = !expandState[groupName + operator.name]">{{operator.displayName}}</a>
+          <div class="operator-extra-info" ng-show="expandState[groupName + operator.name]">
+            <p class="operator-short-desc" ng-bind-html="operator.shortDesc"></p>
+            <p class="operator-tags"><label>Tags:</label> {{ operator.tags.join(", ") }}</p>
+            <p class="operator-ports"><label>Ports:</label> {{ operator.inputPorts.length }} Input, {{ operator.outputPorts.length }} Output</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- search listing -->
+    <ul 
+      ng-if="search.term"
+      class="operator-list search-results">
+      <li 
+        ng-repeat="operator in operatorClasses | filter:search.term"
+        dag-operator-class
+        class="operator-class"
+        ng-attr-data-classname="{{ operator.name }}"
+      >
+        <a ng-click="expandState[groupName + operator.name] = !expandState[groupName + operator.name]">{{operator.displayName}}</a>
+        <div class="operator-extra-info" ng-show="expandState[groupName + operator.name]">
+          <p class="operator-short-desc" ng-bind-html="operator.shortDesc"></p>
+          <p class="operator-tags"><label>Tags:</label> {{ operator.tags.join(", ") }}</p>
+          <p class="operator-ports"><label>Ports:</label> {{ operator.inputPorts.length }} Input, {{ operator.outputPorts.length }} Output</p>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
