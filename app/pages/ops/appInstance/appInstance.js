@@ -97,11 +97,11 @@ angular.module('app.pages.ops.appInstance', [
       // Subscribe to updates.
       $scope.appInstance.subscribe($scope);
       
-      // Unsubscribe when the scope is destroyed.
-      $scope.$on('$destroy', function () {
-        $scope.appInstance.unsubscribe();
-      });
+    });
 
+    // Unsubscribe when the scope is destroyed.
+    $scope.$on('$destroy', function () {
+      $scope.appInstance.unsubscribe();
     });
 
     /**
