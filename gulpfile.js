@@ -17,6 +17,7 @@ require('./gulp/gateway');
 var dev = {
   dir: 'app',
   index: 'app/index.html',
+  favicon: 'app/favicon.ico',
   less: 'app/styles/main.less',
   scripts: [
     'app/*.js',
@@ -158,6 +159,9 @@ gulp.task('copy', function () {
 
   gulp.src(dev.images)
     .pipe(gulp.dest(prod.images));
+
+  gulp.src(dev.favicon)
+    .pipe(gulp.dest(prod.dir));
 });
 
 gulp.task('usemin', function () {
