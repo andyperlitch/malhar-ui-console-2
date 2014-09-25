@@ -48,7 +48,6 @@ angular.module('app.pages.ops.widgets.AppsList', [
   function stateSorter(row1,row2) {
     var state1 = settings.statusOrder.indexOf(row1.state);
     var state2 = settings.statusOrder.indexOf(row2.state);
-    console.log('states: ', row1.state, row2.state, state1, state2);
     return state1 - state2;
   }
 
