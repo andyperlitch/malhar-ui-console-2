@@ -45,6 +45,12 @@ angular.module('app.pages.ops.widgets.AppsList', [
 
 .factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, dtText, $filter, appManager, tableOptionsFactory) {
 
+  function idSorter(row1, row2) {
+    var id1 = row1.id.split('_').pop() * 1;
+    var id2 = row2.id.split('_').pop() * 1;
+    return id1 - id2;
+  }
+
   function stateSorter(row1,row2) {
     var state1 = settings.statusOrder.indexOf(row1.state);
     var state2 = settings.statusOrder.indexOf(row2.state);
@@ -93,7 +99,7 @@ angular.module('app.pages.ops.widgets.AppsList', [
       id: 'id',
       label: dtText.get('id_label'),
       key: 'id',
-      sort: 'string',
+      sort: idSorter,
       filter: 'like',
       template: '<a href="#" app-id-link="row.id" short="true"></a>',
       trustFormat: true
@@ -103,7 +109,8 @@ angular.module('app.pages.ops.widgets.AppsList', [
       key: 'name',
       label: dtText.get('name_label'),
       sort: 'string',
-      filter: 'like'
+      filter: 'like',
+      template: '<a href="#" dt-page-href="AppInstance" params="{ appId: row.id }">{{row.name}}</a>'
     },
     {
       id: 'state',
