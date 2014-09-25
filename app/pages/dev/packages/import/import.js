@@ -34,7 +34,7 @@ angular.module('app.pages.dev.packages.import', [
   })
 
 // Controller
-  .controller('PackageImportCtrl', function($scope, PackageImportCollection) {
+  .controller('PackageImportCtrl', function($scope, $rootScope, $location, PackageImportCollection, settings) {
     function fetchPackages() {
       var packages = new PackageImportCollection();
       packages.fetch().then(function (data) {
@@ -59,14 +59,32 @@ angular.module('app.pages.dev.packages.import', [
           name: 'version',
           width: '20%'
         }
-      ]
+      ],
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
+      }
     };
 
     fetchPackages();
 
     angular.extend($scope, {
       importPackage: function () {
-
+        var selected = $scope.gridApi.selection.getSelectedRows();
+        if (selected && (selected.length > 0)) {
+          var files = _.map(selected, function (appPackage) {
+            return appPackage.file;
+          });
+          var packages = new PackageImportCollection();
+          packages.post({
+            files: files
+          }).then(function () {
+            $rootScope.message = {
+              type: 'success',
+              msg: 'Package(s) successfully imported'
+            };
+            $location.path(settings.pages.Packages);
+          });
+        }
       },
 
       closeAlert: function (index) {
