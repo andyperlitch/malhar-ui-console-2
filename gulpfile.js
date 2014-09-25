@@ -53,7 +53,8 @@ gulp.task('jshint', function () {
   gulp.src(dev.scripts)
     .pipe($.ignore.include(testFileCondition))
     .pipe($.jshint('test/.jshintrc'))
-    .pipe($.jshint.reporter('jshint-stylish'));
+    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.jshint.reporter('fail'));
 
   return gulp.src(dev.scripts)
     .pipe($.ignore.exclude(testFileCondition))
