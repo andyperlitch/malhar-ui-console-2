@@ -1,90 +1,107 @@
 <div class="overview-container">
-  <h2>
-    {{ data.name || 'loading...' }}
-    <small ng-if="data.className">{{ data.className }}</small>
-  </h2>
+  <div class="overview-info">
+    <h2>
+      {{ data.name || 'loading...' }}
+      <small ng-if="data.className">{{ data.className }}</small>
+    </h2>
+  </div>
   
-  <div class="overview-item">
-    <div class="key" dt-text>status</div>
-    <div class="value">
-      <span logical-operator-status="data.status"></span>
-    </div>
-  </div>
+  <fieldset class="overview-group">
+    <legend>State</legend>
 
-  <div class="overview-item">
-    <div class="overview-subitem">
-      <div class="key" dt-text dt-text-tooltip="current_wid_title" tooltip-popup-delay="0">current_wid_label</div>
+    <div class="overview-item">
+      <div class="value">
+        <span logical-operator-status="data.status"></span>
+      </div>
+      <div class="key" dt-text>status</div>
+    </div>
+
+    <div class="overview-item">
       <div class="value" window-id="data.currentWindowId" window-size="appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+      <div class="key" dt-text dt-text-tooltip="current_wid_title" tooltip-popup-delay="0">current_wid_label</div>
     </div>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0">recovery_wid_label</div>
+    <div class="overview-item">
       <div class="value" window-id="data.recoveryWindowId" window-size="appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+      <div class="key" dt-text dt-text-tooltip="recovery_wid_title" tooltip-popup-delay="0">recovery_wid_label</div>
     </div>
-  </div>
 
-  <div class="overview-item">
-    <div class="overview-subitem">
-      <div class="key" dt-text="processed_per_sec"></div>
+    <div class="overview-item">
+      <div class="value">
+        {{ data.partitions ? data.partitions.length : '-' }}
+      </div>
+      <div class="key" dt-text>partitions</div>
+    </div>
+
+    <div class="overview-item">
+      <div class="value">
+        {{ data.containerIds ? data.containerIds.length : '-' }}
+      </div>
+      <div class="key" dt-text>containers</div>
+    </div>
+
+    <div class="overview-item">
+      <div class="value">
+        {{ data.lastHeartbeat | relativeTimestamp }}
+      </div>
+      <div class="key" dt-text>last_heartbeat_label</div>
+    </div>
+
+    <div class="overview-item">
+      <div class="value">
+        {{ data.failureCount | commaGroups }}
+      </div>
+      <div class="key" dt-text>failure_count_label</div>
+    </div>
+
+
+
+  </fieldset>
+
+  <fieldset class="overview-group">
+    <legend>Performance</legend>
+
+    <div class="overview-item">
+      <div class="value">
+        {{ data.latencyMA | commaGroups }}
+      </div>
+      <div class="key" dt-text>latency_ms_label</div>
+    </div>
+    
+    <div class="overview-item">
       <div class="value">{{ data.tuplesProcessedPSMA | commaGroups }}</div>
+      <div class="key" dt-text="processed_per_sec"></div>
     </div>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="emitted_per_sec"></div>
+    <div class="overview-item">
       <div class="value">{{ data.tuplesEmittedPSMA | commaGroups }}</div>
+      <div class="key" dt-text="emitted_per_sec"></div>
     </div>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="processed_total"></div>
+    <div class="overview-item">
       <div class="value">{{ data.totalTuplesProcessed | commaGroups }}</div>
+      <div class="key" dt-text="processed_total"></div>
     </div>
 
-    <div class="overview-subitem">
-      <div class="key" dt-text="emitted_total"></div>
+    <div class="overview-item">
       <div class="value">{{ data.totalTuplesEmitted | commaGroups }}</div>
+      <div class="key" dt-text="emitted_total"></div>
     </div>
-  </div>
+    
+    <div class="overview-item">
+      <div class="value">
+        {{ data.cpuPercentageMA | number:2 }}%
+      </div>
+      <div class="key" dt-text>cpu_percentage_label</div>
+    </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text>latency_ms_label</div>
-    <div class="value">
-      {{ data.latencyMA | commaGroups }}
-    </div>
-  </div>
+  </fieldset>
 
-  <div class="overview-item">
-    <div class="key" dt-text>partitions</div>
-    <div class="value">
-      {{ data.partitions ? data.partitions.length : '-' }}
-    </div>
-  </div>
+  
 
-  <div class="overview-item">
-    <div class="key" dt-text>containers</div>
-    <div class="value">
-      {{ data.containerIds ? data.containerIds.length : '-' }}
-    </div>
-  </div>
+  
 
-  <div class="overview-item">
-    <div class="key" dt-text>cpu_percentage_label</div>
-    <div class="value">
-      {{ data.cpuPercentageMA | number:2 }}%
-    </div>
-  </div>
-
-  <div class="overview-item">
-    <div class="key" dt-text>failure_count_label</div>
-    <div class="value">
-      {{ data.failureCount | commaGroups }}
-    </div>
-  </div>
-
-  <div class="overview-item">
-    <div class="key" dt-text>last_heartbeat_label</div>
-    <div class="value">
-      {{ data.lastHeartbeat | relativeTimestamp }}
-    </div>
-  </div>
+    
+  
 
 </div>

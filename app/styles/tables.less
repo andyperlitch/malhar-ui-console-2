@@ -4,7 +4,7 @@
 @dt-table-font-size:12px;
 @dt-table-border-color:@table-border-color;
 .table {
-    border: 1px solid @table-border-color;
+    border: none;
 }
 .table th input {
     font-weight: normal;
@@ -21,19 +21,20 @@
     margin-bottom: 0;
 }
 .dt-table .table th, .dt-table .table td {
-    padding: 3px;
+    padding: 5px 3px;
 }
 .dt-table .table th {
     input {
         margin: 0;
     }
+    border: none;
     border-color: @dt-table-border-color;
 }
 .dt-table .table td {
     input {
         margin: 0;
     }
-    border-color: @dt-table-border-color;
+    border: none;
     word-wrap: normal;
 }
 .dt-table .table > thead > tr > th {
@@ -46,15 +47,16 @@
     .scroller-width-transition();
     @border-color: fade(@table-border-color, 50%);
     width: 15px;
-    background-color: fade(@panel-default-heading-bg, 80%);
-    box-shadow: inset 0 0 0 1px @border-color;
+    // background-color: fade(@panel-default-heading-bg, 80%);
+    // box-shadow: inset 0 0 0 1px @border-color;
 
     .mlhr-table-scroller {
         .scroller-width-transition();
         right: 2px;
         width: 11px;
         border-radius: 6px;
-        background: rgba(0, 0, 0, 0.3)
+        background: rgba(0, 0, 0, 0.3);
+        min-height: 30px;
     }
 
     &:hover {

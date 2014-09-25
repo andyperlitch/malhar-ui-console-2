@@ -1,46 +1,51 @@
 <div class="overview-container">
-    <h2>
-        {{data.name || 'Loading...'}}
-        <small>{{ data.id }}</small>
-        <button class="btn btn-xs btn-warning" ng-click="endApp('shutdown')">
-            <span class="glyphicon glyphicon-off"></span>
-            <span dt-text="shutdown"></span>
-        </button>
-        <button class="btn btn-xs btn-danger" ng-click="endApp('kill')">
-            <span class="glyphicon glyphicon-ban-circle"></span>
-            <span dt-text="kill"></span>
-        </button>
-    </h2>
-    <h4 ng-if="data.user">
+    <div class="overview-info">
+        <h2>
+            {{data.name || 'Loading...'}}
+            
+            <button class="btn btn-xs btn-warning" ng-click="endApp('shutdown')">
+                <span class="glyphicon glyphicon-off"></span>
+                <span dt-text="shutdown"></span>
+            </button>
+            <button class="btn btn-xs btn-danger" ng-click="endApp('kill')">
+                <span class="glyphicon glyphicon-ban-circle"></span>
+                <span dt-text="kill"></span>
+            </button>
+        </h2>
+        <h4>
+            <small>id:</small>
+            <span dt-container-shorthand="data.id" ng-attr-title="{{ data.id }}"></span>
+            <small>user:</small>
+            <span>{{ data.user }}</span>
+            <small>version:</small>
+            <span ng-bind="data.version.split(' ')[0]" ng-attr-title="{{ data.version }}"></span>
 
-        <small>user:</small>
-        {{data.user}}
-        <small>version:</small>
-        <span ng-bind="data.version.split(' ')[0]" dt-text-tooltip=" {{data.version}} "></span>
-
-    </h4>
-
+        </h4>        
+    </div>
     <fieldset class="overview-group">
         <legend dt-text>State</legend>
         <div class="overview-item">
-            <div class="key" dt-text="state_label"></div>
+            
             <div class="value">
                 <span dt-status="data.state" final-status="data.finalStatus"></span>
             </div>
+            <div class="key" dt-text="state_label"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title"
-                 tooltip-popup-delay="0"></div>
+            
             <div class="value" window-id="data.currentWindowId"
                  window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+            <div class="key" dt-text="current_wid_label" dt-text-tooltip="current_wid_title"
+             tooltip-popup-delay="0"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title"
-                 tooltip-popup-delay="0"></div>
+            
             <div class="value" window-id="data.recoveryWindowId"
                  window-size="data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></div>
+            <div class="key" dt-text="recovery_wid_label" dt-text-tooltip="recovery_wid_title"
+                 tooltip-popup-delay="0"></div>
         </div>
     </fieldset>
 
@@ -48,23 +53,33 @@
         <legend dt-text>Performance</legend>
 
         <div class="overview-item">
-            <div class="key" dt-text="processed_per_sec"></div>
+            
+            <div class="value">{{ data.stats.latency | commaGroups }}</div>
+            <div class="key" dt-text="latency_ms_label"></div>
+        </div>
+
+        <div class="overview-item">
+            
             <div class="value">{{ data.stats.tuplesProcessedPSMA | commaGroups }}</div>
+            <div class="key" dt-text="processed_per_sec"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="emitted_per_sec"></div>
+            
             <div class="value">{{ data.stats.tuplesEmittedPSMA | commaGroups }}</div>
+            <div class="key" dt-text="emitted_per_sec"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="processed_total"></div>
+            
             <div class="value">{{ data.stats.totalTuplesProcessed | commaGroups }}</div>
+            <div class="key" dt-text="processed_total"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="emitted_total"></div>
+            
             <div class="value">{{ data.stats.totalTuplesEmitted | commaGroups }}</div>
+            <div class="key" dt-text="emitted_total"></div>
         </div>
     </fieldset>
 
@@ -72,25 +87,23 @@
         <legend dt-text>Physical</legend>
 
         <div class="overview-item">
-            <div class="key" dt-text="num_operators_label"></div>
+            
             <div class="value">{{ data.stats.numOperators | commaGroups }}</div>
+            <div class="key" dt-text="num_operators_label"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="planned_alloc_ctnrs_label"></div>
+            
             <div class="value">{{ data.stats.plannedContainers | commaGroups }} / {{ data.stats.allocatedContainers |
                 commaGroups }}
             </div>
+            <div class="key" dt-text="planned_alloc_ctnrs_label"></div>
         </div>
 
         <div class="overview-item">
-            <div class="key" dt-text="latency_ms_label"></div>
-            <div class="value">{{ data.stats.latency | commaGroups }}</div>
-        </div>
-
-        <div class="overview-item">
-            <div class="key" dt-text="alloc_mem_label"></div>
+            
             <div class="value">{{ data.stats.totalMemoryAllocated | byte:'mb' }}</div>
+            <div class="key" dt-text="alloc_mem_label"></div>
         </div>
     </fieldset>
 </div>
