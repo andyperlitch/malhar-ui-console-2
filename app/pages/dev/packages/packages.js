@@ -33,7 +33,7 @@ angular.module('app.pages.dev.packages', [
   })
 
 // Controller
-  .controller('PackagesCtrl', function($scope, PackageModel, PackageCollection, FileUploadModal) {
+  .controller('PackagesCtrl', function($scope, $rootScope, PackageModel, PackageCollection, FileUploadModal) {
     function fetchPackages() {
       $scope.packages = new PackageCollection();
       $scope.packages.fetch();
@@ -86,4 +86,9 @@ angular.module('app.pages.dev.packages', [
         $scope.alerts.splice(index, 1);
       }
     });
+
+    if ($rootScope.message) {
+      $scope.alerts.push($rootScope.message);
+      delete $rootScope.message;
+    }
   });
