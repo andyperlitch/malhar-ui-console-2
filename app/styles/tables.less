@@ -1,4 +1,4 @@
-@table-border-color:#AAA;
+@table-border-color:#EFEFEF;
 @table-alternate-row-color:#EFEFEF;
 @dt-table-tfoot-font-size:11px;
 @dt-table-font-size:12px;
@@ -8,6 +8,16 @@
 }
 .table th input {
     font-weight: normal;
+}
+.table thead tr:first-child {
+    border-style: solid;
+    border-color: @table-border-color;
+    border-width: 1px 0 1px 1px;
+}
+.table thead tr:last-child {
+    border-style: solid;
+    border-color: @table-border-color;
+    border-width: 0 1px 1px 1px;
 }
 .table tbody tr:nth-child(odd){
     background-color: @table-alternate-row-color;
