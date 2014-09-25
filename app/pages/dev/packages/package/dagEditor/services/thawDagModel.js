@@ -45,6 +45,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
     scope.app.operators = [];
 
     // set up global app scope things
+    scope.app.displayName = frozenModel.displayName;
     scope.app.description = frozenModel.description;
 
     // set up operators by pushing onto app.operators

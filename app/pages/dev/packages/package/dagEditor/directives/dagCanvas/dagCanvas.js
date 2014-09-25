@@ -210,8 +210,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         }
       });
 
-      
-
       /**
        * Keyboard/Zoom controls
        */
@@ -253,6 +251,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
       $document.on('keydown', scope.captureKeydown);
       $document.on('keyup', scope.captureKeyup);
+
+      // methods for zoom in/out buttons
+      scope.zoomIn = function() {
+        var canvasCenter = [element.width() / 2, element.height() / 2];
+        scope.setZoom(settings.dagEditor.ZOOM_STEP_CLICK, canvasCenter);
+      };
+      scope.zoomOut = function() {
+        var canvasCenter = [element.width() / 2, element.height() / 2];
+        scope.setZoom(-1 * settings.dagEditor.ZOOM_STEP_CLICK, canvasCenter);
+      };
 
       scope.setZoom = function(zoomDelta, controlPoint) {
 
@@ -310,7 +318,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         $event.stopPropagation();
         var delta = (scope.keysPressed.shift ? -1 : 1) * settings.dagEditor.ZOOM_STEP_CLICK;
         var controlCoords = [$event.offsetX, $event.offsetY];
-        scope.setZoom(delta, controlCoords);        
+        scope.setZoom(delta, controlCoords);
       };
 
       scope.onPanWheel = function($event, $delta, $deltaX, $deltaY) {
@@ -326,7 +334,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         $event.preventDefault();
         var anchor = [$event.offsetX, $event.offsetY];
         var initTranslate = scope.translate.slice();
-        
+
         var mousemove = function(e) {
           var delta = [e.offsetX - anchor[0], e.offsetY - anchor[1]];
           scope.translate = [
@@ -362,7 +370,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           scope.updateZoomAndTransform();
           return;
         }
-        
+
         var minX = firstOperator.x;
         var minY = firstOperator.y;
         var maxX = firstOperator.x;
@@ -375,7 +383,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           maxY = Math.max(maxY, o.y);
         });
 
-        
+
         var targetLabelWidths = element.find('.endpointTargetLabel').map(function(i,el) {
           return $(el).width();
         });
@@ -456,6 +464,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       };
 
       scope.$on('firstLoadComplete', scope.fitToContent);
+
+      // receive the message from dagEditor that the save/launch state has changed
+      scope.$on('saveLaunchStateChange', function(event, saveLaunchState) {
+        scope.saveLaunchState = saveLaunchState;
+      });
+
+      // bubble up launch request to parent scope
+      scope.launch = function() {
+        scope.$emit('launchRequest');
+      };
 
       scope.$on('$destroy', function() {
         $jsPlumb.unbind();

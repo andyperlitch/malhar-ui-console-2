@@ -1,6 +1,7 @@
 @dag-editor-default-canvas-height: 650px;
 @dag-editor-operator-side-length: 130px;
 
+@dag-editor-operator-color: lighten(#000, 90%);
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
 @dag-editor-selected-operator-color: lighten(@dt-green, 15%);
 
@@ -37,8 +38,11 @@
 #dag-canvas-container {
   #save-launch-status {
     position: absolute;
-    right: 0;
+    left: 10px;
     top: 10px;
+    .launch-impossible {
+      color:#933;
+    }
     span.saving {
       font-size: 12px;
       color: #888;
@@ -49,7 +53,7 @@
     overflow: hidden;
     position: absolute;
     z-index: 5;
-    right: 0;
+    left: 0;
   }
 }
 // The canvas where operators get placed
@@ -71,10 +75,16 @@
     bottom: 0;
   }
 
-  .fitToContent {
+  .canvasControls {
     position: absolute;
     top: 10px;
-    left: 10px;
+    right: 10px;
+    button.btn-default {
+      color:#666;
+      &:hover {
+        color:#333;
+      }
+    }
   }
 }
 
@@ -120,8 +130,7 @@
   height: @dag-editor-operator-side-length;
   padding:5px;
   border: none;
-  background-color: #EEE;
-  border: 1px solid #DDD;
+  background-color: @dag-editor-operator-color;
   border-radius: 50%;
   position: absolute;
   text-align: center;
@@ -349,5 +358,7 @@
     stroke: @dt-lightblue;
   }
 }
+
+
 
 @import "directives/dagOperatorClasses/dagOperatorClasses.less";
