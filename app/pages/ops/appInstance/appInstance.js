@@ -46,7 +46,7 @@ angular.module('app.pages.ops.appInstance', [
     $routeProvider
       .when(settings.pages.AppInstance, {
         controller: 'AppInstanceCtrl',
-        templateUrl: 'pages/ops/ops.html',
+        templateUrl: 'pages/ops/appInstance/appInstance.html',
         label: 'appInstance',
         collection: {
           label: 'apps',
