@@ -1,63 +1,68 @@
 <div class="overview-container">
-  <h2>
-    {{ container.data.id || 'loading...' }}
-    <span class="btn-group">
-      <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown">
-        <span class="glyphicon glyphicon-file"></span>
-        <span dt-text>logs</span>
-        <span class="caret"></span>
+  <div class="overview-info">
+    <h2>
+      {{ container.data.id || 'loading...' }}
+      <span class="btn-group">
+        <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown">
+          <span class="glyphicon glyphicon-file"></span>
+          <span dt-text>logs</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" container-logs-dropdown="containerLogs"></ul>
+      </span>
+      <button class="btn btn-xs btn-danger" ng-click="containerManager.kill(container.data,appId)">
+        <span class="glyphicon glyphicon-ban-circle"></span>
+        <span dt-text>kill</span>
       </button>
-      <ul class="dropdown-menu" role="menu" container-logs-dropdown="containerLogs"></ul>
-    </span>
-    <button class="btn btn-xs btn-danger" ng-click="containerManager.kill(container.data,appId)">
-      <span class="glyphicon glyphicon-ban-circle"></span>
-      <span dt-text>kill</span>
-    </button>
-  </h2>
-  <h4 ng-if="container.data.host">
+    </h2>
+    <h4 ng-if="container.data.host">
 
-    <small>host:</small> {{container.data.host}}
-    <small>jvm name:</small> {{ container.data.jvmName }}
-    
-  </h4>
-
-  <div class="overview-item">
-    <div class="key" dt-text="state_label"></div>
-    <div class="value">
-      <span dt-status="container.data.state" final-status="container.data.finalStatus"></span>
-    </div>
+      <small>host:</small> {{container.data.host}}
+      <small>jvm name:</small> {{ container.data.jvmName }}
+      
+    </h4>
   </div>
 
-  <div class="overview-item">
-    <div class="key" dt-text>started_label</div>
-    <div class="value">
-      {{ container.data.startedTime | relativeTimestamp }}
+  <fieldset class="overview-group">
+    <legend>State</legend>
+    <div class="overview-item">
+      <div class="value">
+        <span dt-status="container.data.state" final-status="container.data.finalStatus"></span>
+      </div>
+      <div class="key" dt-text>state_label</div>
     </div>
-  </div>
-
-  <div class="overview-group" ng-if="NONENDED_CONTAINER_STATES.indexOf(container.data.state) >= 0">
 
     <div class="overview-item">
-      <div class="key" dt-text>alloc_mem_mb_label</div>
-      <div class="value">{{ container.data.memoryMBAllocated | byte:'mb' }}</div>
+      <div class="value">
+        {{ container.data.startedTime | relativeTimestamp }}
+      </div>
+      <div class="key" dt-text>started_label</div>
     </div>
 
-    <div class="overview-group" ng-if="!containerManager.isAppMaster(container.data.id)">
-      
+    <div class="overview-group" ng-if="NONENDED_CONTAINER_STATES.indexOf(container.data.state) >= 0">
+
       <div class="overview-item">
-        <div class="key" dt-text>last_heartbeat_label</div>
-        <div class="value">
-          {{ container.data.lastHeartbeat | relativeTimestamp }}
+        <div class="value">{{ container.data.memoryMBAllocated | byte:'mb' }}</div>
+        <div class="key" dt-text>alloc_mem_mb_label</div>
+      </div>
+
+      <div class="overview-group" ng-if="!containerManager.isAppMaster(container.data.id)">
+        
+        <div class="overview-item">
+          <div class="value">
+            {{ container.data.lastHeartbeat | relativeTimestamp }}
+          </div>
+          <div class="key" dt-text>last_heartbeat_label</div>
         </div>
-      </div>
 
-      <div class="overview-item">
-        <div class="key" dt-text>num_operators_label</div>
-        <div class="value">{{ container.data.numOperators }}</div>
+        <div class="overview-item">
+          <div class="value">{{ container.data.numOperators }}</div>
+          <div class="key" dt-text>num_operators_label</div>
+        </div>
+
       </div>
 
     </div>
-
-  </div>
+  </fieldset>
 
 </div>
