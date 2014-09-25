@@ -9,6 +9,8 @@
 </div>
 <div class="row" ng-if="!appInstance.fetching && !appInstance.fetchError">
     <div class="col-md-12">
-        <div dashboard-layouts="dashboardOptions" class="dashboard-container" template-url="pages/ops/ops-layouts.html"></div>
+        <div ng-if="dashboardType === 'running'" dashboard-layouts="dashboardOptions.running" class="dashboard-container" template-url="pages/ops/ops-layouts.html"></div>
+        <div ng-if="dashboardType === 'starting'" dashboard-layouts="dashboardOptions.starting" class="dashboard-container" template-url="pages/ops/ops-layouts.html"></div>
+        <div ng-if="dashboardType === 'ended'" dashboard-layouts="dashboardOptions.ended" class="dashboard-container" template-url="pages/ops/ops-layouts.html"></div>
     </div>
 </div>
