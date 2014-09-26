@@ -36,14 +36,15 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
     var widgetDefinitions = [
       {
         name: 'Time Series Bar Chart',
         title: 'Time Series Bar Chart',
         directive: 'wt-time-series',
         dataAttrName: 'data',
-        dataModelType: KafkaTimeSeriesWidgetDataModel,
+        //dataModelType: KafkaTimeSeriesWidgetDataModel,
+        dataModelType: KafkaBarChartWidgetDataModel,
         dataModelOptions: {
           metric: 'impressions'
         },
@@ -58,7 +59,8 @@ angular.module('app.pages.dev.kafka', [
         },
         onSettingsClose: function (result, widget) {
           if (widget.dataModel && widget.dataModel.updateQuery) {
-            widget.dataModel.updateQuery(result.dataModelOptions.query);
+            var query = JSON.parse(result.queryText);
+            widget.dataModel.updateQuery(query);
           }
         }
       },
@@ -123,6 +125,10 @@ angular.module('app.pages.dev.kafka', [
     $scope.kafkaService = new KafkaRestService(function (data, kafkaMessage) {
       $scope.$broadcast('kafkaMessage', data, kafkaMessage);
     }, $scope);
+  })
+  .controller('KafkaOptionsCtrl', function ($scope) {
+    var widget = $scope.widget;
+    $scope.result.queryText = JSON.stringify(widget.dataModel.query, null, ' ');
   })
   .controller('KafkaConsumerCtrl', function ($scope) {
     $scope.$on('kafkaMessage', function (event, data, kafkaMessage) {
