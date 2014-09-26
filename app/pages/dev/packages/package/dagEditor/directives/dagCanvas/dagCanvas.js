@@ -284,7 +284,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
        * @param {Array}  controlPoint   The pixel coordinate to zoom into/out of.
        */
       scope.setZoom = function(zoomDelta, controlPoint) {
-
         // The "real" point on the dag canvas coordinate system
         // realPoint = controlPoint/zoom - translate
         var realPoint = scope.pixelToRealCoordinate(controlPoint);
@@ -329,7 +328,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         $event.preventDefault();
         $event.stopPropagation();
         var delta = $deltaY * settings.dagEditor.ZOOM_STEP_MOUSEWHEEL;
-        var controlCoords = [$event.offsetX, $event.offsetY];
+        var pageOffset = element.offset();
+        var controlCoords = [$event.pageX - pageOffset.left, $event.pageY - pageOffset.top];
         scope.setZoom(delta, controlCoords);
       };
 
@@ -352,12 +352,21 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       };
 
       scope.grabPanCanvas = function($event) {
+        element.addClass('panning');
+        var $trg = $($event.target);
+        if (!$trg.hasClass('dag-canvas') && !$trg.hasClass('real-canvas') && !$trg.hasClass('pan-control')) {
+          return;
+        }
         $event.preventDefault();
-        var anchor = [$event.offsetX, $event.offsetY];
+        var pageOffset = element.offset();
+        var anchor = [$event.pageX - pageOffset.left, $event.pageY - pageOffset.top];
         var initTranslate = scope.translate.slice();
 
         var mousemove = function(e) {
-          var delta = [e.offsetX - anchor[0], e.offsetY - anchor[1]];
+          var delta = [
+            e.pageX - pageOffset.left - anchor[0],
+            e.pageY - pageOffset.top - anchor[1]
+          ];
           scope.translate = [
             initTranslate[0] + delta[0]/scope.zoom,
             initTranslate[1] + delta[1]/scope.zoom
@@ -365,6 +374,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           scope.updateZoomAndTransform();
         };
         var mouseup = function() {
+          element.removeClass('panning');
           $document.off('mousemove', mousemove);
           $document.off('mousemove', mouseup);
         };
