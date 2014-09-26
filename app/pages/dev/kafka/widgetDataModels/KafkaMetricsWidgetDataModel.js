@@ -28,6 +28,11 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
     MetricsWidgetDataModel.prototype.constructor = KafkaWidgetDataModel;
 
     angular.extend(MetricsWidgetDataModel.prototype, {
+      init: function () {
+        KafkaWidgetDataModel.prototype.updateScope.call(this, []);
+        KafkaWidgetDataModel.prototype.init.call(this);
+      },
+
       updateScope: function (data) {
         this.series = [];
         if (data && data.length > 0) {
