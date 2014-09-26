@@ -123,40 +123,78 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $q.all([
     $scope.operatorClassesResource.fetch(),
     $scope.packageApplicationModelResource.fetch()
-  ]).then(function() {
-    // set up the dag in the UI
-    thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
-      // handle the launch button on DAG load
-      if ($scope.app.operators && $scope.app.operators.length < 1) {
-        // empty app
-        $scope.saveLaunchState.launchPossible = false;
-        $scope.saveLaunchState.launchImpossibleReason = 'The app needs at least one output operator.';
-      } else {
-        $scope.saveLaunchState.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
-        $scope.saveLaunchState.launchImpossibleReason = ($scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error) ? $scope.packageApplicationModelResource.data.error : 'The application cannot be started for an unknown reason.';
-      }
-      // now that it's thawed, watch the app for changes
-      var first = true; // don't do this the first time.
-      $scope.$watch('app', function() {
-        // update the representation we send to the server
-        if (!first) {
-          $scope.saveLaunchState.saveRequested = true;
+  ]).then(
+    // loading success
+    function() {
+      // set up the dag in the UI
+      thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
+        // handle the launch button on DAG load
+        if ($scope.app.operators && $scope.app.operators.length < 1) {
+          // empty app
           $scope.saveLaunchState.launchPossible = false;
-          $scope.saveLaunchState.launchImpossibleReason = 'A save is in progress. Please wait until it is finished.';
-          $scope.freeze();
-          debouncedSaveFrozen();
+          $scope.saveLaunchState.launchImpossibleReason = 'The app needs at least one output operator.';
         } else {
-          first = false;
-          $scope.$broadcast('firstLoadComplete');
+          $scope.saveLaunchState.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
+          $scope.saveLaunchState.launchImpossibleReason = ($scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error) ? $scope.packageApplicationModelResource.data.error : 'The application cannot be started for an unknown reason.';
         }
-      }, true); // true set here to do deep equality check on $scope
+        // now that it's thawed, watch the app for changes
+        var first = true; // don't do this the first time.
+        $scope.$watch('app', function() {
+          // update the representation we send to the server
+          if (!first) {
+            $scope.saveLaunchState.saveRequested = true;
+            $scope.saveLaunchState.launchPossible = false;
+            $scope.saveLaunchState.launchImpossibleReason = 'A save is in progress. Please wait until it is finished.';
+            $scope.freeze();
+            debouncedSaveFrozen();
+          } else {
+            first = false;
+            $scope.$broadcast('firstLoadComplete');
+          }
+        }, true); // true set here to do deep equality check on $scope
 
-      // watch the saveLaunchState to notify child scopes
-      $scope.$watch('saveLaunchState', function() {
-        $scope.$broadcast('saveLaunchStateChange', $scope.saveLaunchState);
+        // watch the saveLaunchState to notify child scopes
+        $scope.$watch('saveLaunchState', function() {
+          $scope.$broadcast('saveLaunchStateChange', $scope.saveLaunchState);
+        });
       });
-    });
-  });
+    },
+    // failure to load operators or application
+    function(reason) {
+      var notifTitle = null;
+      var notifBody = null;
+
+      if (reason.config.url === $scope.operatorClassesResource.url) {
+        // could not load operators
+        notifTitle = 'Operators Not Loaded';
+        notifBody = 'Could not load the operator library for this application package.';
+      } else if (reason.config.url === $scope.packageApplicationModelResource.url) {
+        // could not load application
+        notifTitle = 'Application Not Loaded';
+        notifBody = 'The application ' + $routeParams.appName + ' could not be loaded.';
+      } else {
+        // unknown error
+        notifTitle = 'Unknown Error';
+        notifBody = 'An unknown error has occured.';
+      }
+
+      // log the error
+      $log.error(notifTitle, reason);
+
+      // set up a notif
+      notificationService.notify({
+        title: notifTitle,
+        text: notifBody,
+        type: 'error',
+        icon: false,
+        hide: true,
+        history: false
+      });
+      // Navigate to Package page
+      var url = getUri.page('Package', $routeParams, true);
+      $location.path(url);
+    }
+  );
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;
