@@ -17,7 +17,7 @@
 'use strict';
 
 var gulp = require('gulp');
-var argv = require('optimist').argv
+var argv = require('optimist').argv;
 var express = require('express');
 var http = require('http');
 var opn = require('opn');
