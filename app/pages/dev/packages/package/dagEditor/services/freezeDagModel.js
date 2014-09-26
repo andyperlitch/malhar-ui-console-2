@@ -26,7 +26,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.freezeDagModel
     // set up the skeleton object to fill with cherry-picking from our
     // internal operator object
     var frozenModel = {
-      'displayName': undefined,
+      'displayName': scope.app.displayName,
       'description': scope.app.description,
       // collect the list of operators
       'operators': _.map(scope.app.operators, function(operator)

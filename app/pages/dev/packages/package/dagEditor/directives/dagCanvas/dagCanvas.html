@@ -22,8 +22,28 @@
   >
     click and drag to pan the canvas
   </div>
-  <button role="button" class="btn btn-primary fitToContent" ng-click="fitToContent()">
-    <span class="glyphicon glyphicon-picture"></span>
-    <span dt-text>fit to content</span>
-  </a>
+  <div id="save-launch-status" class="pull-right">
+    <button class="btn btn-xs btn-inverse" ng-show="!saveLaunchState.launchPossible" ng-click="" title="{{saveLaunchState.launchImpossibleReason}}">
+      <span class="glyphicon glyphicon-remove-circle launch-impossible"></span>
+      <span dt-text="launch">launch</span>
+    </button>
+    <button class="btn btn-xs btn-primary" ng-show="saveLaunchState.launchPossible" ng-click="launch();" title="Launch {{app.displayName}} now.">
+      <span class="glyphicon glyphicon-play"></span>
+      <span dt-text="launch">launch</span>
+    </button>
+    <span class="saving" ng-show="saveLaunchState.saveInProgress">Saving...</span>
+    <span class="saving" title="Last saved at {{ saveLaunchState.saveLastTimestamp | relativeTimestamp }}" ng-show="!saveLaunchState.saveRequested && !saveLaunchState.saveInProgress && saveLaunchState.saveLastTimestamp">All changes saved to server</span>
+  </div>
+  <div class="canvasControls">
+    <button role="button" class="btn btn-xs btn-default" ng-click="zoomIn()">
+      <span class="glyphicon glyphicon-zoom-in"></span>
+    </button>
+    <button role="button" class="btn btn-xs btn-default" ng-click="fitToContent()">
+      <span class="glyphicon glyphicon-picture"></span>
+      <span dt-text>fit application</span>
+    </button>
+    <button role="button" class="btn btn-xs btn-default" ng-click="zoomOut()">
+      <span class="glyphicon glyphicon-zoom-out"></span>
+    </button>
+  </div>
 </div>
