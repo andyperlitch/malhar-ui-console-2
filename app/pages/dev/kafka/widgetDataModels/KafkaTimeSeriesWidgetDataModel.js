@@ -32,6 +32,10 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
       init: function () {
         KafkaWidgetDataModel.prototype.init.call(this);
 
+        if (this.dataModelOptions && this.dataModelOptions.metric) {
+          this.widgetScope.metricValue = this.dataModelOptions.metric;
+        }
+
         this.widgetScope.$on('metricChanged', function (event, metric) {
           event.stopPropagation();
           if (this.dataModelOptions) {

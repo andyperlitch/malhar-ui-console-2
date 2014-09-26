@@ -36,7 +36,7 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
     var widgetDefinitions = [
       {
         name: 'Time Series Bar Chart',
@@ -46,7 +46,14 @@ angular.module('app.pages.dev.kafka', [
         //dataModelType: KafkaTimeSeriesWidgetDataModel,
         dataModelType: KafkaBarChartWidgetDataModel,
         dataModelOptions: {
-          metric: 'impressions'
+          metric: 'impressions',
+          query: {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          }
         },
         attrs: {
           'metric-value': 'metricValue'
@@ -69,13 +76,32 @@ angular.module('app.pages.dev.kafka', [
         title: 'Time Series Line Chart',
         directive: 'wt-nvd3-line-chart',
         dataAttrName: 'data',
-        dataModelType: KafkaMetricsWidgetDataModel,
+        //dataModelType: KafkaMetricsWidgetDataModel,
+        dataModelType: KafkaLineChartWidgetDataModel,
+        dataModelOptions: {
+          query: {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          }
+        },
         attrs: {
           style: 'height:300px',
           'show-legend': true
         },
         size: {
           width: '50%'
+        },
+        settingsModalOptions: {
+          partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
+        },
+        onSettingsClose: function (result, widget) {
+          if (widget.dataModel && widget.dataModel.updateQuery) {
+            var query = JSON.parse(result.queryText);
+            widget.dataModel.updateQuery(query);
+          }
         }
       },
       {
