@@ -1,4 +1,4 @@
-<div class="dag-canvas" msd-wheel="onPanWheel($event, $delta, $deltaX, $deltaY)">
+<div class="dag-canvas" msd-wheel="onZoomWheel($event, $delta, $deltaX, $deltaY)" ng-mousedown="grabPanCanvas($event)">
   <div class="real-canvas" jsplumb-container>
     <div
       app="app"
@@ -12,16 +12,12 @@
     msd-wheel="onZoomWheel($event, $delta, $deltaX, $deltaY)"
     ng-show="keysPressed.option"
     ng-click="onZoomClick($event)"
-  >
-    scroll up to zoom in, down to zoom out<br>
-  </div>
+  ></div>
 
   <div class="control-canvas pan-control"
     ng-mousedown="grabPanCanvas($event)"
     ng-show="keysPressed.spacebar && !keysPressed.option"
-  >
-    click and drag to pan the canvas
-  </div>
+  ></div>
   <div id="save-launch-status" class="pull-right">
     <button class="btn btn-xs btn-inverse" ng-show="!saveLaunchState.launchPossible" ng-click="" title="{{saveLaunchState.launchImpossibleReason}}">
       <span class="glyphicon glyphicon-remove-circle launch-impossible"></span>

@@ -262,14 +262,31 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.setZoom(-1 * settings.dagEditor.ZOOM_STEP_CLICK, canvasCenter);
       };
 
-      scope.setZoom = function(zoomDelta, controlPoint) {
+      /**
+       * Converts a point on the pixel coordinate plane to
+       * the real coordinate plane.
+       * 
+       * @param  {Array}  point  The point from the pixel coordinate plane, e.g. from mouseclick
+       * @return {Array}         The coordinate in the real plane
+       */
+      scope.pixelToRealCoordinate = function(point) {
+        return [
+          point[0]/scope.zoom - scope.translate[0],
+          point[1]/scope.zoom - scope.translate[1]
+        ];
+      };
 
+      /**
+       * Given a zoom change and a control point (in pixel coordinates)
+       * this sets the zoom level and adjusted translate.
+       * 
+       * @param {number} zoomDelta      Amount of change to the zoom level
+       * @param {Array}  controlPoint   The pixel coordinate to zoom into/out of.
+       */
+      scope.setZoom = function(zoomDelta, controlPoint) {
         // The "real" point on the dag canvas coordinate system
         // realPoint = controlPoint/zoom - translate
-        var realPoint = [
-          controlPoint[0]/scope.zoom - scope.translate[0],
-          controlPoint[1]/scope.zoom - scope.translate[1]
-        ];
+        var realPoint = scope.pixelToRealCoordinate(controlPoint);
 
         var newZoom = scope.zoom + zoomDelta;
         newZoom = Math.min(newZoom, settings.dagEditor.MAX_ZOOM_LEVEL);
@@ -288,6 +305,9 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.updateZoomAndTransform();
       };
 
+      /**
+       * Updates the transform attribute of the "real" app canvas.
+       */
       scope.updateZoomAndTransform = function() {
         var el = $jsPlumb.getContainer();
         var p = [ 'webkit', 'moz', 'ms', 'o' ],
@@ -308,7 +328,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         $event.preventDefault();
         $event.stopPropagation();
         var delta = $deltaY * settings.dagEditor.ZOOM_STEP_MOUSEWHEEL;
-        var controlCoords = [$event.offsetX, $event.offsetY];
+        var pageOffset = element.offset();
+        var controlCoords = [$event.pageX - pageOffset.left, $event.pageY - pageOffset.top];
         scope.setZoom(delta, controlCoords);
       };
 
@@ -331,12 +352,21 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       };
 
       scope.grabPanCanvas = function($event) {
+        element.addClass('panning');
+        var $trg = $($event.target);
+        if (!$trg.hasClass('dag-canvas') && !$trg.hasClass('real-canvas') && !$trg.hasClass('pan-control')) {
+          return;
+        }
         $event.preventDefault();
-        var anchor = [$event.offsetX, $event.offsetY];
+        var pageOffset = element.offset();
+        var anchor = [$event.pageX - pageOffset.left, $event.pageY - pageOffset.top];
         var initTranslate = scope.translate.slice();
 
         var mousemove = function(e) {
-          var delta = [e.offsetX - anchor[0], e.offsetY - anchor[1]];
+          var delta = [
+            e.pageX - pageOffset.left - anchor[0],
+            e.pageY - pageOffset.top - anchor[1]
+          ];
           scope.translate = [
             initTranslate[0] + delta[0]/scope.zoom,
             initTranslate[1] + delta[1]/scope.zoom
@@ -344,6 +374,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           scope.updateZoomAndTransform();
         };
         var mouseup = function() {
+          element.removeClass('panning');
           $document.off('mousemove', mousemove);
           $document.off('mousemove', mouseup);
         };
@@ -351,6 +382,10 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         $document.on('mouseup', mouseup);
       };
 
+      /**
+       * Sets the zoom and translate to fit to the
+       * whole application.
+       */
       scope.fitToContent = function() {
         if (!scope.app.operators.length) {
           scope.zoom = 1;
@@ -399,17 +434,32 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.setViewBox([minX, minY], [maxX,maxY]);
       };
 
+      /**
+       * Sets the zoom and translate so that the provided coordinates
+       * are fit and centered on the canvas.
+       * 
+       * @param {Array} topLeft     The real coordinates of the top left corner of the box
+       * @param {Array} bottomRight The real coordinates of the bottom right corner of the box
+       */
       scope.setViewBox = function(topLeft, bottomRight) {
 
-        var boxWidth = bottomRight[0] - topLeft[0];
-        var boxHeight = bottomRight[1] - topLeft[1];
-        var boxRelHeight = boxHeight/boxWidth;
-        var boxRelWidth = 1/boxRelHeight;
+        // Holds width and height of box
+        var boxDims = [];
+        boxDims[0] = bottomRight[0] - topLeft[0];
+        boxDims[1] = bottomRight[1] - topLeft[1];
 
-        var viewportWidth = element.width();
-        var viewportHeight = element.height();
-        var viewportRelHeight = viewportHeight/viewportWidth;
-        var viewportRelWidth = 1/viewportRelHeight;
+        // Holds relative width and height
+        var boxRelDims = [];
+        boxRelDims[1] = boxDims[1]/boxDims[0];
+        boxRelDims[0] = 1/boxRelDims[1];
+
+        var viewportDims = [];
+        viewportDims[0] = element.width();
+        viewportDims[1] = element.height();
+
+        var viewportRelDims = [];
+        viewportRelDims[1] = viewportDims[1]/viewportDims[0];
+        viewportRelDims[0] = 1/viewportRelDims[1];
 
 
         // determine dominant dimension (the side that gets fit)
@@ -433,32 +483,37 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
         var dominant = 0;  // default to width
         var recessive = 1; // default to height
-        var recessiveBoxRealLength = boxHeight;
-        var recessiveBoxRelLength = boxRelHeight;
-        var recessiveViewportRelLength = viewportRelHeight;
-        var newZoom =  viewportWidth / boxWidth;
-
-
-        if (boxRelHeight > viewportRelHeight) {
+        
+        if (boxRelDims[1] > viewportRelDims[1]) {
           dominant = 1;
           recessive = 0;
-          recessiveBoxRealLength = boxWidth;
-          recessiveBoxRelLength = boxRelWidth;
-          recessiveViewportRelLength = viewportRelWidth;
-          newZoom = viewportHeight / boxHeight;
         }
 
-        // Set the translate
+        var newZoom =  viewportDims[dominant] / boxDims[dominant];
+
+        // Set up the translate
         var newTranslate = [];
+
+        // Dominant is just the negative topLeft value
         newTranslate[dominant] = -topLeft[dominant];
-        var adjustedRecessiveLength = (Math.abs(topLeft[recessive] - bottomRight[recessive])/recessiveBoxRelLength)*recessiveViewportRelLength;
-        var amountToAdjust = (adjustedRecessiveLength - recessiveBoxRealLength) / 2;
+
+        // Recessive: find the recessive length it would be to
+        // match the height/width ratio of the actual viewport
+        var adjustedRecessiveLength = (Math.abs(topLeft[recessive] - bottomRight[recessive])/boxRelDims[recessive])*viewportRelDims[recessive];
+
+        // Adjust the recessive translate
+        var amountToAdjust = (adjustedRecessiveLength - boxDims[recessive]) / 2;
         newTranslate[recessive] = -(topLeft[recessive] - amountToAdjust);
 
+        // Check if the newZoom exceeds the max zoom level
+        if (newZoom > settings.dagEditor.MAX_ZOOM_LEVEL) {
+          var zoomRatio = settings.dagEditor.MAX_ZOOM_LEVEL / newZoom;
+          newTranslate[dominant] += (boxDims[dominant] / zoomRatio - boxDims[dominant]) / 2;
+          newTranslate[recessive] += (boxDims[recessive] / zoomRatio - boxDims[recessive]) / 2;
+          newZoom = settings.dagEditor.MAX_ZOOM_LEVEL;
+        }
 
-        // Set the zoom
         scope.zoom = newZoom;
-
         scope.translate = newTranslate;
         scope.updateZoomAndTransform();
       };
