@@ -20,6 +20,8 @@ angular.module('app.pages.dev.kafka', [
   'ui.widgets',
   'ui.models',
   'app.pages.dev.kafka.widgets.timeSeries',
+  'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
+  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
   'app.pages.dev.kafka.KafkaRestService'
 ])
 
@@ -177,115 +179,4 @@ angular.module('app.pages.dev.kafka', [
     $scope.$on('$destroy', function () {
       $scope.kafkaService.unsubscribe();
     });
-  })
-  .factory('KafkaTimeSeriesWidgetDataModel', function (WidgetDataModel) {
-    function KafkaTimeSeriesWidgetDataModel() {
-    }
-
-    KafkaTimeSeriesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
-    KafkaTimeSeriesWidgetDataModel.prototype.constructor = WidgetDataModel;
-
-    angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
-      init: function () {
-        if (this.dataModelOptions && this.dataModelOptions.metric) {
-          this.widgetScope.metricValue = this.dataModelOptions.metric;
-        }
-
-        this.widgetScope.$on('kafkaMessage', function (event, data) {
-          if (data) {
-            this.updateScope(data);
-          } else {
-            this.updateScope(null);
-          }
-        }.bind(this));
-
-        this.widgetScope.$on('metricChanged', function (event, metric) {
-          event.stopPropagation();
-          if (this.dataModelOptions) {
-            this.dataModelOptions.metric = metric;
-            this.widgetScope.$emit('widgetChanged', this.widget);
-          }
-        }.bind(this));
-      },
-
-      updateQuery: function (query) {
-        console.log(query);
-      },
-
-      destroy: function () {
-        //TODO
-      }
-    });
-
-    return KafkaTimeSeriesWidgetDataModel;
-  })
-  .factory('KafkaMetricsWidgetDataModel', function (WidgetDataModel) {
-    function MetricsWidgetDataModel() {
-    }
-
-    MetricsWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
-    MetricsWidgetDataModel.prototype.constructor = MetricsWidgetDataModel;
-
-    angular.extend(MetricsWidgetDataModel.prototype, {
-      init: function () {
-        this.series = [];
-        this.widgetScope.$on('kafkaMessage', function (event, data) {
-          if (data && data.length > 0) {
-            var sampleObject = angular.copy(data[0]);
-            delete sampleObject.timestamp;
-            var metrics = _.keys(sampleObject);
-            metrics = _.sortBy(metrics, function (key) {
-              return key;
-            });
-
-            //TODO
-            _.each(metrics, function (metric, index) {
-              if (!this.series[index]) {
-                this.series[index] = {
-                  key: metric
-                };
-              }
-            }.bind(this));
-
-            _.each(metrics, function (metric, index) {
-              var values = _.map(data, function (point) {
-                return {
-                  timestamp: point.timestamp,
-                  //value: Math.round(parseInt(point[metric], 10))
-                  value: point[metric]
-                };
-              });
-
-              this.series[index].values = values;
-            }.bind(this));
-
-            /*
-             var max = _.max(data, function (point) {
-             return point.impressions;
-             });
-             console.log(max.impressions);
-             */
-
-            this.updateScope(_.clone(this.series));
-          } else {
-            this.updateScope(null);
-          }
-        }.bind(this));
-
-        this.widgetScope.metrics = [
-          {
-            key: 'impressions'
-          },
-          {
-            key: 'revenue'
-          }
-        ];
-      },
-
-      destroy: function () {
-      }
-    })
-    ;
-
-    return MetricsWidgetDataModel;
   });
