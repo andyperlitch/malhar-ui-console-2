@@ -18,32 +18,19 @@
 
 angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel', [
   'ui.models',
-  'app.pages.dev.kafka.KafkaRestService'
+  'app.pages.dev.kafka.KafkaRestService',
+  'app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel'
 ])
-  .factory('KafkaBarChartWidgetDataModel', function (WidgetDataModel, KafkaRestService) {
+  .factory('KafkaBarChartWidgetDataModel', function (KafkaWidgetDataModel) {
     function KafkaTimeSeriesWidgetDataModel() {
     }
 
-    KafkaTimeSeriesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
-    KafkaTimeSeriesWidgetDataModel.prototype.constructor = WidgetDataModel;
+    KafkaTimeSeriesWidgetDataModel.prototype = Object.create(KafkaWidgetDataModel.prototype);
+    KafkaTimeSeriesWidgetDataModel.prototype.constructor = KafkaWidgetDataModel;
 
     angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
       init: function () {
-        if (this.dataModelOptions && this.dataModelOptions.metric) {
-          this.widgetScope.metricValue = this.dataModelOptions.metric;
-        }
-
-        if (this.dataModelOptions && this.dataModelOptions.query) {
-          this.query = this.dataModelOptions.query;
-        } else {
-          this.query = {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          };
-        }
+        KafkaWidgetDataModel.prototype.init.call(this);
 
         this.widgetScope.$on('metricChanged', function (event, metric) {
           event.stopPropagation();
@@ -54,34 +41,6 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
         }.bind(this));
 
         this.fetchData();
-      },
-
-      fetchData: function () {
-        if (this.kafkaService) {
-          this.kafkaService.unsubscribe();
-        } else {
-          this.kafkaService = new KafkaRestService(function (data) {
-            if (data) {
-              this.updateScope(data);
-            } else {
-              this.updateScope(null);
-            }
-          }.bind(this), this.widgetScope);
-        }
-
-        this.kafkaService.subscribe(this.query);
-      },
-
-      updateQuery: function (query) {
-        this.query = query;
-        this.dataModelOptions = this.dataModelOptions ? this.dataModelOptions : {};
-        this.dataModelOptions.query = query; // dateModelOptions are persisted
-
-        this.fetchData();
-      },
-
-      destroy: function () {
-        this.kafkaService.unsubscribe();
       }
     });
 
