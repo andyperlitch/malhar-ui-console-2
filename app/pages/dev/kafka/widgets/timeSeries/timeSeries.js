@@ -21,7 +21,7 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
     return {
       restrict: 'A',
       replace: true,
-      templateUrl: 'pages/dev/kafka/timeSeries.html',
+      templateUrl: 'pages/dev/kafka/widgets/timeSeries/timeSeries.html',
       scope: {
         data: '=data',
         mode: '=',

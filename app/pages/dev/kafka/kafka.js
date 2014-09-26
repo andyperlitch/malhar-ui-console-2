@@ -50,6 +50,14 @@ angular.module('app.pages.dev.kafka', [
         },
         size: {
           width: '50%'
+        },
+        settingsModalOptions: {
+          partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
+        },
+        onSettingsClose: function (result, widget) {
+          if (widget.dataModel && widget.dataModel.updateQuery) {
+            widget.dataModel.updateQuery(result.dataModelOptions.query);
+          }
         }
       },
       {
@@ -198,6 +206,10 @@ angular.module('app.pages.dev.kafka', [
             this.widgetScope.$emit('widgetChanged', this.widget);
           }
         }.bind(this));
+      },
+
+      updateQuery: function (query) {
+        console.log(query);
       },
 
       destroy: function () {
