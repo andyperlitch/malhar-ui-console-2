@@ -56,6 +56,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
         this.dataModelOptions = this.dataModelOptions ? this.dataModelOptions : {};
         this.dataModelOptions.query = query; // dateModelOptions are persisted
 
+        this.updateScope([]); //reset
         this.fetchData();
       },
 
