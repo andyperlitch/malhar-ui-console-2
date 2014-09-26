@@ -20,6 +20,73 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
   'ui.models',
   'app.pages.dev.kafka.KafkaRestService'
 ])
+  .factory('KafkaBarChartWidgetDataModel', function (WidgetDataModel, KafkaRestService) {
+    function KafkaTimeSeriesWidgetDataModel() {
+    }
+
+    KafkaTimeSeriesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    KafkaTimeSeriesWidgetDataModel.prototype.constructor = WidgetDataModel;
+
+    angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
+      init: function () {
+        if (this.dataModelOptions && this.dataModelOptions.metric) {
+          this.widgetScope.metricValue = this.dataModelOptions.metric;
+        }
+
+        if (this.dataModelOptions && this.dataModelOptions.query) {
+          this.query = this.dataModelOptions.query;
+        } else {
+          this.query = {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          };
+        }
+
+        this.widgetScope.$on('metricChanged', function (event, metric) {
+          event.stopPropagation();
+          if (this.dataModelOptions) {
+            this.dataModelOptions.metric = metric;
+            this.widgetScope.$emit('widgetChanged', this.widget);
+          }
+        }.bind(this));
+
+        this.fetchData();
+      },
+
+      fetchData: function () {
+        if (this.kafkaService) {
+          this.kafkaService.unsubscribe();
+        } else {
+          this.kafkaService = new KafkaRestService(function (data) {
+            if (data) {
+              this.updateScope(data);
+            } else {
+              this.updateScope(null);
+            }
+          }.bind(this), this.widgetScope);
+        }
+
+        this.kafkaService.subscribe(this.query);
+      },
+
+      updateQuery: function (query) {
+        this.query = query;
+        this.dataModelOptions = this.dataModelOptions ? this.dataModelOptions : {};
+        this.dataModelOptions.query = query; // dateModelOptions are persisted
+
+        this.fetchData();
+      },
+
+      destroy: function () {
+        this.kafkaService.unsubscribe();
+      }
+    });
+
+    return KafkaTimeSeriesWidgetDataModel;
+  })
   .factory('KafkaTimeSeriesWidgetDataModel', function (WidgetDataModel) {
     function KafkaTimeSeriesWidgetDataModel() {
     }
