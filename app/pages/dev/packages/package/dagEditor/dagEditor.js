@@ -68,6 +68,19 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // launch the app
   $scope.launch = function () {
+    if (!$scope.saveLaunchState.launchPossible) {
+      // launch is impossible, show why
+      return notificationService.notify({
+        title: 'Application Cannot Be Launched',
+        text: $scope.saveLaunchState.launchImpossibleReason,
+        type: 'error',
+        icon: false,
+        hide: false,
+        history: false
+      });
+    }
+
+    // launch is possible
     var launchNotif = notificationService.notify({
       title: 'Launch Requested',
       text: 'A launch request has been submitted. Waiting for status...',
