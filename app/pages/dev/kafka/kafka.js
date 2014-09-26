@@ -45,16 +45,6 @@ angular.module('app.pages.dev.kafka', [
         dataAttrName: 'data',
         //dataModelType: KafkaTimeSeriesWidgetDataModel,
         dataModelType: KafkaBarChartWidgetDataModel,
-        dataModelOptions: {
-          metric: 'impressions',
-          query: {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          }
-        },
         attrs: {
           'metric-value': 'metricValue'
         },
@@ -78,15 +68,6 @@ angular.module('app.pages.dev.kafka', [
         dataAttrName: 'data',
         //dataModelType: KafkaMetricsWidgetDataModel,
         dataModelType: KafkaLineChartWidgetDataModel,
-        dataModelOptions: {
-          query: {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          }
-        },
         attrs: {
           style: 'height:300px',
           'show-legend': true
@@ -134,7 +115,49 @@ angular.module('app.pages.dev.kafka', [
       }
     ];
 
-    var defaultWidgets = _.clone(widgetDefinitions);
+    var defaultQuery = {
+      keys: {
+        publisherId: 1,
+        advertiserId: 0,
+        adUnit: 0
+      }
+    };
+
+    var defaultWidgets = [{
+      name: 'Time Series Bar Chart',
+      dataModelOptions: {
+        metric: 'impressions',
+        query: defaultQuery
+      }
+    }, {
+      name: 'Time Series Line Chart',
+      dataModelOptions: {
+        query: defaultQuery
+      }
+    }, {
+      name: 'Kafka Consumer'
+    }, {
+      name: 'Kafka Producer'
+    }];
+
+    var demoWidgets = [{
+      name: 'Time Series Bar Chart',
+      dataModelOptions: {
+        metric: 'impressions',
+        query: defaultQuery
+      }
+    }, {
+      name: 'Time Series Line Chart',
+      dataModelOptions: {
+        query: defaultQuery
+      }
+    }];
+
+    var debugWidgets = [{
+      name: 'Kafka Consumer'
+    }, {
+      name: 'Kafka Producer'
+    }];
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
@@ -143,7 +166,9 @@ angular.module('app.pages.dev.kafka', [
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
-        { title: 'default', active: true, defaultWidgets: defaultWidgets }
+        { title: 'default', active: true, defaultWidgets: defaultWidgets },
+        { title: 'example', active: false, defaultWidgets: demoWidgets },
+        { title: 'debug', active: false, defaultWidgets: debugWidgets }
       ]
     });
 
