@@ -17,7 +17,7 @@
 'use strict';
 
 var gulp = require('gulp');
-
+var argv = require('optimist').argv
 var express = require('express');
 var http = require('http');
 var opn = require('opn');
@@ -96,7 +96,9 @@ function startServer(baseDirs, port) {
       console.log('Started connect web server on ' + url);
     });
 
-  opn(url);
+  if (!argv['dont-open']) {
+    opn(url);
+  }
 }
 
 gulp.task('connect', function () {
