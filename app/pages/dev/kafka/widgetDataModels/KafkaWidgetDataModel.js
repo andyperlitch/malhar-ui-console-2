@@ -55,6 +55,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
         this.query = query;
         this.dataModelOptions = this.dataModelOptions ? this.dataModelOptions : {};
         this.dataModelOptions.query = query; // dateModelOptions are persisted
+        //this.widgetScope.$emit('widgetChanged', this.widget); // this is implicitly called
 
         this.updateScope([]); //reset
         this.fetchData();
