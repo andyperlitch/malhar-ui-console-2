@@ -1,11 +1,17 @@
 <% if (version !== false) {  %>
 
 	<p>
-		<strong>version:</strong> <%= version %><br>
-		<strong>date:</strong> <%= date %><br>
-		<strong>revision:</strong> <%= revision %><br>
-		<strong>buildVersion:</strong> <%= buildVersion %><br>
-		<strong>user:</strong> <%= user %><br>
+    <strong>build date:</strong> <%= buildDate %><br/>
+    <strong>build revision:</strong> <%= buildRevision %><br/>
+    <strong>build user:</strong> <%= buildUser %><br/>
+    <strong>build version:</strong> <%= buildVersion %><br/>
+    <strong>config directory:</strong> <%= configDirectory %><br/>
+    <strong>security enabled?</strong> <%= hadoopIsSecurityEnabled ? 'yes' : 'no' %><br/>
+    <strong>hadoop location:</strong> <%= hadoopLocation %><br/>
+    <strong>host name:</strong> <%= hostname %><br/>
+    <strong>java version:</strong> <%= javaVersion %><br/>
+    <strong>jvm name:</strong> <%= jvmName %><br/>
+    <strong>version:</strong> <%= version %><br/>
 	</p>
 	
 

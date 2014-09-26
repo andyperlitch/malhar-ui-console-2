@@ -19,7 +19,17 @@ var BaseModel = require('./BaseModel');
 var GatewayInfoModel = BaseModel.extend({
 
 	defaults: {
-		version: false
+		buildDate: 'Unknown',
+    buildRevision: 'Unknown',
+    buildUser: 'andy',
+    buildVersion: '1.0.5-SNAPSHOT from Unknown by andy on Unknown',
+    configDirectory: '/home/andy/.dt',
+    hadoopIsSecurityEnabled: false,
+    hadoopLocation: '/opt/cloudera/parcels/CDH-5.0.0-1.cdh5.0.0.p0.47',
+    hostname: 'node0.morado.com',
+    javaVersion: '1.6.0_45',
+    jvmName: '10851@node0.morado.com',
+    version: '1.0.5-SNAPSHOT'
 	},
 
 	url: function() {
