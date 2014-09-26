@@ -46,7 +46,14 @@ angular.module('app.pages.dev.kafka', [
         //dataModelType: KafkaTimeSeriesWidgetDataModel,
         dataModelType: KafkaBarChartWidgetDataModel,
         dataModelOptions: {
-          metric: 'impressions'
+          metric: 'impressions',
+          query: {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          }
         },
         attrs: {
           'metric-value': 'metricValue'
@@ -71,6 +78,15 @@ angular.module('app.pages.dev.kafka', [
         dataAttrName: 'data',
         //dataModelType: KafkaMetricsWidgetDataModel,
         dataModelType: KafkaLineChartWidgetDataModel,
+        dataModelOptions: {
+          query: {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          }
+        },
         attrs: {
           style: 'height:300px',
           'show-legend': true

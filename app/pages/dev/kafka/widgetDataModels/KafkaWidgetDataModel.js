@@ -31,17 +31,8 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
       init: function () {
         if (this.dataModelOptions && this.dataModelOptions.query) {
           this.query = this.dataModelOptions.query;
-        } else {
-          this.query = {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          };
+          this.fetchData();
         }
-
-        this.fetchData();
       },
 
       fetchData: function () {
