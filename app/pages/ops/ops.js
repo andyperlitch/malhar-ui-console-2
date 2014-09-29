@@ -30,12 +30,12 @@ angular.module('app.pages.ops', [
 ])
 
 // Route
-  .config(function ($routeProvider) {
+  .config(function (settings, $routeProvider) {
     $routeProvider
-      .when('/ops', {
+      .when(settings.pages.Operations, {
         controller: 'OpsCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'operations'
+        label: 'Operations'
       });
   })
 
