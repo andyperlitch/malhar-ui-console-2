@@ -13,6 +13,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
 require('./gulp/gateway');
+var updateAppScripts = require('./util/update-app-scripts');
 
 var dev = {
   dir: 'app',
@@ -182,6 +183,12 @@ gulp.task('usemin', function () {
       ]
     }))
     .pipe(gulp.dest(prod.dir));
+});
+
+gulp.task('appscripts', function() {
+  updateAppScripts(function() {
+    console.log('Application scripts updated in index.html');
+  });
 });
 
 gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'copy', 'usemin']);
