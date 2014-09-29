@@ -11,10 +11,12 @@ Must-Haves
 - Installer (1 w) [[MLHR-1307](https://malhar.atlassian.net/browse/MLHR-1307)]
 - License info page (3 d) [[MLHR-1309](https://malhar.atlassian.net/browse/MLHR-1309)]
 - System diagnostics page (3 d) [[MLHR-1453](https://malhar.atlassian.net/browse/MLHR-1453)]
+- Finish stream view (2 d) [[MLHR-1281](https://malhar.atlassian.net/browse/MLHR-1281)]
+- Finish port view (3 d) [[MLHR-1288](https://malhar.atlassian.net/browse/MLHR-1288)]
 - Loading feedback for tables (1 d) [[MLHR-1451](https://malhar.atlassian.net/browse/MLHR-1451)]
 - Performance tuning for tables (1 w) [[MLHR-1454](https://malhar.atlassian.net/browse/MLHR-1454)]
 
-**total**: 3.5 weeks
+**total**: 4.5 weeks
 
 Nice-To-Haves
 -------------
