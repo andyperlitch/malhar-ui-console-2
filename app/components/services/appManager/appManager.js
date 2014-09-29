@@ -21,7 +21,7 @@ angular.module('app.components.services.appManager', [
   'app.components.services.dtText',
   'app.components.services.confirm'
 ])
-.service('appManager', function($http, getUri, $modal, dtText, confirm) {
+.service('appManager', function($http, getUri, $modal, dtText, confirm, $q) {
   return {
 
     /**
@@ -43,6 +43,30 @@ angular.module('app.components.services.appManager', [
       .then(function() {
         var url = getUri.action(signal + 'App', { appId: app.id });
         return $http.post(url);
+      });
+    },
+
+    /**
+     * Ends multiple applications. Different from above because
+     * there will be only one modal 
+     * @param  {String} signal The end signal, either "kill" or "shutdown"
+     * @param  {Array}  apps    Array of application objects
+     * @return {Promise}       Returns the promise from the post request.
+     */
+    endApps: function(signal, apps) {
+      // Open a modal confirming the command
+      return confirm({
+        title: dtText.sprintf('End %s applications?', apps.length),
+        body: dtText.get('Are you sure you want to ' + signal + ' these applications?')
+      })
+      // Listen for the confirm/cancel promise
+      .then(function() {
+        // Create an aggregate promise for ending all apps
+        var promises = _.map(apps, function(app) {
+          var url = getUri.action(signal + 'App', { appId: app.id });
+          return $http.post(url);
+        });
+        return $q.all(promises);
       });
     }
     
