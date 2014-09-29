@@ -170,7 +170,32 @@ angular.module('app.pages.ops.widgets.AppsList', [
       this.resource.fetch();
       this.resource.subscribe(scope, undefined, { remove: false });
       scope.resource = this.resource;
-      scope.endApp = appManager.endApp;
+      scope.endApps = function(signal, selected) {
+          
+        if (selected.length === 0) {
+          return;
+        }
+
+        var apps = _.map(selected, function(id) {
+          return { id: id };
+        });
+
+        var promise;
+
+        if (apps.length === 1) {
+          promise = appManager.endApp(signal, apps[0]);
+        }
+
+        else {
+          promise = appManager.endApps(signal, apps);
+        }
+
+        // Deselect all apps
+        promise.then(function() {
+          scope.selected = [];
+        });
+
+      };
     },
 
     destroy: function() {
