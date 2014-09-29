@@ -131,12 +131,17 @@ angular.module('app.settings', [])
     // This is the single source of truth
     // for routes.
     pages: {
+      // Configuration
+      Config                   :'/config',
+      InstallWizard            :'/config/installation-wizard',
+
       // Operations
       AppInstance              :'/ops/apps/:appId',
       Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
       ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
       LogicalStream            :'/ops/apps/:appId/logicalPlan/streams/:streamName',
+      Operations               :'/ops',
       PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
       Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portId',
 
