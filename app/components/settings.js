@@ -155,14 +155,15 @@ angular.module('app.settings', [])
 
     breadcrumbs: {
       appInstance              :':appId',
+      appName                  :':appName',
       container                :':containerId',
-      logicalOperator          :':operatorName',
-      physicalOperator         :':operatorId',
-      logicalStream            :':streamName',
       containerLog             :':logName',
-      port                     :':portId',
+      logicalOperator          :':operatorName',
+      logicalStream            :':streamName',
       packageName              :':packageName @ :packageVersion',
-      appName                  :':appName'
+      physicalOperator         :':operatorId',
+      port                     :':portId'
+      
     },
 
     stramEvents: {
