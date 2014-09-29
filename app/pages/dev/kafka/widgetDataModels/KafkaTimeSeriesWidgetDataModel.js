@@ -30,6 +30,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
 
     angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
       init: function () {
+        KafkaWidgetDataModel.prototype.updateScope.call(this, []);
         KafkaWidgetDataModel.prototype.init.call(this);
 
         if (this.dataModelOptions && this.dataModelOptions.metric) {
@@ -43,8 +44,6 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
             this.widgetScope.$emit('widgetChanged', this.widget);
           }
         }.bind(this));
-
-        this.fetchData();
       }
     });
 

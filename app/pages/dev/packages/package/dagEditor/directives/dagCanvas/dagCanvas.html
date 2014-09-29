@@ -19,11 +19,11 @@
     ng-show="keysPressed.spacebar && !keysPressed.option"
   ></div>
   <div id="save-launch-status" class="pull-right">
-    <button class="btn btn-xs btn-inverse" ng-show="!saveLaunchState.launchPossible" ng-click="" title="{{saveLaunchState.launchImpossibleReason}}">
+    <button class="btn btn-xs btn-inverse" ng-show="!saveLaunchState.launchPossible" ng-click="launch();">
       <span class="glyphicon glyphicon-remove-circle launch-impossible"></span>
       <span dt-text="launch">launch</span>
     </button>
-    <button class="btn btn-xs btn-primary" ng-show="saveLaunchState.launchPossible" ng-click="launch();" title="Launch {{app.displayName}} now.">
+    <button class="btn btn-xs btn-primary" ng-show="saveLaunchState.launchPossible" ng-click="launch();">
       <span class="glyphicon glyphicon-play"></span>
       <span dt-text="launch">launch</span>
     </button>

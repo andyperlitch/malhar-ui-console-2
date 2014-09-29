@@ -120,13 +120,17 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
             keys = _.sortBy(keys, function (key) {
               return key;
             });
+            _.pull(keys, 'timestamp');
+
             scope.metrics = keys;
-            if (!scope.metric) {
-              if (_.contains(keys, 'revenue')) {
-                scope.metric = 'revenue';
-              } else {
-                scope.metric = scope.metrics[0];
-              }
+            if (!scope.metric && (keys.length > 0)) {
+              sampleObject = _.clone(sampleObject);
+              delete sampleObject.timestamp; // don't count timestamp
+              var pairs = _.pairs(sampleObject);
+              var maxPair = _.max(pairs, function (pair) {
+                return pair[1]; //key value
+              });
+              scope.metric = maxPair[0];
             }
 
             updateChart(timeseries);

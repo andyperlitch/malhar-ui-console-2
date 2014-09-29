@@ -66,9 +66,28 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   // handle launch requests from child scopes
   $scope.$on('launchRequest', function () { $scope.launch(); });
 
+  var launchNotif = null;
+
   // launch the app
   $scope.launch = function () {
-    var launchNotif = notificationService.notify({
+    // remove launchNotif if it is displayed
+    if (launchNotif) { launchNotif.remove(0); }
+
+    if (!$scope.saveLaunchState.launchPossible) {
+      // launch is impossible, show why
+      launchNotif = notificationService.notify({
+        title: 'Application Cannot Be Launched',
+        text: $scope.saveLaunchState.launchImpossibleReason,
+        type: 'error',
+        icon: false,
+        hide: false,
+        history: false
+      });
+      return;
+    }
+
+    // launch is possible
+    launchNotif = notificationService.notify({
       title: 'Launch Requested',
       text: 'A launch request has been submitted. Waiting for status...',
       type: 'info',
@@ -79,7 +98,8 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
     $scope.packageApplicationModelResource.launch().success(function (response) {
       var dashboardUrl = getUri.page('AppInstance', { appId: response.appId });
-      notificationService.notify({
+      if (launchNotif) { launchNotif.remove(0); }
+      launchNotif = notificationService.notify({
         title: 'Launched Successfully',
         text: $scope.app.displayName + ' was launched successfully. <a href="' + dashboardUrl + '">View it on the Dashboard</a>.',
         type: 'success',
@@ -87,7 +107,17 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         hide: false,
         history: false
       });
-      launchNotif.remove(0);
+    }).error(function(data) {
+      if (launchNotif) { launchNotif.remove(0); }
+      $log.error('Error launching app.', data);
+      launchNotif = notificationService.notify({
+        title: 'Error Launching Application',
+        text: 'There was an error launching ' + $scope.app.displayName + '. See the console log for more details.',
+        type: 'error',
+        icon: false,
+        hide: false,
+        history: false
+      });
     });
   };
 
@@ -258,6 +288,21 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
           // a save was requested since this request was started, so save now
           saveFrozen();
         }
+      }, function(error) {
+        // error response from saving
+        $log.error('Error saving application', error, $scope.packageApplicationModelResource);
+        $scope.saveLaunchState.saveInProgress = false;
+        $scope.saveLaunchState.launchPossible = false;
+        $scope.saveLaunchState.launchImpossibleReason = 'There was an error saving the app. See the console for details.';
+        $scope.saveLaunchState.saveLastTimestamp = false;
+        notificationService.notify({
+          title: 'Problem Saving Application',
+          text: $scope.saveLaunchState.launchImpossibleReason,
+          type: 'error',
+          icon: false,
+          hide: true,
+          history: false
+        });
       });
     }
   };

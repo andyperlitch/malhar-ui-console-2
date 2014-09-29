@@ -165,4 +165,16 @@ angular.module('app.components.services.dtText', [])
       return key;
     };
 
+    this.sprintf = function(format) {
+
+      var args = [].slice.call(arguments, 1);
+      var i = 0;
+      var str = this.get(format);
+    
+      return str.replace(/%s/g, function() {
+        return args[i++];
+      });
+ 
+    };
+
   }]);
