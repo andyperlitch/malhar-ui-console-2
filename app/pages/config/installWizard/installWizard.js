@@ -29,9 +29,48 @@ angular.module('app.pages.config.installWizard', {
 
 })
 
-// Controller
-.controller('InstallWizardCtrl', function($scope) {
+.factory('installWizardSteps', function() {
+  // linked list
+  return {
+    welcome: {
+      label: 'Welcome',
+      templateUrl: 'pages/config/installWizard/welcome.html',
+      controller: 'InstallWizardWelcomeCtrl',
+      next: 'hadoop'
+    },
+    hadoop: {
+      label: 'Hadoop',
+      templateUrl: 'pages/config/installWizard/hadoop.html',
+      controller: 'InstallWizardHadoopCtrl',
+      next: 'license',
+      prev: 'welcome'
+    },
+    license: {
+      label: 'License',
+      templateUrl: 'pages/config/installWizard/license.html',
+      controller: 'InstallWizardLicenseCtrl',
+      next: 'summary',
+      prev: 'hadoop'
+    },
+    summary: {
+      label: 'Summary',
+      templateUrl: 'pages/config/installWizard/summary.html',
+      controller: 'InstallWizardSummaryCtrl',
+      prev: 'license'
+    }
+  };
+})
 
-  console.log('Installation Wizard Page', $scope);
+// Controller
+.controller('InstallWizardCtrl', function($scope, installWizardSteps) {
+
+  // Holds the current step
+  $scope.currentStep = installWizardSteps.welcome;
+
+  // Changes to step
+  $scope.goToStep = function(step) {
+    $scope.currentStep = installWizardSteps[step];    
+  };
+
 
 });
