@@ -13,12 +13,16 @@ Must-Haves
 - Loading feedback for tables (1 d)
 - Performance tuning for tables (1 w)
 
+**total**: 3.5 weeks
+
 Nice-To-Haves
 -------------
 - Log Level Setter (3 d)
 - Tuple Viewer (2 w)
 - WebSocket connection re-establishment (3 d)
-- Infinite scroll for Stram Events(3 d)
+- Infinite scroll for Stram Events(2 d)
 - Auto-tail container logs (2 d)
 - Counters widget (1 w)
 - Better charting widget (1 w)
+
+**total**: 6 weeks
