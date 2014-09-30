@@ -1,2 +1,2 @@
 window.clientSettings = {};
-window.clientSettings.dataServerHost = 'http://localhost:3003';
+window.clientSettings.dataServerHost = 'http://localhost:3015';
