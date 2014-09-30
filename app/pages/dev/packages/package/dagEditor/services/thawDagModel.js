@@ -59,8 +59,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
         name: frozenOperator.name,
         x: frozenOperator.x,
         y: frozenOperator.y,
-        properties: _(frozenOperator.properties).clone(),
-        attributes: _(frozenOperator.attributes).clone(),
+        properties: frozenOperator.properties,
+        attributes: frozenOperator.attributes,
         opClass: opClass,
       };
 

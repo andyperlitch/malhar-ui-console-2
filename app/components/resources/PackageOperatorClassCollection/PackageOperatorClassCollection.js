@@ -17,10 +17,9 @@
 
 angular.module('app.components.resources.PackageOperatorClassCollection', [
   'app.components.resources.BaseCollection',
-  'app.components.resources.PackageOperatorClassModel',
-  'app.settings'
+  'app.components.resources.PackageOperatorClassModel'
 ])
-.factory('PackageOperatorClassCollection', function(BaseCollection, PackageOperatorClassModel, settings) {
+.factory('PackageOperatorClassCollection', function(BaseCollection, PackageOperatorClassModel) {
   var PackageOperatorClassCollection = BaseCollection.extend({
     debugName: 'Package Operators',
     urlKey: 'PackageOperatorClass',
@@ -29,8 +28,6 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         // Add packageName and className to operator object
         op.packageName = op.name.replace(/\.[^\.]+$/, '');
         op.simpleName = op.name.replace(/.*(?=\.)\./, '');
-        // remove this once the server starts sending attributes per operator
-        op.attributes = _(settings.OPERATOR_ATTRIBUTES).clone();
       });
       // do not include operators with no displayName
       raw.operatorClasses = _.filter(raw.operatorClasses, function(op) { return op.displayName; });

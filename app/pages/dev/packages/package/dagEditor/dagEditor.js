@@ -233,7 +233,6 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $scope.app = {
     displayName: undefined,
     description: undefined,
-    attributes: {},
     operators: [],
     streams: []
   };
