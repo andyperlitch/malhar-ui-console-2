@@ -43,6 +43,7 @@
             <p class="operator-short-desc" ng-bind-html="operator.shortDesc"></p>
             <p class="operator-tags"><label>Tags:</label> {{ operator.tags.join(", ") }}</p>
             <p class="operator-ports"><label>Ports:</label> {{ operator.inputPorts.length }} Input, {{ operator.outputPorts.length }} Output</p>
+            <p ng-show="!!operator.doclink" class="operator-doclink"><a target="dtdocs" href="{{operator.doclink}}">Documentation</a></p>
           </div>
         </li>
       </ul>
