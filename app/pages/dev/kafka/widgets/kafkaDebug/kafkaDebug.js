@@ -16,30 +16,12 @@
 
 'use strict';
 
-angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [])
-  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService) {
-    $scope.kafkaService = new KafkaRestService(function (data, kafkaMessage) {
-      $scope.$broadcast('kafkaMessage', data, kafkaMessage);
-    }, $scope);
+angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
+  'app.pages.dev.kafka.KafkaSocketService'
+])
+  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService) {
+    $scope.kafkaService = new KafkaSocketService();
 
-    $scope.$on('$destroy', function () {
-      $scope.kafkaService.unsubscribe();
-    });
-  })
-  .controller('KafkaConsumerCtrl', function ($scope) {
-    $scope.$on('kafkaMessage', function (event, data, kafkaMessage) {
-      $scope.kafkaMessage = kafkaMessage;
-
-      if (kafkaMessage && kafkaMessage.value) {
-        var kafkaMessageValue = JSON.parse(kafkaMessage.value);
-        $scope.kafkaMessageValue = kafkaMessageValue;
-        $scope.kafkaMessage.value = '<see data below>';
-      } else {
-        $scope.kafkaMessageValue = null; //TODO
-      }
-    });
-  })
-  .controller('KafkaProducerCtrl', function ($scope) {
     var defaultMessage;
 
     if ($scope.widget.dataModelOptions && $scope.widget.dataModelOptions.query) {
@@ -67,7 +49,19 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [])
       }
 
       if (msg) {
-        $scope.kafkaService.subscribe(msg);
+        $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) {
+          $scope.kafkaMessage = kafkaMessage;
+
+          if (kafkaMessage && kafkaMessage.value) {
+            var kafkaMessageValue = JSON.parse(kafkaMessage.value);
+            $scope.kafkaMessageValue = kafkaMessageValue;
+            $scope.kafkaMessage.value = '<see data below>';
+          } else {
+            $scope.kafkaMessageValue = null; //TODO
+          }
+        }, $scope);
+
+
         $scope.request = $scope.kafkaService.getQuery();
         if ($scope.widget.dataModelOptions) {
           $scope.widget.dataModelOptions.query = msg;

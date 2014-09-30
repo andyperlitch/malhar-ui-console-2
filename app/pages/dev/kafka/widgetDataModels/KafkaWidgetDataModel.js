@@ -18,9 +18,59 @@
 
 angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
   'ui.models',
-  'app.pages.dev.kafka.KafkaRestService'
+  'app.pages.dev.kafka.KafkaRestService',
+  'app.pages.dev.kafka.KafkaSocketService'
 ])
-  .factory('KafkaWidgetDataModel', function (WidgetDataModel, KafkaRestService) {
+  .factory('KafkaWidgetDataModel', function (WidgetDataModel, KafkaRestService, KafkaSocketService) {
+    function KafkaTimeSeriesWidgetDataModel() {
+    }
+
+    KafkaTimeSeriesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    KafkaTimeSeriesWidgetDataModel.prototype.constructor = WidgetDataModel;
+
+    angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
+      init: function () {
+        if (this.dataModelOptions && this.dataModelOptions.query) {
+          this.query = this.dataModelOptions.query;
+          this.fetchData();
+        }
+      },
+
+      fetchData: function () {
+        this.updateScope([]); //TODO
+
+        if (!this.kafkaService) {
+          this.kafkaService = new KafkaSocketService();
+        }
+
+        this.kafkaService.subscribe(this.query, function (data) {
+          if (data) {
+            this.updateScope(data);
+          } else {
+            this.updateScope(null);
+          }
+        }.bind(this), this.widgetScope);
+      },
+
+      updateQuery: function (query) {
+        this.query = query;
+        this.dataModelOptions = this.dataModelOptions ? this.dataModelOptions : {};
+        this.dataModelOptions.query = query; // dateModelOptions are persisted
+        //this.widgetScope.$emit('widgetChanged', this.widget); // this is implicitly called
+
+        this.fetchData();
+      },
+
+      destroy: function () {
+        if (this.kafkaService) {
+          this.kafkaService.unsubscribe();
+        }
+      }
+    });
+
+    return KafkaTimeSeriesWidgetDataModel;
+  })
+  .factory('KafkaRestWidgetDataModel', function (WidgetDataModel, KafkaRestService) {
     function KafkaTimeSeriesWidgetDataModel() {
     }
 
@@ -62,6 +112,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
       },
 
       destroy: function () {
+        console.log('_destroy');
         this.kafkaService.unsubscribe();
       }
     });

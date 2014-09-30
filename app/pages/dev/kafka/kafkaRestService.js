@@ -20,7 +20,8 @@ angular.module('app.pages.dev.kafka.KafkaRestService', [])
   .factory('KafkaRestService', function ($http, $interval, $q, util) {
     var settings = {
       pollInterval: 1000,
-      keepAliveInterval:5000
+      keepAliveInterval:5000,
+      restHost: 'http://localhost:3003'
     }; //TODO
 
     function KafkaRestService(callback, scope) {

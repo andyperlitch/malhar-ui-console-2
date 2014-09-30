@@ -21,12 +21,15 @@ angular.module('app.pages.dev.kafka', [
   'ui.models',
   'app.pages.dev.kafka.widgets.timeSeries',
   'app.pages.dev.kafka.widgets.kafkaDebug',
+  'app.pages.dev.kafka.socket',
+  'app.pages.dev.kafka.KafkaSocketService',
   'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel'
 ])
 
 // Route
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, socketProvider) {
+    socketProvider.setWebSocketURL('http://localhost:3003');
     $routeProvider
       .when('/kafka', {
         controller: 'KafkaCtrl',
