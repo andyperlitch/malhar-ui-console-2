@@ -17,7 +17,7 @@
 'use strict';
 
 var gulp = require('gulp');
-
+var argv = require('optimist').argv;
 var express = require('express');
 var http = require('http');
 var opn = require('opn');
@@ -72,7 +72,7 @@ function startServer(baseDirs, port) {
       res.json(require('../mock/mockOperatorClasses.json'));
     }, 1000);
   });
-  app.get('/ws/v1/appPackages/mydtapp2/1.0/operators', function(req, res) {
+  app.get('/ws/v1/appPackages/simplepkg/1.1/operators', function(req, res) {
     setTimeout(function() {
       res.json(require('../mock/mockOperatorClasses2.json'));
     }, 1000);
@@ -102,7 +102,9 @@ function startServer(baseDirs, port) {
       console.log('Started connect web server on ' + url);
     });
 
-  opn(url);
+  if (!argv['dont-open']) {
+    opn(url);
+  }
 }
 
 gulp.task('connect', function () {

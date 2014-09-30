@@ -13,10 +13,12 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
 require('./gulp/gateway');
+var updateAppScripts = require('./util/update-app-scripts');
 
 var dev = {
   dir: 'app',
   index: 'app/index.html',
+  favicon: 'app/favicon.ico',
   less: 'app/styles/main.less',
   scripts: [
     'app/*.js',
@@ -158,6 +160,9 @@ gulp.task('copy', function () {
 
   gulp.src(dev.images)
     .pipe(gulp.dest(prod.images));
+
+  gulp.src(dev.favicon)
+    .pipe(gulp.dest(prod.dir));
 });
 
 gulp.task('usemin', function () {
@@ -178,6 +183,12 @@ gulp.task('usemin', function () {
       ]
     }))
     .pipe(gulp.dest(prod.dir));
+});
+
+gulp.task('appscripts', function() {
+  updateAppScripts(function() {
+    console.log('Application scripts updated in index.html');
+  });
 });
 
 gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'copy', 'usemin']);

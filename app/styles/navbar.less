@@ -15,7 +15,6 @@
         font-weight:100;
         letter-spacing: 0.15em;
         color: @nav-text-color;
-        text-shadow:0 1px 1px @nav-text-shadow,0 1px 1px @nav-text-shadow,0 1px 1px @nav-text-shadow;
 
     }
     li.active, li.open {
@@ -28,7 +27,8 @@
 }
 .navbar-brand {
     background: url('../images/main_banner.png') no-repeat 0 0 scroll;
-    // the ", none" is a fun trick to serve svg only to browsers that support it
+    // the ", none" is a fun trick to serve svg only to browsers that support
+    // it, since svg support and multiple bg support go hand-in-hand
     background: url('../images/datatorrent_logo.svg') no-repeat 0 0 scroll, none;
     width:218px;
     height:48px;

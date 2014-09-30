@@ -34,8 +34,9 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   'app.pages.dev.packages.package.dagEditor.directives.dagStream',
 
   // services
-  'app.components.services.dtText',
   'app.components.services.confirm',
+  'app.components.services.dtText',
+  'app.components.services.getUri',
   'app.components.services.jsPlumb',
   'app.pages.dev.packages.package.dagEditor.services.freezeDagModel',
   'app.pages.dev.packages.package.dagEditor.services.thawDagModel',
@@ -60,44 +61,64 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 })
 
 // Page Controller
-.controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel, dtText, confirm, $location) {
+.controller('DagEditorCtrl', function($q, $scope, PackageOperatorClassCollection, $routeParams, $log, settings, freezeDagModel, thawDagModel, dagEditorOptions, PackageApplicationModel, dtText, confirm, $location, notificationService, getUri) {
 
-  $scope.launchAlerts = [];
-  var msgIds = 0;
+  // handle launch requests from child scopes
+  $scope.$on('launchRequest', function () { $scope.launch(); });
+
+  var launchNotif = null;
 
   // launch the app
-  $scope.launch = function (event, name) {
-    var app = new PackageApplicationModel({
-      packageName: $routeParams.packageName,
-      packageVersion: $routeParams.packageVersion,
-      appName: name
-    });
-    var infoMsgId = msgIds++;
-    $scope.launchAlerts.push({
-      id: infoMsgId,
+  $scope.launch = function () {
+    // remove launchNotif if it is displayed
+    if (launchNotif) { launchNotif.remove(0); }
+
+    if (!$scope.saveLaunchState.launchPossible) {
+      // launch is impossible, show why
+      launchNotif = notificationService.notify({
+        title: 'Application Cannot Be Launched',
+        text: $scope.saveLaunchState.launchImpossibleReason,
+        type: 'error',
+        icon: false,
+        hide: false,
+        history: false
+      });
+      return;
+    }
+
+    // launch is possible
+    launchNotif = notificationService.notify({
+      title: 'Launch Requested',
+      text: 'A launch request has been submitted. Waiting for status...',
       type: 'info',
-      appName: name,
-      include: 'pages/dev/packages/package/msgSubmit.html'
+      icon: false,
+      hide: false,
+      history: false
     });
 
-    app.launch().success(function (response) {
-      // remove info msg
-      $scope.launchAlerts = _.reject($scope.launchAlerts, function (alert) {
-        return alert.id === infoMsgId;
-      });
-
-      $scope.launchAlerts.push({
+    $scope.packageApplicationModelResource.launch().success(function (response) {
+      var dashboardUrl = getUri.page('AppInstance', { appId: response.appId });
+      if (launchNotif) { launchNotif.remove(0); }
+      launchNotif = notificationService.notify({
+        title: 'Launched Successfully',
+        text: $scope.app.displayName + ' was launched successfully. <a href="' + dashboardUrl + '">View it on the Dashboard</a>.',
         type: 'success',
-        appName: name,
-        appId: response.appId,
-        include: 'pages/dev/packages/package/msgLaunch.html'
+        icon: false,
+        hide: false,
+        history: false
+      });
+    }).error(function(data) {
+      if (launchNotif) { launchNotif.remove(0); }
+      $log.error('Error launching app.', data);
+      launchNotif = notificationService.notify({
+        title: 'Error Launching Application',
+        text: 'There was an error launching ' + $scope.app.displayName + '. See the console log for more details.',
+        type: 'error',
+        icon: false,
+        hide: false,
+        history: false
       });
     });
-  };
-
-  // handle closing launch alerts
-  $scope.closeAlert = function (index) {
-    $scope.launchAlerts.splice(index, 1);
   };
 
   // Deselects everything
@@ -132,43 +153,95 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
   $q.all([
     $scope.operatorClassesResource.fetch(),
     $scope.packageApplicationModelResource.fetch()
-  ]).then(function() {
-    // set up the dag in the UI
-    thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
-      // handle the launch button on DAG load
-      if ($scope.app.operators && $scope.app.operators.length < 1) {
-        // empty app
-        $scope.launchPossible = false;
-        $scope.launchImpossibleReason = 'The app needs at least one output operator.';
-      } else {
-        $scope.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
-        $scope.launchImpossibleReason = $scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error ? $scope.packageApplicationModelResource.data.error : 'Application cannot be started for reasons unknown.';
-      }
-      // now that it's thawed, watch the app for changes
-      var first = true; // don't do this the first time.
-      $scope.$watch('app', function() {
-        // update the representation we send to the server
-        if (!first) {
-          $scope.launchPossible = false;
-          $scope.launchImpossibleReason = 'A save is in progress. Please wait until it is finished.';
-          $scope.freeze();
-          $scope.saveRequested = true;
-          debouncedSaveFrozen();
+  ]).then(
+    // loading success
+    function() {
+      // set up the dag in the UI
+      thawDagModel($scope.packageApplicationModelResource.data.fileContent, $scope, dagEditorOptions).then(function() {
+        // handle the launch button on DAG load
+        if ($scope.app.operators && $scope.app.operators.length < 1) {
+          // empty app
+          $scope.saveLaunchState.launchPossible = false;
+          $scope.saveLaunchState.launchImpossibleReason = 'The app needs at least one output operator.';
         } else {
-          first = false;
-          $scope.$broadcast('firstLoadComplete');
+          $scope.saveLaunchState.launchPossible = ($scope.packageApplicationModelResource.data && !$scope.packageApplicationModelResource.data.error);
+          $scope.saveLaunchState.launchImpossibleReason = ($scope.packageApplicationModelResource.data && $scope.packageApplicationModelResource.data.error) ? $scope.packageApplicationModelResource.data.error : 'The application cannot be started for an unknown reason.';
         }
-      }, true); // true set here to do deep equality check on $scope
-    });
-  });
+        // now that it's thawed, watch the app for changes
+        var first = true; // don't do this the first time.
+        $scope.$watch('app', function() {
+          // update the representation we send to the server
+          if (!first) {
+            $scope.saveLaunchState.saveRequested = true;
+            $scope.saveLaunchState.launchPossible = false;
+            $scope.saveLaunchState.launchImpossibleReason = 'A save is in progress. Please wait until it is finished.';
+            $scope.freeze();
+            debouncedSaveFrozen();
+          } else {
+            first = false;
+            $scope.$broadcast('firstLoadComplete');
+          }
+        }, true); // true set here to do deep equality check on $scope
+
+        // watch the saveLaunchState to notify child scopes
+        $scope.$watch('saveLaunchState', function() {
+          $scope.$broadcast('saveLaunchStateChange', $scope.saveLaunchState);
+        });
+      });
+    },
+    // failure to load operators or application
+    function(reason) {
+      var notifTitle = null;
+      var notifBody = null;
+
+      if (reason.config.url === $scope.operatorClassesResource.url) {
+        // could not load operators
+        notifTitle = 'Operators Not Loaded';
+        notifBody = 'Could not load the operator library for this application package.';
+      } else if (reason.config.url === $scope.packageApplicationModelResource.url) {
+        // could not load application
+        notifTitle = 'Application Not Loaded';
+        notifBody = 'The application ' + $routeParams.appName + ' could not be loaded.';
+      } else {
+        // unknown error
+        notifTitle = 'Unknown Error';
+        notifBody = 'An unknown error has occured.';
+      }
+
+      // log the error
+      $log.error(notifTitle, reason);
+
+      // set up a notif
+      notificationService.notify({
+        title: notifTitle,
+        text: notifBody,
+        type: 'error',
+        icon: false,
+        hide: true,
+        history: false
+      });
+      // Navigate to Package page
+      var url = getUri.page('Package', $routeParams, true);
+      $location.path(url);
+    }
+  );
 
   // Expose appName to scope
   $scope.appName = $routeParams.appName;
 
   // Models the application
   $scope.app = {
+    displayName: undefined,
+    description: undefined,
     operators: [],
     streams: []
+  };
+
+  $scope.saveLaunchState = {
+    saveRequested: false,
+    launchPossible: false,
+    launchImpossibleReason: 'The app is loading.',
+    saveLastTimestamp: null
   };
 
   // Canvas resizable options
@@ -189,35 +262,53 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
 
   // PUT the frozen model to the gateway
   var saveFrozen = function() {
-    if (!$scope.saveInProgress) {
+    if (!$scope.saveLaunchState.saveInProgress) {
       // not currently saving, so unset saveRequested and set saveInProgress
-      $scope.saveRequested = false;
-      $scope.saveInProgress = true;
+      $scope.saveLaunchState.saveRequested = false;
+      $scope.saveLaunchState.saveInProgress = true;
+      $scope.saveLaunchState.launchPossible = false;
+      $scope.saveLaunchState.launchImpossibleReason = 'The app is currently being saved.';
       $scope.packageApplicationModelResource.save().then(function(e) {
         // unset saveInProgress now that we are done
-        $scope.saveInProgress = false;
+        $scope.saveLaunchState.saveInProgress = false;
 
         // set scope vars to indicate saving state and launch possibility
         if ($scope.app.operators && $scope.app.operators.length < 1) {
           // empty app
-          $scope.launchPossible = false;
-          $scope.launchImpossibleReason = 'The app needs at least one output operator.';
+          $scope.saveLaunchState.saveRequested = false;
+          $scope.saveLaunchState.launchPossible = false;
+          $scope.saveLaunchState.launchImpossibleReason = 'The app needs at least one output operator.';
         } else {
-          $scope.launchPossible = (e.status === 200 && e.data && !e.data.error);
-          $scope.launchImpossibleReason = e.data && e.data.error ? e.data.error : 'Application cannot be started for reasons unknown.';
+          $scope.saveLaunchState.launchPossible = (e.status === 200 && e.data && !e.data.error);
+          $scope.saveLaunchState.launchImpossibleReason = e.data && e.data.error ? e.data.error : 'The application cannot be started for an unknown reason.';
+          $scope.saveLaunchState.saveLastTimestamp = new Date();
         }
-        $scope.saveLastTimestamp = new Date();
 
-        if ($scope.saveRequested) {
+        if ($scope.saveLaunchState.saveRequested) {
           // a save was requested since this request was started, so save now
           saveFrozen();
         }
+      }, function(error) {
+        // error response from saving
+        $log.error('Error saving application', error, $scope.packageApplicationModelResource);
+        $scope.saveLaunchState.saveInProgress = false;
+        $scope.saveLaunchState.launchPossible = false;
+        $scope.saveLaunchState.launchImpossibleReason = 'There was an error saving the app. See the console for details.';
+        $scope.saveLaunchState.saveLastTimestamp = false;
+        notificationService.notify({
+          title: 'Problem Saving Application',
+          text: $scope.saveLaunchState.launchImpossibleReason,
+          type: 'error',
+          icon: false,
+          hide: true,
+          history: false
+        });
       });
     }
   };
 
   var confirmNavigation = function(event, next) {
-    if ($scope.saveRequested || $scope.saveInProgress) {
+    if ($scope.saveLaunchState.saveRequested || $scope.saveLaunchState.saveInProgress) {
       // block the navigation change to show the confirm box
       event.preventDefault();
 
@@ -227,17 +318,15 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
         body: dtText.get('The streaming application is currently being saved to the server. Are you sure you want to cancel that?')
       }).then(function() {
         // User really wants to navigate away
-        $scope.saveRequested = $scope.saveInProgress = false;
+        $scope.saveLaunchState.saveRequested = $scope.saveLaunchState.saveInProgress = false;
         $location.url($location.url(next).hash());
       });
     }
   };
 
-
   $scope.$on('$locationChangeStart', confirmNavigation);
   window.onbeforeunload = function (event) {
-    console.log($scope.saveRequested, $scope.saveInProgress);
-    if ($scope.saveRequested || $scope.saveInProgress) {
+    if ($scope.saveLaunchState.saveRequested || $scope.saveLaunchState.saveInProgress) {
       var message = 'The streaming application is currently being saved to the server.';
       if (typeof event === 'undefined') {
         event = window.event;

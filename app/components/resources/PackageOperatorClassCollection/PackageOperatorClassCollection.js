@@ -29,6 +29,8 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         op.packageName = op.name.replace(/\.[^\.]+$/, '');
         op.simpleName = op.name.replace(/.*(?=\.)\./, '');
       });
+      // do not include operators with no displayName
+      raw.operatorClasses = _.filter(raw.operatorClasses, function(op) { return op.displayName; });
       return raw.operatorClasses;
     },
     model: PackageOperatorClassModel

@@ -14,27 +14,6 @@
 
   <!-- *** DAG CANVAS *** -->
   <div class="col-md-8" id="dag-canvas-container">
-    <div id="save-launch-status" class="pull-right">
-      <span class="saving" ng-show="saveInProgress">Saving...</span>
-      <span class="saving" title="Last saved at {{ saveLastTimestamp | relativeTimestamp }}" ng-show="!saveRequested && !saveInProgress && saveLastTimestamp">All changes saved to server</span>
-      <button class="btn btn-xs btn-inverse" ng-show="!launchPossible" ng-click="" tooltip-popup-delay="100" tooltip-placement="bottom" tooltip="{{launchImpossibleReason}}">
-        <span class="glyphicon glyphicon-remove-circle"></span>
-        <span dt-text="launch">launch</span>
-      </button>
-      <button class="btn btn-xs btn-primary" ng-show="launchPossible" ng-click="launch($event, appName);" tooltip-popup-delay="100" tooltip-placement="bottom" tooltip="Launch {{appName}} now.">
-        <span class="glyphicon glyphicon-play"></span>
-        <span dt-text="launch">launch</span>
-      </button>
-      <alert ng-repeat="alert in launchAlerts"
-             type="{{alert.type}}"
-             close="closeAlert($index);"
-             class="notification">
-          <span ng-if="alert.include">
-              <span ng-include="alert.include"></span>
-          </span>
-          <span ng-if="!alert.include">{{alert.msg}}</span>
-      </alert>
-    </div>
     <h2 class="h4">Application Canvas</h2>
 
     <!-- The canvas div:
@@ -78,8 +57,8 @@
       <!-- Note: This is not editable because it is
       taken from the URL. -->
       <div class="form-group">
-        <label for="appName" dt-text>Name</label>
-        <input type="text" readonly ng-model="appName" name="app_name" class="form-control">
+        <label for="displayName" dt-text>Name</label>
+        <input type="text" id="displayName" ng-model="app.displayName" name="app_name" class="form-control">
       </div>
 
       <!-- app description -->
@@ -273,4 +252,4 @@
 
 </div>
 <!-- <h3>app structure</h3> -->
-<pre class="well" style="max-width: 800px;">{{ app | json }}</pre>
+<!-- <pre class="well" style="max-width: 800px;">{{ app | json }}</pre> -->
