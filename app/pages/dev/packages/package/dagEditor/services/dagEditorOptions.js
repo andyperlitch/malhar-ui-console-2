@@ -52,15 +52,18 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.dagEditorOptio
     },
     hoverPaintStyle:options.endpointHoverStyle,
     dropOptions:{ hoverClass:'hover', activeClass:'active' },
+    isSource:true,
     isTarget:true,
-      overlays:[
-        [ 'Label', {
-            location:[-1, 0.5],
-            label:'Drop',
-            cssClass:'endpointTargetLabel',
-            id: 'label'
-        } ]
-      ]
+    connector:[ 'Bezier', { curviness: 150 } ],
+    connectorStyle: options.connectorPaintStyle,
+    overlays:[
+      [ 'Label', {
+          location:[-1, 0.5],
+          label:'Drop',
+          cssClass:'endpointTargetLabel',
+          id: 'label'
+      } ]
+    ]
   };
   options.outputEndpointOptions = {
     cssClass: 'outputEndpoint',
@@ -73,21 +76,20 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.dagEditorOptio
       lineWidth:3
     },
     isSource:true,
-    // connector:[ 'Flowchart', { stub:[40, 60], gap:10, cornerRadius:5, alwaysRespectStubs:true } ],
-    // connector:[ 'StateMachine', { margin: 30, curviness: 150, proximityLimit: 200 } ],
+    isTarget:true,
     connector:[ 'Bezier', { curviness: 150 } ],
     connectorStyle: options.connectorPaintStyle,
     hoverPaintStyle: options.endpointHoverStyle,
-      connectorHoverStyle: options.connectorHoverStyle,
-      dragOptions:{},
-      overlays:[
-        [ 'Label', {
-            location:[2.2, 0.5],
-            label:'',
-            cssClass:'endpointSourceLabel',
-            id: 'label'
-          } ]
-      ]
+    connectorHoverStyle: options.connectorHoverStyle,
+    dragOptions:{},
+    overlays:[
+      [ 'Label', {
+          location:[2.2, 0.5],
+          label:'',
+          cssClass:'endpointSourceLabel',
+          id: 'label'
+      } ]
+    ]
   };
 
   return options;

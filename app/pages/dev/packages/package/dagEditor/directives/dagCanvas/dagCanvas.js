@@ -102,6 +102,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
   }
 
   function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, sinkConnection, scope) {
+    if (sourcePort.portType === 'input') {
+      // connected input to output, so swap ends
+      var tmpOperator = sourceOperator;
+      var tmpPort = sourcePort;
+      sourceOperator = sinkOperator;
+      sourcePort = sinkPort;
+      sinkOperator = tmpOperator;
+      sinkPort = tmpPort;
+    }
+
     // Check for existing stream
     var stream = _.find(scope.app.streams, function(s) {
       return s.source.operator === sourceOperator && s.source.port === sourcePort;
