@@ -58,6 +58,12 @@ function gatewayMiddleware(req, res, next) {
 function startServer(baseDirs, port) {
   var app = express();
 
+  app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+  });
+
   // ------------------------------------------
   // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
   // ------------------------------------------
