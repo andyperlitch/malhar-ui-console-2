@@ -29,7 +29,7 @@ angular.module('app.pages.dev.kafka', [
 
 // Route
   .config(function ($routeProvider, socketProvider) {
-    socketProvider.setWebSocketURL('http://localhost:3003');
+    socketProvider.setWebSocketURL(window.dataServerHost);
     $routeProvider
       .when('/kafka', {
         controller: 'KafkaCtrl',
