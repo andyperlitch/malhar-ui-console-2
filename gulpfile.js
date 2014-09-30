@@ -165,7 +165,7 @@ gulp.task('copy', function () {
     .pipe(gulp.dest(prod.dir));
 });
 
-gulp.task('usemin', function () {
+gulp.task('usemin', ['less'], function () {
   gulp.src(dev.index)
     .pipe($.inject(gulp.src('.tmp/templates.js'), {
       read: false,
