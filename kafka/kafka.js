@@ -85,18 +85,19 @@ function createConsumer() {
 
         if (io && queries.hasQuery(msg.id)) {
 
-          var lastSent = lruCache.get(msg.id);
+          var cache = lruCache.get(msg.id);
           var now = Date.now();
-          if (!lastSent || (now - lastSent > 500)) {
-            console.log('_msg ', msg.id, lastSent);
-            var activeQueries = queries.getQueryList();
-            console.log(activeQueries);
+          if (!cache || (now - cache.time > 500)) {
+            //console.log('_msg ', msg.id, lastSent);
+            //var activeQueries = queries.getQueryList();
             //console.log(activeQueries);
-            //console.log('_');
 
-            lruCache.set(msg.id, now);
-            console.log('emit', msg.id);
-            console.log(queries.getQueryList());
+            lruCache.set(msg.id, {
+              message: message,
+              time: now
+            });
+            //console.log('emit', msg.id);
+            //console.log(queries.getQueryList());
             io.to(msg.id).emit(msg.id, message);
           }
         }
@@ -210,6 +211,12 @@ function generateQueryResults() {
 }
 
 //setInterval(generateQueryResults, 500);
+function emitCachedResult (id) {
+  var cache = lruCache.get(id);
+  if (cache) {
+    io.to(id).emit(id, cache.message);
+  }
+}
 
 exports.initSocketServer = function (ioInstance) {
   io = ioInstance;
@@ -223,6 +230,8 @@ exports.initSocketServer = function (ioInstance) {
       queries.addQuery(socket.id, query.id);
 
       send(JSON.stringify(query));
+
+      emitCachedResult(query.id);
     });
 
     socket.on('unsubscribe', function (data) {
