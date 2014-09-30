@@ -43,7 +43,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.freezeDagModel
         // hash representing one operator
         return {
           'name': operator.name,
-          'attributes':  {},
+          'attributes':  operator.attributes,
           'class': operator.opClass.name,
           // collect the list of operator ports
           'ports': _.map(allports, function (port) {
@@ -52,7 +52,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.freezeDagModel
               'attributes': _(port.attributes).clone()
             };
           }),
-          'properties': _(operator.properties).clone(),
+          'properties': operator.properties,
           'x': operator.x,
           'y': operator.y
         };

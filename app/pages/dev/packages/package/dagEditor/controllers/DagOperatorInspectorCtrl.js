@@ -17,7 +17,8 @@
 
 angular.module('app.pages.dev.packages.package.dagEditor.controllers.DagOperatorInspectorCtrl', [])
 // Controller: Inspector for operator
-.controller('DagOperatorInspectorCtrl', function($scope) {
+.controller('DagOperatorInspectorCtrl', function($scope, settings) {
+  $scope.OPERATOR_ATTRIBUTES = settings.OPERATOR_ATTRIBUTES;
   $scope.canSetFilter = function(prop) {
     return prop.canSet;
   };

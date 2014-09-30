@@ -142,6 +142,23 @@
         <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
       </div>
 
+      <!-- Operator attributes -->
+      <h5>Attributes</h5>
+      <p class="text-muted" ng-if="!selected.opClass.attributes" dt-text>
+        No settable attributes
+      </p>
+      <div ng-repeat="attr in OPERATOR_ATTRIBUTES" class="form-group">
+
+        <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{attr.description}}"></span>
+        <label ng-attr-for="attr-{{attr.name}}">{{attr.display_name}}</label>
+        <input ng-if="'Boolean' !== attr.type" class="form-control" type="text" ng-model="selected.attributes[attr.name]" ng-attr-placeholder="{{attr.type}}" ng-attr-name="attr-{{attr.name}}">
+        <div ng-if="'Boolean' === attr.type">
+          <input id="oper_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
+          <label ng-attr-for="oper_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
+        </div>
+      </div>
+
+
       <hr>
       <!-- Ports -->
       <h5>Ports</h5>
@@ -231,11 +248,12 @@
 
       <hr>
 
+      <!-- port attributes -->
       <h5>Attributes</h5>
 
       <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
         <span ng-if="attr.description" class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{ attr.description }}"></span>
-        <label ng-attr-for="port_attr_{{attr.name}}">{{attr.name}}</label>
+        <label ng-attr-for="port_attr_{{attr.name}}">{{attr.display_name}}</label>
         <!-- Boolean -->
         <div ng-if="attr.type === 'Boolean'">
           <input id="port_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
