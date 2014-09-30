@@ -15,9 +15,10 @@
 */
 'use strict';
 
-angular.module('app.pages.config.installWizard', {
-
-})
+angular.module('app.pages.config.installWizard', [
+  'app.components.resources.ConfigPropertyModel',
+  'app.components.resources.HadoopLocation'
+])
 // Routing
 .config(function(settings, $routeProvider) {
 
@@ -35,27 +36,23 @@ angular.module('app.pages.config.installWizard', {
     welcome: {
       label: 'Welcome',
       templateUrl: 'pages/config/installWizard/welcome.html',
-      controller: 'InstallWizardWelcomeCtrl',
       next: 'hadoop'
     },
     hadoop: {
       label: 'Hadoop',
       templateUrl: 'pages/config/installWizard/hadoop.html',
-      controller: 'InstallWizardHadoopCtrl',
       next: 'license',
       prev: 'welcome'
     },
     license: {
       label: 'License',
       templateUrl: 'pages/config/installWizard/license.html',
-      controller: 'InstallWizardLicenseCtrl',
       next: 'summary',
       prev: 'hadoop'
     },
     summary: {
       label: 'Summary',
       templateUrl: 'pages/config/installWizard/summary.html',
-      controller: 'InstallWizardSummaryCtrl',
       prev: 'license'
     }
   };
@@ -73,4 +70,43 @@ angular.module('app.pages.config.installWizard', {
   };
 
 
+})
+
+.controller('InstallWizardWelcomeCtrl', function($scope) {
+  
+  $scope.next = function() {
+    $scope.goToStep('hadoop');
+  };
+
+
+})
+.controller('InstallWizardHadoopCtrl', function($scope, $q, ConfigPropertyModel, HadoopLocation) {
+  
+  // Set up models for the two properties to set
+  $scope.dfsLocation = new ConfigPropertyModel('dt.dfsRootDirectory');
+  $scope.hadoopLocation = new HadoopLocation();
+
+  // Loading
+  $scope.loading = true;
+  $q.all([$scope.dfsLocation.fetch(), $scope.hadoopLocation.fetch()])
+    .then(
+      // Successfully loaded property values
+      function(){
+        $scope.loading = false;
+      },
+      // Failed to load properties
+      function() {
+        $scope.loading = false;
+        $scope.loadError = true;
+      }
+    );
+
+
+
+})
+.controller('InstallWizardLicenseCtrl', function() {
+  console.log('hello from InstallWizardLicenseCtrl');
+})
+.controller('InstallWizardSummaryCtrl', function() {
+  console.log('hello from InstallWizardSummaryCtrl');
 });
