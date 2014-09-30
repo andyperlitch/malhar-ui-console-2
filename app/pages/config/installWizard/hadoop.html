@@ -15,7 +15,28 @@
   </div>
 
   <div class="alert alert-danger" ng-if="loadError">
-    <span dt-text>Internal error. Failed to load installation data.</span>
+    <span dt-text>An internal error. Failed to load installation data.</span> <button class="btn btn-default" ng-click="showErrorDetails = !showErrorDetails" dt-text>details</button>
+    <div ng-if="showErrorDetails">
+
+      <div ng-if="hadoopLocation.fetchError">
+        <hr>
+        <h4 dt-text>Hadoop Installation Location failed to load</h4>
+        <p>
+          <strong dt-text>Response:</strong>
+          {{hadoopLocation.fetchError.data}}
+        </p>
+      </div>
+
+      <div ng-if="dfsLocation.fetchError">
+        <hr>
+        <h4 dt-text>DFS Installation Location failed to load</h4>
+        <p>
+          <strong dt-text>Response:</strong>
+          {{dfsLocation.fetchError.data}}
+        </p>
+      </div>
+
+    </div>
   </div>
 
   <form name="hadoopForm" ng-show="!loading && !loadError">
