@@ -16,9 +16,10 @@
 
 'use strict';
 
-var config = require('./config');
+var config = require('../config');
 var kafka = require('kafka-node');
 var LRU = require('lru-cache');
+var Queries = require('./queries');
 //var aggregatesMockData = require('./aggregatesMockData');
 //var aggregatesMockData = require('./mockData');
 
@@ -43,6 +44,9 @@ var options = {
   fetchMaxBytes: 1024 * 1024,
   fromOffset: true
 };
+
+var queries = new Queries();
+var io = null;
 
 //TODO mock data
 if (config.kafka.enableMockData) {
@@ -76,7 +80,26 @@ function createConsumer() {
       if (message.offset >= initialOffset) {
         var msg = JSON.parse(message.value);
         //console.log('_msg ' + msg.id);
-        lruCache.set(msg.id, message);
+        //lruCache.set(msg.id, message);
+        //console.log(msg.id);
+
+        if (io && queries.hasQuery(msg.id)) {
+
+          var lastSent = lruCache.get(msg.id);
+          var now = Date.now();
+          if (!lastSent || (now - lastSent > 500)) {
+            console.log('_msg ', msg.id, lastSent);
+            var activeQueries = queries.getQueryList();
+            console.log(activeQueries);
+            //console.log(activeQueries);
+            //console.log('_');
+
+            lruCache.set(msg.id, now);
+            console.log('emit', msg.id);
+            console.log(queries.getQueryList());
+            io.to(msg.id).emit(msg.id, message);
+          }
+        }
       }
     });
     consumer.on('error', function (err) {
@@ -113,6 +136,7 @@ createConsumer();
 var producer = new Producer(client);
 
 function send(message) {
+  console.log('_send', message);
   var payload = {topic: topicIn, messages: [message], partition: 0};
   producer.send([payload], function (err) {
     if (err) {
@@ -148,3 +172,76 @@ function publish(req, res) {
 
 exports.data = data;
 exports.publish = publish;
+
+//----------------------------
+
+function generateQueryResults() {
+  var activeQueries = queries.getQueryList();
+  console.log(io.sockets.adapter.rooms);
+  console.log(activeQueries);
+  console.log('_');
+
+  activeQueries.forEach(function (query) {
+    var r = (query * 1000) + Math.floor(Math.random() * 100);
+    var result = query + '->' + r;
+
+    // notify all sockets subscribed to the query
+    io.to(query).emit(query, result);
+  });
+}
+
+//setInterval(generateQueryResults, 500);
+
+function generateQueryResults() {
+  var activeQueries = queries.getQueryList();
+  console.log(io.sockets.adapter.rooms);
+  console.log(activeQueries);
+  console.log('_');
+
+  activeQueries.forEach(function (query) {
+    var r = (query * 1000) + Math.floor(Math.random() * 100);
+    var result = query + '->' + r;
+
+    // notify all sockets subscribed to the query
+    if (io) {
+      //io.to(query).emit(query, result);
+    }
+  });
+}
+
+//setInterval(generateQueryResults, 500);
+
+exports.initSocketServer = function (ioInstance) {
+  io = ioInstance;
+
+  io.on('connection', function (socket) {
+    socket.on('subscribe', function (data) {
+      var query = JSON.parse(data.query);
+      query.id = data.query;
+      console.log('_sub ' + query);
+      socket.join(query.id); // join room with specified query
+      queries.addQuery(socket.id, query.id);
+
+      send(JSON.stringify(query));
+    });
+
+    socket.on('unsubscribe', function (data) {
+      var query = data.query;
+      socket.leave(query);
+      queries.removeQuery(socket.id, query);
+      //TODO clean up rooms
+      /*
+       var room = io.sockets.adapter.rooms[query];
+       if (room && _.isEmpty(room)) {
+       delete queries[query];
+       }
+       */
+    });
+
+    socket.on('disconnect', function () {
+      console.log(socket.id + ' disconnected ' + socket.connected);
+      queries.removeId(socket.id);
+    });
+  });
+};
+
