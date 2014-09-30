@@ -19,9 +19,10 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var http = require('http');
 var httpProxy = require('http-proxy');
+var socketIO = require('socket.io');
 var config = require('./config');
 
-var kafka = require('./kafka');
+var kafka = require('./kafka/kafka');
 
 var app = express();
 
@@ -41,6 +42,12 @@ app.use(bodyParser.json());
 //app.use(app.router);
 
 console.log('environment: ' + app.get('env'));
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 console.log(config.web.useDist);
 if (config.web.useDist) {
@@ -70,10 +77,18 @@ app.get('/settings.js', function(req, res) {
 });
 
 var server = http.createServer(app);
+
+var io = socketIO(server);
+
+kafka.initSocketServer(io);
+
 server.listen(config.web.port, function(){
   console.log('Express server listening on port ' + config.web.port);
 });
 
+
+/*
 server.on('upgrade', function (req, socket, head) {
   proxy.ws(req, socket, head);
 })
+  */
