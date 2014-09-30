@@ -18,7 +18,7 @@
 angular.module('app.pages.dev.packages.package.dagEditor.directives.dagStream', [
   'app.settings'
 ])
-.directive('dagStream', function($log, settings) {
+.directive('dagStream', function($log, settings, $jsPlumb) {
   return {
     link: function(scope) {
 
@@ -120,6 +120,13 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagStream', 
         }
       });
 
+      // listen for remove events broadcast from the parent scope
+      scope.$on('remove', function(e, data) {
+        if (data.selected_type === 'stream' && data.selected.name === scope.stream.name) {
+          // broadcasted "remove" message was for this instance, so remove
+          $jsPlumb.detach(scope.connection);
+        }
+      });
     }
   };
 });

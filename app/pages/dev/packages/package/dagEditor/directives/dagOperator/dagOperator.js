@@ -236,6 +236,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
 
     $scope.editing.name = false;
   };
+
+  // listen for remove events broadcast from the parent scope
+  $scope.$on('remove', function(e, data) {
+    if (data.selected_type === 'operator' && data.selected.name === $scope.operator.name) {
+      // broadcasted "remove" message was for this instance, so remove
+      $scope.remove();
+    }
+  });
+
+  // delete this operator
   $scope.remove = function() {
 
     // Check if streams will be destroyed
