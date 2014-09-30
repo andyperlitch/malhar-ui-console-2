@@ -3,7 +3,7 @@
 angular.module('app.pages.dev.kafka.KafkaSocketService', [
   'app.pages.dev.kafka.socket'
 ])
-  .factory('KafkaSocketService', function ($timeout, socket) {
+  .factory('KafkaSocketService', function ($timeout, $log, socket) {
     function KafkaSocketService() {
     }
 
@@ -13,7 +13,13 @@ angular.module('app.pages.dev.kafka.KafkaSocketService', [
         return function (data) {
           //console.log(data);
           if (data && data.value) {
-            var value = JSON.parse(data.value);
+            var value;
+            try {
+              value = JSON.parse(data.value);
+            } catch (e) {
+              $log.error(data.value);
+              throw e;
+            }
 
             if (that.query === value.id) { // ignore stale responses
               var valueData = value.data;

@@ -50,7 +50,7 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
 
       if (msg) {
         $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) {
-          $scope.kafkaMessage = kafkaMessage;
+          $scope.kafkaMessage = _.clone(kafkaMessage);
 
           if (kafkaMessage && kafkaMessage.value) {
             var kafkaMessageValue = JSON.parse(kafkaMessage.value);
