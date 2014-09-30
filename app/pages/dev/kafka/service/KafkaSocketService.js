@@ -3,7 +3,7 @@
 angular.module('app.pages.dev.kafka.KafkaSocketService', [
   'app.pages.dev.kafka.socket'
 ])
-  .factory('KafkaSocketService', function (socket) {
+  .factory('KafkaSocketService', function ($timeout, socket) {
     function KafkaSocketService() {
     }
 
@@ -32,9 +32,16 @@ angular.module('app.pages.dev.kafka.KafkaSocketService', [
         var resultCallback = this.createResultCallback(callback);
 
         this.unregisterFn = socket.subscribe(this.query, resultCallback, scope);
+
+        this.keepAliveTimeout = $timeout(function () {
+          this.subscribe(query, callback, scope);
+        }.bind(this), 5000);
       },
 
       unsubscribe: function () {
+        if (this.keepAliveTimeout) {
+          $timeout.cancel(this.keepAliveTimeout);
+        }
         if (this.unregisterFn) {
           this.unregisterFn();
         }
