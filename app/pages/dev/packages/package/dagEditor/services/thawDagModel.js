@@ -60,6 +60,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
         x: frozenOperator.x,
         y: frozenOperator.y,
         properties: _(frozenOperator.properties).clone(),
+        attributes: _(frozenOperator.attributes).clone(),
         opClass: opClass,
       };
 

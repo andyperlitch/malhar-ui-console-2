@@ -29,22 +29,123 @@ angular.module('app.settings', [])
       // 'RACK_LOCAL'
     ],
     PORT_ATTRIBUTES: [
-      { name: 'AUTO_RECORD',        type: 'Boolean', description: 'Whether or not to auto record the tuples.' },
-      { name: 'PARTITION_PARALLEL', type: 'Boolean', portType: 'input', description: 
+      { name: 'AUTO_RECORD',        display_name: 'Auto-Record', type: 'Boolean', description: 'Whether or not to auto record the tuples.' },
+      { name: 'PARTITION_PARALLEL', display_name: 'Partition Parallel', type: 'Boolean', portType: 'input', description:
         'Input port attribute. Extend partitioning of an upstream operator w/o intermediate merge. ' +
         'Can be used to form parallel partitions that span a group of operators. ' +
         'Defined on input port to allow for stream to be shared with non-partitioned sinks. ' +
         'If multiple ports of an operator have the setting, incoming streams must track back to ' +
         'a common root partition, i.e. the operator join forks of the same origin.'
       },
-      { name: 'QUEUE_CAPACITY',     type: 'Integer', description: 'Number of tuples the poll buffer can cache without blocking the input stream to the port.' },
-      { name: 'SPIN_MILLIS',        type: 'Integer', description: 'Poll period in milliseconds when the port buffer reaches its limits.' },
-      { name: 'UNIFIER_LIMIT',      type: 'Integer', portType: 'output', description: 
+      { name: 'QUEUE_CAPACITY',     display_name: 'Queue Capacity', type: 'Integer', description: 'Number of tuples the poll buffer can cache without blocking the input stream to the port.' },
+      { name: 'SPIN_MILLIS',        display_name: 'Spin Millis', type: 'Integer', description: 'Poll period in milliseconds when the port buffer reaches its limits.' },
+      { name: 'UNIFIER_LIMIT',      display_name: 'Unifier Limit', type: 'Integer', portType: 'output', description:
         'Attribute of output port to specify how many partitions should be merged by a single unifier instance. If the ' +
         'number of partitions exceeds the limit set, a cascading unifier plan will be created. For example, 4 partitions ' +
         'with the limit set to 2 will result in 3 unifiers arranged in 2 levels. The setting can be used to cap the ' +
         'network I/O or other resource requirement for each unifier container (depends on the specific functionality of ' +
         'the unifier), enabling horizontal scale by overcoming the single unifier bottleneck.'
+      }
+    ],
+    OPERATOR_ATTRIBUTES: [
+      { name: 'ACTIVATION_WINDOW_ID', display_name: 'Activation Window ID', type: 'Long', description:
+        'The windowId at which the operator\'s current run got activated. ' +
+        'When the operator is deployed the first time during its activation, this value is the default value ' +
+        'of the operator. On subsequent run, it\'s the windowId of the checkpoint from which the operator state ' +
+        'is recovered.'
+      },
+      { name: 'SPIN_MILLIS', display_name: 'Spin Millis', type: 'Integer', description:
+        'Poll period in milliseconds when there are no tuples available on any of the input ports of the operator. ' +
+        'Default value is 10 milliseconds.'
+      },
+      { name: 'RECOVERY_ATTEMPTS', display_name: 'Recovery Attempts', type: 'Integer', description:
+        'The maximum number of attempts to restart a failing operator before shutting down the application. ' +
+        'Until this number is reached, when an operator fails to start it is re-spawned in a new container. Once all the ' +
+        'attempts are exhausted, the application is shutdown. The default value for this attribute is null or unset and ' +
+        'is equivalent to infinity; The operator hence will be attempted to be recovered indefinitely unless this value ' +
+        'is set to anything else.'
+      },
+      { name: 'INITIAL_PARTITION_COUNT', display_name: 'Initial Partition Count', type: 'Integer', description:
+        'Count of initial partitions for the operator. The number is interpreted as follows: ' +
+        '<p> ' +
+        'Default partitioning (operator does not implement Partitioner):<br> ' +
+        'The platform creates the initial partitions by cloning the operator from the logical plan.<br> ' +
+        'Default partitioning does not consider operator state on split or merge. ' +
+        '<p> ' +
+        'Operator implements Partitioner:<br> ' +
+        'Value given as initial capacity hint to Partitioner#definePartitions(java.util.Collection, int) ' +
+        'The operator implementation controls instance number and initialization on a per partition basis.'
+      },
+      { name: 'PARTITION_TPS_MIN', display_name: 'Partition TPS Minimum', type: 'Integer', description:
+        'The minimum rate of tuples below which the physical operators are consolidated in dynamic partitioning. When this ' +
+        'attribute is set and partitioning is enabled if the number of tuples per second falls below the specified rate ' +
+        'the physical operators are consolidated into fewer operators till the rate goes above the specified minimum.'
+      },
+      { name: 'PARTITION_TPS_MAX', display_name: 'Partition TPS Maximum', type: 'Integer', description:
+        'The maximum rate of tuples above which new physical operators are spawned in dynamic partitioning. When this ' +
+        'attribute is set and partitioning is enabled if the number of tuples per second goes above the specified rate new ' +
+        'physical operators are spawned till the rate again goes below the specified maximum.'
+      },
+      { name: 'STATS_LISTENERS', display_name: 'Stats Listeners', type: 'Collection', description:
+        'Specify a listener to process and optionally react to operator status updates. ' +
+        'The handler will be called for each physical operator as statistics are updated during heartbeat processing.'
+      },
+      { name: 'STATELESS', display_name: 'Stateless', type: 'Boolean', description:
+        'Conveys whether the Operator is stateful or stateless. If the operator is stateless, no checkpointing is required ' +
+        'by the engine. The attribute is ignored when the operator was already declared stateless through the ' +
+        'Stateless annotation.'
+      },
+      { name: 'MEMORY_MB', display_name: 'Memory (MB)', type: 'Integer', description:
+        'Memory resource that the operator requires for optimal functioning. Used to calculate total memory requirement for containers.'
+      },
+      { name: 'APPLICATION_WINDOW_COUNT', display_name: 'Application Window Count', type: 'Integer', description:
+        'Attribute of the operator that tells the platform how many streaming windows make 1 application window.'
+      },
+      { name: 'CHECKPOINT_WINDOW_COUNT', display_name: 'Checkpoint Window Count', type: 'Integer', description:
+        'Attribute of the operator that hints at the optimal checkpoint boundary. ' +
+        'By default checkpointing happens after every predetermined streaming windows. Application developer can override ' +
+        'this behavior by defining the following attribute. When this attribute is defined, checkpointing will be done after ' +
+        'completion of later of regular checkpointing window and the window whose serial number is divisible by the attribute ' +
+        'value. Typically user would define this value to be the same as that of APPLICATION_WINDOW_COUNT so checkpointing ' +
+        'will be done at application window boundary.'
+      },
+      { name: 'LOCALITY_HOST', display_name: 'Locality Host', type: 'String', description:
+        'Name of host to directly control locality of an operator. Complementary to stream locality (NODE_LOCAL affinity). ' +
+        'For example, the user may wish to specify a locality constraint for an input operator relative to its data source. ' +
+        'The attribute can then be set to the host name that is specified in the operator specific connect string property.'
+      },
+      { name: 'LOCALITY_RACK', display_name: 'Locality Rack', type: 'String', description:
+        'Name of rack to directly control locality of an operator. Complementary to stream locality (RACK_LOCAL affinity).'
+      },
+      { name: 'STORAGE_AGENT', display_name: 'Storage Agent', type: 'StorageAgent', description:
+        'The agent which can be used to checkpoint the windows.'
+      },
+      { name: 'PROCESSING_MODE', display_name: 'Processing Mode', type: 'Operator.ProcessingMode', description:
+        'The payload processing mode for this operator - at most once, exactly once, or default at least once. ' +
+        'If the processing mode for an operator is specified as AT_MOST_ONCE and no processing mode is specified for the downstream ' +
+        'operators if any, the processing mode of the downstream operators is automatically set to AT_MOST_ONCE. If a different processing ' +
+        'mode is specified for the downstream operators it will result in an error. ' +
+        'If the processing mode for an operator is specified as EXACTLY_ONCE then the processing mode for all downstream operators ' +
+        'should be specified as AT_MOST_ONCE otherwise it will result in an error.'
+      },
+      { name: 'TIMEOUT_WINDOW_COUNT', display_name: 'Timeout Window Count', type: 'Integer', description:
+        'Timeout to identify stalled processing, specified as count of streaming windows. If the last processed ' +
+        'window does not advance within the specified timeout count, the operator will be considered stuck and the ' +
+        'container restart. There are multiple reasons this could happen: clock drift, hardware issue, networking issue, ' +
+        'blocking operator logic, etc.'
+      },
+      { name: 'AUTO_RECORD', display_name: 'Auto-Record', type: 'Boolean', description:
+        'Whether or not to auto record the tuples'
+      },
+      { name: 'PARTITIONER', display_name: 'Partitioner', type: 'Partitioner', description:
+        'How the operator distributes its state and share the input can be influenced by setting the Partitioner attribute. ' +
+        'If this attribute is set to non null value, the instance of the partitioner is used to partition and merge the ' +
+        'state of the operator and the inputs. If this attribute is set to null then default partitioning is used. ' +
+        'If the attribute is not set and the operator implements Partitioner interface, then the instance of the operator ' +
+        'is used otherwise default default partitioning is used.'
+      },
+      { name: 'COUNTERS_AGGREGATOR', display_name: 'Counters Aggregator', type: 'CountersAggregator', description:
+        'Aggregates physical counters to a logical counter.'
       }
     ],
     maxAlertActions: 3,
