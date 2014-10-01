@@ -25,7 +25,7 @@
         <h4 dt-text>Hadoop Installation Location failed to load</h4>
         <p>
           <strong dt-text>Response:</strong>
-          {{hadoopLocation.fetchError.data}}
+          {{hadoopLocation.fetchError.data || '(no response)'}}
         </p>
       </div>
 
@@ -34,7 +34,7 @@
         <h4 dt-text>DFS Installation Location failed to load</h4>
         <p>
           <strong dt-text>Response:</strong>
-          {{dfsLocation.fetchError.data}}
+          {{dfsLocation.fetchError.data || '(no response)'}}
         </p>
       </div>
 
@@ -48,7 +48,7 @@
         <tr>
           <th scope="col">item</th>
           <th scope="col" width="50%">description</th>
-          <th scope="col">value</th>
+          <th scope="col" width="30%">value</th>
         </tr>
       </thead>
       <tbody>
@@ -63,6 +63,11 @@
             <div ng-messages="hadoopForm.hadoopLocation.$error">
               <div ng-message="required">
                 <span class="text-danger" dt-text>A hadoop location is required.</span>
+              </div>
+              <div ng-if="hadoopLocationServerError">
+                <span class="text-danger">
+                  {{ hadoopLocationServerError.message }}
+                </span>
               </div>
             </div>
             
@@ -85,6 +90,11 @@
               <div ng-message="required">
                 <span class="text-danger" dt-text>A DFS location is required.</span>
               </div>
+              <div ng-if="dfsLocationServerError">
+                <span class="text-danger">
+                  {{ dfsLocationServerError.message }}
+                </span>
+              </div>
             </div>
 
           </td>
@@ -95,14 +105,13 @@
     </table>
   </form>
 
-
   <button class="btn btn-default" ng-if="currentStep.prev" ng-click="goToStep('welcome')">
     <span class="glyphicon glyphicon-circle-arrow-left"></span>
     <span ng-text>back</span>
   </button>
-  <button class="btn btn-success" ng-click="next()" ng-disabled="loading || loadError || hadoopForm.$invalid">
+  <button class="btn btn-success" ng-click="next()" ng-disabled="loading || loadError || hadoopForm.$invalid || submittingChanges">
     <span ng-text>continue</span>
     <span class="glyphicon glyphicon-circle-arrow-right"></span>
   </button>
-
+  <!-- <pre>{{hadoopForm | json}}</pre> -->
 </div>

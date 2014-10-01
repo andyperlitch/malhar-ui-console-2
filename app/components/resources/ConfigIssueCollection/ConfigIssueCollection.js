@@ -15,16 +15,16 @@
 */
 'use strict';
 
-angular.module('app.components.resources.ConfigPropertyModel', [
-  'app.components.resources.BaseModel'
+angular.module('app.components.resources.ConfigIssueCollection', [
+  'app.components.resources.BaseCollection',
+  'app.components.resources.ConfigIssueModel'
 ])
-.factory('ConfigPropertyModel', function(BaseModel, $http) {
-  var ConfigPropertyModel = BaseModel.extend({
-    debugName: 'Config Property',
-    urlKey: 'ConfigProperty',
-    save: function() {
-      return $http.put(this.url, this.data);
-    }
+.factory('ConfigIssueCollection', function(BaseCollection, ConfigIssueModel) {
+  var ConfigIssueCollection = BaseCollection.extend({
+    model: ConfigIssueModel,
+    urlKey: 'ConfigIssue',
+    debugName: 'Config Issue Collection',
+    transformResponse: 'issues'
   });
-  return ConfigPropertyModel;
+  return ConfigIssueCollection;
 });

@@ -75,6 +75,30 @@ function startServer(baseDirs, port) {
   // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
   // ------------------------------------------
 
+
+  // ----------------------------------
+  // MOCK CALLS FOR INSTALLATION WIZARD
+  // ----------------------------------
+  // app.get('/ws/v1/config/properties/dt.dfsRootDirectory', function(req, res) {
+
+  //   // Error
+  //   setTimeout(function() {
+  //     res.status(500).send('Some kind of crazy error occurred');
+  //   }, 1000);
+
+  // });
+  // app.get('/ws/v1/config/hadoopInstallDirectory', function(req, res) {
+
+  //   // Error
+  //   setTimeout(function() {
+  //     res.status(500).send('hadoopInstallDirectory could not be retrieved');
+  //   }, 1000);
+
+  // });
+  // ----------------------------------
+  // MOCK CALLS FOR INSTALLATION WIZARD
+  // ----------------------------------
+
   app.use(livereload({ port: 35729 }));
 
   baseDirs.forEach(function (dir) {

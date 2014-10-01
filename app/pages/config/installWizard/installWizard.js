@@ -16,8 +16,11 @@
 'use strict';
 
 angular.module('app.pages.config.installWizard', [
+  'app.components.resources.ConfigIssueCollection',
   'app.components.resources.ConfigPropertyModel',
-  'app.components.resources.HadoopLocation'
+  'app.components.resources.HadoopLocation',
+  'app.components.services.gatewayManager',
+  'ui.bootstrap.modal'
 ])
 // Routing
 .config(function(settings, $routeProvider) {
@@ -80,11 +83,12 @@ angular.module('app.pages.config.installWizard', [
 
 
 })
-.controller('InstallWizardHadoopCtrl', function($scope, $q, ConfigPropertyModel, HadoopLocation) {
+.controller('InstallWizardHadoopCtrl', function($scope, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal) {
   
   // Set up models for the two properties to set
-  $scope.dfsLocation = new ConfigPropertyModel('dt.dfsRootDirectory');
   $scope.hadoopLocation = new HadoopLocation();
+  $scope.dfsLocation = new ConfigPropertyModel('dt.dfsRootDirectory');
+  $scope.issues = new ConfigIssueCollection();
 
   // Loading
   $scope.loading = true;
@@ -93,6 +97,12 @@ angular.module('app.pages.config.installWizard', [
       // Successfully loaded property values
       function(){
         $scope.loading = false;
+
+        // Set the initial values for testing
+        $scope.initialValues = {
+          hadoopLocation: $scope.hadoopLocation.data.value,
+          dfsLocation: $scope.dfsLocation.data.value
+        };
       },
       // Failed to load properties
       function() {
@@ -101,7 +111,136 @@ angular.module('app.pages.config.installWizard', [
       }
     );
 
+  // Continue action
+  $scope.next = function() {
 
+    // Set a model to track what is happening
+    var currentAction = {
+      message: 'Starting to update hadoop configuration...'
+    };
+
+    // Set up modal instance
+    var $modalInstance = $modal.open({
+      templateUrl: 'pages/config/installWizard/updateHadoopConfigModal.html',
+      backdrop: 'static',
+      keyboard: false,
+      controller: function($scope, currentAction) {
+        $scope.currentAction = currentAction;
+      },
+      resolve: {
+        currentAction: function() {
+          return currentAction;
+        }
+      }
+    });
+
+    $scope.submittingChanges = true;
+    $scope.dfsLocationError = false;
+
+    // -------------------------------------------------
+    // STEP 1: Save the hadoopLocation if it has changed
+    // -------------------------------------------------
+    currentAction.message = 'Saving hadoop installation location...';
+    var hadoopPromise;
+    if ($scope.hadoopLocation.data.value !== $scope.initialValues.hadoopLocation) {
+      hadoopPromise = $scope.hadoopLocation.save();
+    }
+    else {
+      $log.debug('Hadoop Location was unchanged, no save required.');
+      hadoopPromise = true;
+    }
+    $q.when(hadoopPromise)
+      .then(
+        // ---------------------------------
+        // STEP 2: Restart Gateway if needed
+        // ---------------------------------
+        function() {
+          currentAction.message = 'Checking if gateway needs to be restarted...';
+          // Get the issues
+          return $scope.issues.fetch().then(
+            function(issues) {
+
+              // check for RESTART_NEEDED issue
+              var restartPromise;
+              var restartNeeded = _.find(issues, function(i) {
+                return i.key === 'RESTART_NEEDED';
+              });
+
+              // If it is, trigger a restart
+              if (restartNeeded) {
+                $log.info('Gateway restart needed');
+                currentAction.message = 'Restarting the gateway...';
+                restartPromise = gatewayManager.restart();
+              }
+              // If it is not, create resolved promise
+              else {
+                $log.debug('Gateway restart was not needed.');
+                restartPromise = true;
+              }
+
+              return $q.when(restartPromise)
+                .then(
+                  // -----------------------------------
+                  // STEP 3: Save DFS location if needed
+                  // -----------------------------------
+                  function() {
+                    
+                    var dfsPromise;
+                    if ($scope.dfsLocation.data.value !== $scope.initialValues.dfsLocation) {
+                      currentAction.message = 'Saving DFS location...';
+                      dfsPromise = $scope.dfsLocation.save();  
+                    }
+                    else {
+                      dfsPromise = true;
+                    }
+
+                    return $q.when(dfsPromise)
+                      .then(
+                        function() {
+                          // ----------
+                          // SUCCESS!!!
+                          // ----------
+                          $scope.goToStep('license');
+                        },
+                        function(response) {
+                          // If it fails, update the $error object of dfsLocation
+                          $scope.dfsLocationServerError = response.data;
+                        }
+                      );
+                      
+                      
+                  },
+                  // STEP 2 FAILED: gateway failed to restart
+                  function(reason) {
+                    console.log('crap... gateway didnt restart: ', reason);
+                    $scope.hadoopLocationServerError = {
+                      message: 'The gateway could not be restarted.'
+                    };
+                  }
+                );
+            },
+            // STEP 2 FAILED: Issues failed to load
+            function() {
+              console.log('Issues failed to load from the gateway!');
+              $scope.hadoopLocationServerError = {
+                message: 'Issues could not be loaded from the gateway.'
+              };
+            }
+          );
+        },
+
+        // STEP 1 FAILED: hadoop location could not be saved
+        function(response) {
+          console.log('Failed to save new hadoop location');
+          $scope.hadoopLocationServerError = response.data;
+        }
+      )
+      .finally(function() {
+        $scope.submittingChanges = false;
+        $modalInstance.close();
+      });
+    
+  };
 
 })
 .controller('InstallWizardLicenseCtrl', function() {
