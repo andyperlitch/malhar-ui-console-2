@@ -53,8 +53,8 @@ DataServer.prototype = {
       var now = Date.now();
       if (!cache || (now - cache.time > 500)) {
         //console.log('_msg ', msg.id, lastSent);
-        var activeQueries = this.queries.getQueryList();
-        console.log(activeQueries);
+        //var activeQueries = this.queries.getQueryList();
+        //console.log(activeQueries);
 
         this.lruCache.set(msg.id, {
           message: message,
