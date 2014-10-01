@@ -26,16 +26,7 @@ angular.module('app.components.resources.LicenseFileModel', [
       this.agent = new LicenseAgentModel();
     },
     debugName: 'License File Model',
-    urlKey: 'License',
-    fetch: function(options) {
-      var firstResult = BaseModel.prototype.fetch.call(this, options);
-      var agent = this.agent;
-      var self = this;
-      return firstResult.then(function() {
-        agent.updateParams(self.data.id);
-        return agent.fetch();
-      });
-    }
+    urlKey: 'License'
   });
   return LicenseFileModel;
 });
