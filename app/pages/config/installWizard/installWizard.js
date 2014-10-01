@@ -83,7 +83,7 @@ angular.module('app.pages.config.installWizard', [
 
 
 })
-.controller('InstallWizardHadoopCtrl', function($scope, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal) {
+.controller('InstallWizardHadoopCtrl', function($scope, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal, $timeout) {
   
   // Set up models for the two properties to set
   $scope.hadoopLocation = new HadoopLocation();
@@ -151,16 +151,21 @@ angular.module('app.pages.config.installWizard', [
         $log.debug('Hadoop Location was unchanged, no save required.');
         hadoopPromise = true;
       }
-      return $q.when(hadoopPromise).then(
-        // Go to step 2
-        step2,
 
-        // STEP 1 FAILED: hadoop location could not be saved
+      var result = $q.when(hadoopPromise);
+
+      result.then(
+        function() {
+          // clear server error
+          $scope.hadoopLocationServerError = null;
+        },
         function(response) {
           $log.warn('Failed to save new hadoop location. Response: ', response);
           $scope.hadoopLocationServerError = response.data;
         }
       );
+
+      return result;
     }
 
     // ---------------------------------
@@ -190,8 +195,14 @@ angular.module('app.pages.config.installWizard', [
             restartPromise = true;
           }
 
-          return $q.when(restartPromise).then(
-            step3,
+          // Create promise
+          var result = $q.when(restartPromise);
+
+          result.then(
+            function() {
+              // Clear server error
+              $scope.hadoopLocationServerError = null;
+            },
             // STEP 2 FAILED: gateway failed to restart
             function(reason) {
               console.log('crap... gateway didnt restart: ', reason);
@@ -200,6 +211,8 @@ angular.module('app.pages.config.installWizard', [
               };
             }
           );
+
+          return result;
         },
         // STEP 2 FAILED: Issues failed to load
         function() {
@@ -225,26 +238,48 @@ angular.module('app.pages.config.installWizard', [
         dfsPromise = true;
       }
 
-      return $q.when(dfsPromise).then(
+      var result = $q.when(dfsPromise);
+
+      result.then(
         function() {
-          // ----------
-          // SUCCESS!!!
-          // ----------
-          $scope.goToStep('license');
+          // Clear error
+          $scope.dfsLocationServerError = null;
         },
         function(response) {
-          // If it fails, update the $error object of dfsLocation
+          // Saving dfsLocation failed.
+          // Check for "Permission denied" string
+          // TODO: Base it on the response code
+          var permissionDeniedRegExp = /permission\s+denied/i;
+          if (permissionDeniedRegExp.test(response.data.message)) {
+
+          }
+
           $scope.dfsLocationServerError = response.data;
         }
       );
+
+      return result;
     }
 
 
     // Kick things off
-    step1().finally(function() {
-      $scope.submittingChanges = false;
-      $modalInstance.close();
-    });
+    step1()
+    .then(step2)
+    .then(step3)
+    .then(
+      function() {
+        $scope.submittingChanges = false;
+        $modalInstance.close();
+        $scope.goToStep('license');
+      },
+      function() {
+        $log.warn('Failure updating hadoop configuration.');
+        $scope.submittingChanges = false;
+        $timeout(function() {
+          $modalInstance.close();
+        }, 500);
+      }
+    );
     
   };
 
