@@ -29,6 +29,7 @@ angular.module('app.components.services.dtText', [])
       'alert_label'                :  'alert',
       'alloc_mem_mb_label'         :  'allocated mem. (mb)',
       'alloc_mem_label'            :  'allocated mem.',
+      'app_data'                   :  'app data',
       'as_of_label'                :  'as of',
       'buffer_server_reads_label'  :  'buffer server reads',
       'buffer_server_writes_label' :  'buffer server writes',
