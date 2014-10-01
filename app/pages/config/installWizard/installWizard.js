@@ -140,105 +140,111 @@ angular.module('app.pages.config.installWizard', [
     // -------------------------------------------------
     // STEP 1: Save the hadoopLocation if it has changed
     // -------------------------------------------------
-    currentAction.message = 'Saving hadoop installation location...';
-    var hadoopPromise;
-    if ($scope.hadoopLocation.data.value !== $scope.initialValues.hadoopLocation) {
-      hadoopPromise = $scope.hadoopLocation.save();
+    function step1() {
+    
+      currentAction.message = 'Saving hadoop installation location...';
+      var hadoopPromise;
+      if ($scope.hadoopLocation.data.value !== $scope.initialValues.hadoopLocation) {
+        hadoopPromise = $scope.hadoopLocation.save();
+      }
+      else {
+        $log.debug('Hadoop Location was unchanged, no save required.');
+        hadoopPromise = true;
+      }
+      return $q.when(hadoopPromise).then(
+        // Go to step 2
+        step2,
+
+        // STEP 1 FAILED: hadoop location could not be saved
+        function(response) {
+          $log.warn('Failed to save new hadoop location. Response: ', response);
+          $scope.hadoopLocationServerError = response.data;
+        }
+      );
     }
-    else {
-      $log.debug('Hadoop Location was unchanged, no save required.');
-      hadoopPromise = true;
-    }
-    $q.when(hadoopPromise)
-      .then(
-        // ---------------------------------
-        // STEP 2: Restart Gateway if needed
-        // ---------------------------------
-        function() {
-          currentAction.message = 'Checking if gateway needs to be restarted...';
-          // Get the issues
-          return $scope.issues.fetch().then(
-            function(issues) {
 
-              // check for RESTART_NEEDED issue
-              var restartPromise;
-              var restartNeeded = _.find(issues, function(i) {
-                return i.key === 'RESTART_NEEDED';
-              });
+    // ---------------------------------
+    // STEP 2: Restart Gateway if needed
+    // ---------------------------------
+    function step2() {
+      currentAction.message = 'Checking if gateway needs to be restarted...';
+      // Get the issues
+      return $scope.issues.fetch().then(
+        function(issues) {
 
-              // If it is, trigger a restart
-              if (restartNeeded) {
-                $log.info('Gateway restart needed');
-                currentAction.message = 'Restarting the gateway...';
-                restartPromise = gatewayManager.restart();
-              }
-              // If it is not, create resolved promise
-              else {
-                $log.debug('Gateway restart was not needed.');
-                restartPromise = true;
-              }
+          // check for RESTART_NEEDED issue
+          var restartPromise;
+          var restartNeeded = _.find(issues, function(i) {
+            return i.key === 'RESTART_NEEDED';
+          });
 
-              return $q.when(restartPromise)
-                .then(
-                  // -----------------------------------
-                  // STEP 3: Save DFS location if needed
-                  // -----------------------------------
-                  function() {
-                    
-                    var dfsPromise;
-                    if ($scope.dfsLocation.data.value !== $scope.initialValues.dfsLocation) {
-                      currentAction.message = 'Saving DFS location...';
-                      dfsPromise = $scope.dfsLocation.save();  
-                    }
-                    else {
-                      dfsPromise = true;
-                    }
+          // If it is, trigger a restart
+          if (restartNeeded) {
+            $log.info('Gateway restart needed');
+            currentAction.message = 'Restarting the gateway...';
+            restartPromise = gatewayManager.restart();
+          }
+          // If it is not, create resolved promise
+          else {
+            $log.debug('Gateway restart was not needed.');
+            restartPromise = true;
+          }
 
-                    return $q.when(dfsPromise)
-                      .then(
-                        function() {
-                          // ----------
-                          // SUCCESS!!!
-                          // ----------
-                          $scope.goToStep('license');
-                        },
-                        function(response) {
-                          // If it fails, update the $error object of dfsLocation
-                          $scope.dfsLocationServerError = response.data;
-                        }
-                      );
-                      
-                      
-                  },
-                  // STEP 2 FAILED: gateway failed to restart
-                  function(reason) {
-                    console.log('crap... gateway didnt restart: ', reason);
-                    $scope.hadoopLocationServerError = {
-                      message: 'The gateway could not be restarted.'
-                    };
-                  }
-                );
-            },
-            // STEP 2 FAILED: Issues failed to load
-            function() {
-              console.log('Issues failed to load from the gateway!');
+          return $q.when(restartPromise).then(
+            step3,
+            // STEP 2 FAILED: gateway failed to restart
+            function(reason) {
+              console.log('crap... gateway didnt restart: ', reason);
               $scope.hadoopLocationServerError = {
-                message: 'Issues could not be loaded from the gateway.'
+                message: 'The gateway could not be restarted.'
               };
             }
           );
         },
-
-        // STEP 1 FAILED: hadoop location could not be saved
-        function(response) {
-          console.log('Failed to save new hadoop location');
-          $scope.hadoopLocationServerError = response.data;
+        // STEP 2 FAILED: Issues failed to load
+        function() {
+          console.log('Issues failed to load from the gateway!');
+          $scope.hadoopLocationServerError = {
+            message: 'Issues could not be loaded from the gateway.'
+          };
         }
-      )
-      .finally(function() {
-        $scope.submittingChanges = false;
-        $modalInstance.close();
-      });
+      );
+    }
+
+    // -----------------------------------
+    // STEP 3: Save DFS location if needed
+    // -----------------------------------
+    function step3() {
+      
+      var dfsPromise;
+      if ($scope.dfsLocation.data.value !== $scope.initialValues.dfsLocation) {
+        currentAction.message = 'Saving DFS location...';
+        dfsPromise = $scope.dfsLocation.save();  
+      }
+      else {
+        dfsPromise = true;
+      }
+
+      return $q.when(dfsPromise).then(
+        function() {
+          // ----------
+          // SUCCESS!!!
+          // ----------
+          $scope.goToStep('license');
+        },
+        function(response) {
+          // If it fails, update the $error object of dfsLocation
+          $scope.dfsLocationServerError = response.data;
+        }
+      );
+    }
+
+
+    // Kick things off
+    step1().finally(function() {
+      $scope.submittingChanges = false;
+      $modalInstance.close();
+    });
     
   };
 
