@@ -48,13 +48,32 @@ angular.module('app.components.resources.BaseModel', [
   var BaseModel = BaseResource.extend({
 
     /**
-     * Constructor for models. Expects this.urlKey and/or this.topicKey
-     * to be defined in a subclass.
+     * Constructor for models. 
      * 
-     * @param  {object} params  Parameters to be used when interpolating url or topic URIs
+     * @param  {object|String|number} params  Parameters to be used when interpolating
+     *                                        url or topic URIs. Can also be this.idAttribute, 
+     *                                        i.e. string or number.
      */
     constructor: function (params) {
+      this.data = {};
+      this.updateParams(params);
+    },
 
+    /**
+     * Updates the parameters used for url and topic interpolation.
+     * Sets this.url based on this.urlKey and the passed
+     * params object and id object. Used by this.constructor
+     * but is also useful when this.url has to be updated
+     * after instantiation.
+     * 
+     * Expects this.urlKey and/or this.topicKey
+     * to be defined in a subclass.
+     * 
+     * @param  {object|String|number} params  Parameters to be used when interpolating
+     *                                        url or topic URIs. Can also be this.idAttribute, 
+     *                                        i.e. string or number.
+     */
+    updateParams: function(params) {
       var id;
 
       var argType = typeof params;
@@ -69,7 +88,7 @@ angular.module('app.components.resources.BaseModel', [
       }
 
       this.url = getUri.url(this.urlKey, params, id);
-      this.data = {};
+
       if (this.topicKey) {
         this.topic = getUri.topic(this.topicKey, params);
       }
