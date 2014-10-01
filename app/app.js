@@ -46,6 +46,7 @@ angular.module('app', [
   // pages
   'app.pages.ops',
   'app.pages.ops.appInstance',
+  'app.pages.ops.appInstance.appData',
   'app.pages.ops.appInstance.logicalOperator',
   'app.pages.ops.appInstance.physicalOperator',
   'app.pages.ops.appInstance.physicalOperator.port',

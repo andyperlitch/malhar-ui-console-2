@@ -234,6 +234,7 @@ angular.module('app.settings', [])
     pages: {
       // Operations
       AppInstance              :'/ops/apps/:appId',
+      AppData                  :'/ops/apps/:appId/output',
       Container                :'/ops/apps/:appId/logicalPlan/containers/:containerId',
       ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
