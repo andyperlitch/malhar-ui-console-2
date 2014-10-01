@@ -102,6 +102,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
   }
 
   function addStream(sourceOperator, sourcePort, sinkOperator, sinkPort, sinkConnection, scope) {
+    if (sourcePort.portType === 'input') {
+      // connected input to output, so swap ends
+      var tmpOperator = sourceOperator;
+      var tmpPort = sourcePort;
+      sourceOperator = sinkOperator;
+      sourcePort = sinkPort;
+      sinkOperator = tmpOperator;
+      sinkPort = tmpPort;
+    }
+
     // Check for existing stream
     var stream = _.find(scope.app.streams, function(s) {
       return s.source.operator === sourceOperator && s.source.port === sourcePort;
@@ -177,6 +187,31 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.$broadcast('connectionDetached', info.connection, true);
       });
 
+      // This is where we can do validations on stream drops.
+      // The info object contains:
+      // * sourceId - the id of the source element in the connection
+      // * targetId - the id of the target element in the connection
+      // * scope - the scope of the connection
+      // * connection - the actual Connection object. You can access the
+      //   'endpoints' array in a Connection to get the Endpoints involved in the
+      //   Connection, but be aware that when a Connection is being dragged, one
+      //   of these Endpoints will always be a transient Endpoint that exists
+      //   only for the life of the drag. To get the Endpoint on which the
+      //   Connection is being dropped, use the 'dropEndpoint' member.
+      // * dropEndpoint - this is the actual Endpoint on which the Connection is
+      //   being dropped. This may be null, because it will not be set if the
+      //   Connection is being dropped on an element on which makeTarget has been
+      //   called.
+      $jsPlumb.bind('beforeDrop', function(info) {
+        // do not allow connections to the same operator
+        if (info.sourceId === info.targetId) {
+          return false;
+        }
+
+        // otherwise OK
+        return true;
+      });
+
       /**
        * Sets up the droppable state of the canvas.
        */
@@ -215,42 +250,23 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
        */
       scope.zoom = 1;
       scope.translate = [0,0];
-      scope.keysPressed = {};
 
       scope.captureKeydown = function(e) {
-        if (e.which === 16) {
-          scope.keysPressed.shift = true;
-        }
-        if (e.which === 18) {
-          scope.keysPressed.option = true;
-        }
-        if (e.which === 32) {
-          // check input, textarea, select
-          var tagname = e.target.tagName && e.target.tagName.toLowerCase();
-          if (['textarea', 'input', 'select'].indexOf(tagname) === -1) {
-            e.preventDefault();
-            e.stopPropagation();
-            scope.keysPressed.spacebar = true;
+        if (e.which === 8) {
+          // backspace
+          if (document.activeElement !== document.body) {
+            // something is focused, so do the normal behavior
+            return;
           }
-        }
-        scope.$digest();
-      };
-
-      scope.captureKeyup = function(e) {
-        if (e.which === 16) {
-          scope.keysPressed.shift = false;
-        }
-        if (e.which === 18) {
-          scope.keysPressed.option = false;
-        }
-        if (e.which === 32) {
-          scope.keysPressed.spacebar = false;
+          // nothing was focused, so hijack the key to maybe delete an operator or stream
+          e.preventDefault();
+          // send an event up the scope chain, to be received in dagEditor
+          scope.$emit('deleteSelectedEntity');
         }
         scope.$digest();
       };
 
       $document.on('keydown', scope.captureKeydown);
-      $document.on('keyup', scope.captureKeyup);
 
       // methods for zoom in/out buttons
       scope.zoomIn = function() {
@@ -331,24 +347,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         var pageOffset = element.offset();
         var controlCoords = [$event.pageX - pageOffset.left, $event.pageY - pageOffset.top];
         scope.setZoom(delta, controlCoords);
-      };
-
-      scope.onZoomClick = function($event) {
-        $event.preventDefault();
-        $event.originalEvent.preventDefault();
-        $event.stopPropagation();
-        var delta = (scope.keysPressed.shift ? -1 : 1) * settings.dagEditor.ZOOM_STEP_CLICK;
-        var controlCoords = [$event.offsetX, $event.offsetY];
-        scope.setZoom(delta, controlCoords);
-      };
-
-      scope.onPanWheel = function($event, $delta, $deltaX, $deltaY) {
-        $event.preventDefault();
-        scope.translate = [
-          scope.translate[0] - $deltaX/scope.zoom,
-          scope.translate[1] + $deltaY/scope.zoom
-        ];
-        scope.updateZoomAndTransform();
       };
 
       scope.grabPanCanvas = function($event) {
@@ -483,7 +481,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
         var dominant = 0;  // default to width
         var recessive = 1; // default to height
-        
+
         if (boxRelDims[1] > viewportRelDims[1]) {
           dominant = 1;
           recessive = 0;
@@ -533,9 +531,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       scope.$on('$destroy', function() {
         $jsPlumb.unbind();
         $document.off('keydown', scope.captureKeydown);
-        $document.off('keyup', scope.captureKeyup);
       });
-
     }
   };
 });

@@ -95,7 +95,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
       for (var i = 0, len = ports.length; i < len; i++) {
         var port = ports[i];
         var y_pos = getYPosition(len, i);
-        // var x_pos = y_pos;
         var x_pos = getXPosition(type.incident, len, i);
         var endpointOptions = {
           // anchor placement
@@ -236,6 +235,16 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
 
     $scope.editing.name = false;
   };
+
+  // listen for remove events broadcast from the parent scope
+  $scope.$on('remove', function(e, data) {
+    if (data.selected === $scope.operator) {
+      // broadcasted "remove" message was for this instance, so remove
+      $scope.remove();
+    }
+  });
+
+  // delete this operator
   $scope.remove = function() {
 
     // Check if streams will be destroyed

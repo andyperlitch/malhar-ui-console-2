@@ -125,7 +125,6 @@
       </tr>
     </table>
     <script>
-
     // @see http://stackoverflow.com/questions/22199564/chrome-truncates-error-messages-and-adds-omitted-in-window-onerror/22218280#22218280
     // 
     window.onerror = function (errorMsg, url, lineNumber, columnNumber, errorObject) {
@@ -141,8 +140,13 @@
     }
     </script>
 
+    <!-- settings:js -->
+    <script src="client.settings.dev.js"></script>
+    <!-- endinject -->
+
     <!-- build:js scripts/vendor.js -->
     <script src="bower_components/ng-file-upload/angular-file-upload-shim.js"></script>
+    <script src="vendor/socket.io.js"></script>
     <!-- bower:js -->
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
@@ -250,6 +254,7 @@
     <script src="components/resources/StramEventCollection/StramEventCollection.js"></script>
     <script src="components/resources/StramEventModel/StramEventModel.js"></script>
     <script src="components/services/appManager/appManager.js"></script>
+    <script src="components/services/clientSettings/clientSettings.js"></script>
     <script src="components/services/confirm/confirm.js"></script>
     <script src="components/services/containerManager/containerManager.js"></script>
     <script src="components/services/dashboardOptionsFactory/dashboardOptionsFactory.js"></script>
@@ -283,9 +288,12 @@
     <script src="pages/dev/etl/etl-controller.js"></script>
     <script src="pages/dev/kafka/kafka.js"></script>
     <script src="pages/dev/kafka/kafkaRestService.js"></script>
+    <script src="pages/dev/kafka/service/KafkaSocketService.js"></script>
+    <script src="pages/dev/kafka/service/socket.js"></script>
     <script src="pages/dev/kafka/widgetDataModels/KafkaMetricsWidgetDataModel.js"></script>
     <script src="pages/dev/kafka/widgetDataModels/KafkaTimeSeriesWidgetDataModel.js"></script>
     <script src="pages/dev/kafka/widgetDataModels/KafkaWidgetDataModel.js"></script>
+    <script src="pages/dev/kafka/widgets/kafkaDebug/kafkaDebug.js"></script>
     <script src="pages/dev/kafka/widgets/timeSeries/timeSeries.js"></script>
     <script src="pages/dev/packages/import/import.js"></script>
     <script src="pages/dev/packages/package/application/application.js"></script>

@@ -5,9 +5,11 @@ var walk = require('walk');
 var walker;
 var basedir = process.cwd() + '/app';
 var options;
-var skipDirectories = ['bower_components', 'scripts'];
+var skipDirectories = ['bower_components', 'vendor', 'scripts'];
 var scriptsrcs = [];
 var ignorePatterns = [
+  /client\.settings\.dev\.js/,
+  /client\.settings\.prod\.js/,
   /_test\.js$/
 ];
 var indexfile = basedir + '/index.html';

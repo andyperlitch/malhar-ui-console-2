@@ -6,3 +6,5 @@ dist
 .DS_Store
 app/bower_components
 /coverage
+/util/deploy.prod.sh
+prod_start.sh

@@ -25,6 +25,7 @@ var dev = {
     'app/components/**/*.js',
     'app/pages/**/*.js'
   ],
+  clientSettings: 'app/client.settings.prod.js',
   watchDependencies: [
     'app/bower_components/malhar-angular-dashboard/dist/angular-ui-dashboard.js',
     'app/bower_components/malhar-angular-widgets/dist/malhar-angular-widgets.js'
@@ -163,10 +164,18 @@ gulp.task('copy', function () {
 
   gulp.src(dev.favicon)
     .pipe(gulp.dest(prod.dir));
+
+  gulp.src(dev.clientSettings)
+    .pipe(gulp.dest(prod.dir));
 });
 
-gulp.task('usemin', function () {
+gulp.task('usemin', ['less'], function () {
   gulp.src(dev.index)
+    .pipe($.inject(gulp.src(dev.clientSettings), {
+      read: false,
+      relative: true,
+      name: 'settings'
+    }))
     .pipe($.inject(gulp.src('.tmp/templates.js'), {
       read: false,
       relative: true

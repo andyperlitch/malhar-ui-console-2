@@ -139,8 +139,16 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     }
   };
 
-  // Listen for entity selections
+  // Listen for entity selections and deletions
   $scope.$on('selectEntity', $scope.selectEntity);
+  $scope.$on('deleteSelectedEntity', function() {
+    if (!$scope.selected) {
+      // nothing selected, nothing to do
+      return;
+    }
+    // Send a remove event down the scope chain. The scope responsible for the given entity/type will delete.
+    $scope.$broadcast('remove', { selected: $scope.selected, selected_type: $scope.selected_type });
+  });
 
   // Operator Classes:
   $scope.operatorClassesResource = new PackageOperatorClassCollection($routeParams);

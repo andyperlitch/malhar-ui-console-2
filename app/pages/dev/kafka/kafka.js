@@ -20,13 +20,16 @@ angular.module('app.pages.dev.kafka', [
   'ui.widgets',
   'ui.models',
   'app.pages.dev.kafka.widgets.timeSeries',
+  'app.pages.dev.kafka.widgets.kafkaDebug',
+  'app.pages.dev.kafka.socket',
+  'app.pages.dev.kafka.KafkaSocketService',
   'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
-  'app.pages.dev.kafka.KafkaRestService'
+  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel'
 ])
 
 // Route
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, socketProvider, clientSettings) {
+    socketProvider.setWebSocketURL(clientSettings.dataServerHost);
     $routeProvider
       .when('/kafka', {
         controller: 'KafkaCtrl',
@@ -90,9 +93,12 @@ angular.module('app.pages.dev.kafka', [
         }
       },
       {
-        name: 'Kafka Producer',
-        title: 'Kafka Producer',
-        templateUrl: 'pages/dev/kafka/producer.html',
+        name: 'Kafka Debug',
+        title: 'Kafka Debug',
+        templateUrl: 'pages/dev/kafka/widgets/kafkaDebug/kafkaDebug.html',
+        size: {
+          width: '100%'
+        },
         dataModelOptions: {
           query: {
             keys: {
@@ -101,20 +107,6 @@ angular.module('app.pages.dev.kafka', [
               adUnit: 0
             }
           }
-        },
-        style: {
-          float: 'right'
-        },
-        size: {
-          width: '50%'
-        }
-      },
-      {
-        name: 'Kafka Consumer',
-        title: 'Kafka Consumer',
-        templateUrl: 'pages/dev/kafka/consumer.html',
-        size: {
-          width: '50%'
         }
       }
     ];
@@ -139,9 +131,7 @@ angular.module('app.pages.dev.kafka', [
         query: defaultQuery
       }
     }, {
-      name: 'Kafka Consumer'
-    }, {
-      name: 'Kafka Producer'
+      name: 'Kafka Debug'
     }];
 
     var demoWidgets = [{
@@ -158,9 +148,7 @@ angular.module('app.pages.dev.kafka', [
     }];
 
     var debugWidgets = [{
-      name: 'Kafka Consumer'
-    }, {
-      name: 'Kafka Producer'
+      name: 'Kafka Debug'
     }];
 
     $scope.dashboardOptions = dashboardOptionsFactory({
@@ -175,69 +163,8 @@ angular.module('app.pages.dev.kafka', [
         { title: 'debug', active: false, defaultWidgets: debugWidgets }
       ]
     });
-
-    //TODO
-    $scope.kafkaService = new KafkaRestService(function (data, kafkaMessage) {
-      $scope.$broadcast('kafkaMessage', data, kafkaMessage);
-    }, $scope);
   })
   .controller('KafkaOptionsCtrl', function ($scope) {
     var widget = $scope.widget;
     $scope.result.queryText = JSON.stringify(widget.dataModel.query, null, ' ');
-  })
-  .controller('KafkaConsumerCtrl', function ($scope) {
-    $scope.$on('kafkaMessage', function (event, data, kafkaMessage) {
-      $scope.kafkaMessage = kafkaMessage;
-
-      if (kafkaMessage && kafkaMessage.value) {
-        var kafkaMessageValue = JSON.parse(kafkaMessage.value);
-        $scope.kafkaMessageValue = kafkaMessageValue;
-        $scope.kafkaMessage.value = '<see data below>';
-      } else {
-        $scope.kafkaMessageValue = null; //TODO
-      }
-    });
-  })
-  .controller('KafkaProducerCtrl', function ($scope) {
-    var defaultMessage;
-
-    if ($scope.widget.dataModelOptions && $scope.widget.dataModelOptions.query) {
-      defaultMessage = $scope.widget.dataModelOptions.query;
-    } else {
-      defaultMessage = {
-        keys: {
-          publisherId: 1,
-          advertiserId: 0,
-          adUnit: 0
-        }
-      };
-    }
-
-    $scope.requestText = JSON.stringify(defaultMessage, null, ' ');
-
-    $scope.sendRequest = function () {
-      var msg = null;
-
-      try {
-        msg = JSON.parse($scope.requestText);
-      } catch (e) {
-        console.log(e);
-        $scope.request = 'JSON parse error';
-      }
-
-      if (msg) {
-        $scope.kafkaService.subscribe(msg);
-        $scope.request = $scope.kafkaService.getQuery();
-        if ($scope.widget.dataModelOptions) {
-          $scope.widget.dataModelOptions.query = msg;
-          $scope.$emit('widgetChanged', $scope.widget);
-        }
-      }
-    };
-
-    $scope.sendRequest();
-
-    $scope.$on('$destroy', function () {
-      $scope.kafkaService.unsubscribe();
-    });
   });

@@ -1,3 +1,5 @@
+<snippet>
+  <content><![CDATA[
 /*
 * Copyright (c) 2013 DataTorrent, Inc. ALL Rights Reserved.
 *
@@ -15,11 +17,19 @@
 */
 'use strict';
 
-angular.module('app.pages.dev.packages.package.dagEditor.controllers.DagOperatorInspectorCtrl', [])
-// Controller: Inspector for operator
-.controller('DagOperatorInspectorCtrl', function($scope, settings) {
-  $scope.OPERATOR_ATTRIBUTES = settings.OPERATOR_ATTRIBUTES;
-  $scope.canSetFilter = function(prop) {
-    return prop.canSet;
-  };
+angular.module('app.components.resources.${16:${15:MyNew}${20:Model}}', [
+  'app.components.resources.BaseModel'
+])
+.factory('$16', function(BaseModel) {
+  var $16 = BaseModel.extend({
+    debugName: '${30:$15}',
+    urlKey: '${40:$15}'
+  });
+  return $16;
 });
+]]></content>
+  <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+  <tabTrigger>dtmodel</tabTrigger>
+  <!-- Optional: Set a scope to limit where the snippet will trigger -->
+  <scope>source.js</scope>
+</snippet>

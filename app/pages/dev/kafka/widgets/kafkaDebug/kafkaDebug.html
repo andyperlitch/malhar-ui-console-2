@@ -1,0 +1,29 @@
+<div class="row" ng-controller="KafkaDebugCtrl">
+    <div class="col-md-6">
+        <div>
+            <p>Kafka Message Received</p>
+            <p>
+            <div class="alert alert-info">
+                <pre>{{kafkaMessage|json}}</pre>
+            </div>
+            </p>
+
+            <p>Data</p>
+            <div class="alert alert-info">
+                <pre style="max-height: 200px;overflow: auto;">{{kafkaMessageValue|json}}</pre>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <p>Request:</p>
+            <p>
+                <textarea style="height: 200px; width: 100%;" ng-model="requestText"></textarea>
+            </p>
+            <p><button class="btn btn-primary" ng-click="sendRequest();">send request</button></p>
+            <div class="alert alert-info" ng-if="request">
+                <pre>{{request|json}}</pre>
+            </div>
+        </div>
+    </div>
+</div>
