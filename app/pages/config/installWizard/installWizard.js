@@ -135,7 +135,6 @@ angular.module('app.pages.config.installWizard', [
     });
 
     $scope.submittingChanges = true;
-    $scope.dfsLocationError = false;
 
     // -------------------------------------------------
     // STEP 1: Save the hadoopLocation if it has changed
