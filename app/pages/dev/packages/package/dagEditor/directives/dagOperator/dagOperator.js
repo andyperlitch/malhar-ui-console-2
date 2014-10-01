@@ -238,7 +238,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
 
   // listen for remove events broadcast from the parent scope
   $scope.$on('remove', function(e, data) {
-    if (data.selected_type === 'operator' && data.selected.name === $scope.operator.name) {
+    if (data.selected === $scope.operator) {
       // broadcasted "remove" message was for this instance, so remove
       $scope.remove();
     }
