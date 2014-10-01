@@ -119,8 +119,10 @@ angular.module('app.pages.dev.packages.package.dagEditor.services.thawDagModel',
             return appStream.source.operator.name === frozenStream.source.operatorName &&
               appStream.source.port.name === frozenStream.source.portName;
           });
-          appStream.name = frozenStream.name;
-          appStream.locality = frozenStream.locality;
+          if (appStream) {
+            appStream.name = frozenStream.name;
+            appStream.locality = frozenStream.locality;
+          }
         });
 
         // All done now

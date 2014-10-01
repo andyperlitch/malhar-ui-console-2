@@ -25,16 +25,40 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagStream', 
       // Add dag-stream class
       scope.connection.addClass('dag-stream');
 
-      var overlay;
+      var overlay = scope.connection.getOverlay('streamLabel');
+      var streamDel = scope.connection.getOverlay('streamDel');
 
       // First check for existing
-      overlay = scope.connection.getOverlay('streamLabel');
-
       if (!overlay) {
-        // Set the stream label
-        scope.connection.addOverlay(['Label', { label: scope.stream.name, id: 'streamLabel', cssClass: 'stream-label' }]);
+        // Set the stream label and add delete control
+        scope.connection.addOverlay(['Label', {
+          label: scope.stream.name,
+          id: 'streamLabel',
+          cssClass: 'stream-label'
+        }]);
+        scope.connection.addOverlay(['Custom', {
+          create: function() { return $('<button><span>&times;</span></button>'); },
+          location: 0.5,
+          id: 'streamDel',
+          cssClass: 'stream-del close'
+        }]);
+        scope.connection.hideOverlay('streamDel');
         overlay = scope.connection.getOverlay('streamLabel');
+        streamDel = scope.connection.getOverlay('streamDel');
       }
+
+      // Watch for mouse events on streams to show/hide the stream delete control
+      scope.connection.bind('mouseenter', function(conn) {
+        conn.showOverlay('streamDel');
+      });
+      scope.connection.bind('mouseleave', function(conn) {
+        conn.hideOverlay('streamDel');
+      });
+
+      // listener for stream delete control
+      streamDel.bind('click', function(overlay) {
+        $jsPlumb.detach(overlay.component);
+      });
 
       // Update label as needed
       scope.$watch('stream.name', function(name) {
@@ -122,7 +146,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagStream', 
 
       // listen for remove events broadcast from the parent scope
       scope.$on('remove', function(e, data) {
-        if (data.selected_type === 'stream' && data.selected.name === scope.stream.name) {
+        if (data.selected === scope.stream) {
           // broadcasted "remove" message was for this instance, so remove
           $jsPlumb.detach(scope.connection);
         }

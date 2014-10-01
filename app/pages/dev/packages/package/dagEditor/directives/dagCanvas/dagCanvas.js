@@ -187,6 +187,31 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
         scope.$broadcast('connectionDetached', info.connection, true);
       });
 
+      // This is where we can do validations on stream drops.
+      // The info object contains:
+      // * sourceId - the id of the source element in the connection
+      // * targetId - the id of the target element in the connection
+      // * scope - the scope of the connection
+      // * connection - the actual Connection object. You can access the
+      //   'endpoints' array in a Connection to get the Endpoints involved in the
+      //   Connection, but be aware that when a Connection is being dragged, one
+      //   of these Endpoints will always be a transient Endpoint that exists
+      //   only for the life of the drag. To get the Endpoint on which the
+      //   Connection is being dropped, use the 'dropEndpoint' member.
+      // * dropEndpoint - this is the actual Endpoint on which the Connection is
+      //   being dropped. This may be null, because it will not be set if the
+      //   Connection is being dropped on an element on which makeTarget has been
+      //   called.
+      $jsPlumb.bind('beforeDrop', function(info) {
+        // do not allow connections to the same operator
+        if (info.sourceId === info.targetId) {
+          return false;
+        }
+
+        // otherwise OK
+        return true;
+      });
+
       /**
        * Sets up the droppable state of the canvas.
        */
