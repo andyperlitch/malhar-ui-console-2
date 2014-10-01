@@ -1,6 +1,6 @@
 <div ng-controller="InstallWizardHadoopCtrl">
-  <h1>Hadoop Configuration</h1>
-  <p>
+  <h1 dt-text>Hadoop Configuration</h1>
+  <p dt-text>
     DataTorrent RTS requires a Hadoop installation (version 2.2.0 or greater) and a writeable location on a Distributed File System (typically HDFS). A restart may be required if the Hadoop Installation Location is changed.
   </p>
 
@@ -59,7 +59,7 @@
           <td>The absolute path to the location of your Hadoop installation, typically specified by <code>$HADOOP_PREFIX</code>.</td>
           <td>
             
-            <input name="hadoopLocation" type="text" class="form-control" ng-model="hadoopLocation.data.value" placeholder="e.g. /my/hadoop/dir" required>
+            <input name="hadoopLocation" tabindex="1" type="text" class="form-control" ng-model="hadoopLocation.data.value" placeholder="e.g. /my/hadoop/dir" required>
             <div ng-messages="hadoopForm.hadoopLocation.$error">
               <div ng-message="required">
                 <span class="text-danger" dt-text>A hadoop location is required.</span>
@@ -85,7 +85,7 @@
           </td>
           <td>
 
-            <input name="dfsLocation" type="text" class="form-control" ng-model="dfsLocation.data.value" placeholder="e.g. /user/USER/datatorrent" required>
+            <input name="dfsLocation" tabindex="2" type="text" class="form-control" ng-model="dfsLocation.data.value" placeholder="e.g. /user/USER/datatorrent" required>
             <div ng-messages="hadoopForm.dfsLocation.$error">
               <div ng-message="required">
                 <span class="text-danger" dt-text>A DFS location is required.</span>
@@ -105,11 +105,11 @@
     </table>
   </form>
 
-  <button class="btn btn-default" ng-if="currentStep.prev" ng-click="goToStep('welcome')">
+  <button class="btn btn-default" ng-if="currentStep.prev" ng-click="goToStep('welcome')" tabindex="4">
     <span class="glyphicon glyphicon-circle-arrow-left"></span>
     <span ng-text>back</span>
   </button>
-  <button class="btn btn-success" ng-click="next()" ng-disabled="loading || loadError || hadoopForm.$invalid || submittingChanges">
+  <button class="btn btn-success" ng-click="next()" ng-disabled="loading || loadError || hadoopForm.$invalid || submittingChanges" tabindex="3">
     <span ng-text>continue</span>
     <span class="glyphicon glyphicon-circle-arrow-right"></span>
   </button>

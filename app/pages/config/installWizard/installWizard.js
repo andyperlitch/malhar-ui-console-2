@@ -53,6 +53,11 @@ angular.module('app.pages.config.installWizard', [
       next: 'summary',
       prev: 'hadoop'
     },
+    licenseUpload: {
+      label: 'License',
+      templateUrl: 'pages/config/installWizard/licenseUpload.html',
+      prev: 'license'
+    },
     summary: {
       label: 'Summary',
       templateUrl: 'pages/config/installWizard/summary.html',
@@ -75,16 +80,19 @@ angular.module('app.pages.config.installWizard', [
 
 })
 
-.controller('InstallWizardWelcomeCtrl', function($scope) {
+.controller('InstallWizardWelcomeCtrl', function($scope, $element) {
   
+  // Put focus on continue button
+  $element.find('.nextButton').focus();
+
   $scope.next = function() {
     $scope.goToStep('hadoop');
   };
 
 
 })
-.controller('InstallWizardHadoopCtrl', function($scope, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal, $timeout) {
-  
+.controller('InstallWizardHadoopCtrl', function($scope, $element, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal, $timeout) {
+
   // Set up models for the two properties to set
   $scope.hadoopLocation = new HadoopLocation();
   $scope.dfsLocation = new ConfigPropertyModel('dt.dfsRootDirectory');
@@ -103,6 +111,11 @@ angular.module('app.pages.config.installWizard', [
           hadoopLocation: $scope.hadoopLocation.data.value,
           dfsLocation: $scope.dfsLocation.data.value
         };
+
+        // Put focus on first text box
+        _.defer(function() {
+          $element.find('input[name="hadoopLocation"]').focus()[0].setSelectionRange(0,9999);
+        });
       },
       // Failed to load properties
       function() {
