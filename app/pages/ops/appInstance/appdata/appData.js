@@ -32,7 +32,7 @@ angular.module('app.pages.ops.appInstance.appData', [
       .when(settings.pages.AppData, {
         controller: 'AppDataCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'output'
+        label: 'app data'
       });
   })
 
