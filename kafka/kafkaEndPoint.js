@@ -57,7 +57,7 @@ KafkaEndPoint.prototype = {
     });
   },
 
-  subscribe: function (consumer, initialOffset) {
+  subscribe: function (consumer, offset, initialOffset) {
     var count = 0;
     var done = false;
 
@@ -75,34 +75,6 @@ KafkaEndPoint.prototype = {
 
       if (message.offset >= initialOffset) {
         this.messageCallback(message);
-        //console.log(message);
-        /*
-
-        var msg = JSON.parse(message.value);
-        //console.log('_msg ' + msg.id);
-        //lruCache.set(msg.id, message);
-        //console.log(msg.id);
-
-        if (io && queries.hasQuery(msg.id)) {
-
-          var cache = lruCache.get(msg.id);
-          var now = Date.now();
-          if (!cache || (now - cache.time > 500)) {
-            //console.log('_msg ', msg.id, lastSent);
-            //var activeQueries = queries.getQueryList();
-            //console.log(activeQueries);
-
-            lruCache.set(msg.id, {
-              message: message,
-              time: now
-            });
-            //console.log('emit', msg.id);
-            //console.log(queries.getQueryList());
-            io.to(msg.id).emit(msg.id, message);
-          }
-        }
-
-        */
       }
     }.bind(this));
     consumer.on('error', function (err) {
@@ -132,7 +104,7 @@ KafkaEndPoint.prototype = {
           {topic: topicOut, partition: topicOutPartition, offset: initialOffset}
         ];
         var consumer = new Consumer(client, topics, options);
-        this.subscribe(consumer, initialOffset);
+        this.subscribe(consumer, offset, initialOffset);
       }
     }.bind(this));
   }
