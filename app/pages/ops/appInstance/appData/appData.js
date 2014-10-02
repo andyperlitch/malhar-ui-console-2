@@ -37,7 +37,15 @@ angular.module('app.pages.ops.appInstance.appData', [
   })
 
 // Controller
-  .controller('AppDataCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+  .controller('AppDataCtrl', function ($scope, defaultOnSettingsClose, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+    function onSettingsClose (result, widget) {
+      defaultOnSettingsClose(result, widget);
+      if (widget.dataModel && widget.dataModel.updateQuery) {
+        var query = JSON.parse(result.queryText);
+        widget.dataModel.updateQuery(query);
+      }
+    }
+
     var widgetDefinitions = [
       {
         name: 'Time Series Bar Chart',
@@ -57,12 +65,7 @@ angular.module('app.pages.ops.appInstance.appData', [
         settingsModalOptions: {
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
-        onSettingsClose: function (result, widget) {
-          if (widget.dataModel && widget.dataModel.updateQuery) {
-            var query = JSON.parse(result.queryText);
-            widget.dataModel.updateQuery(query);
-          }
-        }
+        onSettingsClose: onSettingsClose
       },
       {
         name: 'Time Series Line Chart',
@@ -83,12 +86,7 @@ angular.module('app.pages.ops.appInstance.appData', [
         settingsModalOptions: {
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
-        onSettingsClose: function (result, widget) {
-          if (widget.dataModel && widget.dataModel.updateQuery) {
-            var query = JSON.parse(result.queryText);
-            widget.dataModel.updateQuery(query);
-          }
-        }
+        onSettingsClose: onSettingsClose
       },
       {
         name: 'Kafka Debug',
