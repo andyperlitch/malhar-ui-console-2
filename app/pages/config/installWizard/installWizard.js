@@ -112,9 +112,12 @@ angular.module('app.pages.config.installWizard', [
           dfsLocation: $scope.dfsLocation.data.value
         };
 
-        // Put focus on first text box
+        // Focus on element
         _.defer(function() {
-          $element.find('input[name="hadoopLocation"]').focus()[0].setSelectionRange(0,9999);
+          // Puts focus on first text box
+          // $element.find('input[name="hadoopLocation"]').focus()[0].setSelectionRange(0,9999);
+          // Puts focus on next button
+          $element.find('.nextButton').focus();
         });
       },
       // Failed to load properties
