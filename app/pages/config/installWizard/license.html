@@ -6,12 +6,37 @@
   <p>
     If you have a different License file you would like to use, you can <a href="#" ng-click="goToStep('license')">upload it</a>. Otherwise click "continue" to use the Current License.
   </p>
+
+  <div class="alert alert-info" ng-if="license.fetching">
+    <span dt-text>loading</span>
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+    </div>
+  </div>
+
+  <div ng-if="!license.fetching && !license.fetchError" class="well">
+    <h4>Current License:</h4>
+    <p>
+      <strong>license id:</strong> {{ license.data.id }}<br>
+      <span ng-if="license.data.sections && license.data.sections.length">
+        <span ng-repeat="section in license.data.sections">
+          <strong>start date:</strong> {{ section.startDate }}<br>
+          <strong>end date:</strong> {{ section.endDate }}<br>
+          <strong>constraint:</strong> {{ section.constraint }}<br>
+          <strong>comment:</strong> {{ section.comment }}<br>
+        </span>
+      </span>
+    </p>
+  </div>
   
-  <button class="btn btn-default" ng-click="goToStep('hadoop')" tabindex="4">
+  <button class="btn btn-default" ng-click="goToStep('hadoop')" tabindex="2">
     <span class="glyphicon glyphicon-circle-arrow-left"></span>
     <span ng-text>back</span>
   </button>
-  <button class="btn btn-success" ng-click="next()" ng-disabled="loading || loadError" tabindex="3">
+  <button class="btn btn-success nextButton" ng-click="goToStep('summary')" tabindex="1">
     <span ng-text>continue</span>
     <span class="glyphicon glyphicon-circle-arrow-right"></span>
   </button>
