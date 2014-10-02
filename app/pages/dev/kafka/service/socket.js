@@ -47,7 +47,6 @@ angular.module('app.pages.dev.kafka.socket', [])
 
         return {
           subscribe: function (query, callback, $scope) {
-            console.log('_sub', query);
             var resultCallback = this.createResultCallbackFunction(callback, $scope);
             var unregisterFn = this.createUnregisterFunction(query, resultCallback);
 
@@ -62,14 +61,14 @@ angular.module('app.pages.dev.kafka.socket', [])
 
           sendSubscribe: function (query) {
             deferred.promise.then(function () {
-              $log.debug('emit subscribe ' + query);
+              //$log.debug('emit subscribe ' + query);
               socket.emit('subscribe', { query: query });
             });
           },
 
           addQueryCallback: function (query, callback) {
             deferred.promise.then(function () {
-              $log.debug('addQueryCallback ' + query);
+              //$log.debug('addQueryCallback ' + query);
               socket.on(query, callback);
             });
           },
@@ -90,7 +89,6 @@ angular.module('app.pages.dev.kafka.socket', [])
           createUnregisterFunction: function (query, resultCallback) {
             var that = this;
             return function () {
-              console.log('remove', query);
               socket.removeListener(query, resultCallback);
               var callbacks = socket._callbacks[query];
               if (_.isEmpty(callbacks)) {
