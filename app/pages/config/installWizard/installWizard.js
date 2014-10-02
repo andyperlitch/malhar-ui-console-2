@@ -327,7 +327,7 @@ angular.module('app.pages.config.installWizard', [
   $scope.issues = new ConfigIssueCollection();
   $scope.issues.fetch().then(function() {
     $scope.severeIssues = _.filter($scope.issues.data, function(issue) {
-      return issue.severity === 'warning';
+      return issue.severity === 'error';
     });
   });
 });
