@@ -18,6 +18,7 @@
 angular.module('app.pages.config.installWizard', [
   'app.components.resources.ConfigIssueCollection',
   'app.components.resources.ConfigPropertyModel',
+  'app.components.resources.LicenseFileModel',
   'app.components.resources.HadoopLocation',
   'app.components.services.gatewayManager',
   'ui.bootstrap.modal'
@@ -299,8 +300,12 @@ angular.module('app.pages.config.installWizard', [
   };
 
 })
-.controller('InstallWizardLicenseCtrl', function() {
-  console.log('hello from InstallWizardLicenseCtrl');
+.controller('InstallWizardLicenseCtrl', function($scope, $element, LicenseFileModel) {
+  
+  $scope.license = new LicenseFileModel('current');
+  $scope.license.fetch();
+  $element.find('.nextButton').focus();
+
 })
 .controller('InstallWizardSummaryCtrl', function() {
   console.log('hello from InstallWizardSummaryCtrl');
