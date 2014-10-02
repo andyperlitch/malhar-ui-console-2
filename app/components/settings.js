@@ -199,16 +199,17 @@ angular.module('app.settings', [])
     },
     
     actions: {
-      startOpRecording         :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/start',
-      stopOpRecording          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/stop',
-      startPortRecording       :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/start',
-      stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop',
-      shutdownApp              :'/ws/:v/applications/:appId/shutdown',
       killApp                  :'/ws/:v/applications/:appId/kill',
       killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
       launchApp                :'/ws/:v/jars/:fileName/applications/:appName/launch',
+      makeLicenseCurrent       :'/ws/:v/licenses/files/:fileName/makeCurrent',
+      restartGateway           :'/ws/:v/config/restart',
+      shutdownApp              :'/ws/:v/applications/:appId/shutdown',
       specifyDepJars           :'/ws/:v/jars/:fileName/dependencyJars',
-      restartGateway           :'/ws/:v/config/restart'
+      startOpRecording         :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/start',
+      startPortRecording       :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/start',
+      stopOpRecording          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/stop',
+      stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop'
     },
     
     topics: {

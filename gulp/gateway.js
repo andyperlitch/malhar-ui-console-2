@@ -99,6 +99,13 @@ function startServer(baseDirs, port) {
   //   setTimeout(function() {
   //     res.status(500).send('hadoopInstallDirectory could not be retrieved');
   //   }, 1000);
+    
+  // app.post('/ws/v1/licenses/files/:filename/makeCurrent', function(req, res) {
+  //   console.log('MOCK REQUEST TO MAKE LICENSE CURRENT. FAILING PURPOSEFULLY.');
+  //   setTimeout(function() {
+  //     res.status(500).send('Could not make license current');
+  //   }, 1000);
+  // });
 
   // });
   // ----------------------------------

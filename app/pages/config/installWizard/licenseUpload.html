@@ -1,0 +1,17 @@
+<div ng-controller="InstallWizardLicenseUploadCtrl">
+  <h1 dt-text>Upload License File</h1>
+  <p dt-text>
+    If you have a valid DataTorrent License file, please locate the file and use the utility below to upload it. To cancel this step, click the “Back” button below to go back to the previous screen.
+  </p>
+
+  <p class="alert alert-danger" ng-if="makeCurrentError">
+    Failed to make the uploaded license current. <a href="" ng-click="makeUploadedLicenseCurrent()">Try again</a>.
+  </p>
+
+  <div class="well well-sm upload-area" file-upload="fileUploadOptions"></div>
+
+  <button class="btn btn-default" ng-click="goToStep('license')" tabindex="2">
+    <span class="glyphicon glyphicon-circle-arrow-left"></span>
+    <span ng-text>back</span>
+  </button>
+</div>

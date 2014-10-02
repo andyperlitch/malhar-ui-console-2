@@ -16,11 +16,14 @@
 'use strict';
 
 angular.module('app.pages.config.installWizard', [
+  'app.components.services.getUri',
   'app.components.resources.ConfigIssueCollection',
   'app.components.resources.ConfigPropertyModel',
   'app.components.resources.LicenseFileModel',
   'app.components.resources.HadoopLocation',
   'app.components.services.gatewayManager',
+  // 'angularFileUpload',
+  'app.components.widgets.fileUpload',
   'ui.bootstrap.modal'
 ])
 // Routing
@@ -221,7 +224,7 @@ angular.module('app.pages.config.installWizard', [
             },
             // STEP 2 FAILED: gateway failed to restart
             function(reason) {
-              console.log('crap... gateway didnt restart: ', reason);
+              $log.warn('Gateway didnt restart: ', reason);
               $scope.hadoopLocationServerError = {
                 message: 'The gateway could not be restarted.'
               };
@@ -232,7 +235,7 @@ angular.module('app.pages.config.installWizard', [
         },
         // STEP 2 FAILED: Issues failed to load
         function() {
-          console.log('Issues failed to load from the gateway!');
+          $log.warn('Issues failed to load from the gateway!');
           $scope.hadoopLocationServerError = {
             message: 'Issues could not be loaded from the gateway.'
           };
@@ -313,6 +316,56 @@ angular.module('app.pages.config.installWizard', [
   $scope.license.fetch();
   $element.find('.nextButton').focus();
 
+})
+// .controller('InstallWizardLicenseUploadCtrl', function($scope, FileUploader, getUri) {
+.controller('InstallWizardLicenseUploadCtrl', function($scope, $element, $log, getUri, $http, $modal, $timeout) {
+  $scope.fileUploadOptions = {
+    url: getUri.url('License'),
+    success: function(file) {
+      
+      // Set as current license
+      $scope.uploadedLicense = file;
+
+      // If successful, return to license screen
+      $scope.makeUploadedLicenseCurrent();
+
+    }
+  };
+  $scope.makeUploadedLicenseCurrent = function() {
+
+    var status = {};
+
+    var $modalInstance = $modal.open({
+      templateUrl: 'pages/config/installWizard/makeLicenseCurrentModal.html',
+      backdrop: 'static',
+      keyboard: false,
+      resolve: {
+        status: function() {
+          return status;
+        }
+      },
+      controller: function($scope, status) {
+        $scope.status = status;
+      }
+    });
+
+    $http.post(getUri.action('makeLicenseCurrent', { fileName: $scope.uploadedLicense.name })).then(
+      function() {
+        $log.info('Uploaded license made current. Filename: ', $scope.uploadedLicense.name);
+        status.success = true;
+        $scope.makeCurrentError = false;
+        $timeout(function() {
+          $modalInstance.close();
+          $scope.goToStep('license');
+        }, 2500);
+      },
+      function() {
+        status.success = false;
+        $modalInstance.close();
+        $scope.makeCurrentError = true;
+      }
+    );
+  };
 })
 .controller('InstallWizardSummaryCtrl', function($scope, $element, $q, ConfigIssueCollection, ConfigPropertyModel) {
 
