@@ -307,6 +307,20 @@ angular.module('app.pages.config.installWizard', [
   $element.find('.nextButton').focus();
 
 })
-.controller('InstallWizardSummaryCtrl', function() {
-  console.log('hello from InstallWizardSummaryCtrl');
+.controller('InstallWizardSummaryCtrl', function($scope, $element, $q, ConfigIssueCollection, ConfigPropertyModel) {
+
+  $element.find('.nextButton').focus();  
+
+  // Update the dt.configStatus property
+  $scope.completeProperty = new ConfigPropertyModel('dt.configStatus');
+  $scope.completeProperty.set({ value: 'complete' });
+  $scope.completeProperty.save();
+
+  // Check for any severe issues
+  $scope.issues = new ConfigIssueCollection();
+  $scope.issues.fetch().then(function() {
+    $scope.severeIssues = _.filter($scope.issues.data, function(issue) {
+      return issue.severity === 'warning';
+    });
+  });
 });

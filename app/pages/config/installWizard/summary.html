@@ -1,0 +1,47 @@
+<div ng-controller="InstallWizardSummaryCtrl">
+  <h1 dt-text>Configuration Complete</h1>
+
+  <div class="alert alert-info" ng-if="completeProperty.saving">
+    <span dt-text>loading</span>
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" ng-if="completeProperty.saveError && !completeProperty.saving">
+    <p>
+      An error occurred trying to notify the DataTorrent Platform that you have completed your configuration. 
+      <a href="" ng-click="completeProperty.save()">Try again.</a>
+    </p>
+  </div>
+
+  <p ng-if="!completeProperty.saving && !completeProperty.saveError" class="alert alert-success">
+    Your DataTorrent RTS configuration is complete. You can return to this Configuration Wizard at any time by going to the <a dt-page-href="Config">Configuration Page</a> from the DataTorrent Console.
+  </p>
+
+  <h3>Getting Started</h3>
+  <p>
+    To learn more about DataTorrent and getting started, please visit our <a href="https://www.datatorrent.com/developers/">Developer Center</a> on our website at <a href="https://www.datatorrent.com/developers/">www.datatorrent.com/developers/</a>.
+  </p>
+
+  <div ng-if="severeIssues && severeIssues.length">
+    <h3>Identified Issues</h3>
+    <p>The following issues were found for your DataTorrent installation:</p>
+    <div class="alert alert-warning" ng-repeat="issue in severeIssues">
+      <h4>{{ issue.key }}</h4>
+      <p>{{ issue.description }}</p>
+    </div>
+  </div>
+
+  <button class="btn btn-default" ng-click="goToStep('license')" tabindex="2">
+    <span class="glyphicon glyphicon-circle-arrow-left"></span>
+    <span ng-text>back</span>
+  </button>
+  <a class="btn btn-success nextButton" dt-page-href="Operations" tabindex="1">
+    <span ng-text>continue</span>
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>
+  </a>
+</div>
