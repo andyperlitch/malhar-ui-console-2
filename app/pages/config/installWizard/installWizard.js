@@ -246,6 +246,7 @@ angular.module('app.pages.config.installWizard', [
     function step3() {
       
       var dfsPromise;
+      currentAction.message = 'Checking if DFS location needs to be saved.';
       if ($scope.dfsLocation.data.value !== $scope.initialValues.dfsLocation) {
         currentAction.message = 'Saving DFS location...';
         dfsPromise = $scope.dfsLocation.save();  
@@ -285,8 +286,14 @@ angular.module('app.pages.config.installWizard', [
     .then(
       function() {
         $scope.submittingChanges = false;
-        $modalInstance.close();
-        $scope.goToStep('license');
+        $modalInstance.opened.then(function() {
+          currentAction.message = 'Configuration updated!';
+          $timeout(function() {
+            $modalInstance.close();
+            $scope.goToStep('license');
+          }, 1000);
+        });
+        
       },
       function() {
         $log.warn('Failure updating hadoop configuration.');
