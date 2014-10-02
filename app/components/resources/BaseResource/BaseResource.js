@@ -95,6 +95,67 @@ angular.module('app.components.resources.BaseResource', [
 
     },
 
+    /**
+     * Called when there is an error while trying to fetch this resource
+     * 
+     * @param  {object} response The response object returned by the $http.get call.
+     */
+    onFetchError: function(response) {
+      $log.error(this.debugName + ' failed to load from the server. Response: ', response);
+    },
+
+    /**
+     * Saves this resource with put (by default)
+     *  
+     * @param  {object} options Options to be passed to $http.put
+     * @param  {object} data    Data to send to the server instead of this.data.
+     * @return {Promise}        The promise returned by $http.put
+     */
+    save: function(options, data) {
+
+      // Save reference to this object for use in callbacks
+      var self = this;
+
+      // Set the saving flag. This can be used by
+      // templates to show save status.
+      this.saving = true;
+      
+      // Initiate the put
+      var putPromise = $http.put(this.url, data || this.data);
+
+      // Set the callbacks
+      putPromise.then(
+        function() {
+          // Update the flag
+          self.saving = false;
+          
+          // Remove any saveError from before
+          self.saveError = null;
+        },
+        function(response) {
+          // Update the flag
+          self.saving = false;
+
+          // Set the saveError to this
+          self.saveError = response;
+
+          // Call the save error callback
+          self.onSaveError(response);
+        }
+      );
+
+      return putPromise;
+    },
+
+    /**
+     * Called when saving a resource fails.
+     * 
+     * @param  {object} response The response returned by the failed $http.put command.
+     */
+    onSaveError: function(response) {
+      $log.error(this.debugName + ' failed to save to the server. Response: ', response);
+    },
+
     post: function (payload, action) {
       var url = action ? (this.url + '/' + action) : this.url;
       return $http.post(url, payload);
@@ -159,10 +220,6 @@ angular.module('app.components.resources.BaseResource', [
      */
     set: function() {
       throw new TypeError('The set method must be implemented in a child class of BaseResource!');
-    },
-
-    onFetchError: function(response) {
-      $log.error(this.debugName + ' failed to load from the server. Response: ', response);
     },
 
     /**

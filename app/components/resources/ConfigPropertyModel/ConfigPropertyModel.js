@@ -22,10 +22,7 @@ angular.module('app.components.resources.ConfigPropertyModel', [
   var ConfigPropertyModel = BaseModel.extend({
     debugName: 'Config Property',
     urlKey: 'ConfigProperty',
-    idAttribute: 'name',
-    save: function() {
-      return $http.put(this.url, this.data);
-    }
+    idAttribute: 'name'
   });
   return ConfigPropertyModel;
 });

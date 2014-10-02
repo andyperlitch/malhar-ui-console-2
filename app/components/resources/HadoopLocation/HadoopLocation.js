@@ -18,13 +18,10 @@
 angular.module('app.components.resources.HadoopLocation', [
   'app.components.resources.BaseModel'
 ])
-.factory('HadoopLocation', function(BaseModel, $http){
+.factory('HadoopLocation', function(BaseModel){
   var HadoopLocation = BaseModel.extend({
     debugName: 'Hadoop Location',
-    urlKey: 'HadoopLocation',
-    save: function() {
-      return $http.put(this.url, this.data);
-    }
+    urlKey: 'HadoopLocation'
   });
   return HadoopLocation;
 });
