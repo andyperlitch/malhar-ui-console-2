@@ -44,6 +44,9 @@ angular.module('app', [
   'app.components.services.setupBreadcrumbs',
 
   // pages
+  'app.pages.config',
+  'app.pages.config.installWizard',
+
   'app.pages.ops',
   'app.pages.ops.appInstance',
   'app.pages.ops.appInstance.appData',

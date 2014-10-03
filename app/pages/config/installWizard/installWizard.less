@@ -1,0 +1,61 @@
+.installWizardContainer {
+  background-color: #FCFCFC;
+  border: #CCC;
+  padding-bottom: 15px;
+  margin-top: 15px;
+  .nextButton, .backButton {
+    .button-size(@padding-large-vertical; @padding-large-horizontal; @font-size-large; @line-height-large; @border-radius-large);
+    .glyphicon {
+      vertical-align: text-top;
+    }
+  }
+  .nextButton {
+    float: right;
+  }
+}
+.wizardStepMeter {
+  margin-top: 10px;
+
+  .stepMeterItem {
+    position: relative;
+    float:left;
+    text-align: center;
+
+    .stepIndicator, .stepPath {
+      border: 3px solid #FFF;
+      background-color: #CCC;
+    }
+
+    .stepIndicator {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      &.active {
+        background-color: @dt-green;
+      }
+    }
+
+    .stepPath {
+      width: 100%;
+      height: 10px;
+      position: absolute;
+      background-color: #EEE;
+      left: 50%;
+      top: 10px;
+      z-index: 1;
+      &.active {
+        background-color: lighten(desaturate(@dt-green, 20%), 20%);
+      }
+    }
+
+    .stepLabel {
+      font-weight: 100;
+      letter-spacing: 0.1em;
+      font-size: 18px;
+    }
+
+  }
+}

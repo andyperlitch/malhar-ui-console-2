@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h3 class="modal-title" dt-text>Updating License</h3>
+</div>
+<div class="modal-body" style="text-align: center;">
+  <div ng-if="!status.success">
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+    </div>
+    <p>
+      Setting the uploaded license as current...
+    </p>
+  </div>
+  <p class="alert alert-success" ng-if="status.success">
+    Uploaded license successfully set as the current license!
+  </p>
+</div>

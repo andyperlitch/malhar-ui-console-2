@@ -85,7 +85,7 @@
             </li>
               <li data-match-route="/kafka">
                   <a href="#/kafka">
-                      <span class="nav-text">Packages</span>
+                      <span class="nav-text">Dashboards</span>
                       <span class="glyphicon nav-icon glyphicon-random"></span>
                   </a>
               </li>
@@ -210,6 +210,7 @@
     <script src="components/directives/validation/greaterThan/greaterThan.js"></script>
     <script src="components/directives/validation/readableBytes/readableBytes.js"></script>
     <script src="components/directives/validation/uniqueInSet/uniqueInSet.js"></script>
+    <script src="components/directives/viewRawInModal/viewRawInModal.js"></script>
     <script src="components/directives/windowId/windowId.js"></script>
     <script src="components/filters/byte/byte.js"></script>
     <script src="components/filters/camel2spaces/camel2spaces.js"></script>
@@ -226,10 +227,18 @@
     <script src="components/resources/BaseModel/BaseModel.js"></script>
     <script src="components/resources/BaseResource/BaseResource.js"></script>
     <script src="components/resources/ClusterMetrics/ClusterMetrics.js"></script>
+    <script src="components/resources/ConfigIssueCollection/ConfigIssueCollection.js"></script>
+    <script src="components/resources/ConfigIssueModel/ConfigIssueModel.js"></script>
+    <script src="components/resources/ConfigPropertyModel/ConfigPropertyModel.js"></script>
     <script src="components/resources/ContainerCollection/ContainerCollection.js"></script>
     <script src="components/resources/ContainerLogCollection/ContainerLogCollection.js"></script>
     <script src="components/resources/ContainerLogModel/ContainerLogModel.js"></script>
     <script src="components/resources/ContainerModel/ContainerModel.js"></script>
+    <script src="components/resources/HadoopLocation/HadoopLocation.js"></script>
+    <script src="components/resources/LicenseAgentCollection/LicenseAgentCollection.js"></script>
+    <script src="components/resources/LicenseAgentModel/LicenseAgentModel.js"></script>
+    <script src="components/resources/LicenseFileCollection/LicenseFileCollection.js"></script>
+    <script src="components/resources/LicenseFileModel/LicenseFileModel.js"></script>
     <script src="components/resources/LogicalOperatorCollection/LogicalOperatorCollection.js"></script>
     <script src="components/resources/LogicalOperatorModel/LogicalOperatorModel.js"></script>
     <script src="components/resources/LogicalPlanResource/LogicalPlanResource.js"></script>
@@ -258,6 +267,7 @@
     <script src="components/services/defaultWidgetSettings/defaultWidgetSettings.js"></script>
     <script src="components/services/dtText/dtText.js"></script>
     <script src="components/services/extend/extend.js"></script>
+    <script src="components/services/gatewayManager/gatewayManager.js"></script>
     <script src="components/services/getUri/getUri.js"></script>
     <script src="components/services/jsPlumb/jsPlumb.js"></script>
     <script src="components/services/setupBreadcrumbs/setupBreadcrumbs.js"></script>
@@ -278,6 +288,13 @@
     <script src="components/widgets/dag/physical/physicalDagDirective.js"></script>
     <script src="components/widgets/fileUpload/fileUpload.js"></script>
     <script src="components/widgets/fileUpload/fileUploadConfig.js"></script>
+    <script src="pages/config/config.js"></script>
+    <script src="pages/config/installWizard/hadoop/InstallWizardHadoopCtrl.js"></script>
+    <script src="pages/config/installWizard/installWizard.js"></script>
+    <script src="pages/config/installWizard/license/InstallWizardLicenseCtrl.js"></script>
+    <script src="pages/config/installWizard/license/InstallWizardLicenseUploadCtrl.js"></script>
+    <script src="pages/config/installWizard/summary/InstallWizardSummaryCtrl.js"></script>
+    <script src="pages/config/installWizard/welcome/InstallWizardWelcomeCtrl.js"></script>
     <script src="pages/dev/apache-log/apache-log-controller.js"></script>
     <script src="pages/dev/etl/etl-controller.js"></script>
     <script src="pages/dev/kafka/kafka.js"></script>
