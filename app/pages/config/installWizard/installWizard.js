@@ -21,7 +21,10 @@ angular.module('app.pages.config.installWizard', [
   'app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl',
   'app.pages.config.installWizard.license.InstallWizardLicenseCtrl',
   'app.pages.config.installWizard.license.InstallWizardLicenseUploadCtrl',
-  'app.pages.config.installWizard.summary.InstallWizardSummaryCtrl'
+  'app.pages.config.installWizard.summary.InstallWizardSummaryCtrl',
+
+  // Directives
+  'app.components.directives.viewRawInModal'
 ])
 // Routing
 .config(function(settings, $routeProvider) {
