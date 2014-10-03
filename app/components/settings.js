@@ -174,9 +174,8 @@ angular.module('app.settings', [])
       Jar                      :'/ws/:v/jars',
       JarApps                  :'/ws/:v/jars/:fileName/applications',
       JarDependencies          :'/ws/:v/jars/:fileName/dependencyJars',
-      License                  :'/ws/:v/licenses/files/current',
+      License                  :'/ws/:v/licenses/files',
       LicenseAgent             :'/ws/:v/licenses/agents',
-      LicenseFiles             :'/ws/:v/licenses/files',
       LicenseRequest           :'/ws/:v/licenses/request',
       LicenseLastRequest       :'/ws/:v/licenses/lastRequest',
       LogicalOperator          :'/ws/:v/applications/:appId/logicalPlan/operators',
@@ -200,16 +199,17 @@ angular.module('app.settings', [])
     },
     
     actions: {
-      startOpRecording         :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/start',
-      stopOpRecording          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/stop',
-      startPortRecording       :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/start',
-      stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop',
-      shutdownApp              :'/ws/:v/applications/:appId/shutdown',
       killApp                  :'/ws/:v/applications/:appId/kill',
       killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
       launchApp                :'/ws/:v/jars/:fileName/applications/:appName/launch',
+      makeLicenseCurrent       :'/ws/:v/licenses/files/:fileName/makeCurrent',
+      restartGateway           :'/ws/:v/config/restart',
+      shutdownApp              :'/ws/:v/applications/:appId/shutdown',
       specifyDepJars           :'/ws/:v/jars/:fileName/dependencyJars',
-      restartGateway           :'/ws/:v/config/restart'
+      startOpRecording         :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/start',
+      startPortRecording       :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/start',
+      stopOpRecording          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/stop',
+      stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop'
     },
     
     topics: {
@@ -232,6 +232,10 @@ angular.module('app.settings', [])
     // This is the single source of truth
     // for routes.
     pages: {
+      // Configuration
+      Config                   :'/config',
+      InstallWizard            :'/config/installation-wizard',
+
       // Operations
       AppInstance              :'/ops/apps/:appId',
       AppData                  :'/ops/apps/:appId/appdata',
@@ -239,6 +243,7 @@ angular.module('app.settings', [])
       ContainerLog             :'/ops/apps/:appId/logicalPlan/containers/:containerId/logs/:logName',
       LogicalOperator          :'/ops/apps/:appId/logicalPlan/operators/:operatorName',
       LogicalStream            :'/ops/apps/:appId/logicalPlan/streams/:streamName',
+      Operations               :'/ops',
       PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
       Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portId',
 
@@ -252,14 +257,15 @@ angular.module('app.settings', [])
 
     breadcrumbs: {
       appInstance              :':appId',
+      appName                  :':appName',
       container                :':containerId',
-      logicalOperator          :':operatorName',
-      physicalOperator         :':operatorId',
-      logicalStream            :':streamName',
       containerLog             :':logName',
-      port                     :':portId',
+      logicalOperator          :':operatorName',
+      logicalStream            :':streamName',
       packageName              :':packageName @ :packageVersion',
-      appName                  :':appName'
+      physicalOperator         :':operatorId',
+      port                     :':portId'
+      
     },
 
     stramEvents: {

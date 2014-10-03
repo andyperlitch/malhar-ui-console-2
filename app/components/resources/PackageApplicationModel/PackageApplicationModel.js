@@ -18,7 +18,7 @@
 angular.module('app.components.resources.PackageApplicationModel',[
   'app.components.resources.BaseModel'
 ])
-  .factory('PackageApplicationModel', function(BaseModel, $http) {
+  .factory('PackageApplicationModel', function(BaseModel) {
     var PackageApplicationModel = BaseModel.extend({
       debugName: 'PackageApplicationModel',
       urlKey: 'PackageApplication',
@@ -33,7 +33,7 @@ angular.module('app.components.resources.PackageApplicationModel',[
       },
       save: function(errorIfExists) {
         errorIfExists = !! errorIfExists;
-        return $http.put(this.url, this.data.fileContent, { params: { errorIfExists: errorIfExists } });
+        return BaseModel.prototype.save.call(this, { params: { errorIfExists: errorIfExists } }, this.data.fileContent);
       },
       launch: function () {
         console.log('launch ' + this.url);

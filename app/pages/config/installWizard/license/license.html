@@ -1,0 +1,43 @@
+<div ng-controller="InstallWizardLicenseCtrl">
+  <h1 dt-text>DataTorrent RTS License Confirmation</h1>
+  <p dt-text>
+    DataTorrent RTS requires a License file to run. An Evaluation license is included with this installation, and can be used in any non-production environment for development and testing purposes for up to 4 months. Up to 20GB of memory is available for your applications.
+  </p>
+  <p>
+    If you have a different License file you would like to use, you can <strong><a href="" ng-click="goToStep('licenseUpload')">upload it</a></strong>. Otherwise click "continue" to use the Current License.
+  </p>
+
+  <div class="alert alert-info" ng-if="license.fetching">
+    <span dt-text>loading</span>
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+    </div>
+  </div>
+
+  <div ng-if="!license.fetching && !license.fetchError" class="well well-sm">
+    <h4>Current License:</h4>
+    <p>
+      <strong>license id:</strong> {{ license.data.id }}<br>
+      <span ng-if="license.data.sections && license.data.sections.length">
+        <span ng-repeat="section in license.data.sections">
+          <strong>start date:</strong> {{ section.startDate }}<br>
+          <strong>end date:</strong> {{ section.endDate }}<br>
+          <strong>constraint:</strong> {{ section.constraint }}<br>
+          <strong>comment:</strong> {{ section.comment }}<br>
+        </span>
+      </span>
+    </p>
+  </div>
+  
+  <button class="btn btn-default backButton" ng-click="goToStep('hadoop')" tabindex="2">
+    <span class="glyphicon glyphicon-circle-arrow-left"></span>
+    <span ng-text>back</span>
+  </button>
+  <button class="btn btn-success nextButton" ng-click="goToStep('summary')" tabindex="1">
+    <span ng-text>continue</span>
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>
+  </button>
+</div>
