@@ -37,7 +37,7 @@ angular.module('app.pages.config.installWizard.license.InstallWizardLicenseUploa
     var status = {};
 
     var $modalInstance = $modal.open({
-      templateUrl: 'pages/config/installWizard/makeLicenseCurrentModal.html',
+      templateUrl: 'pages/config/installWizard/license/makeLicenseCurrentModal.html',
       backdrop: 'static',
       keyboard: false,
       resolve: {

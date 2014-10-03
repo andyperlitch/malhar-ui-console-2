@@ -39,29 +39,29 @@ angular.module('app.pages.config.installWizard', [
   return {
     welcome: {
       label: 'Welcome',
-      templateUrl: 'pages/config/installWizard/welcome.html',
+      templateUrl: 'pages/config/installWizard/welcome/welcome.html',
       next: 'hadoop'
     },
     hadoop: {
       label: 'Hadoop',
-      templateUrl: 'pages/config/installWizard/hadoop.html',
+      templateUrl: 'pages/config/installWizard/hadoop/hadoop.html',
       next: 'license',
       prev: 'welcome'
     },
     license: {
       label: 'License',
-      templateUrl: 'pages/config/installWizard/license.html',
+      templateUrl: 'pages/config/installWizard/license/license.html',
       next: 'summary',
       prev: 'hadoop'
     },
     licenseUpload: {
       label: 'License',
-      templateUrl: 'pages/config/installWizard/licenseUpload.html',
+      templateUrl: 'pages/config/installWizard/license/licenseUpload.html',
       prev: 'license'
     },
     summary: {
       label: 'Summary',
-      templateUrl: 'pages/config/installWizard/summary.html',
+      templateUrl: 'pages/config/installWizard/summary/summary.html',
       prev: 'license'
     }
   };

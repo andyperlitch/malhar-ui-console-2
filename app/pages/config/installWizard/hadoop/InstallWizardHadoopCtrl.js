@@ -68,7 +68,7 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
 
     // Set up modal instance
     var $modalInstance = $modal.open({
-      templateUrl: 'pages/config/hadoop/installWizard/updateHadoopConfigModal.html',
+      templateUrl: 'pages/config/installWizard/hadoop/updateHadoopConfigModal.html',
       backdrop: 'static',
       keyboard: false,
       controller: function($scope, currentAction) {
