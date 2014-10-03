@@ -53,16 +53,18 @@ angular.module('app.pages.ops.appInstance.appData', [
 
     //TODO
     var kafkaDiscovery = new KafkaDiscovery(appId);
-    kafkaDiscovery.fetch().then(function () {
+    kafkaDiscovery.fetch();
+    kafkaDiscovery.getFetchPromise().then(function () {
       console.log('____discovered');
       console.log(kafkaDiscovery.dimensionsOperator);
     });
+    $scope.kafkaDiscovery = kafkaDiscovery;
   })
   .controller('AppDataDashboardCtrl', function ($scope, $routeParams, ApplicationModel, defaultOnSettingsClose, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
     function onSettingsClose (result, widget) {
       defaultOnSettingsClose(result, widget);
       if (widget.dataModel && widget.dataModel.updateQuery) {
-        var query = JSON.parse(result.queryText);
+        var query = widget.dataModel.query; //TODO
         widget.dataModel.updateQuery(query);
       }
     }

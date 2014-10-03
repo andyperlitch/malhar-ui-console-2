@@ -19,6 +19,8 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
   .factory('KafkaDiscovery', function ($q, OpPropertiesModel, LogicalOperatorCollection) {
     function KafkaDiscovery(appId) {
       this.appId = appId;
+      this.deferred = $q.defer();
+      this.fetchPromise = this.deferred.promise;
     }
 
     KafkaDiscovery.prototype = {
@@ -39,8 +41,6 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
       },
 
       fetch: function () {
-        var deferred = $q.defer();
-
         var operators = new LogicalOperatorCollection({ appId: this.appId });
         operators.fetch().then(function (operators) { // success
           this.kafakInputOperator = _.findWhere(operators, {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortStringInputOperator'});
@@ -51,16 +51,20 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
               this.fetchOpProperties(this.kafakInputOperator),
               this.fetchOpProperties(this.kafakOutputOperator),
               this.fetchOpProperties(this.dimensionsOperator)]
-          ).then(function () {
-              deferred.resolve();
-          }, function () {
-            deferred.reject('failed to fetch operator properties');
-          });
+          ).then(function () { // success
+              this.deferred.resolve();
+            }.bind(this), function () { // fail
+              this.deferred.reject('failed to fetch operator properties');
+            }.bind(this));
         }.bind(this), function (reason) { // fail
-          deferred.reject(reason);
+          this.deferred.reject(reason);
         });
 
-        return deferred.promise;
+        return this.deferred.promise;
+      },
+
+      getFetchPromise: function () {
+        return this.deferred.promise;
       },
 
       getDimensionList: function () {
