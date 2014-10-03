@@ -19,6 +19,10 @@
             <p>Request:</p>
             <div dt-query-editor ng-model="kafkaQuery" options="dimensions"></div>
             <p><button class="btn btn-primary" ng-click="sendRequest();">send request</button></p>
+            <p>Query:</p>
+            <div class="alert alert-info">
+                <pre>{{kafkaQuery|json}}</pre>
+            </div>
             <p>Query ID:</p>
             <div class="alert alert-info" ng-if="request">
                 <pre>{{request|json}}</pre>

@@ -32,14 +32,19 @@
                             </div>
                         </form>
                     </div>
-                    <div class="cell" style="width:100%;">
+                    <div ng-if="false" class="cell" style="width:100%;">
                         <pre class="json-output">{{ngModel.$viewValue|json}}</pre>
                     </div>
                 </div>
             </div>
         </tab>
         <tab heading="JSON" select="switchToJsonMode();">
-            <textarea ng-model="jsonText"></textarea>
+            <div ng-if="jsonMode" ng-controller="QueryEditorJsonCtrl">
+                <textarea ng-model="jsonText" ng-change="textChanged(jsonText);"></textarea>
+                <div ng-if="!valid"class="alert alert-danger">
+                    Invalid JSON
+                </div>
+            </div>
         </tab>
     </tabset>
 </div>
