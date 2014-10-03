@@ -17,10 +17,9 @@
     <div class="col-md-6">
         <div>
             <p>Request:</p>
-            <p>
-                <textarea style="height: 200px; width: 100%;" ng-model="requestText"></textarea>
-            </p>
+            <div dt-query-editor ng-model="kafkaQuery" options="dimensions"></div>
             <p><button class="btn btn-primary" ng-click="sendRequest();">send request</button></p>
+            <p>Query ID:</p>
             <div class="alert alert-info" ng-if="request">
                 <pre>{{request|json}}</pre>
             </div>

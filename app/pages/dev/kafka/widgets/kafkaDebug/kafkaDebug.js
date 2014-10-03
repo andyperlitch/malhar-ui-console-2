@@ -17,9 +17,10 @@
 'use strict';
 
 angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
-  'app.pages.dev.kafka.KafkaSocketService'
+  'app.pages.dev.kafka.KafkaSocketService',
+  'app.components.directives.dtQueryEditor'
 ])
-  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService) {
+  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService, KafkaDiscovery) {
     $scope.kafkaService = new KafkaSocketService();
 
     var defaultMessage;
@@ -36,9 +37,17 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       };
     }
 
+    $scope.kafkaQuery = defaultMessage;
+    var kafkaDiscovery = new KafkaDiscovery($scope.appId);
+    kafkaDiscovery.fetch().then(function () {
+      $scope.dimensions = kafkaDiscovery.getDimensionList();
+      console.log($scope.dimensions);
+    });
+
     $scope.requestText = JSON.stringify(defaultMessage, null, ' ');
 
     $scope.sendRequest = function () {
+      /*
       var msg = null;
 
       try {
@@ -47,6 +56,8 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
         console.log(e);
         $scope.request = 'JSON parse error';
       }
+      */
+      var msg = $scope.kafkaQuery;
 
       if (msg) {
         $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) {

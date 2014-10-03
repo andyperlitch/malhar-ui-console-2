@@ -61,6 +61,29 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
         });
 
         return deferred.promise;
+      },
+
+      getDimensionList: function () {
+        if (!this.dimensionsOperator || !this.dimensionsOperator.properties || !this.dimensionsOperator.properties.aggregators) {
+          return null;
+        }
+
+        var aggregators = this.dimensionsOperator.properties.aggregators;
+
+        var dimensionSet = {};
+        _.each(aggregators, function (aggregator) {
+          var dimensionString = aggregator.dimension;
+          var dimensions = dimensionString.split(':');
+
+          dimensions = _.reject(dimensions, function (dimension) {
+            return dimension.indexOf('=') >= 0;
+          });
+          _.each(dimensions, function (dimension) {
+            dimensionSet[dimension] = true;
+          });
+        });
+
+        return _.keys(dimensionSet);
       }
     };
 

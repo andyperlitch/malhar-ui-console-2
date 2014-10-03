@@ -1,0 +1,45 @@
+<div class="query-editor">
+    <tabset>
+        <tab heading="Designer" select="switchToDesignerMode();">
+            <div class="properties-table">
+                <div class="row">
+                    <div class="cell">
+                        <form>
+                            <div ng-repeat="property in properties" class="row">
+                                <div class="cell key-cell">
+                                    <label>{{property.key}}</label>
+                                </div>
+                                <div class="cell">
+                                    <input type="text" ng-model="property.value"/>
+                                </div>
+                                <div class="cell" ng-click="remove(property);">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell key-cell">
+                                    <select ng-model="selOption" ng-options="opt for opt in options"
+                                            ng-change="onChange(selOption)" class="form-control">
+                                        <option value="">-- choose key --</option>
+                                    </select>
+                                </div>
+                                <div class="cell">
+                                    <input type="text" ng-model="selValue" />
+                                </div>
+                                <div class="cell" ng-click="add(selValue);">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="cell" style="width:100%;">
+                        <pre class="json-output">{{ngModel.$viewValue|json}}</pre>
+                    </div>
+                </div>
+            </div>
+        </tab>
+        <tab heading="JSON" select="switchToJsonMode();">
+            <textarea ng-model="jsonText"></textarea>
+        </tab>
+    </tabset>
+</div>
