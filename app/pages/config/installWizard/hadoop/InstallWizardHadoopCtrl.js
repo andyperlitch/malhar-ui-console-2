@@ -198,10 +198,14 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
           // TODO: Base it on the response code
           var permissionDeniedRegExp = /permission\s+denied/i;
           if (permissionDeniedRegExp.test(response.data.message)) {
-
+            $scope.dfsLocationServerError = {
+              message: 'You do not have permission to set the DFS location to "' + $scope.dfsLocation.data.value + '".',
+              stack: response.data.message
+            };
           }
-
-          $scope.dfsLocationServerError = response.data;
+          else {
+            $scope.dfsLocationServerError = response.data;
+          }
         }
       );
 
