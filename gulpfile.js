@@ -106,7 +106,7 @@ gulp.task('karma:watch', [], function () {
     }));
 });
 
-gulp.task('less', function () {
+gulp.task('less', ['clean'], function () {
   return gulp.src('app/styles/main.less')
     .pipe($.less({
       paths: ['app/styles']
@@ -114,7 +114,7 @@ gulp.task('less', function () {
     .pipe(gulp.dest('.tmp/styles'));
 });
 
-gulp.task('ngtemplates', function () {
+gulp.task('ngtemplates', ['clean'], function () {
   return gulp.src(dev.templates, { base: dev.dir })
     .pipe($.ngtemplate({
       module: 'app'
@@ -155,7 +155,7 @@ gulp.task('clean', function() {
     .pipe($.rimraf({ force: true }));
 });
 
-gulp.task('copy', function () {
+gulp.task('copy', ['clean'], function () {
   gulp.src(dev.fonts)
     .pipe(gulp.dest(prod.fonts));
 
