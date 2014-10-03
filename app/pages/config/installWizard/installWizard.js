@@ -34,33 +34,33 @@ angular.module('app.pages.config.installWizard', [
 
 })
 
-.factory('installWizardSteps', function() {
+.factory('installWizardSteps', function(dtText) {
   // linked list
   return {
     welcome: {
-      label: 'Welcome',
+      label: dtText.get('Welcome'),
       templateUrl: 'pages/config/installWizard/welcome/welcome.html',
       next: 'hadoop'
     },
     hadoop: {
-      label: 'Hadoop',
+      label: dtText.get('Hadoop'),
       templateUrl: 'pages/config/installWizard/hadoop/hadoop.html',
       next: 'license',
       prev: 'welcome'
     },
     license: {
-      label: 'License',
+      label: dtText.get('License'),
       templateUrl: 'pages/config/installWizard/license/license.html',
       next: 'summary',
       prev: 'hadoop'
     },
     licenseUpload: {
-      label: 'License',
+      label: dtText.get('License'),
       templateUrl: 'pages/config/installWizard/license/licenseUpload.html',
       prev: 'license'
     },
     summary: {
-      label: 'Summary',
+      label: dtText.get('Summary'),
       templateUrl: 'pages/config/installWizard/summary/summary.html',
       prev: 'license'
     }
@@ -68,7 +68,7 @@ angular.module('app.pages.config.installWizard', [
 })
 
 // Controller
-.controller('InstallWizardCtrl', function($scope, installWizardSteps) {
+.controller('InstallWizardCtrl', function($scope, installWizardSteps, dtText) {
 
   // Holds the current step
   $scope.currentStep = installWizardSteps.welcome;
@@ -78,5 +78,7 @@ angular.module('app.pages.config.installWizard', [
     $scope.currentStep = installWizardSteps[step];    
   };
 
+  // Step order
+  $scope.stepOrder = [dtText.get('Welcome'), dtText.get('Hadoop'), dtText.get('License'), dtText.get('Summary')];
 
 });

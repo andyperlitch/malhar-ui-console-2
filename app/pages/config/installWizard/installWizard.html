@@ -1,1 +1,8 @@
-<div class="container" ng-include="currentStep.templateUrl"></div>
+<div class="container installWizardContainer" ng-include="currentStep.templateUrl"></div>
+<div class="container wizardStepMeter">
+  <div ng-repeat="stepLabel in stepOrder" class="stepMeterItem" ng-style="{width: 100 / stepOrder.length + '%'}">
+    <div class="stepIndicator" ng-class="{ active: currentStep.label === stepLabel }"></div>
+    <div class="stepPath" ng-if="!$last" ng-class="{ active: stepOrder.indexOf(currentStep.label) > stepOrder.indexOf(stepLabel) }"></div>
+    <div class="stepLabel">{{ stepLabel }}</div>
+  </div>
+</div>
