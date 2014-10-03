@@ -166,5 +166,10 @@ angular.module('app.pages.dev.kafka', [
   })
   .controller('KafkaOptionsCtrl', function ($scope) {
     var widget = $scope.widget;
-    $scope.result.queryText = JSON.stringify(widget.dataModel.query, null, ' ');
+    $scope.result.query = widget.dataModel.query;
+    if ($scope.kafkaDiscovery) {
+      $scope.kafkaDiscovery.getFetchPromise().then(function () {
+        $scope.dimensions = $scope.kafkaDiscovery.getDimensionList();
+      });
+    }
   });

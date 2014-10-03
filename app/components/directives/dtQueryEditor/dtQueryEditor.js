@@ -94,6 +94,10 @@ angular.module('app.components.directives.dtQueryEditor', [])
           },
 
           update: function (json) {
+            if (!json || !json.keys) {
+              return;
+            }
+
             scope.properties = _.map(_.pairs(json.keys), function (pair) {
               return {
                 key: pair[0],
