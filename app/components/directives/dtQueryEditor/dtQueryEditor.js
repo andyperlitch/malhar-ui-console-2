@@ -45,10 +45,12 @@ angular.module('app.components.directives.dtQueryEditor', [])
 
         angular.extend(scope, {
           switchToDesignerMode: function () {
+            scope.jsonMode = false;
             scope.update(ngModel.$viewValue);
           },
 
           switchToJsonMode: function () {
+            scope.jsonMode = true;
             scope.jsonText = JSON.stringify(ngModel.$viewValue, null, ' ');
           },
 
@@ -107,9 +109,25 @@ angular.module('app.components.directives.dtQueryEditor', [])
           }
         });
 
-        ngModel.$render = function() {
+        ngModel.$render = function () {
           scope.switchToDesignerMode();
         };
       }
     };
+  })
+  .controller('QueryEditorJsonCtrl', function ($scope) {
+    $scope.valid = true;
+
+    angular.extend($scope, {
+      textChanged: function () {
+        try {
+          var json = JSON.parse($scope.jsonText);
+          $scope.valid = true;
+          $scope.ngModel.$setViewValue(json);
+        } catch (e) {
+          $scope.valid = false;
+        }
+      }
+    });
+
   });
