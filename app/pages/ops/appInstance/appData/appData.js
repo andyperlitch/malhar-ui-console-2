@@ -39,8 +39,10 @@ angular.module('app.pages.ops.appInstance.appData', [
 
 // Controller
   .controller('AppDataCtrl', function ($scope, $routeParams, ApplicationModel, KafkaDiscovery) {
-    // Instantiate resources
     var appId = $routeParams.appId;
+
+    $scope.appId = appId;
+
     $scope.appInstance = new ApplicationModel({
       id: appId
     });
