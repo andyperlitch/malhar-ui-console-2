@@ -18,7 +18,7 @@
 angular.module('app.components.resources.ConfigPropertyModel', [
   'app.components.resources.BaseModel'
 ])
-.factory('ConfigPropertyModel', function(BaseModel, $http) {
+.factory('ConfigPropertyModel', function(BaseModel) {
   var ConfigPropertyModel = BaseModel.extend({
     debugName: 'Config Property',
     urlKey: 'ConfigProperty',
