@@ -1,0 +1,25 @@
+<div class="container info-page-container">
+  <h1>License Information</h1>
+  <p>
+    DataTorrent requires a license file to run. You can <strong><a href="https://www.datatorrent.com/license-upgrade/">upgrade</a></strong> this License any time. If you have a License file that you would like to activate and use, you can upload it below.
+  </p>
+
+  <div class="alert alert-info" ng-if="license.fetching">
+    <span dt-text>loading license information</span>
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" ng-if="!license.fetching && license.fetchError">
+    An error occurred retrieving license information. <a href="" ng-click="license.fetch()">Try again</a>
+  </div>
+
+  <div ng-if="!license.fetching && !license.fetchError">
+    
+  </div>
+
+</div>
