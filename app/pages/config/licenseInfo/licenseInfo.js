@@ -15,7 +15,9 @@
 */
 'use strict';
 
-angular.module('app.pages.config.licenseInfo', [])
+angular.module('app.pages.config.licenseInfo', [
+  'app.components.resources.LicenseFileModel'
+])
 
 // Routing
 .config(function(settings, $routeProvider) {
@@ -27,6 +29,15 @@ angular.module('app.pages.config.licenseInfo', [])
 })
 
 // Controller
-.controller('LicenseInfoPageCtrl', function($scope) {
-  console.log('license info page loaded', $scope);
+.controller('LicenseInfoPageCtrl', function($scope, LicenseFileModel) {
+  
+  $scope.license = new LicenseFileModel('current');
+  $scope.license.fetch().then(function() {
+    $scope.license.agent.updateParams({ id: $scope.license.data.id });
+    $scope.license.agent.fetch().then(function() {
+      console.log('agent received');
+    });
+  });
+
+
 });
