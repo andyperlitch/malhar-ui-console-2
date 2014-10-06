@@ -123,7 +123,7 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
             _.pull(keys, 'timestamp');
 
             scope.metrics = keys;
-            if (!scope.metric && (keys.length > 0)) {
+            if ((!scope.metric && (keys.length > 0)) || (scope.metric && !sampleObject.hasOwnProperty(scope.metric))) {
               sampleObject = _.clone(sampleObject);
               delete sampleObject.timestamp; // don't count timestamp
               var pairs = _.pairs(sampleObject);
