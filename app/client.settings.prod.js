@@ -9,7 +9,13 @@
   clientSettings.kafka.discovery = {};
   clientSettings.kafka.discovery.inputOperatorFilter = {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortStringInputOperator'};
   clientSettings.kafka.discovery.outputOperatorFilter = {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortOutputOperator'};
-  clientSettings.kafka.discovery.dimensionsOperatorFilter = {className: 'com.datatorrent.lib.statistics.DimensionsComputation'}; // {className: 'com.datatorrent.demos.adsdimension.generic.GenericDimensionComputation'}
+  clientSettings.kafka.discovery.dimensionsOperatorFilter = function (operator) {
+    var className = operator.className;
+    return _.contains(['com.datatorrent.lib.statistics.DimensionsComputation',
+      'com.datatorrent.demos.adsdimension.generic.GenericDimensionComputation'],
+      className
+    );
+  };
 
   var dashboard = clientSettings.dashboard = {};
 
