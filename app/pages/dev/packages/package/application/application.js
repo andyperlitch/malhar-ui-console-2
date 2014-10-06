@@ -44,9 +44,8 @@ angular.module('app.pages.dev.packages.package.application', [
       console.log('_r');
       event.stopPropagation();
 
-      app.fetch().then(function (logicalPlan) {
-        console.log(logicalPlan);
-        ctrl.renderDag(logicalPlan);
+      app.fetch().then(function (data) {
+        ctrl.renderDag(data.dag);
       });
     }.bind(this));
   });

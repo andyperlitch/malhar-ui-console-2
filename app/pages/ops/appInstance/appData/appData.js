@@ -197,7 +197,7 @@ angular.module('app.pages.ops.appInstance.appData', [
       defaultWidgets: defaultWidgets,
       defaultLayouts: [
         { title: 'default', active: true, defaultWidgets: defaultWidgets },
-        { title: 'example', active: false, defaultWidgets: demoWidgets },
+        { title: 'demo', active: false, defaultWidgets: demoWidgets },
         { title: 'debug', active: false, defaultWidgets: debugWidgets }
       ]
     });
