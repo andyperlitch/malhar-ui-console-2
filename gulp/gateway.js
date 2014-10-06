@@ -59,24 +59,29 @@ function startServer(baseDirs, port) {
   var app = express();
 
   app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
     next();
   });
 
   // ------------------------------------------
   // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
   // ------------------------------------------
-  app.get('/ws/v1/appPackages/mydtapp/1.0-SNAPSHOT/operators', function(req, res) {
-    setTimeout(function() {
-      res.json(require('../mock/mockOperatorClasses.json'));
-    }, 1000);
-  });
-  app.get('/ws/v1/appPackages/simplepkg/1.1/operators', function(req, res) {
-    setTimeout(function() {
-      res.json(require('../mock/mockOperatorClasses2.json'));
-    }, 1000);
-  });
+  // app.get('/ws/v1/appPackages/mydtapp/1.0-SNAPSHOT/operators', function(req, res) {
+  //   setTimeout(function() {
+  //     res.json(require('../mock/mockOperatorClasses.json'));
+  //   }, 1000);
+  // });
+  // app.get('/ws/v1/appPackages/simplepkg/1.1/operators', function(req, res) {
+  //   setTimeout(function() {
+  //     res.json(require('../mock/mockOperatorClasses2.json'));
+  //   }, 1000);
+  // });
+  // app.get('/ws/v1/appPackages/ads-demo/1.0-SNAPSHOT/operators', function(req, res) {
+  //   setTimeout(function() {
+  //     res.status(500).send('Some issue occurred');
+  //   }, 1000);
+  // });
   // ------------------------------------------
   // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
   // ------------------------------------------
@@ -111,6 +116,26 @@ function startServer(baseDirs, port) {
   // ----------------------------------
   // MOCK CALLS FOR INSTALLATION WIZARD
   // ----------------------------------
+
+  // ----------------------------------
+  // MOCK CALLS FOR LICENSE INFORMATION
+  // ----------------------------------
+  var fail = false;
+  app.get('/ws/v1/licenses/files/current', function(req, res) {
+    setTimeout(function() {
+      fail = !fail;
+      if (fail) {
+        res.status(500).send('Could not get license file!');
+      } else {
+        res.json({'id':'default-20140401','current':'yes','sections':[{'startDate':'2014-04-01','endDate':'2015-04-01','comment':'Total licensed memory is 10TB','processorList':{'info':[{'type':'STRAM','processors':[{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAMAAAAA'}],'enforcers':[{'id':'1','type':'ENFORCER','data':'AAAAAAAAAAUAAAACABNyZWd1bGFyTGljVG9sZXJhbmNlAAMxLjAAE2RlZmF1bHRMaWNUb2xlcmFuY2UAAzAuMA=='}]}]},{'type':'AGENT','processors':[{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAIAAAAA'}],'enforcers':[]},{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAEAAAAA'}],'enforcers':[]}]}]},'constraint':'memory=10485760','url':'http:\/\/www.datatorrent.com\/'}]});
+      }
+    }, 1000);
+  });
+
+  // ----------------------------------
+  // MOCK CALLS FOR LICENSE INFORMATION
+  // ----------------------------------
+
 
   app.use(livereload({ port: 35729 }));
 
