@@ -23,8 +23,8 @@ angular.module('app.components.resources.PackageApplicationModel',[
       debugName: 'PackageApplicationModel',
       urlKey: 'PackageApplication',
       transformResponse: function(raw) {
-        if (raw.fileContent.operators) {
-          _.each(raw.fileContent.operators, function(o) {
+        if (raw.dag.operators) {
+          _.each(raw.dag.operators, function(o) {
             o.x *= 1;
             o.y *= 1;
           });
