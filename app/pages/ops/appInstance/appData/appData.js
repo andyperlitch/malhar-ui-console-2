@@ -137,46 +137,16 @@ angular.module('app.pages.ops.appInstance.appData', [
           width: '100%'
         },
         dataModelOptions: {
-          query: {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          }
+          query: clientSettings.kafka.defaultQuery
         }
       }
     ];
-
-    var defaultQuery = {
-      keys: {
-        publisherId: 1,
-        advertiserId: 0,
-        adUnit: 0
-      }
-    };
-
-    var defaultWidgets = [{
-      name: 'Time Series Bar Chart',
-      dataModelOptions: {
-        metric: 'impressions',
-        query: defaultQuery
-      }
-    }, {
-      name: 'Time Series Line Chart',
-      dataModelOptions: {
-        query: defaultQuery
-      }
-    }, {
-      name: 'Kafka Debug'
-    }];
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
       storageId: 'dashboard.appdata_' + $scope.appInstance.data.name,
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
       defaultLayouts: clientSettings.dashboard.appData.layouts
     });
   })
