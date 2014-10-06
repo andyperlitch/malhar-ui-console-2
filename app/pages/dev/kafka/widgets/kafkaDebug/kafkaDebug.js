@@ -20,7 +20,7 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
   'app.pages.dev.kafka.KafkaSocketService',
   'app.components.directives.dtQueryEditor'
 ])
-  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService, KafkaDiscovery) {
+  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService, KafkaDiscovery, clientSettings) {
     $scope.kafkaService = new KafkaSocketService();
 
     var defaultMessage;
@@ -28,13 +28,7 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
     if ($scope.widget.dataModelOptions && $scope.widget.dataModelOptions.query) {
       defaultMessage = $scope.widget.dataModelOptions.query;
     } else {
-      defaultMessage = {
-        keys: {
-          publisherId: 1,
-          advertiserId: 0,
-          adUnit: 0
-        }
-      };
+      defaultMessage = clientSettings.kafka.defaultQuery;
     }
 
     $scope.kafkaQuery = defaultMessage;

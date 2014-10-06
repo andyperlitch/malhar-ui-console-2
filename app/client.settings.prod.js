@@ -16,16 +16,15 @@
       className
     );
   };
-
-  var dashboard = clientSettings.dashboard = {};
-
-  var defaultQuery = {
+  clientSettings.kafka.defaultQuery = {
     keys: {
-      publisherId: 1,
-      advertiserId: 0,
-      adUnit: 0
+      publisherId: '1',
+      advertiserId: '0',
+      adUnit: '0'
     }
   };
+
+  var dashboard = clientSettings.dashboard = {};
 
   dashboard.appData = {}; // clientSettings.dashboard.appData
   dashboard.appData.layouts = [ // clientSettings.dashboard.appData.layouts
@@ -35,13 +34,13 @@
         name: 'Time Series Bar Chart',
         dataModelOptions: {
           metric: 'impressions',
-          query: defaultQuery
+          query: clientSettings.kafka.defaultQuery
         }
       },
       {
         name: 'Time Series Line Chart',
         dataModelOptions: {
-          query: defaultQuery
+          query: clientSettings.kafka.defaultQuery
         }
       },
       {
@@ -55,13 +54,13 @@
         name: 'Time Series Bar Chart',
         dataModelOptions: {
           metric: 'impressions',
-          query: defaultQuery
+          query: clientSettings.kafka.defaultQuery
         }
       },
       {
         name: 'Time Series Line Chart',
         dataModelOptions: {
-          query: defaultQuery
+          query: clientSettings.kafka.defaultQuery
         }
       }
     ]
