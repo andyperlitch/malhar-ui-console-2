@@ -60,7 +60,8 @@ angular.module('app.pages.ops.appInstance.appData', [
     });
     $scope.kafkaDiscovery = kafkaDiscovery;
   })
-  .controller('AppDataDashboardCtrl', function ($scope, $routeParams, ApplicationModel, defaultOnSettingsClose, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+  .controller('AppDataDashboardCtrl', function ($scope, $routeParams, defaultOnSettingsClose, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget,
+                                                dashboardOptionsFactory, clientSettings) {
     function onSettingsClose (result, widget) {
       defaultOnSettingsClose(result, widget);
       if (widget.dataModel && widget.dataModel.updateQuery) {
@@ -170,19 +171,6 @@ angular.module('app.pages.ops.appInstance.appData', [
       name: 'Kafka Debug'
     }];
 
-    var demoWidgets = [{
-      name: 'Time Series Bar Chart',
-      dataModelOptions: {
-        metric: 'impressions',
-        query: defaultQuery
-      }
-    }, {
-      name: 'Time Series Line Chart',
-      dataModelOptions: {
-        query: defaultQuery
-      }
-    }];
-
     var debugWidgets = [{
       name: 'Kafka Discovery'
     }, {
@@ -195,11 +183,7 @@ angular.module('app.pages.ops.appInstance.appData', [
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultWidgets: defaultWidgets,
-      defaultLayouts: [
-        { title: 'default', active: true, defaultWidgets: defaultWidgets },
-        { title: 'demo', active: false, defaultWidgets: demoWidgets },
-        { title: 'debug', active: false, defaultWidgets: debugWidgets }
-      ]
+      defaultLayouts: clientSettings.dashboard.appData.layouts
     });
   })
   .controller('KafkaOptionsCtrl', function ($scope) {
