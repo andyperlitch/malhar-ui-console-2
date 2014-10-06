@@ -41,7 +41,6 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
     var kafkaDiscovery = new KafkaDiscovery($scope.appId);
     kafkaDiscovery.fetch().then(function () {
       $scope.dimensions = kafkaDiscovery.getDimensionList();
-      console.log($scope.dimensions);
     });
 
     $scope.requestText = JSON.stringify(defaultMessage, null, ' ');

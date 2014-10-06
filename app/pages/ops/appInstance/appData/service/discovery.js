@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
-  .factory('KafkaDiscovery', function ($q, OpPropertiesModel, LogicalOperatorCollection) {
+  .factory('KafkaDiscovery', function ($q, OpPropertiesModel, LogicalOperatorCollection, clientSettings) {
     function KafkaDiscovery(appId) {
       this.appId = appId;
       this.deferred = $q.defer();
@@ -43,9 +43,10 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
       fetch: function () {
         var operators = new LogicalOperatorCollection({ appId: this.appId });
         operators.fetch().then(function (operators) { // success
-          this.kafakInputOperator = _.findWhere(operators, {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortStringInputOperator'});
-          this.kafakOutputOperator = _.findWhere(operators, {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortOutputOperator'});
-          this.dimensionsOperator = _.findWhere(operators, {className: 'com.datatorrent.lib.statistics.DimensionsComputation'});
+          this.kafakInputOperator = _.findWhere(operators, clientSettings.kafka.discovery.inputOperatorFilter);
+          this.kafakOutputOperator = _.findWhere(operators, clientSettings.kafka.discovery.outputOperatorFilter);
+          this.dimensionsOperator = _.findWhere(operators, clientSettings.kafka.discovery.dimensionsOperatorFilter);
+          //this.dimensionsOperator = _.findWhere(operators, {className: 'com.datatorrent.demos.adsdimension.generic.GenericDimensionComputation'});
 
           $q.all([
               this.fetchOpProperties(this.kafakInputOperator),
@@ -73,7 +74,6 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
         }
 
         var aggregators = this.dimensionsOperator.properties.aggregators;
-
         var dimensionSet = {};
         _.each(aggregators, function (aggregator) {
           var dimensionString = aggregator.dimension;
