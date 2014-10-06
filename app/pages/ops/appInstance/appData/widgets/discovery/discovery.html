@@ -3,21 +3,24 @@
         <label>Application Name:</label>
         {{appInstance.data.name}}
     </div>
-    <div class="overview-item" style="float:left;text-align:left;">
+    <div class="row">
+    <div class="col-md-4">
         <label>KafkaSinglePortStringInputOperator</label><br/>
         <label>Name:</label> {{kafkaDiscovery.kafakInputOperator.name}} <br/>
         <label>Topic:</label> {{kafkaDiscovery.kafakInputOperator.properties.consumer.topic}}
     </div>
-    <div class="overview-item" style="float:left;text-align:left;">
+    <div class="col-md-4">
         <label>KafkaSinglePortOutputOperator</label><br/>
         <label>Name:</label> {{kafkaDiscovery.kafakOutputOperator.name}}<br/>
         <label>Topic:</label> {{kafkaDiscovery.kafakOutputOperator.properties.topic}}
     </div>
-    <div class="overview-item" style="float:left;text-align:left;">
+    <div class="col-md-4">
         <label>DimensionsComputation</label><br/>
         <label>Aggregators:</label>
-        <div ng-repeat="item in kafkaDiscovery.dimensionsOperator.properties.aggregators">
+        <pre style="height:150px;width:100%;overflow:auto;">{{kafkaDiscovery.dimensionsOperator.properties.aggregators|json}}</pre>
+        <div ng-if="false" ng-repeat="item in kafkaDiscovery.dimensionsOperator.properties.aggregators">
             {{item}}
         </div>
+    </div>
     </div>
 </div>
