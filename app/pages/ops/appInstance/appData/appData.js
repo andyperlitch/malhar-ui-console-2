@@ -171,12 +171,6 @@ angular.module('app.pages.ops.appInstance.appData', [
       name: 'Kafka Debug'
     }];
 
-    var debugWidgets = [{
-      name: 'Kafka Discovery'
-    }, {
-      name: 'Kafka Debug'
-    }];
-
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
       storageId: 'dashboard.appdata_' + $scope.appInstance.data.name,
