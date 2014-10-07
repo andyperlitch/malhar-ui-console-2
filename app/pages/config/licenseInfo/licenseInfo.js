@@ -17,7 +17,8 @@
 
 angular.module('app.pages.config.licenseInfo', [
   'app.components.resources.LicenseFileModel',
-  'app.components.directives.licenseMemoryUsage'
+  'app.components.directives.licenseMemoryUsage',
+  'app.components.services.getUri'
 ])
 
 // Routing
@@ -30,8 +31,12 @@ angular.module('app.pages.config.licenseInfo', [
 })
 
 // Controller
-.controller('LicenseInfoPageCtrl', function($scope, LicenseFileModel) {
+.controller('LicenseInfoPageCtrl', function($scope, LicenseFileModel, getUri) {
   
+  $scope.fileUploadOptions = {
+    url: getUri.url('License')
+  };
+
   $scope.license = new LicenseFileModel('current');
 
   $scope.fetchLicense = function() {

@@ -25,8 +25,8 @@ angular.module('app.components.directives.licenseMemoryUsage', [
       license: '='
     },
     templateUrl: 'components/directives/licenseMemoryUsage/licenseMemoryUsage.html',
-    link: function(scope, element, attrs) {
-      scope.$watch('license.agent.data', function(newValue, oldValue) {
+    link: function(scope) {
+      scope.$watch('license.agent.data', function(newValue) {
         if (newValue.hasOwnProperty('remainingLicensedMB')) {
           scope.totalLicensedMB = newValue.totalLicensedMB * 1;
           scope.remainingLicensedMB = newValue.remainingLicensedMB * 1;
