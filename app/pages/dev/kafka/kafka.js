@@ -39,8 +39,34 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
+                                     dashboardOptionsFactory, defaultOnSettingsClose, clientSettings) {
+    function onSettingsClose (result, widget) {
+      defaultOnSettingsClose(result, widget);
+      if (widget.dataModel && widget.dataModel.updateQuery) {
+        var query = widget.dataModel.query; //TODO
+        widget.dataModel.updateQuery(query);
+      }
+    }
+
     var widgetDefinitions = [
+      {
+        name: 'Kafka Discovery',
+        title: 'Kafka Discovery',
+        templateUrl: 'pages/ops/appInstance/appData/widgets/discovery/discovery.html',
+        size: {
+          width: '100%'
+        },
+        dataModelOptions: {
+          query: {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          }
+        }
+      },
       {
         name: 'Time Series Bar Chart',
         title: 'Time Series Bar Chart',
@@ -59,12 +85,7 @@ angular.module('app.pages.dev.kafka', [
         settingsModalOptions: {
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
-        onSettingsClose: function (result, widget) {
-          if (widget.dataModel && widget.dataModel.updateQuery) {
-            var query = JSON.parse(result.queryText);
-            widget.dataModel.updateQuery(query);
-          }
-        }
+        onSettingsClose: onSettingsClose
       },
       {
         name: 'Time Series Line Chart',
@@ -85,12 +106,7 @@ angular.module('app.pages.dev.kafka', [
         settingsModalOptions: {
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
-        onSettingsClose: function (result, widget) {
-          if (widget.dataModel && widget.dataModel.updateQuery) {
-            var query = JSON.parse(result.queryText);
-            widget.dataModel.updateQuery(query);
-          }
-        }
+        onSettingsClose: onSettingsClose
       },
       {
         name: 'Kafka Debug',
@@ -100,68 +116,17 @@ angular.module('app.pages.dev.kafka', [
           width: '100%'
         },
         dataModelOptions: {
-          query: {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          }
+          query: clientSettings.kafka.defaultQuery
         }
       }
     ];
-
-    var defaultQuery = {
-      keys: {
-        publisherId: 1,
-        advertiserId: 0,
-        adUnit: 0
-      }
-    };
-
-    var defaultWidgets = [{
-      name: 'Time Series Bar Chart',
-      dataModelOptions: {
-        metric: 'impressions',
-        query: defaultQuery
-      }
-    }, {
-      name: 'Time Series Line Chart',
-      dataModelOptions: {
-        query: defaultQuery
-      }
-    }, {
-      name: 'Kafka Debug'
-    }];
-
-    var demoWidgets = [{
-      name: 'Time Series Bar Chart',
-      dataModelOptions: {
-        metric: 'impressions',
-        query: defaultQuery
-      }
-    }, {
-      name: 'Time Series Line Chart',
-      dataModelOptions: {
-        query: defaultQuery
-      }
-    }];
-
-    var debugWidgets = [{
-      name: 'Kafka Debug'
-    }];
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
       storageId: 'dashboard.kafka',
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
-      defaultLayouts: [
-        { title: 'default', active: true, defaultWidgets: defaultWidgets },
-        { title: 'example', active: false, defaultWidgets: demoWidgets },
-        { title: 'debug', active: false, defaultWidgets: debugWidgets }
-      ]
+      defaultLayouts: clientSettings.dashboard.kafka.layouts
     });
   })
   .controller('KafkaOptionsCtrl', function ($scope) {
