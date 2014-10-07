@@ -16,7 +16,8 @@
 'use strict';
 
 angular.module('app.pages.config.licenseInfo', [
-  'app.components.resources.LicenseFileModel'
+  'app.components.resources.LicenseFileModel',
+  'app.components.directives.licenseMemoryUsage'
 ])
 
 // Routing
@@ -32,12 +33,14 @@ angular.module('app.pages.config.licenseInfo', [
 .controller('LicenseInfoPageCtrl', function($scope, LicenseFileModel) {
   
   $scope.license = new LicenseFileModel('current');
-  $scope.license.fetch().then(function() {
-    $scope.license.agent.updateParams({ id: $scope.license.data.id });
-    $scope.license.agent.fetch().then(function() {
-      console.log('agent received');
-    });
-  });
 
+  $scope.fetchLicense = function() {
+    $scope.license.fetch().then(function() {
+      $scope.license.agent.updateParams({ id: $scope.license.data.id });
+      $scope.license.agent.fetch();
+    });
+  };
+
+  $scope.fetchLicense();
 
 });
