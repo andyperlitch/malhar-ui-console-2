@@ -120,17 +120,17 @@ function startServer(baseDirs, port) {
   // ----------------------------------
   // MOCK CALLS FOR LICENSE INFORMATION
   // ----------------------------------
-  var fail = false;
-  app.get('/ws/v1/licenses/files/current', function(req, res) {
-    setTimeout(function() {
-      fail = !fail;
-      if (fail) {
-        res.status(500).send('Could not get license file!');
-      } else {
-        res.json({'id':'default-20140401','current':'yes','sections':[{'startDate':'2014-04-01','endDate':'2015-04-01','comment':'Total licensed memory is 10TB','processorList':{'info':[{'type':'STRAM','processors':[{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAMAAAAA'}],'enforcers':[{'id':'1','type':'ENFORCER','data':'AAAAAAAAAAUAAAACABNyZWd1bGFyTGljVG9sZXJhbmNlAAMxLjAAE2RlZmF1bHRMaWNUb2xlcmFuY2UAAzAuMA=='}]}]},{'type':'AGENT','processors':[{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAIAAAAA'}],'enforcers':[]},{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAEAAAAA'}],'enforcers':[]}]}]},'constraint':'memory=10485760','url':'http:\/\/www.datatorrent.com\/'}]});
-      }
-    }, 1000);
-  });
+  // var fail = false;
+  // app.get('/ws/v1/licenses/files/current', function(req, res) {
+  //   setTimeout(function() {
+  //     fail = !fail;
+  //     if (fail) {
+  //       res.status(500).send('Could not get license file!');
+  //     } else {
+  //       res.json({'id':'default-20140401','current':'yes','sections':[{'startDate':'2014-04-01','endDate':'2015-04-01','comment':'Total licensed memory is 10TB','processorList':{'info':[{'type':'STRAM','processors':[{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAMAAAAA'}],'enforcers':[{'id':'1','type':'ENFORCER','data':'AAAAAAAAAAUAAAACABNyZWd1bGFyTGljVG9sZXJhbmNlAAMxLjAAE2RlZmF1bHRMaWNUb2xlcmFuY2UAAzAuMA=='}]}]},{'type':'AGENT','processors':[{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAIAAAAA'}],'enforcers':[]},{'handlers':[{'id':'1','type':'HANDLER','data':'AAAAAAAAAAEAAAAA'}],'enforcers':[]}]}]},'constraint':'memory=10485760','url':'http:\/\/www.datatorrent.com\/'}]});
+  //     }
+  //   }, 1000);
+  // });
 
   // ----------------------------------
   // MOCK CALLS FOR LICENSE INFORMATION
