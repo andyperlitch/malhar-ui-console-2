@@ -73,7 +73,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
 
           KafkaWidgetDataModel.prototype.updateScope.call(this, _.clone(this.series));
         } else {
-          KafkaWidgetDataModel.prototype.updateScope.call(this, null);
+          KafkaWidgetDataModel.prototype.updateScope.call(this, []);
         }
 
         this.widgetScope.metrics = [
