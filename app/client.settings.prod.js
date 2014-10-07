@@ -42,26 +42,6 @@
         dataModelOptions: {
           query: clientSettings.kafka.defaultQuery
         }
-      },
-      {
-        name: 'Kafka Debug'
-      }
-    ]
-    },
-    {
-      title: 'demo', active: false, defaultWidgets: [
-      {
-        name: 'Time Series Bar Chart',
-        dataModelOptions: {
-          metric: 'impressions',
-          query: clientSettings.kafka.defaultQuery
-        }
-      },
-      {
-        name: 'Time Series Line Chart',
-        dataModelOptions: {
-          query: clientSettings.kafka.defaultQuery
-        }
       }
     ]
     },
