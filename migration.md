@@ -13,15 +13,18 @@ Must-Haves
 - System diagnostics page (3 d) [[MLHR-1453](https://malhar.atlassian.net/browse/MLHR-1453)]
 - Finish stream view (2 d) [[MLHR-1281](https://malhar.atlassian.net/browse/MLHR-1281)]
 - Finish port view (3 d) [[MLHR-1288](https://malhar.atlassian.net/browse/MLHR-1288)]
-- Loading feedback for tables (1 d) [[MLHR-1451](https://malhar.atlassian.net/browse/MLHR-1451)]
 - Performance tuning for tables (1 w) [[MLHR-1454](https://malhar.atlassian.net/browse/MLHR-1454)]
+- Fix broken info links (1 hr) [[MLHR-1310](https://malhar.atlassian.net/browse/MLHR-1310)]
 
 **total**: 4.5 weeks
 
 Nice-To-Haves
 -------------
+- Auth management support (3 d) [[MLHR-1354](https://malhar.atlassian.net/browse/MLHR-1354)]
 - Log Level Setter (3 d) [[MLHR-1455](https://malhar.atlassian.net/browse/MLHR-1455)]
-- Tuple Viewer (2 w) [[MLHR-1261](https://malhar.atlassian.net/browse/MLHR-1261), [MLHR-1262](https://malhar.atlassian.net/browse/MLHR-1262), [MLHR-1232](https://malhar.atlassian.net/browse/MLHR-1232)]
+- Recording + Tuple Viewer (2 w) [[MLHR-1294](https://malhar.atlassian.net/browse/MLHR-1294)], [[MLHR-1261](https://malhar.atlassian.net/browse/MLHR-1261), [MLHR-1262](https://malhar.atlassian.net/browse/MLHR-1262), [MLHR-1232](https://malhar.atlassian.net/browse/MLHR-1232)]
 - Better charting widget (1 w) [[MLHR-1233](https://malhar.atlassian.net/browse/MLHR-1233)]
+- Loading feedback for tables (1 d) [[MLHR-1451](https://malhar.atlassian.net/browse/MLHR-1451)]
+- Lock layouts (3 d) [[MLHR-1312](https://malhar.atlassian.net/browse/MLHR-1312)]
 
 **total**: 3 weeks
