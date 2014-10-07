@@ -1,4 +1,4 @@
-<div class="container installWizardContainer" ng-include="currentStep.templateUrl"></div>
+<div class="container installWizardContainer info-page-container" ng-include="currentStep.templateUrl"></div>
 <div class="container wizardStepMeter">
   <div ng-repeat="stepLabel in stepOrder" class="stepMeterItem" ng-style="{width: 100 / stepOrder.length + '%'}">
     <div class="stepIndicator" ng-class="{ active: currentStep.label === stepLabel }"></div>
