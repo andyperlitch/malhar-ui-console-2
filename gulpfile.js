@@ -25,7 +25,7 @@ var dev = {
     'app/components/**/*.js',
     'app/pages/**/*.js'
   ],
-  clientSettings: 'app/client.settings.prod.js',
+  clientSettings: 'app/client.settings.js',
   watchDependencies: [
     'app/bower_components/malhar-angular-dashboard/dist/angular-ui-dashboard.js',
     'app/bower_components/malhar-angular-widgets/dist/malhar-angular-widgets.js'
@@ -171,11 +171,11 @@ gulp.task('copy', ['clean'], function () {
 
 gulp.task('usemin', ['less'], function () {
   gulp.src(dev.index)
-    .pipe($.inject(gulp.src(dev.clientSettings), {
-      read: false,
-      relative: true,
-      name: 'settings'
-    }))
+    //.pipe($.inject(gulp.src(dev.clientSettings), {
+    //  read: false,
+    //  relative: true,
+    //  name: 'settings'
+    //}))
     .pipe($.inject(gulp.src('.tmp/templates.js'), {
       read: false,
       relative: true
@@ -198,6 +198,14 @@ gulp.task('appscripts', function() {
   updateAppScripts(function() {
     console.log('Application scripts updated in index.html');
   });
+});
+
+gulp.task('prodenv', function () {
+  if (process.env.DATA_SERVER_HOST) {
+    gulp.src(dev.clientSettings)
+      .pipe($.replace('http://localhost:3003', process.env.DATA_SERVER_HOST)) //TODO have more configurable replace
+      .pipe(gulp.dest(prod.dir));
+  }
 });
 
 gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'copy', 'usemin']);
