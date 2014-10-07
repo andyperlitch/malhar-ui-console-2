@@ -44,24 +44,11 @@ function KafkaEndPoint (messageCallback) {
 
   this.client = new Client(connectionString);
   this.producer = new Producer(this.client);
-  //this.createConsumer(client);
   this.consumers = {};
-  //this.addConsumer(topicOut);
 }
 
 KafkaEndPoint.prototype = {
-  send: function (message) {
-    //console.log('_send', message);
-    var payload = {topic: topicIn, messages: [message], partition: 0};
-    this.producer.send([payload], function (err) {
-      if (err) {
-        console.log(arguments);
-      }
-    });
-  },
-
-  sendMessage: function (topic, message) {
-    //console.log('_send', message);
+  send: function (topic, message) {
     var payload = {topic: topic, messages: [message], partition: 0};
     this.producer.send([payload], function (err) {
       if (err) {

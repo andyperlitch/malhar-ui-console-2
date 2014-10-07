@@ -77,7 +77,7 @@ DataServer.prototype = {
 
     if (query.kafka) {
       if (query.kafka.queryTopic) {
-        this.kafkaEndPoint.sendMessage(query.kafka.queryTopic, JSON.stringify(query));
+        this.kafkaEndPoint.send(query.kafka.queryTopic, JSON.stringify(query));
       }
       if (query.kafka.resultTopic) {
         this.kafkaEndPoint.addConsumer(query.kafka.resultTopic);
