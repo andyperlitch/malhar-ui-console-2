@@ -20,7 +20,7 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
   'app.pages.dev.kafka.KafkaSocketService',
   'app.components.directives.dtQueryEditor'
 ])
-  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService, KafkaDiscovery, clientSettings) {
+  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService, KafkaDiscovery, clientSettings, $timeout) {
     $scope.kafkaService = new KafkaSocketService();
 
     var defaultMessage;
@@ -42,13 +42,25 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       angular.extend($scope.kafkaQuery, {
         kafka: $scope.kafkaDiscovery.getKafkaTopics()
       });
+    } else {
+      $scope.kafkaQuery = clientSettings.kafka.defaultQueryWithTopics;
     }
 
     $scope.sendRequest = function () {
+      $timeout.cancel($scope.timeout);
+      $scope.timeout = $timeout(function () {
+        delete $scope.kafkaMessage;
+        delete $scope.kafkaMessageValue;
+      }, 500); // clean results if query does not produce fast results
+
       var msg = $scope.kafkaQuery;
 
       if (msg) {
         $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) {
+          if ($scope.timeout) {
+            $timeout.cancel($scope.timeout);
+            delete $scope.timeout;
+          }
           $scope.kafkaMessage = _.clone(kafkaMessage);
 
           if (kafkaMessage && kafkaMessage.value) {
