@@ -1,0 +1,44 @@
+@startuml
+
+class DataServer
+DataServer : lruCache
+DataServer : endPoint
+DataServer : QueryMap
+DataServer : onMessage()
+DataServer : onSubscribe()
+DataServer : onUnSubscribe()
+DataServer : onDisconnect()
+DataServer : emitCachedResult()
+
+class EndPoint
+EndPoint : callback
+EndPoint : send()
+EndPoint : addConsumer()
+
+class LRUCache
+LRUCache : get()
+LRUCache : set()
+
+class QueryMap
+QueryMap : query2id
+QueryMap : id2query
+QueryMap : addQuery()
+QueryMap : removeQuery()
+
+class SocketIO
+SocketIO : rooms
+SocketIO : on()
+SocketIO : emit()
+
+class Socket
+Socket : id
+Socket : join(room)
+Socket : leave(room)
+
+DataServer *--> EndPoint
+DataServer *--> LRUCache
+DataServer *--> QueryMap
+DataServer -> SocketIO
+SocketIO *-> Socket
+
+@enduml
