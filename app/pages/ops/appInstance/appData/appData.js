@@ -38,7 +38,7 @@ angular.module('app.pages.ops.appInstance.appData', [
   })
 
 // Controller
-  .controller('AppDataCtrl', function ($scope, $routeParams, ApplicationModel, KafkaDiscovery) {
+  .controller('AppDataCtrl', function ($scope, $routeParams, $q, ApplicationModel, KafkaDiscovery) {
     var appId = $routeParams.appId;
 
     $scope.appId = appId;
@@ -46,19 +46,16 @@ angular.module('app.pages.ops.appInstance.appData', [
     $scope.appInstance = new ApplicationModel({
       id: appId
     });
-    $scope.appInstance.fetch().then(function (app) {
-      console.log($scope.appInstance);
-      console.log(app.name);
-    });
+    var appInstancePromise = $scope.appInstance.fetch();
 
     //TODO
-    var kafkaDiscovery = new KafkaDiscovery(appId);
-    kafkaDiscovery.fetch();
-    kafkaDiscovery.getFetchPromise().then(function () {
-      console.log('____discovered');
-      console.log(kafkaDiscovery.dimensionsOperator);
+    $scope.kafkaDiscovery = new KafkaDiscovery(appId);
+    var kafkaDiscoveryPromise = $scope.kafkaDiscovery.fetch();
+
+    $scope.fetched = false;
+    $q.all([appInstancePromise, kafkaDiscoveryPromise]).then(function () {
+      $scope.fetched = true;
     });
-    $scope.kafkaDiscovery = kafkaDiscovery;
   })
   .controller('AppDataDashboardCtrl', function ($scope, $routeParams, defaultOnSettingsClose, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget,
                                                 dashboardOptionsFactory, clientSettings) {

@@ -31,25 +31,20 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       defaultMessage = clientSettings.kafka.defaultQuery;
     }
 
+    defaultMessage = clientSettings.kafka.defaultQuery;
     $scope.kafkaQuery = defaultMessage;
-    var kafkaDiscovery = new KafkaDiscovery($scope.appId);
-    kafkaDiscovery.fetch().then(function () {
-      $scope.dimensions = kafkaDiscovery.getDimensionList();
-    });
 
-    $scope.requestText = JSON.stringify(defaultMessage, null, ' ');
+    if ($scope.kafkaDiscovery) {
+      $scope.dimensions = $scope.kafkaDiscovery.getDimensionList();
+
+      $scope.kafkaQuery = _.clone($scope.kafkaQuery);
+
+      angular.extend($scope.kafkaQuery, {
+        kafka: $scope.kafkaDiscovery.getKafkaTopics()
+      });
+    }
 
     $scope.sendRequest = function () {
-      /*
-      var msg = null;
-
-      try {
-        msg = JSON.parse($scope.requestText);
-      } catch (e) {
-        console.log(e);
-        $scope.request = 'JSON parse error';
-      }
-      */
       var msg = $scope.kafkaQuery;
 
       if (msg) {
