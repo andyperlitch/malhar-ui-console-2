@@ -23,7 +23,7 @@ angular.module('app.components.resources.PackageApplicationModel',[
       debugName: 'PackageApplicationModel',
       urlKey: 'PackageApplication',
       transformResponse: function(raw) {
-        if (raw.fileContent.operators) {
+        if (raw.fileContent && raw.fileContent.operators) {
           _.each(raw.fileContent.operators, function(o) {
             o.x *= 1;
             o.y *= 1;

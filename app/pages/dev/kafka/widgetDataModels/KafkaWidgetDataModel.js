@@ -43,7 +43,16 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
           this.kafkaService = new KafkaSocketService();
         }
 
-        this.kafkaService.subscribe(this.query, function (data) {
+        var kafkaQuery = this.query;
+
+        if (this.widgetScope.kafkaDiscovery) {
+          kafkaQuery = _.clone(kafkaQuery);
+          angular.extend(kafkaQuery, {
+            kafka: this.widgetScope.kafkaDiscovery.getKafkaTopics()
+          });
+        }
+
+        this.kafkaService.subscribe(kafkaQuery, function (data) {
           if (data) {
             this.updateScope(data);
           } else {

@@ -38,7 +38,7 @@ angular.module('app.pages.ops.appInstance.appData', [
   })
 
 // Controller
-  .controller('AppDataCtrl', function ($scope, $routeParams, ApplicationModel, KafkaDiscovery) {
+  .controller('AppDataCtrl', function ($scope, $routeParams, $q, ApplicationModel, KafkaDiscovery) {
     var appId = $routeParams.appId;
 
     $scope.appId = appId;
@@ -46,21 +46,19 @@ angular.module('app.pages.ops.appInstance.appData', [
     $scope.appInstance = new ApplicationModel({
       id: appId
     });
-    $scope.appInstance.fetch().then(function (app) {
-      console.log($scope.appInstance);
-      console.log(app.name);
-    });
+    var appInstancePromise = $scope.appInstance.fetch();
 
     //TODO
-    var kafkaDiscovery = new KafkaDiscovery(appId);
-    kafkaDiscovery.fetch();
-    kafkaDiscovery.getFetchPromise().then(function () {
-      console.log('____discovered');
-      console.log(kafkaDiscovery.dimensionsOperator);
+    $scope.kafkaDiscovery = new KafkaDiscovery(appId);
+    var kafkaDiscoveryPromise = $scope.kafkaDiscovery.fetch();
+
+    $scope.fetched = false;
+    $q.all([appInstancePromise, kafkaDiscoveryPromise]).then(function () {
+      $scope.fetched = true;
     });
-    $scope.kafkaDiscovery = kafkaDiscovery;
   })
-  .controller('AppDataDashboardCtrl', function ($scope, $routeParams, ApplicationModel, defaultOnSettingsClose, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget, RandomPercentageDataModel, RandomNVD3TimeSeriesDataModel, RandomMinutesDataModel, dashboardOptionsFactory) {
+  .controller('AppDataDashboardCtrl', function ($scope, $routeParams, defaultOnSettingsClose, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget,
+                                                dashboardOptionsFactory, clientSettings) {
     function onSettingsClose (result, widget) {
       defaultOnSettingsClose(result, widget);
       if (widget.dataModel && widget.dataModel.updateQuery) {
@@ -136,70 +134,17 @@ angular.module('app.pages.ops.appInstance.appData', [
           width: '100%'
         },
         dataModelOptions: {
-          query: {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          }
+          query: clientSettings.kafka.defaultQuery
         }
       }
     ];
-
-    var defaultQuery = {
-      keys: {
-        publisherId: 1,
-        advertiserId: 0,
-        adUnit: 0
-      }
-    };
-
-    var defaultWidgets = [{
-      name: 'Time Series Bar Chart',
-      dataModelOptions: {
-        metric: 'impressions',
-        query: defaultQuery
-      }
-    }, {
-      name: 'Time Series Line Chart',
-      dataModelOptions: {
-        query: defaultQuery
-      }
-    }, {
-      name: 'Kafka Debug'
-    }];
-
-    var demoWidgets = [{
-      name: 'Time Series Bar Chart',
-      dataModelOptions: {
-        metric: 'impressions',
-        query: defaultQuery
-      }
-    }, {
-      name: 'Time Series Line Chart',
-      dataModelOptions: {
-        query: defaultQuery
-      }
-    }];
-
-    var debugWidgets = [{
-      name: 'Kafka Discovery'
-    }, {
-      name: 'Kafka Debug'
-    }];
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
       storageId: 'dashboard.appdata_' + $scope.appInstance.data.name,
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
-      defaultLayouts: [
-        { title: 'default', active: true, defaultWidgets: defaultWidgets },
-        { title: 'example', active: false, defaultWidgets: demoWidgets },
-        { title: 'debug', active: false, defaultWidgets: debugWidgets }
-      ]
+      defaultLayouts: clientSettings.dashboard.appData.layouts
     });
   })
   .controller('KafkaOptionsCtrl', function ($scope) {

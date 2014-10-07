@@ -75,7 +75,14 @@ DataServer.prototype = {
     socket.join(query.id); // join room with specified query
     this.queries.addQuery(socket.id, query.id);
 
-    this.kafkaEndPoint.send(JSON.stringify(query));
+    if (query.kafka) {
+      if (query.kafka.queryTopic) {
+        this.kafkaEndPoint.send(query.kafka.queryTopic, JSON.stringify(query));
+      }
+      if (query.kafka.resultTopic) {
+        this.kafkaEndPoint.addConsumer(query.kafka.resultTopic);
+      }
+    }
 
     this.emitCachedResult(query.id);
   },

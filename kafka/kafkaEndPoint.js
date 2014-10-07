@@ -17,6 +17,7 @@
 'use strict';
 
 var config = require('../config');
+var _ = require('lodash');
 var kafka = require('kafka-node');
 var LRU = require('lru-cache');
 
@@ -41,15 +42,14 @@ var options = {
 function KafkaEndPoint (messageCallback) {
   this.messageCallback = messageCallback;
 
-  var client = new Client(connectionString);
-  this.producer = new Producer(client);
-  this.createConsumer(client);
+  this.client = new Client(connectionString);
+  this.producer = new Producer(this.client);
+  this.consumers = {};
 }
 
 KafkaEndPoint.prototype = {
-  send: function (message) {
-    //console.log('_send', message);
-    var payload = {topic: topicIn, messages: [message], partition: 0};
+  send: function (topic, message) {
+    var payload = {topic: topic, messages: [message], partition: 0};
     this.producer.send([payload], function (err) {
       if (err) {
         console.log(arguments);
@@ -90,7 +90,14 @@ KafkaEndPoint.prototype = {
     });
   },
 
-  createConsumer: function (client) {
+  addConsumer: function (topic) {
+    if (!_.has(this.consumers, topic)) {
+      this.consumers[topic] = true; // TODO store consumer
+      this.createConsumer(this.client, topic);
+    }
+  },
+
+  createConsumer: function (client, topicOut) {
     var offset = new Offset(client);
 
     offset.fetch([
