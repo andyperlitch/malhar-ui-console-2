@@ -29,8 +29,6 @@ angular.module('app.components.directives.dtQueryEditor', [])
       link: function (scope, element, attrs, ngModel) {
         scope.ngModel = ngModel;
         scope.jsonMode = false;
-        console.log('_link');
-        console.log(attrs);
 
         //scope.selOption = null;
         //scope.options = ['op1', 'op2', 'op3'];
@@ -55,13 +53,17 @@ angular.module('app.components.directives.dtQueryEditor', [])
           },
 
           updateModel: function () {
-            var json = {
-              keys: _.reduce(scope.properties, function (result, property) {
-                result[property.key] = property.value;
-                return result;
-              }, {})
-            };
-            ngModel.$setViewValue(json);
+            var keys = _.reduce(scope.properties, function (result, property) {
+              result[property.key] = property.value;
+              return result;
+            }, {});
+
+            var viewValue = scope.ngModel.$viewValue ? _.clone(scope.ngModel.$viewValue) : {};
+            angular.extend(viewValue, {
+              keys: keys
+            });
+
+            ngModel.$setViewValue(viewValue);
           },
 
           add: function (value) {
