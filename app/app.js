@@ -46,6 +46,7 @@ angular.module('app', [
   // pages
   'app.pages.config',
   'app.pages.config.installWizard',
+  'app.pages.config.licenseInfo',
 
   'app.pages.ops',
   'app.pages.ops.appInstance',

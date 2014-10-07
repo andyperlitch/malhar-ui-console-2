@@ -235,6 +235,7 @@ angular.module('app.settings', [])
       // Configuration
       Config                   :'/config',
       InstallWizard            :'/config/installation-wizard',
+      LicenseInfo              :'/config/license-information',
 
       // Operations
       AppInstance              :'/ops/apps/:appId',

@@ -17,6 +17,10 @@
     </div>
   </div>
 
+  <div class="alert alert-danger" ng-if="!license.fetching && license.fetchError">
+    An error occurred retrieving license information. <a href="" ng-click="license.fetch()">Try again</a>
+  </div>
+
   <div ng-if="!license.fetching && !license.fetchError" class="well well-sm">
     <h4>Current License:</h4>
     <p>
