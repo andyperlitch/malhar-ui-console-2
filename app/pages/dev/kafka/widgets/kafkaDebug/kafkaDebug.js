@@ -42,6 +42,8 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       angular.extend($scope.kafkaQuery, {
         kafka: $scope.kafkaDiscovery.getKafkaTopics()
       });
+    } else {
+      $scope.kafkaQuery = clientSettings.kafka.defaultQueryWithTopics;
     }
 
     $scope.sendRequest = function () {
