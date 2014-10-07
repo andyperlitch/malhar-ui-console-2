@@ -68,6 +68,13 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
         return this.deferred.promise;
       },
 
+      getKafkaTopics: function () {
+        return {
+          queryTopic: this.kafakInputOperator.properties.consumer.topic,
+          resultTopic: this.kafakOutputOperator.properties.topic
+        };
+      },
+
       getDimensionList: function () {
         if (!this.dimensionsOperator || !this.dimensionsOperator.properties || !this.dimensionsOperator.properties.aggregators) {
           return null;

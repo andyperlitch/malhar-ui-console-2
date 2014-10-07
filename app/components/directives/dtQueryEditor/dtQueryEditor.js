@@ -29,8 +29,6 @@ angular.module('app.components.directives.dtQueryEditor', [])
       link: function (scope, element, attrs, ngModel) {
         scope.ngModel = ngModel;
         scope.jsonMode = false;
-        console.log('_link');
-        console.log(attrs);
 
         //scope.selOption = null;
         //scope.options = ['op1', 'op2', 'op3'];
