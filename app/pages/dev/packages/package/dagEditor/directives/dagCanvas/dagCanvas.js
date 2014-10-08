@@ -93,7 +93,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       opClass: opClass,
       x: x,
       y: y,
-      properties: {},
+      properties: _(opClass.default_properties).clone(),
+      attributes: _(opClass.attributes).clone(),
       inputPorts: copyPorts(opClass.inputPorts, 'input'),
       outputPorts: copyPorts(opClass.outputPorts, 'output')
     };
@@ -147,6 +148,23 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
       angularizeSinkConnection(sinkConnection, stream, scope);
     }
+
+    ///////////////////////////////////////////////////
+    // HADOOP WORLD DEMO HACKS BELOW
+    if (sourceOperator.opClass.simpleName === 'JsonAdInfoGenerator' && sourcePort.name === 'jsonOutput' &&
+        sinkOperator.opClass.simpleName === 'JsonToMapConverter' && sinkPort.name === 'input') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    if (sourceOperator.opClass.simpleName === 'JsonToMapConverter' && sourcePort.name === 'outputMap' &&
+        sinkOperator.opClass.simpleName === 'GenericDimensionComputation' && sinkPort.name === 'data') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    if (sourceOperator.opClass.simpleName === 'Average' && sourcePort.name === 'average' &&
+        sinkOperator.opClass.simpleName === 'Average' && sinkPort.name === 'data') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    // HADOOP WORLD DEMO HACKS ABOVE
+    ///////////////////////////////////////////////////
 
     // Select the stream
     scope.$emit('selectEntity', 'stream', stream);
@@ -208,6 +226,11 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
           return false;
         }
 
+        // prevent connecting input to input, output to output
+        if (info.connection.endpoints[0].port.portType === info.dropEndpoint.port.portType) {
+          return false;
+        }
+
         // otherwise OK
         return true;
       });
@@ -248,6 +271,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       /**
        * Keyboard/Zoom controls
        */
+      scope.settings = settings;
       scope.zoom = 1;
       scope.translate = [0,0];
 

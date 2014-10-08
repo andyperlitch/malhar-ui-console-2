@@ -4,26 +4,27 @@
   margin-top:23px;
   color:#888;
 }
-.dag-operator-classes {
-  .operator-search-form {
-    position:relative;
-    // clear button for search box
-    .button.button-icon.input-button {
-      position: absolute;
-      right: 3px;
-      top: 4px;
-      color: #bbb;
-      border: none;
-      color: #FCC;
-      background: none;
-      font-size: 18px;
-      &:hover {
-        color: #F66;
-      }
+
+.operator-search-form {
+  position:relative;
+  // clear button for search box
+  .button.button-icon.input-button {
+    position: absolute;
+    right: 3px;
+    top: 4px;
+    color: #bbb;
+    border: none;
+    color: #FCC;
+    background: none;
+    font-size: 18px;
+    &:hover {
+      color: #F66;
     }
   }
+}
 
-  height: @dag-editor-default-canvas-height;
+.dag-operator-classes {
+  height: @dag-editor-default-canvas-height - 40;
   overflow: auto;
 
   li.operator-class {
@@ -52,7 +53,7 @@
     } 
 
     .operator-class {
-      margin-left: 1em;
+      margin-left: 1.75em;
       .operator-name {
         font-size: 85%;
       }
