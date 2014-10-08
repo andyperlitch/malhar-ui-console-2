@@ -17,13 +17,13 @@
 
 var config = require('../config');
 var LRU = require('lru-cache');
-var Queries = require('./queries');
+var QueryMap = require('./queryMap');
 var KafkaEndPoint = require('./kafkaEndPoint');
 
 function DataServer(io) {
   this.io = io;
   this.lruCache = LRU(config.kafka.lruCacheMax);
-  this.queries = new Queries();
+  this.queries = new QueryMap();
   this.kafkaEndPoint = new KafkaEndPoint(this.onMessage.bind(this)); //TODO add onready
 
   this.io.on('connection', function (socket) {
