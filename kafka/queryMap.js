@@ -16,12 +16,12 @@
 
 var _ = require('lodash');
 
-function Queries() {
+function QueryMap() {
   this.query2id = {}; // query -> {id1: true, id2: true}
   this.id2query = {}; // id -> {query1: true, query2: true}
 }
 
-_.extend(Queries.prototype, {
+_.extend(QueryMap.prototype, {
   getQueryList: function () {
     return _.keys(this.query2id);
   },
@@ -91,4 +91,4 @@ _.extend(Queries.prototype, {
   }
 });
 
-module.exports = Queries;
+module.exports = QueryMap;
