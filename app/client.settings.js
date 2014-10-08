@@ -84,6 +84,12 @@
         dataModelOptions: {
           query: clientSettings.kafka.defaultQueryWithTopics
         }
+      },
+      {
+        name: 'Kafka Debug',
+        dataModelOptions: {
+          query: clientSettings.kafka.defaultQueryWithTopics
+        }
       }
     ]
   };
@@ -98,6 +104,12 @@
       },
       {
         name: 'Time Series Line Chart',
+        dataModelOptions: {
+          query: clientSettings.kafka.dimensionsDemoQuery
+        }
+      },
+      {
+        name: 'Kafka Debug',
         dataModelOptions: {
           query: clientSettings.kafka.dimensionsDemoQuery
         }
@@ -127,7 +139,10 @@
     {
       title: 'debug', active: false, defaultWidgets: [
       {
-        name: 'Kafka Debug'
+        name: 'Kafka Debug',
+        dataModelOptions: {
+          query: clientSettings.kafka.defaultQueryWithTopics
+        }
       }
     ]
     }

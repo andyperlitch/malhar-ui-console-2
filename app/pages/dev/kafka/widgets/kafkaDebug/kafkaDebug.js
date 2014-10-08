@@ -31,7 +31,6 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       defaultMessage = clientSettings.kafka.defaultQuery;
     }
 
-    defaultMessage = clientSettings.kafka.defaultQuery;
     $scope.kafkaQuery = defaultMessage;
 
     if ($scope.kafkaDiscovery) {
@@ -42,8 +41,6 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       angular.extend($scope.kafkaQuery, {
         kafka: $scope.kafkaDiscovery.getKafkaTopics()
       });
-    } else {
-      $scope.kafkaQuery = clientSettings.kafka.defaultQueryWithTopics;
     }
 
     $scope.sendRequest = function () {
