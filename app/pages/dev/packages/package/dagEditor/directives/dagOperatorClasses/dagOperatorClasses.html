@@ -38,7 +38,7 @@
       <ul class="operator-list">
         <li 
           ng-show="expandState[groupName]"
-          ng-repeat="operator in group"
+          ng-repeat="operator in group | orderBy:'displayName'"
           dag-operator-class
           class="operator-class"
           ng-attr-data-classname="{{ operator.name }}"
