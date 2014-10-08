@@ -123,7 +123,7 @@ angular.module('app.pages.dev.kafka', [
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
-      storageId: 'dashboard.kafka',
+      storageId: clientSettings.dashboard.kafka.storageKey,
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultLayouts: clientSettings.dashboard.kafka.layouts

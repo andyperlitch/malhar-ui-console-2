@@ -141,7 +141,7 @@ angular.module('app.pages.ops.appInstance.appData', [
 
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
-      storageId: 'dashboard.appdata_' + $scope.appInstance.data.name,
+      storageId: clientSettings.dashboard.appData.storageKey + '_' + $scope.appInstance.data.name,
       widgetButtons: false,
       widgetDefinitions: widgetDefinitions,
       defaultLayouts: clientSettings.dashboard.appData.layouts

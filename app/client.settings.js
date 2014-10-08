@@ -25,7 +25,11 @@
   };
 
   clientSettings.dashboard = {};
+  clientSettings.dashboard.storageMasterKey = 'ErZ8nC2Jek';
+  clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
+    .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.appData = {};
+  clientSettings.dashboard.appData.storageKey = clientSettings.dashboard.storageKey + 'InstanceAppData';
   clientSettings.dashboard.appData.layouts = [
     {
       title: 'default', active: true, defaultWidgets: [
@@ -70,6 +74,8 @@
   });
 
   clientSettings.dashboard.kafka = {};
+  clientSettings.dashboard.kafka.storageKey = clientSettings.dashboard.storageKey + 'AppData';
+
   clientSettings.dashboard.kafka.AdsDemo = {
     title: 'AdsDemo', active: false, defaultWidgets: [
       {
