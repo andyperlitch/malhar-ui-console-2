@@ -28,6 +28,7 @@ angular.module('app.components.services.dashboardOptionsFactory', [
       }
       defaults = {
         storage: userStorage,
+        lockDefaultLayouts: true,
         settingsModalOptions: defaultSettingsModalOptions,
         onSettingsClose: defaultOnSettingsClose,
         widgetButtons: false
