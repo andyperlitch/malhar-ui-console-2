@@ -12,15 +12,16 @@
   <div class="dag-operator-classes" ng-show="!!groupedClasses && !classesLoaded">
     No Operators to Show.
   </div>
-  <div class="dag-operator-classes" ng-show="!!groupedClasses && !!classesLoaded">
-    <form class="operator-search-form">
-      <input class="form-control" type="text" placeholder="quick find" ng-model="search.term"/>
-      <button ng-if="search.term.length" class="input-button button button-icon ion-android-close" ng-click="clearSearch()" title="Clear Search">
-        <span class="glyphicon glyphicon-remove-circle"></span>
-      </button>
-    </form>
+
+  <form class="operator-search-form" ng-show="!!groupedClasses && !!classesLoaded">
+    <input class="form-control" type="text" placeholder="quick find" ng-model="search.term"/>
+    <button ng-if="search.term.length" class="input-button button button-icon ion-android-close" ng-click="clearSearch()" title="Clear Search">
+      <span class="glyphicon glyphicon-remove-circle"></span>
+    </button>
+  </form>
 
     <!-- the grouped listing -->
+  <div class="dag-operator-classes" ng-show="!!groupedClasses && !!classesLoaded">
     <div
       ng-show="!search.term"
       ng-repeat="(groupName, group) in groupedClasses"
@@ -58,7 +59,7 @@
       ng-if="search.term"
       class="operator-list search-results">
       <li 
-        ng-repeat="operator in operatorClasses | filter:search.term"
+        ng-repeat="operator in operatorClasses | filter:search.term | orderBy:'displayName'"
         dag-operator-class
         class="operator-class"
         ng-attr-data-classname="{{ operator.name }}"

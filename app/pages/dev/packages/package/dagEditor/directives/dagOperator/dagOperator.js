@@ -244,6 +244,13 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
     }
   });
 
+  // listen for selected element events broadcast from the parent
+  $scope.$on('selected', function(e, selected) {
+    if (selected !== $scope.operator) {
+      $scope.saveName(e);
+    }
+  });
+
   // delete this operator
   $scope.remove = function() {
 
