@@ -16,7 +16,7 @@ Must-Haves
 - Performance tuning for tables (1 w) [[MLHR-1454](https://malhar.atlassian.net/browse/MLHR-1454)]
 - Fix broken info links (1 hr) [[MLHR-1310](https://malhar.atlassian.net/browse/MLHR-1310)]
 
-**total**: 4.5 weeks
+**remaining total**: 2.5 weeks
 
 Nice-To-Haves
 -------------
@@ -27,4 +27,4 @@ Nice-To-Haves
 - Loading feedback for tables (1 d) [[MLHR-1451](https://malhar.atlassian.net/browse/MLHR-1451)]
 - Lock layouts (3 d) [[MLHR-1312](https://malhar.atlassian.net/browse/MLHR-1312)]
 
-**total**: 3 weeks
+**remaining total**: 5 weeks
