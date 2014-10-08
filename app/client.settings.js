@@ -142,6 +142,7 @@
         name: 'Kafka Debug',
         dataModelOptions: {
           query: clientSettings.kafka.defaultQueryWithTopics
+          //query: clientSettings.kafka.dimensionsDemoQuery
         }
       }
     ]
