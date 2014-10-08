@@ -28,6 +28,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         // Add packageName and className to operator object
         op.packageName = op.name.replace(/\.[^\.]+$/, '');
         op.simpleName = op.name.replace(/.*(?=\.)\./, '');
+        op.simpleNameNoOperator = op.simpleName.replace(/Operator$/, '');
 
         ///////////////////////////////////////////////////
         // HADOOP WORLD DEMO HACKS BELOW
@@ -50,9 +51,15 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
           op.default_properties.maxCacheSize = 5;
         }
         if (op.simpleName === 'JsonToMapConverter') {
+          if (!op.inputPorts[0].attributes) {
+            op.inputPorts[0].attributes = {};
+          }
           op.inputPorts[0].attributes.PARTITION_PARALLEL = true;
         }
         if (op.simpleName === 'GenericDimensionComputation') {
+          if (!op.outputPorts[0].attributes) {
+            op.outputPorts[0].attributes = {};
+          }
           op.outputPorts[0].attributes.PARTITION_PARALLEL = true;
           op.attributes.APPLICATION_WINDOW_COUNT = 4;
         }
@@ -62,6 +69,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         }
         if (op.simpleName === 'KafkaQueryResultOperator') {
           op.default_properties.topic = 'GenericDimensionsQueryResult';
+          op.default_properties['configProperties(metadata.broker.list)'] = 'node25.morado.com:9092';
         }
         // HADOOP WORLD DEMO HACKS ABOVE
         ///////////////////////////////////////////////////
