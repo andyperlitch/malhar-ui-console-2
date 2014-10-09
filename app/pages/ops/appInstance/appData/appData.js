@@ -17,6 +17,7 @@
 
 angular.module('app.pages.ops.appInstance.appData', [
   'app.settings',
+  'app.pages.dev.kafka.socket',
   'app.components.services.dtText',
   'app.components.services.dashboardOptionsFactory',
   'app.components.resources.ApplicationModel',
@@ -26,7 +27,9 @@ angular.module('app.pages.ops.appInstance.appData', [
   'app.pages.ops.appInstance.appData.widgets.discovery'
 ])
 // Route
-  .config(function($routeProvider, settings) {
+  .config(function($routeProvider, socketProvider, settings, clientSettings) {
+    socketProvider.setWebSocketURL(clientSettings.dataServerHost);
+
     $routeProvider
       .when(settings.pages.AppData, {
         controller: 'AppDataCtrl',
