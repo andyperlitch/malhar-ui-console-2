@@ -38,7 +38,8 @@ angular.module('app.pages.dev.packages.package.application', [
       packageVersion: $routeParams.packageVersion,
       appName: $routeParams.appName
     });
-    $scope.appName = $routeParams.appName;
+    $scope.routeParams = $routeParams;
+    app.fetch().then(function(app) { $scope.app = app; });
 
     $scope.$on('registerController', function (event, ctrl) {
       console.log('_r');
