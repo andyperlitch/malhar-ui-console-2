@@ -42,6 +42,7 @@
           dag-operator-class
           class="operator-class"
           ng-attr-data-classname="{{ operator.name }}"
+          ng-attr-data-displayname="{{ operator.displayName }}"
         >
           <a class="operator-name" ng-click="expandState[groupName + operator.name] = !expandState[groupName + operator.name]">{{operator.displayName}}</a>
           <div class="operator-extra-info" ng-show="expandState[groupName + operator.name]">
@@ -63,6 +64,7 @@
         dag-operator-class
         class="operator-class"
         ng-attr-data-classname="{{ operator.name }}"
+        ng-attr-data-displayname="{{ operator.displayName }}"
       >
         <a ng-click="expandState[groupName + operator.name] = !expandState[groupName + operator.name]">{{operator.displayName}}</a>
         <div class="operator-extra-info" ng-show="expandState[groupName + operator.name]">
