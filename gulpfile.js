@@ -84,6 +84,20 @@ gulp.task('test', function () {
     });
 });
 
+// !!!Requires optionalDependencies to be installed!!!
+gulp.task('testall', function () {
+  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
+    .pipe($.karma({
+      configFile: 'test/karma-unit.conf.js',
+      //configFile: 'test/karma-coverage.conf.js',
+      action: 'run',
+      browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+    }))
+    .on('error', function (err) {
+      throw err;
+    });
+});
+
 gulp.task('coverage', function () {
   return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
     .pipe($.karma({
