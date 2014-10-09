@@ -95,7 +95,8 @@ angular.module('app.pages.ops.appInstance.appData', [
         dataModelOptions: {
         },
         attrs: {
-          'metric-value': 'metricValue'
+          'metric-value': 'metricValue',
+          'exclude-metrics': 'excludeMetrics'
         },
         size: {
           width: '50%'

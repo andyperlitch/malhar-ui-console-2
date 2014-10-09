@@ -37,6 +37,10 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
           this.widgetScope.metricValue = this.dataModelOptions.metric;
         }
 
+        if (this.widgetScope.kafkaDiscovery) {
+          this.widgetScope.excludeMetrics = this.widgetScope.kafkaDiscovery.getDimensionList();
+        }
+
         this.widgetScope.$on('metricChanged', function (event, metric) {
           event.stopPropagation();
           if (this.dataModelOptions) {

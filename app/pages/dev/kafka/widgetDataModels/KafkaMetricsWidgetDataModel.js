@@ -39,6 +39,16 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
           var sampleObject = angular.copy(data[0]);
           delete sampleObject.timestamp;
           var metrics = _.keys(sampleObject);
+
+          if (this.widgetScope.kafkaDiscovery) {
+            var dimensionList = this.widgetScope.kafkaDiscovery.getDimensionList();
+            if (dimensionList) {
+              _.remove(metrics, function (metric) {
+                return _.contains(dimensionList, metric);
+              });
+            }
+          }
+
           metrics = _.sortBy(metrics, function (key) {
             return key;
           });

@@ -25,7 +25,8 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
       scope: {
         data: '=data',
         mode: '=',
-        metricValue: '='
+        metricValue: '=',
+        excludeMetrics: '='
       },
       controller: function ($scope) {
         var filter = $filter('date');
@@ -117,10 +118,17 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
 
             var sampleObject = timeseries[0];
             var keys = _.keys(sampleObject);
+            _.pull(keys, 'timestamp');
+
+            if (scope.excludeMetrics) {
+              _.remove(keys, function (metric) {
+                return _.contains(scope.excludeMetrics, metric);
+              });
+            }
+
             keys = _.sortBy(keys, function (key) {
               return key;
             });
-            _.pull(keys, 'timestamp');
 
             scope.metrics = keys;
             if ((!scope.metric && (keys.length > 0)) || (scope.metric && !sampleObject.hasOwnProperty(scope.metric))) {

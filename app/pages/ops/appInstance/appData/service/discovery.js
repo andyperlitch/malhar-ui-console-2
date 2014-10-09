@@ -76,6 +76,10 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
       },
 
       getDimensionList: function () {
+        if (this.dimensionList) {
+          return this.dimensionList;
+        }
+
         if (!this.dimensionsOperator || !this.dimensionsOperator.properties || !this.dimensionsOperator.properties.aggregators) {
           return null;
         }
@@ -94,7 +98,8 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
           });
         });
 
-        return _.keys(dimensionSet);
+        this.dimensionList = _.keys(dimensionSet);
+        return this.dimensionList;
       }
     };
 
