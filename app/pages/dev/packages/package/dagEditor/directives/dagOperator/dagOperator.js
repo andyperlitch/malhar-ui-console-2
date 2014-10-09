@@ -19,8 +19,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
   'app.components.services.jsPlumb',
   'app.components.services.dtText',
   'app.components.services.confirm',
-  'app.components.filters.camel2spaces',
-  'app.components.filters.upcaseCommonAbbrevs',
   'app.pages.dev.packages.package.dagEditor.services.dagEditorOptions'
 ])
 // Directive: operator on the canvas
