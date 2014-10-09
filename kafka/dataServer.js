@@ -17,6 +17,7 @@
 
 var config = require('../config');
 var LRU = require('lru-cache');
+var util = require('util');
 var QueryMap = require('./queryMap');
 var KafkaEndPoint = require('./kafkaEndPoint');
 
@@ -39,11 +40,28 @@ function DataServer(io) {
       this.onDisconnect(socket);
     }.bind(this));
   }.bind(this));
+
+  this.count = 0;
+  this.topic2query = {};
+  this.lastLogTime = Date.now();
+  this.lastLoggedMessageCount = 0;
+  this.logInterval = 5000;
+  this.maxRate = 0;
+  this.logDebug = false;
 }
 
 DataServer.prototype = {
   onMessage: function (message) {
     var msg = JSON.parse(message.value);
+
+    var parsedId = JSON.parse(msg.id);
+    this.topic2query[JSON.stringify(parsedId.kafka)] = JSON.stringify(parsedId.keys);
+
+    if (this.logDebug) {
+      this.logDebugInfo();
+    }
+
+    //console.log(msg.id);
     //console.log('_msg ' + msg.id);
     //lruCache.set(msg.id, message);
     //console.log(msg.id);
@@ -70,7 +88,9 @@ DataServer.prototype = {
   onSubscribe: function (socket, data) {
     var query = JSON.parse(data.query);
     query.id = data.query;
-    console.log('_subscribe ' + query.id);
+    //console.log('_subscribe ' + query.id);
+    //console.log(this.kafkaEndPoint.consumers);
+    //console.log(this.io.sockets.adapter.rooms);
 
     socket.join(query.id); // join room with specified query
     this.queries.addQuery(socket.id, query.id);
@@ -111,6 +131,24 @@ DataServer.prototype = {
     var cache = this.lruCache.get(id);
     if (cache) {
       this.io.to(id).emit(id, cache.message);
+    }
+  },
+
+  logDebugInfo: function () {
+    this.count++;
+    var now = Date.now();
+    var timeDiff = now - this.lastLogTime;
+    if (timeDiff > this.logInterval) {
+      this.lastLogTime = now;
+      var rate = Math.round((this.count - this.lastLoggedMessageCount) / (timeDiff/1000));
+      this.maxRate = Math.max(this.maxRate, rate);
+      console.log('_message count (per sec): ', rate);
+      console.log('_message total count: ', this.count, ', max rate: ', this.maxRate, ' (msg/sec)');
+      console.log(this.topic2query);
+      console.log(this.kafkaEndPoint.consumers);
+      console.log('===============');
+
+      this.lastLoggedMessageCount = this.count;
     }
   }
 };

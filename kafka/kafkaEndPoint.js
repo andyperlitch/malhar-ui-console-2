@@ -57,7 +57,7 @@ KafkaEndPoint.prototype = {
     });
   },
 
-  subscribe: function (consumer, offset, initialOffset) {
+  subscribe: function (consumer, offset, initialOffset, topic) {
     var count = 0;
     var done = false;
 
@@ -65,12 +65,12 @@ KafkaEndPoint.prototype = {
       count++;
       if (!done) {
         done = true;
-        console.log('_initial message offset', message.offset);
-        console.log('_offset difference', initialOffset - message.offset);
+        console.log(topic, '_initial msg offset', message.offset);
+        console.log(topic, '_offset difference', initialOffset - message.offset);
       }
 
       if (message.offset === initialOffset) {
-        console.log('_messages received before initial offset ' + count);
+        console.log(topic + '_messages received before initial offset ' + count);
       }
 
       if (message.offset >= initialOffset) {
@@ -93,7 +93,9 @@ KafkaEndPoint.prototype = {
   addConsumer: function (topic) {
     if (!_.has(this.consumers, topic)) {
       this.consumers[topic] = true; // TODO store consumer
-      this.createConsumer(this.client, topic);
+      //this.createConsumer(this.client, topic);
+      var client = new Client(connectionString);
+      this.createConsumer(client, topic);
     }
   },
 
@@ -105,13 +107,14 @@ KafkaEndPoint.prototype = {
     ], function (err, data) {
       if (data) {
         var initialOffset = data[topicOut][0][0];
-        console.log('__initial offset', initialOffset);
+        console.log('__initial offset', initialOffset, topicOut);
 
         var topics = [
           {topic: topicOut, partition: topicOutPartition, offset: initialOffset}
         ];
         var consumer = new Consumer(client, topics, options);
-        this.subscribe(consumer, offset, initialOffset);
+        //console.log('_consumer created with topic ' + topicOut);
+        this.subscribe(consumer, offset, initialOffset, topicOut);
       }
     }.bind(this));
   }
