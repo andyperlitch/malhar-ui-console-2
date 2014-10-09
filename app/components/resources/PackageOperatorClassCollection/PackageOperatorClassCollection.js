@@ -63,11 +63,11 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
           op.outputPorts[0].attributes.PARTITION_PARALLEL = true;
           op.attributes.APPLICATION_WINDOW_COUNT = 4;
         }
-        if (op.simpleName === 'KafkaQueryOperator') {
+        if (op.simpleName === 'KafkaSinglePortStringInputOperator') {
           op.default_properties.brokerSet = 'node25.morado.com:9092';
           op.default_properties.topic = 'GenericDimensionsQuery';
         }
-        if (op.simpleName === 'KafkaQueryResultOperator') {
+        if (op.simpleName === 'KafkaSinglePortOutputOperator') {
           op.default_properties.topic = 'GenericDimensionsQueryResult';
           op.default_properties['configProperties(metadata.broker.list)'] = 'node25.morado.com:9092';
         }
