@@ -54,40 +54,42 @@
       <!-- inspector title -->
       <h2 class="h4">Application Inspector</h2>
 
-      <!-- app name -->
-      <!-- Note: This is not editable because it is
-      taken from the URL. -->
-      <div class="form-group">
-        <label for="displayName" dt-text>Name</label>
-        <input type="text" id="displayName" ng-model="app.displayName" name="app_name" class="form-control">
-      </div>
+      <div class="scroll-panel">
+        <!-- app name -->
+        <!-- Note: This is not editable because it is
+        taken from the URL. -->
+        <div class="form-group">
+          <label for="displayName" dt-text>Name</label>
+          <input type="text" id="displayName" ng-model="app.displayName" name="app_name" class="form-control">
+        </div>
 
-      <!-- app description -->
-      <!-- ngModel: app.description -->
-      <div class="form-group">
-        <label for="app_description" dt-text>Description</label>
-        <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
-      </div>
+        <!-- app description -->
+        <!-- ngModel: app.description -->
+        <div class="form-group">
+          <label for="app_description" dt-text>Description</label>
+          <textarea name="app_description" ng-model="app.description" class="form-control" rows="5"></textarea>
+        </div>
 
-      <hr>
-      <!-- DAG Topology: lists operators and streams -->
-      <h5>Topology</h5>
-      <h6>Operators</h6>
-      <ul>
-        <li ng-repeat="op in app.operators track by op.name">
-          <!-- clicking on this selects the operator in the dag-canvas -->
-          <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
-        </li>
-        <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
-      </ul>
-      <h6>Streams</h6>
-      <ul>
-        <li ng-repeat="str in app.streams track by str.name">
-          <!-- clicking on this selects the stream in the dag-canvas -->
-          <a href="#" ng-click="selectEntity($event, 'stream', str)">{{ str.name }} <span class="text-muted">({{ str.sinks.length }} sink{{ str.sinks.length === 1 ? '' : 's' }})</span></a>
-        </li>
-        <li ng-if="!app.streams.length" class="text-muted" dt-text>no streams</li>
-      </ul>
+        <hr>
+        <!-- DAG Topology: lists operators and streams -->
+        <h5>Topology</h5>
+        <h6>Operators</h6>
+        <ul>
+          <li ng-repeat="op in app.operators track by op.name">
+            <!-- clicking on this selects the operator in the dag-canvas -->
+            <a href="#" ng-click="selectEntity($event, 'operator', op)">{{ op.name }}</a>
+          </li>
+          <li ng-if="!app.operators.length" class="text-muted" dt-text>no operators</li>
+        </ul>
+        <h6>Streams</h6>
+        <ul>
+          <li ng-repeat="str in app.streams track by str.name">
+            <!-- clicking on this selects the stream in the dag-canvas -->
+            <a href="#" ng-click="selectEntity($event, 'stream', str)">{{ str.name }} <span class="text-muted">({{ str.sinks.length }} sink{{ str.sinks.length === 1 ? '' : 's' }})</span></a>
+          </li>
+          <li ng-if="!app.streams.length" class="text-muted" dt-text>no streams</li>
+        </ul>
+      </div>
     </form>
 
     <!-- operator inspector -->
@@ -97,85 +99,85 @@
     >
       <!-- inspector title -->
       <h2 class="h4">Operator Inspector</h2>
-      
-      <!-- operator class name (readonly) -->
-      <div class="form-group">
-        <label for="class" dt-text>Class Name</label>
-        <input name="class" type="text" class="form-control" readonly ng-model="selected.opClass.name">
-      </div>
-      
-      <!-- operator name -->
-      <div class="form-group">
-        <label for="name" dt-text>Operator Name</label>
-        <div class="popover-group">
-          <!-- ngModel: selected.name -->
-          <input name="name"
-            type="text"
-            class="form-control"
-            unique-in-set="app.operators"
-            unique-key="name"
-            exclude="selected"
-            required
-          ng-model="selected.name">
-          <!-- validation errors here -->
-          <div class="popover left" ng-messages="dag_operator_inspector.name.$error" ng-style="{ display: dag_operator_inspector.name.$invalid ? 'block' : 'none' }">
-            <div class="arrow"></div>
-            <h3 class="popover-title" dt-text>Invalid operator name</h3>
-            <div class="popover-content">
-              <!-- when not unique in app.operators -->
-              <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
-              <!-- when empty -->
-              <p ng-message="required" dt-text>An operator name is required</p>
+
+      <div class="scroll-panel">
+        <!-- operator class name (readonly) -->
+        <div class="form-group">
+          <label for="class" dt-text>Class Name</label>
+          <input name="class" type="text" class="form-control" readonly ng-model="selected.opClass.name">
+        </div>
+
+        <!-- operator name -->
+        <div class="form-group">
+          <label for="name" dt-text>Operator Name</label>
+          <div class="popover-group">
+            <!-- ngModel: selected.name -->
+            <input name="name"
+              type="text"
+              class="form-control"
+              unique-in-set="app.operators"
+              unique-key="name"
+              exclude="selected"
+              required
+            ng-model="selected.name">
+            <!-- validation errors here -->
+            <div class="popover left" ng-messages="dag_operator_inspector.name.$error" ng-style="{ display: dag_operator_inspector.name.$invalid ? 'block' : 'none' }">
+              <div class="arrow"></div>
+              <h3 class="popover-title" dt-text>Invalid operator name</h3>
+              <div class="popover-content">
+                <!-- when not unique in app.operators -->
+                <p ng-message="uniqueInSet" dt-text>You must choose a unique operator name</p>
+                <!-- when empty -->
+                <p ng-message="required" dt-text>An operator name is required</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <hr>
-      <!-- Operator properties -->
-      <h5>Properties</h5>
-      <p class="text-muted" ng-if="!selected.opClass.properties || !(selected.opClass.properties | filter:canSetFilter).length" dt-text>
-        No settable properties
-      </p>
-      <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
-        <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{prop.description}}"></span>
-        <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
-        <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
-      </div>
-
-      <!-- Operator attributes -->
-      <h5>Attributes</h5>
-      <p class="text-muted" ng-if="!OPERATOR_ATTRIBUTES" dt-text>
-        No settable attributes
-      </p>
-      <div ng-repeat="attr in OPERATOR_ATTRIBUTES" class="form-group">
-
-        <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{attr.description}}"></span>
-        <label ng-attr-for="attr-{{attr.name}}">{{attr.display_name}}</label>
-        <input ng-if="'Boolean' !== attr.type" class="form-control" type="text" ng-model="selected.attributes[attr.name]" ng-attr-placeholder="{{attr.type}}" ng-attr-name="attr-{{attr.name}}">
-        <div ng-if="'Boolean' === attr.type">
-          <input id="oper_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
-          <label ng-attr-for="oper_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
+        <hr>
+        <!-- Operator properties -->
+        <h5>Properties</h5>
+        <p class="text-muted" ng-if="!selected.opClass.properties || !(selected.opClass.properties | filter:canSetFilter).length" dt-text>
+          No settable properties
+        </p>
+        <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
+          <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{prop.description}}"></span>
+          <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
+          <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
         </div>
+
+        <!-- Operator attributes -->
+        <h5>Attributes</h5>
+        <p class="text-muted" ng-if="!OPERATOR_ATTRIBUTES" dt-text>
+          No settable attributes
+        </p>
+        <div ng-repeat="attr in OPERATOR_ATTRIBUTES" class="form-group">
+
+          <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{attr.description}}"></span>
+          <label ng-attr-for="attr-{{attr.name}}">{{attr.display_name}}</label>
+          <input ng-if="'Boolean' !== attr.type" class="form-control" type="text" ng-model="selected.attributes[attr.name]" ng-attr-placeholder="{{attr.type}}" ng-attr-name="attr-{{attr.name}}">
+          <div ng-if="'Boolean' === attr.type">
+            <input id="oper_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
+            <label ng-attr-for="oper_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
+          </div>
+        </div>
+
+
+        <hr>
+        <!-- Ports -->
+        <h5>Ports</h5>
+        <div ng-repeat="port in selected.inputPorts">
+          <a href="#" ng-click="selectEntity($event, 'port', port)">
+            <span class="glyphicon glyphicon-log-in"></span> {{port.name}}
+          </a>
+        </div>
+        <div ng-repeat="port in selected.outputPorts">
+          <a href="#" ng-click="selectEntity($event, 'port', port)">
+            <span class="glyphicon glyphicon-log-out"></span> {{port.name}}
+          </a>
+        </div>
+
       </div>
-
-
-      <hr>
-      <!-- Ports -->
-      <h5>Ports</h5>
-      <div ng-repeat="port in selected.inputPorts">
-        <a href="#" ng-click="selectEntity($event, 'port', port)">
-          <span class="glyphicon glyphicon-log-in"></span> {{port.name}}
-        </a>
-      </div>
-      <div ng-repeat="port in selected.outputPorts">
-        <a href="#" ng-click="selectEntity($event, 'port', port)">
-          <span class="glyphicon glyphicon-log-out"></span> {{port.name}}
-        </a>
-      </div>
-
-      <!-- <pre>{{selected | json }}</pre> -->
-
     </form>
 
     <!-- stream inspector -->
@@ -185,55 +187,57 @@
     >
       <h2 class="h4">Stream Inspector</h2>
 
-      <div class="form-group">
-        <label for="name" dt-text>Stream Name</label>
-        <div class="popover-group">
-          <input name="name"
-            type="text"
-            class="form-control"
-            unique-in-set="app.streams"
-            unique-key="name"
-            exclude="selected"
-            required
-          ng-model="selected.name">
-          <div class="popover left" ng-messages="dag_stream_inspector.name.$error" ng-style="{ display: dag_stream_inspector.name.$invalid ? 'block' : 'none' }">
-            <div class="arrow"></div>
-            <h3 class="popover-title" dt-text>Invalid stream name</h3>
-            <div class="popover-content">
-              <p ng-message="uniqueInSet" dt-text>You must choose a unique stream name</p>
-              <p ng-message="required" dt-text>A stream name is required</p>
+      <div class="scroll-panel">
+        <div class="form-group">
+          <label for="name" dt-text>Stream Name</label>
+          <div class="popover-group">
+            <input name="name"
+              type="text"
+              class="form-control"
+              unique-in-set="app.streams"
+              unique-key="name"
+              exclude="selected"
+              required
+            ng-model="selected.name">
+            <div class="popover left" ng-messages="dag_stream_inspector.name.$error" ng-style="{ display: dag_stream_inspector.name.$invalid ? 'block' : 'none' }">
+              <div class="arrow"></div>
+              <h3 class="popover-title" dt-text>Invalid stream name</h3>
+              <div class="popover-content">
+                <p ng-message="uniqueInSet" dt-text>You must choose a unique stream name</p>
+                <p ng-message="required" dt-text>A stream name is required</p>
+              </div>
             </div>
           </div>
         </div>
+
+        <div class="form-group">
+          <span class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="The locality setting affects how operators are scheduled for deployment by the platform. The setting serves as hint to the planner and can yield significant performance gains. Optimizations are subject to resource availability. You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'."></span>
+          <label for="locality">Stream Locality</label>
+          <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
+            <option value="">AUTOMATIC</option>
+          </select>
+        </div>
+
+        <hr>
+
+        <h5>Source</h5>
+        <div class="stream-inspector-source-sink">
+          <p>
+            <a href="#" ng-click="selectEntity($event, 'operator', selected.source.operator)">{{selected.source.operator.name}}</a>
+            <a href="#" ng-click="selectEntity($event, 'port', selected.source.port)"><span class="glyphicon glyphicon-log-out"></span> {{selected.source.port.name}}</a>
+          </p>
+        </div>
+
+        <h5>Sinks</h5>
+        <div ng-repeat="sink in selected.sinks" class="stream-inspector-source-sink">
+          <p>
+            <a href="#" ng-click="selectEntity($event, 'operator', sink.operator)">{{sink.operator.name}}</a>
+            <a href="#" ng-click="selectEntity($event, 'port', sink.port)"><span class="glyphicon glyphicon-log-in"></span> {{sink.port.name}}</a>
+          </p>
+        </div>
+
       </div>
-
-      <div class="form-group">
-        <span class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="The locality setting affects how operators are scheduled for deployment by the platform. The setting serves as hint to the planner and can yield significant performance gains. Optimizations are subject to resource availability. You can restrict the relative locality between source and sinks of this stream by setting this to something other than 'AUTOMATIC'."></span>
-        <label for="locality">Stream Locality</label>
-        <select class="form-control" name="locality" ng-model="selected.locality" ng-options="locality for locality in streamLocalities">
-          <option value="">AUTOMATIC</option>
-        </select>
-      </div>
-
-      <hr>
-
-      <h5>Source</h5>
-      <div class="stream-inspector-source-sink">
-        <p>
-          <a href="#" ng-click="selectEntity($event, 'operator', selected.source.operator)">{{selected.source.operator.name}}</a>
-          <a href="#" ng-click="selectEntity($event, 'port', selected.source.port)"><span class="glyphicon glyphicon-log-out"></span> {{selected.source.port.name}}</a>
-        </p>
-      </div>
-
-      <h5>Sinks</h5>
-      <div ng-repeat="sink in selected.sinks" class="stream-inspector-source-sink">
-        <p>
-          <a href="#" ng-click="selectEntity($event, 'operator', sink.operator)">{{sink.operator.name}}</a>
-          <a href="#" ng-click="selectEntity($event, 'port', sink.port)"><span class="glyphicon glyphicon-log-in"></span> {{sink.port.name}}</a>
-        </p>
-      </div>
-
-    </form> 
+    </form>
 
     <!-- port inspector -->
     <form name="dag_port_inspector"
@@ -242,33 +246,33 @@
     >
       <h2 class="h4">Port Inspector</h2>
 
-      <div class="form-group">
-        <label for="class" dt-text>Port Name</label>
-        <input name="class" type="text" class="form-control" readonly ng-model="selected.name">
-      </div>
-
-      <hr>
-
-      <!-- port attributes -->
-      <h5>Attributes</h5>
-
-      <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
-        <span ng-if="attr.description" class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{ attr.description }}"></span>
-        <label ng-attr-for="port_attr_{{attr.name}}">{{attr.display_name}}</label>
-        <!-- Boolean -->
-        <div ng-if="attr.type === 'Boolean'">
-          <input id="port_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
-          <label ng-attr-for="port_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
+      <div class="scroll-panel">
+        <div class="form-group">
+          <label for="class" dt-text>Port Name</label>
+          <input name="class" type="text" class="form-control" readonly ng-model="selected.name">
         </div>
-        <!-- Integer -->
-        <input ng-if="attr.type === 'Integer'" type="number" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
-        <!-- Default -->
-        <input ng-if="attr.type !== 'Integer' && attr.type !== 'Boolean'" type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
-      </div>
 
+        <hr>
+
+        <!-- port attributes -->
+        <h5>Attributes</h5>
+
+        <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
+          <span ng-if="attr.description" class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{ attr.description }}"></span>
+          <label ng-attr-for="port_attr_{{attr.name}}">{{attr.display_name}}</label>
+          <!-- Boolean -->
+          <div ng-if="attr.type === 'Boolean'">
+            <input id="port_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
+            <label ng-attr-for="port_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
+          </div>
+          <!-- Integer -->
+          <input ng-if="attr.type === 'Integer'" type="number" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+          <!-- Default -->
+          <input ng-if="attr.type !== 'Integer' && attr.type !== 'Boolean'" type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+        </div>
+
+      </div>
     </form>
   </div>
 
 </div>
-<!-- <h3>app structure</h3> -->
-<!-- <pre class="well" style="max-width: 800px;">{{ app | json }}</pre> -->

@@ -276,6 +276,11 @@
 // what is currently selected on the dag-canvas.
 // If nothing is selected, this is the app inspector.
 .dag-inspector {
+  .scroll-panel {
+    height: @dag-editor-default-canvas-height;
+    overflow: auto;
+  }
+
   label {
     font-size: 11px;
   }
