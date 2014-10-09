@@ -34,7 +34,12 @@ angular.module('app.pages.dev.kafka', [
       .when('/kafka', {
         controller: 'KafkaCtrl',
         templateUrl: 'pages/ops/ops.html',
-        label: 'Kafka Debug'
+        label: 'Application Data'
+      })
+      .when('/appdata', {
+        controller: 'KafkaCtrl',
+        templateUrl: 'pages/ops/ops.html',
+        label: 'Application Data'
       });
   })
 
