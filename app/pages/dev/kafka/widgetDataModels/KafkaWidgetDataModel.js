@@ -121,7 +121,6 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
       },
 
       destroy: function () {
-        console.log('_destroy');
         this.kafkaService.unsubscribe();
       }
     });
