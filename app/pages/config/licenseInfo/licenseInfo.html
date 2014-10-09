@@ -1,0 +1,49 @@
+<div class="container info-page-container license-info-page">
+  <h1>License Information</h1>
+  <p>
+    DataTorrent requires a license file to run. You can <strong><a href="https://www.datatorrent.com/license-upgrade/">upgrade</a></strong> this License any time. If you have a License file that you would like to activate and use, you can upload it below.
+  </p>
+
+  <div class="alert alert-info" ng-if="license.fetching">
+    <span dt-text>loading license information</span>
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" ng-if="!license.fetching && license.fetchError">
+    An error occurred retrieving license information. <a href="" ng-click="fetchLicense()">Try again</a>
+  </div>
+  <hr>
+  <div class="row" ng-if="!license.fetching && !license.fetchError">
+    <div class="col-sm-6">
+      <h2>Current License</h2>
+      <h3>Memory Usage</h3>
+      <license-memory-usage license="license"></license-memory-usage>
+      <h3>Basic Info</h3>
+      <p>
+        <strong>license id:</strong> {{ license.data.id }}<br>
+        <span ng-if="license.data.sections && license.data.sections.length">
+          <span ng-repeat="section in license.data.sections">
+            <strong>start date:</strong> {{ section.startDate }}<br>
+            <strong>end date:</strong> {{ section.endDate }}<br>
+            <strong>constraint:</strong> {{ section.constraint }}<br>
+            <strong>comment:</strong> {{ section.comment }}<br>
+          </span>
+        </span>
+      </p>
+    </div>
+    <div class="col-sm-6">
+      <h2>Upgrade License</h2>
+      <p>
+        You can <strong><a href="https://www.datatorrent.com/license-upgrade/">upgrade</a></strong> the capacity of your license at any time.
+      </p>
+      <h2>Upload License</h2>
+      <div class="well well-sm upload-area" file-upload="fileUploadOptions"></div>
+    </div>
+  </div>
+
+</div>

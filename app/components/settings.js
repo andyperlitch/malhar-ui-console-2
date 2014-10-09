@@ -169,7 +169,6 @@ angular.module('app.settings', [])
       ContainerLog             :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/logs',
       DependencyJar            :'/ws/:v/dependencyJars',
       GatewayInfo              :'/ws/:v/about',
-      GatewayRestart           :'/ws/:v/config/restart',
       HadoopLocation           :'/ws/:v/config/hadoopInstallDirectory',
       Jar                      :'/ws/:v/jars',
       JarApps                  :'/ws/:v/jars/:fileName/applications',
@@ -235,6 +234,8 @@ angular.module('app.settings', [])
       // Configuration
       Config                   :'/config',
       InstallWizard            :'/config/installation-wizard',
+      LicenseInfo              :'/config/license-information',
+      SystemDiagnostics        :'/config/system-diagnostics',
 
       // Operations
       AppInstance              :'/ops/apps/:appId',

@@ -150,6 +150,11 @@ angular.module('app.pages.dev.packages.package.dagEditor', [
     $scope.$broadcast('remove', { selected: $scope.selected, selected_type: $scope.selected_type });
   });
 
+  // Watch selected element and broadcast an event when it changes
+  $scope.$watch('selected', function() {
+    $scope.$broadcast('selected', $scope.selected);
+  });
+
   // Operator Classes:
   $scope.operatorClassesResource = new PackageOperatorClassCollection($routeParams);
   $scope.operatorClasses = $scope.operatorClassesResource.data;

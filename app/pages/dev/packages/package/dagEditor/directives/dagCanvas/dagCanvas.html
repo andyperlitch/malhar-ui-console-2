@@ -20,14 +20,14 @@
     <span class="saving" title="Last saved at {{ saveLaunchState.saveLastTimestamp | relativeTimestamp }}" ng-show="!saveLaunchState.saveRequested && !saveLaunchState.saveInProgress && saveLaunchState.saveLastTimestamp">All changes saved to server</span>
   </div>
   <div class="canvasControls">
-    <button role="button" class="btn btn-xs btn-default" ng-click="zoomIn()">
+    <button role="button" class="btn btn-xs btn-default" ng-click="zoomIn()" ng-disabled="zoom >= settings.dagEditor.MAX_ZOOM_LEVEL">
       <span class="glyphicon glyphicon-zoom-in"></span>
     </button>
     <button role="button" class="btn btn-xs btn-default" ng-click="fitToContent()">
       <span class="glyphicon glyphicon-picture"></span>
       <span dt-text>fit application</span>
     </button>
-    <button role="button" class="btn btn-xs btn-default" ng-click="zoomOut()">
+    <button role="button" class="btn btn-xs btn-default" ng-click="zoomOut()" ng-disabled="zoom <= settings.dagEditor.MIN_ZOOM_LEVEL">
       <span class="glyphicon glyphicon-zoom-out"></span>
     </button>
   </div>

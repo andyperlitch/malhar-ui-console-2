@@ -1,0 +1,2 @@
+<progressbar class="active license-memory-usage" value="percentageMemoryUsed" type="{{type}}"></progressbar>
+<span ng-if="totalLicensedMB">{{ totalLicensedMB | byte:'mb' }} total, {{ usedLicensedMB | byte:'mb' }} ({{percentageMemoryUsed}}%) used</span>

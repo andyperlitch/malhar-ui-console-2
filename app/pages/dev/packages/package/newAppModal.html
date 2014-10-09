@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
   <p dt-text>Type a name for this new application.</p>
-  <form name="new_app_form">
+  <form name="new_app_form" ng-submit="create(new_app_form)">
     <input type="text" ng-model="app.name" class="form-control" id="new_app_name" name="new_app_name" required reset-validity-on-change="uniqueName">
     <div ng-messages="new_app_form.new_app_name.$error">
       <p ng-message="required" class="help-block">
