@@ -30,10 +30,10 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperatorC
         zIndex: 1,
         helper: function(event) {
           // TODO: use the same routines that operators on the canvas use. We have reimplemented various filters below.
-          var classname = event.currentTarget.getAttribute('data-classname').split('.').slice(-1)[0].replace(/([A-Z][a-z])/g,' $1').replace(/Operator$/,'').replace(/\bhttp\b/ig, 'HTTP').replace(/\bjson\b/ig, 'JSON').replace(/\bhtml\b/ig, 'HTML').replace(/\bxml\b/ig,  'XML').replace(/\bhds\b/ig,  'HDS').replace(/\bhdfs\b/ig, 'HDFS');
+          var displayName = event.currentTarget.getAttribute('data-displayname');
           return $('<div class="dag-operator selected"><div class="dag-operator-content">'+
             '<h4 class="dag-operator-name">Operator</h4>'+
-            '<h5 class="operator-class-name">' + classname + '</h5>'+
+            '<h5 class="operator-class-name">' + displayName + '</h5>'+
           '</div></div>');
         },
         appendTo: 'body',
