@@ -1,3 +1,10 @@
-<p>Application: {{appName}}</p>
+<h2 class="h4">
+  {{app.name}}
+  <a dt-page-href="DagEditor" params="routeParams" class="btn btn-xs btn-info"
+          ng-if="app.type === 'json'">
+      <span class="glyphicon glyphicon-edit"></span>
+      <span dt-text="edit">edit</span>
+  </a>
+</h2>
 
 <div dt-dag></div>
