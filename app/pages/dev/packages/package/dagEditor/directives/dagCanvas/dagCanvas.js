@@ -149,6 +149,23 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
       angularizeSinkConnection(sinkConnection, stream, scope);
     }
 
+    ///////////////////////////////////////////////////
+    // HADOOP WORLD DEMO HACKS BELOW
+    if (sourceOperator.opClass.simpleName === 'JsonAdInfoGenerator' && sourcePort.name === 'jsonOutput' &&
+        sinkOperator.opClass.simpleName === 'JsonToMapConverter' && sinkPort.name === 'json') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    if (sourceOperator.opClass.simpleName === 'JsonToMapConverter' && sourcePort.name === 'map' &&
+        sinkOperator.opClass.simpleName === 'GenericDimensionComputation' && sinkPort.name === 'data') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    if (sourceOperator.opClass.simpleName === 'Average' && sourcePort.name === 'average' &&
+        sinkOperator.opClass.simpleName === 'Average' && sinkPort.name === 'data') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    // HADOOP WORLD DEMO HACKS ABOVE
+    ///////////////////////////////////////////////////
+
     // Select the stream
     scope.$emit('selectEntity', 'stream', stream);
     return stream;
