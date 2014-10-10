@@ -12,7 +12,7 @@
   clientSettings.kafka.discovery.dimensionsOperatorFilter = function (operator) {
     var className = operator.className;
     return _.contains(['com.datatorrent.lib.statistics.DimensionsComputation',
-        'com.datatorrent.demos.adsdimension.generic.GenericDimensionComputation'],
+        'com.datatorrent.demos.dimensions.generic.GenericDimensionComputation'],
       className
     );
   };
