@@ -65,7 +65,6 @@
 .event-item {
   position: relative;
   cursor: pointer;
-  background-color: @stram-event-default-color;
   overflow: hidden;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -73,15 +72,12 @@
   user-select: none;
   padding: 3px 10px;
   margin: 1px;
-  border-bottom: 1px solid @gray-light;
   em {
     font-size: 110%;
     font-weight: bold;
   }
 
   &.selected {
-    color: #FFF;
-    background-color: @stram-event-default-color-active;
     .show-on-active {
       display: inherit;
     }
@@ -91,75 +87,75 @@
   }
 
   &.event-changelogicalplan {
-    background-color: @stram-event-changelogicalplan-color;
+    border-left: 15px solid @stram-event-changelogicalplan-color;
     &.selected {
-      background-color: @stram-event-changelogicalplan-color-active;
+      border-left: 15px solid @stram-event-changelogicalplan-color-active;
     }
   }
   &.event-containererror {
-    background-color: @stram-event-containererror-color;
+    border-left: 15px solid @stram-event-containererror-color;
     &.selected {
-      background-color: @stram-event-containererror-color-active;
+      border-left: 15px solid @stram-event-containererror-color-active;
     }
   }
   &.event-createoperator {
-    background-color: @stram-event-createoperator-color;
+    border-left: 15px solid @stram-event-createoperator-color;
     &.selected {
-      background-color: @stram-event-createoperator-color-active;
+      border-left: 15px solid @stram-event-createoperator-color-active;
     }
   }
   &.event-operatorerror {
-    background-color: @stram-event-operatorerror-color;
+    border-left: 15px solid @stram-event-operatorerror-color;
     &.selected {
-      background-color: @stram-event-operatorerror-color-active;
+      border-left: 15px solid @stram-event-operatorerror-color-active;
     }
   }
   &.event-partition {
-    background-color: @stram-event-partition-color;
+    border-left: 15px solid @stram-event-partition-color;
     &.selected {
-      background-color: @stram-event-partition-color-active;
+      border-left: 15px solid @stram-event-partition-color-active;
     }
   }
   &.event-removeoperator {
-    background-color: @stram-event-removeoperator-color;
+    border-left: 15px solid @stram-event-removeoperator-color;
     &.selected {
-      background-color: @stram-event-removeoperator-color-active;
+      border-left: 15px solid @stram-event-removeoperator-color-active;
     }
   }
   &.event-setoperatorproperty {
-    background-color: @stram-event-setoperatorproperty-color;
+    border-left: 15px solid @stram-event-setoperatorproperty-color;
     &.selected {
-      background-color: @stram-event-setoperatorproperty-color-active;
+      border-left: 15px solid @stram-event-setoperatorproperty-color-active;
     }
   }
   &.event-setphysicaloperatorproperty {
-    background-color: @stram-event-setphysicaloperatorproperty-color;
+    border-left: 15px solid @stram-event-setphysicaloperatorproperty-color;
     &.selected {
-      background-color: @stram-event-setphysicaloperatorproperty-color-active;
+      border-left: 15px solid @stram-event-setphysicaloperatorproperty-color-active;
     }
   }
   &.event-startcontainer {
-    background-color: @stram-event-startcontainer-color;
+    border-left: 15px solid @stram-event-startcontainer-color;
     &.selected {
-      background-color: @stram-event-startcontainer-color-active;
+      border-left: 15px solid @stram-event-startcontainer-color-active;
     }
   }
   &.event-startoperator {
-    background-color: @stram-event-startoperator-color;
+    border-left: 15px solid @stram-event-startoperator-color;
     &.selected {
-      background-color: @stram-event-startoperator-color-active;
+      border-left: 15px solid @stram-event-startoperator-color-active;
     }
   }
   &.event-stopcontainer {
-    background-color: @stram-event-stopcontainer-color;
+    border-left: 15px solid @stram-event-stopcontainer-color;
     &.selected {
-      background-color: @stram-event-stopcontainer-color-active;
+      border-left: 15px solid @stram-event-stopcontainer-color-active;
     }
   }
   &.event-stopoperator {
-    background-color: @stram-event-stopoperator-color;
+    border-left: 15px solid @stram-event-stopoperator-color;
     &.selected {
-      background-color: @stram-event-stopoperator-color-active;
+      border-left: 15px solid @stram-event-stopoperator-color-active;
     }
   }
 }
