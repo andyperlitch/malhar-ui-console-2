@@ -37,9 +37,8 @@ rm node_modules
 mv node_modules.orig node_modules
 
 # deploy
-ssh -t $DEST_HOST "sudo mkdir -p /usr/local/deploy/; sudo chmod 777 /usr/local/deploy;"
 scp $ARTIFACT_FNAME $DEST_HOST:
 rm $ARTIFACT_FNAME
 # extract artifact into deploy dir and move project symlink to point to the new release
-ssh $DEST_HOST "cd /usr/local/deploy && mkdir $ARTIFACT_BASE && cd $ARTIFACT_BASE && tar -xzf ~/$ARTIFACT_FNAME && cd .. && rm -f $PROJECT_NAME && ln -s $ARTIFACT_BASE $PROJECT_NAME && rm ~/$ARTIFACT_FNAME"
-ssh -t $DEST_HOST "sudo -u hadoop /home/hadoop/repos/core/gateway/src/main/scripts/dtgateway restart"
+ssh -l hadoop $DEST_HOST "cd /usr/local/deploy && mkdir $ARTIFACT_BASE && cd $ARTIFACT_BASE && tar -xzf ~/$ARTIFACT_FNAME && cd .. && rm -f $PROJECT_NAME && ln -s $ARTIFACT_BASE $PROJECT_NAME && rm ~/$ARTIFACT_FNAME"
+ssh -l hadoop -t $DEST_HOST "/home/hadoop/repos/core/gateway/src/main/scripts/dtgateway restart"
