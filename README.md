@@ -4,16 +4,35 @@ DataTorrent Console
 Open-source, web-based user interface for use with [DataTorrent](http://datatorrent.com), a stream-processing platform for developing real-time, big data applications in Hadoop.
 Built with Angular.
 
+Building
+--------
+### Note regarding npm version
+
+Due to a race condition bug in older npm versions, it is recommended that your npm version is at least v2.1.1. To update, run:
+
+    sudo npm -g i npm@2.1.1
+
+Check out npm issues [#6309](https://github.com/npm/npm/issues/6309) and [#6318](https://github.com/npm/npm/issues/6318) for more details.
+
+### Running the build
+To build this project, run the following commands:
+
+    npm install . --no-optional
+    bower install
+    gulp
+
+This will create a `dist` folder that will contain the appropriate files to be served by the DataTorrent Gateway (Gateway serves files from the location specified by the `dt.gateway.staticResourceDirectory` property in your dt-site.xml. Defaults to `/home/[USER]/htdocs`).
+
 
 Setting up dev environment
 --------------------------
-### Installing Current Dependencies
+### Install current dependencies
 Uses the `bower.json` and `package.json` files:
 
     npm install .
     bower install .
 
-### Use Gulp tasks
+### Use gulp tasks
 
 * `gulp serve` to launch a browser sync server (default=localhost:9000) on the source files
  * To run the server on a different port, run `PORT=19000 gulp serve`
@@ -23,6 +42,11 @@ Uses the `bower.json` and `package.json` files:
 * `gulp` or `gulp build` to build an optimized version of the application in `/dist`
 * `gulp serve:dist` to launch a server on the optimized application
 * `gulp test` to launch unit tests with Karma
+* `gulp testall` to launch unit tests with Karma on all available browsers (requires optional dependencies)
+
+Unit Tests
+----------
+
 
 Working with Dependencies
 -------------------------
@@ -53,7 +77,7 @@ The files in this project are organized into feature/component directories, rath
 ### Updating `index.html` with app scripts
 The following command walks the `app` directory and updates `app/index.html` with all the `.js` files:
     
-    grunt appscripts
+    gulp appscripts
 
 This script excludes files that end in `_test.js` and all `js` files inside of `bower_components`.
 
