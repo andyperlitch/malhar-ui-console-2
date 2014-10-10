@@ -1,3 +1,9 @@
+/**
+ * Changing dashboard configuration in runtime:
+ * - Create new `clientSettings.dashboard.storageMasterKey` (to force the app to use new configuration, not the old one from browser local storage)
+ * - Refresh the page (make sure it's not cached)
+ */
+
 'use strict';
 (function (window) {
   var clientSettings = window.clientSettings = {};
@@ -18,14 +24,11 @@
   };
   clientSettings.kafka.defaultQuery = {
     keys: {
-      publisherId: '1',
-      advertiserId: '0',
-      adUnit: '0'
     }
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8nC2Jek';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.appData = {};
