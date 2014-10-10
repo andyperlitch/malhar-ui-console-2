@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var _ = require('underscore');
+var _ = require('lodash');
 var express = require("express");
 var app = express();
 var fs = require('graceful-fs');

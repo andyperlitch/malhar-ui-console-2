@@ -14,6 +14,7 @@ var $ = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
 require('./gulp/gateway');
 var updateAppScripts = require('./util/update-app-scripts');
+var wiredep = require('wiredep').stream;
 
 var dev = {
   dir: 'app',
@@ -78,6 +79,20 @@ gulp.task('test', function () {
       action: 'run',
       //browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
       browsers: ['PhantomJS']
+    }))
+    .on('error', function (err) {
+      throw err;
+    });
+});
+
+// !!!Requires optionalDependencies to be installed!!!
+gulp.task('testall', function () {
+  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
+    .pipe($.karma({
+      configFile: 'test/karma-unit.conf.js',
+      //configFile: 'test/karma-coverage.conf.js',
+      action: 'run',
+      browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
     }))
     .on('error', function (err) {
       throw err;
@@ -198,6 +213,14 @@ gulp.task('appscripts', function() {
   updateAppScripts(function() {
     console.log('Application scripts updated in index.html');
   });
+});
+
+gulp.task('bower', function () {
+  gulp.src(dev.index)
+    .pipe(wiredep({
+      exclude: ['bower_components/es5-shim/es5-shim.js', 'bower_components/json3/lib/json3.min.js']
+    }))
+    .pipe(gulp.dest(dev.dir));
 });
 
 gulp.task('prodenv', function () {
