@@ -151,8 +151,8 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
 
     ///////////////////////////////////////////////////
     // HADOOP WORLD DEMO HACKS BELOW
-    if (sourceOperator.opClass.simpleName === 'JsonAdInfoGenerator' && sourcePort.name === 'jsonOutput' &&
-        sinkOperator.opClass.simpleName === 'JsonToMapConverter' && sinkPort.name === 'json') {
+    if (sourceOperator.opClass.simpleName === 'JsonSalesGenerator' && sourcePort.name === 'jsonBytes' &&
+        sinkOperator.opClass.simpleName === 'JsonToMapConverter' && sinkPort.name === 'jsonBytes') {
       stream.locality = 'CONTAINER_LOCAL';
     }
     if (sourceOperator.opClass.simpleName === 'JsonToMapConverter' && sourcePort.name === 'map' &&

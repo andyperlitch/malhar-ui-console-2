@@ -38,13 +38,12 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         if (!op.default_properties) {
           op.default_properties = {};
         }
-        if (op.simpleName === 'Average') {
-          op.attributes.INITIAL_PARTITION_COUNT = 20;
-          op.default_properties.name = 'hello';
-        }
-        if (op.simpleName === 'JsonAdInfoGenerator') {
+        if (op.simpleName === 'JsonSalesGenerator') {
           op.attributes.INITIAL_PARTITION_COUNT = 2;
           op.default_properties.maxTuplesPerWindow = 40000;
+        }
+        if (op.simpleName === 'EnrichmentOperator') {
+          op.default_properties.filePath = 'TODO'; // TODO
         }
         if (op.simpleName === 'DimensionStoreOperator') {
           op.attributes.INITIAL_PARTITION_COUNT = 4;
@@ -70,6 +69,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         if (op.simpleName === 'KafkaSinglePortOutputOperator') {
           op.default_properties.topic = 'GenericDimensionsQueryResult';
           op.default_properties['configProperties(metadata.broker.list)'] = 'node25.morado.com:9092';
+          op.default_properties['configProperties(serializer.class)'] = 'com.datatorrent.demos.dimensions.ads.KafkaJsonEncoder';
         }
         // HADOOP WORLD DEMO HACKS ABOVE
         ///////////////////////////////////////////////////
