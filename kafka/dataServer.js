@@ -47,7 +47,7 @@ function DataServer(io) {
   this.lastLoggedMessageCount = 0;
   this.logInterval = 5000;
   this.maxRate = 0;
-  this.logDebug = false;
+  this.logDebug = config.kafka.logDebug;
 }
 
 DataServer.prototype = {
@@ -58,7 +58,7 @@ DataServer.prototype = {
     this.topic2query[JSON.stringify(parsedId.kafka)] = JSON.stringify(parsedId.keys);
 
     if (this.logDebug) {
-      this.logDebugInfo();
+      this.logDebugInfo(message);
     }
 
     //console.log(msg.id);
@@ -134,7 +134,7 @@ DataServer.prototype = {
     }
   },
 
-  logDebugInfo: function () {
+  logDebugInfo: function (message) {
     this.count++;
     var now = Date.now();
     var timeDiff = now - this.lastLogTime;
@@ -142,8 +142,8 @@ DataServer.prototype = {
       this.lastLogTime = now;
       var rate = Math.round((this.count - this.lastLoggedMessageCount) / (timeDiff/1000));
       this.maxRate = Math.max(this.maxRate, rate);
-      console.log('_message count (per sec): ', rate);
-      console.log('_message total count: ', this.count, ', max rate: ', this.maxRate, ' (msg/sec)');
+      console.log('_message rate (per sec): ', rate);
+      console.log('_message total count: ', this.count, ', max rate: ', this.maxRate, ' (msg/sec)', ', last offset: ', message.offset);
       console.log(this.topic2query);
       console.log(this.kafkaEndPoint.consumers);
       console.log('===============');
