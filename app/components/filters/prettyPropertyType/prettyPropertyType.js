@@ -15,14 +15,21 @@
 */
 'use strict';
 
-angular.module('app.pages.dev.packages.package.dagEditor.controllers.DagOperatorInspectorCtrl', [])
-// Controller: Inspector for operator
-.controller('DagOperatorInspectorCtrl', function($scope, settings) {
-  $scope.OPERATOR_ATTRIBUTES = settings.OPERATOR_ATTRIBUTES;
-  $scope.canSetFilter = function(prop) {
-    return prop.canSet;
-  };
-  $scope.canEditType = function(prop) {
-    return [ 'BOOLEAN', 'INTEGER', 'LONG', 'JAVA.LANG.STRING' ].indexOf(prop.type.toUpperCase()) > -1;
+angular.module('app.components.filters.prettyPropertyType', [])
+.filter('prettyPropertyType', function() {
+  return function(str) {
+    if (!str) {
+      return '';
+    }
+    if (str === 'java.lang.String') {
+      return 'String';
+    }
+    if (str === 'Integer' || str === 'Long') {
+      return 'Number';
+    }
+    if (str === 'boolean') {
+      return 'Boolean';
+    }
+    return '';
   };
 });

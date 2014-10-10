@@ -29,6 +29,7 @@ angular.module('app', [
   'ui.websocket',
   'app.components.services.clientSettings',
   'app.components.filters.percent2cpu',
+  'app.components.filters.prettyPropertyType',
   'app.components.filters.commaGroups',
   'app.components.filters.byte',
   'app.components.filters.timeSince',

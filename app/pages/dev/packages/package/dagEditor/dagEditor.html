@@ -140,10 +140,14 @@
         <p class="text-muted" ng-if="!selected.opClass.properties || !(selected.opClass.properties | filter:canSetFilter).length" dt-text>
           No settable properties
         </p>
-        <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter" class="form-group">
+        <div ng-repeat="prop in selected.opClass.properties | filter:canSetFilter | filter:canEditType" class="form-group">
           <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{prop.description}}"></span>
           <label ng-attr-for="property-{{prop.name}}">{{prop.name}}</label>
-          <input class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type}}" ng-attr-name="property-{{prop.name}}">
+          <input ng-if="'BOOLEAN' !== prop.type.toUpperCase()" class="form-control" type="text" ng-model="selected.properties[prop.name]" ng-attr-placeholder="{{prop.type | prettyPropertyType }}" ng-attr-name="property-{{prop.name}}">
+          <div ng-if="'BOOLEAN' === prop.type.toUpperCase()">
+            <input id="oper_prop_{{prop.name}}" type="checkbox" ng-model="selected.properties[prop.name]">
+            <label ng-attr-for="oper_prop_{{prop.name}}" style="font-weight:normal;">Enable</label>
+          </div>
         </div>
 
         <!-- Operator attributes -->
@@ -151,12 +155,12 @@
         <p class="text-muted" ng-if="!OPERATOR_ATTRIBUTES" dt-text>
           No settable attributes
         </p>
-        <div ng-repeat="attr in OPERATOR_ATTRIBUTES" class="form-group">
+        <div ng-repeat="attr in OPERATOR_ATTRIBUTES | filter:canEditType" class="form-group">
 
           <span class="pull-right help-icon glyphicon glyphicon-question-sign" dt-text tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{attr.description}}"></span>
           <label ng-attr-for="attr-{{attr.name}}">{{attr.display_name}}</label>
-          <input ng-if="'Boolean' !== attr.type" class="form-control" type="text" ng-model="selected.attributes[attr.name]" ng-attr-placeholder="{{attr.type}}" ng-attr-name="attr-{{attr.name}}">
-          <div ng-if="'Boolean' === attr.type">
+          <input ng-if="'BOOLEAN' !== attr.type.toUpperCase()" class="form-control" type="text" ng-model="selected.attributes[attr.name]" ng-attr-placeholder="{{attr.type | prettyPropertyType }}" ng-attr-name="attr-{{attr.name}}">
+          <div ng-if="'BOOLEAN' === attr.type.toUpperCase()">
             <input id="oper_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
             <label ng-attr-for="oper_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
           </div>
@@ -257,18 +261,18 @@
         <!-- port attributes -->
         <h5>Attributes</h5>
 
-        <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES" ng-if="!attr.portType || attr.portType === selected.portType">
+        <div class="form-group" ng-repeat="attr in PORT_ATTRIBUTES | filter:canEditType" ng-if="!attr.portType || attr.portType === selected.portType">
           <span ng-if="attr.description" class="pull-right help-icon glyphicon glyphicon-question-sign" tooltip-popup-delay="100" tooltip-placement="left" dt-text-tooltip="{{ attr.description }}"></span>
           <label ng-attr-for="port_attr_{{attr.name}}">{{attr.display_name}}</label>
           <!-- Boolean -->
-          <div ng-if="attr.type === 'Boolean'">
+          <div ng-if="attr.type.toUpperCase() === 'BOOLEAN'">
             <input id="port_attr_{{attr.name}}" type="checkbox" ng-model="selected.attributes[attr.name]">
             <label ng-attr-for="port_attr_{{attr.name}}" style="font-weight:normal;">Enable</label>
           </div>
           <!-- Integer -->
-          <input ng-if="attr.type === 'Integer'" type="number" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+          <input ng-if="attr.type.toUpperCase() === 'INTEGER'" type="number" class="form-control" ng-attr-placeholder="{{attr.type | prettyPropertyType }}" ng-model="selected.attributes[attr.name]">
           <!-- Default -->
-          <input ng-if="attr.type !== 'Integer' && attr.type !== 'Boolean'" type="text" class="form-control" ng-attr-placeholder="{{attr.type}}" ng-model="selected.attributes[attr.name]">
+          <input ng-if="attr.type.toUpperCase() !== 'INTEGER' && attr.type.toUpperCase() !== 'BOOLEAN'" type="text" class="form-control" ng-attr-placeholder="{{attr.type | prettyPropertyType }}" ng-model="selected.attributes[attr.name]">
         </div>
 
       </div>
