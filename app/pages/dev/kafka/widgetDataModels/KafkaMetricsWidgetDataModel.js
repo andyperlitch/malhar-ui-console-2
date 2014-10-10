@@ -31,10 +31,10 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
       init: function () {
         KafkaWidgetDataModel.prototype.updateScope.call(this, []);
         KafkaWidgetDataModel.prototype.init.call(this);
+        this.series = [];
       },
 
       updateScope: function (data) {
-        this.series = [];
         if (data && data.length > 0) {
           var sampleObject = angular.copy(data[0]);
           delete sampleObject.timestamp;
@@ -95,6 +95,11 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
           }
         ];
       }
+
+      //updateQuery: function (query) {
+      //  this.series = []; // reset
+      //  KafkaWidgetDataModel.prototype.updateQuery.call(this, query);
+      //}
     })
     ;
 
