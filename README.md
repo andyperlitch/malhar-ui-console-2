@@ -97,4 +97,4 @@ On rare occasion, it is useful to have a final theme-agnostic file to place impo
 App Data Framework
 --------------------------
 
-Please see wiki [App Data Framework](https://github.com/DataTorrent/malhar-ui-console/wiki/App-Data-Framework-Architecture)
+Please see wiki [App Data Framework](https://github.com/DataTorrent/malhar-ui-console/wiki/App-Data-Framework)
