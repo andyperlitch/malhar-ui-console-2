@@ -46,6 +46,10 @@ angular.module('app.pages.ops.appInstance.widgets.StramEvents', [
   $scope.onEventClick = function($event, event) {
     var shift = $event.shiftKey;
     
+    if ($event.target.tagName.toLowerCase() === 'pre') {
+      return;
+    }
+
     if (!shift) {
       var wasSelected = event.selected;
       _.each($scope.resource.data, function(e) {

@@ -85,14 +85,26 @@
   </button>
   <div class="event-list well well-sm" ng-keydown="onEventListKey($event)" tabindex="1">
     <div ng-if="rangeError && state.mode === 'range'" class="text-muted">{{ rangeError }}</div>
-    <div ng-repeat="event in resource.data" ng-mousedown="onEventClick($event, event)"  ng-class="getEventClasses(event)">
-      <i 
+    <div ng-repeat="event in resource.data" ng-class="getEventClasses(event)">
+      <button 
         ng-if="event.data.reason || event.data.errorMessage"
-        class="reason-indicator glyphicon glyphicon-info-sign"
-        dt-text-tooltip="click to view additional details"
-      ></i>
+        class="reason-indicator btn btn-xs btn-default"
+        view-raw-in-modal="event.data.reason || event.data.errorMessage"
+        modal-title="Stram event details"
+        modal-size="lg"
+        dt-text
+      >details</button>
       <small>{{ event.timestamp | relativeTimestamp }}</small>
-      <em>{{event.type}}</em>
+      <em>
+        <span ng-if="!event.data.reason && !event.data.errorMessage">{{event.type}}</span>
+        <a 
+        href=""
+        ng-if="event.data.reason || event.data.errorMessage"
+        view-raw-in-modal="event.data.reason || event.data.errorMessage"
+        modal-title="Stram event details"
+        modal-size="lg"
+      >{{event.type}}</a>
+      </em>
       
 
       <span ng-switch="event.type">
