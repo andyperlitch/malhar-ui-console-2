@@ -1,5 +1,9 @@
 {
   "name": "ngconsole",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/DataTorrent/malhar-ui-console"
+  },
   "version": "0.0.0",
   "dependencies": {
     "express": "^4.9.5",
