@@ -24,6 +24,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
     debugName: 'Package Operators',
     urlKey: 'PackageOperatorClass',
     transformResponse: function(raw) {
+      var hacky_timestamp = (new Date()).getTime();
       _.each(raw.operatorClasses, function(op) {
         // Add packageName and className to operator object
         op.packageName = op.name.replace(/\.[^\.]+$/, '');
@@ -48,6 +49,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         if (op.simpleName === 'DimensionStoreOperator') {
           op.attributes.INITIAL_PARTITION_COUNT = 4;
           op.default_properties.maxCacheSize = 5;
+          op.default_properties['fileStore.basePath'] = 'O15DimensionsStore_' + hacky_timestamp;
         }
         if (op.simpleName === 'JsonToMapConverter') {
           if (!op.inputPorts[0].attributes) {
@@ -64,10 +66,10 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         }
         if (op.simpleName === 'KafkaSinglePortStringInputOperator') {
           op.default_properties.brokerSet = 'node25.morado.com:9092';
-          op.default_properties.topic = 'GenericDimensionsQuery';
+          op.default_properties.topic = 'O15DimensionsQuery_' + hacky_timestamp;
         }
         if (op.simpleName === 'KafkaSinglePortOutputOperator') {
-          op.default_properties.topic = 'GenericDimensionsQueryResult';
+          op.default_properties.topic = 'O15DimensionsQueryResult_' + hacky_timestamp;
           op.default_properties['configProperties(metadata.broker.list)'] = 'node25.morado.com:9092';
           op.default_properties['configProperties(serializer.class)'] = 'com.datatorrent.demos.dimensions.ads.KafkaJsonEncoder';
         }
