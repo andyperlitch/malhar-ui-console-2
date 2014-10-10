@@ -55,19 +55,17 @@ To use a package from bower, first run the bower install command:
 
     bower install PACKAGE_NAME[#VERSION_TAG] [--save]
 
-Then, use grunt to automatically inject this package into index.html:
-
-    grunt bower-install
+Then, use `gulp bower` to automatically inject this package into index.html:
 
 ### Updating packages
 
     bower update [PACKAGE_NAME]
-    grunt bower-install    
+    gulp bower
 
 ### Uninstalling a package
 
     bower uninstall [PACKAGE_NAME] --save
-    grunt bower-install
+    gulp bower
 
 
 App components & sections

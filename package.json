@@ -1,8 +1,8 @@
 {
   "name": "ngconsole",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/DataTorrent/malhar-ui-console"
+    "type": "git",
+    "url": "https://github.com/DataTorrent/malhar-ui-console"
   },
   "version": "0.0.0",
   "dependencies": {
@@ -40,6 +40,7 @@
     "gulp-load-plugins": "^0.5.0",
     "gulp-minify-css": "^0.3.7",
     "gulp-ngtemplate": "^0.2.3",
+    "gulp-replace": "^0.4.0",
     "gulp-rev": "^1.0.0",
     "gulp-rimraf": "^0.1.0",
     "gulp-size": "^0.3.0",
@@ -56,7 +57,7 @@
     "optimist": "^0.6.1",
     "time-grunt": "~0.2.1",
     "walk": "^2.3.3",
-    "gulp-replace": "^0.4.0"
+    "wiredep": "^1.8.5"
   },
   "optionalDependencies": {
     "karma-chrome-launcher": "^0.1.2",
