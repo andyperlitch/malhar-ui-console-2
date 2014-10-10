@@ -32,12 +32,19 @@ var topicIn = config.kafka.topic.in || 'test';
 
 var topicOutPartition = 0;
 
-var options = {
+var existingTopicOptions = {
   autoCommit: false,
   fromBeginning: false,
   fetchMaxWaitMs: 1000,
   fetchMaxBytes: 1024 * 1024,
   fromOffset: true
+};
+
+var newTopicOptions = {
+  autoCommit: false,
+  fromBeginning: false,
+  fetchMaxWaitMs: 1000,
+  fetchMaxBytes: 1024 * 1024
 };
 
 function KafkaEndPoint (messageCallback) {
@@ -106,16 +113,31 @@ KafkaEndPoint.prototype = {
     offset.fetch([
       { topic: topicOut, partition: topicOutPartition, time: -1, maxNum: 1 }
     ], function (err, data) {
-      if (data) {
-        var initialOffset = data[topicOut][0][0];
-        console.log('__initial fetched offset', initialOffset, topicOut);
+      var initialOffset;
+      var topics;
+      var options;
+      var consumerClient = client;
 
-        var topics = [
+      if (err) {
+        initialOffset = 0;
+        topics = [
+          {topic: topicOut, partition: topicOutPartition }
+        ];
+        options = newTopicOptions;
+        consumerClient = new Client(connectionString);
+        console.log('_fetching offset failed, error below');
+        console.log(err);
+      } else {
+        initialOffset = data[topicOut][0][0];
+        options = existingTopicOptions;
+        topics = [
           {topic: topicOut, partition: topicOutPartition, offset: initialOffset}
         ];
-        var consumer = new Consumer(client, topics, options);
-        this.subscribe(consumer, offset, initialOffset, topicOut);
+        console.log('__initial fetched offset', initialOffset, topicOut);
       }
+
+      var consumer = new Consumer(consumerClient, topics, options);
+      this.subscribe(consumer, offset, initialOffset, topicOut);
     }.bind(this));
   }
 };
