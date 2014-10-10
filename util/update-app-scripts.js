@@ -8,8 +8,7 @@ var options;
 var skipDirectories = ['bower_components', 'vendor', 'scripts'];
 var scriptsrcs = [];
 var ignorePatterns = [
-  /client\.settings\.dev\.js/,
-  /client\.settings\.prod\.js/,
+  /client\.settings\.js/,
   /_test\.js$/
 ];
 var indexfile = basedir + '/index.html';

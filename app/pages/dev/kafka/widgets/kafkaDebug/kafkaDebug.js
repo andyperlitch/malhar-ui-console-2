@@ -79,4 +79,8 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
     };
 
     $scope.sendRequest();
+
+    $scope.$on('$destroy', function () {
+      $scope.kafkaService.unsubscribe();
+    });
   });
