@@ -22,6 +22,7 @@ var kafka = require('kafka-node');
 var LRU = require('lru-cache');
 
 var Consumer = kafka.Consumer;
+//var Consumer = kafka.HighLevelConsumer;
 var Producer = kafka.Producer;
 var Offset = kafka.Offset;
 var Client = kafka.Client;
@@ -103,17 +104,16 @@ KafkaEndPoint.prototype = {
     var offset = new Offset(client);
 
     offset.fetch([
-      { topic: topicOut, partition: topicOutPartition, time: Date.now(), maxNum: 1 }
+      { topic: topicOut, partition: topicOutPartition, time: -1, maxNum: 1 }
     ], function (err, data) {
       if (data) {
         var initialOffset = data[topicOut][0][0];
-        console.log('__initial offset', initialOffset, topicOut);
+        console.log('__initial fetched offset', initialOffset, topicOut);
 
         var topics = [
           {topic: topicOut, partition: topicOutPartition, offset: initialOffset}
         ];
         var consumer = new Consumer(client, topics, options);
-        //console.log('_consumer created with topic ' + topicOut);
         this.subscribe(consumer, offset, initialOffset, topicOut);
       }
     }.bind(this));
