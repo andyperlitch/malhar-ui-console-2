@@ -48,6 +48,9 @@ angular.module('app.components.resources.PhysicalOperatorCollection', [
 
       }
     },
+    defaultSetOptions: {
+      remove: true
+    },
     urlKey: 'PhysicalOperator',
     topicKey: 'PhysicalOperators',
     transformResponse: 'operators',
