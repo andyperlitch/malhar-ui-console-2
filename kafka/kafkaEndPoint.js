@@ -86,7 +86,7 @@ KafkaEndPoint.prototype = {
       }
     }.bind(this));
     consumer.on('error', function (err) {
-      console.log('error', err);
+      console.log('_consumer error', err);
     });
     consumer.on('offsetOutOfRange', function (topic) {
       console.log('__offsetOutOfRange');
@@ -137,7 +137,14 @@ KafkaEndPoint.prototype = {
       }
 
       var consumer = new Consumer(consumerClient, topics, options);
-      this.subscribe(consumer, offset, initialOffset, topicOut);
+      if (!err) {
+        this.subscribe(consumer, offset, initialOffset, topicOut);
+      } else {
+        var self = this;
+        setTimeout(function () {
+          self.subscribe(consumer, offset, initialOffset, topicOut);
+        }, 1000);
+      }
     }.bind(this));
   }
 };

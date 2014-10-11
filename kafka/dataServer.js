@@ -88,7 +88,9 @@ DataServer.prototype = {
   onSubscribe: function (socket, data) {
     var query = JSON.parse(data.query);
     query.id = data.query;
-    //console.log('_subscribe ' + query.id);
+    if (this.logDebug) {
+      console.log('_subscribe ' + query.id);
+    }
     //console.log(this.kafkaEndPoint.consumers);
     //console.log(this.io.sockets.adapter.rooms);
 
