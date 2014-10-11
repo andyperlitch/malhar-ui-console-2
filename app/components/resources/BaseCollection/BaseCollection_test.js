@@ -153,7 +153,7 @@ describe('Resource: BaseCollection', function () {
       expect(data.indexOf(newEl) === -1).toEqual(true);
     });
 
-    it('should remove items that are not updated by new values', function() {
+    it('should remove items that are not updated by new values if remove is set to true in the options', function() {
       var a,s,t;
       c.set([
         a = {id: 1, name: 'andy'},
@@ -165,7 +165,7 @@ describe('Resource: BaseCollection', function () {
         {id: 1, name: 'andrew'},
         {id: 3, name: 'Tevya'},
         {id: 4, name: 'bruce'}
-      ]);
+      ], { remove: true } );
 
       expect(data).not.toContain(s);
       expect(data.length).toEqual(3);
@@ -174,7 +174,7 @@ describe('Resource: BaseCollection', function () {
       })).toEqual([1,3,4]);
     });
 
-    it('should NOT remove items that are not updated if remove is set to false in the options', function() {
+    it('should NOT remove items that are not updated by default', function() {
       var a,s,t;
       c.set([
         a = {id: 1, name: 'andy'},
@@ -186,7 +186,7 @@ describe('Resource: BaseCollection', function () {
         {id: 1, name: 'andrew'},
         {id: 3, name: 'Tevya'},
         {id: 4, name: 'bruce'}
-      ], { remove: false } );
+      ]);
 
       expect(data).toContain(s);
       expect(data.length).toEqual(4);

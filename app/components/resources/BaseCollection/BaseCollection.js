@@ -22,10 +22,6 @@ angular.module('app.components.resources.BaseCollection', [
 ])
 .factory('BaseCollection', function(getUri, BaseResource, BaseModel) {
 
-  var defaultSetOptions = {
-    remove: true
-  };
-
   var BaseCollection = BaseResource.extend({
     /**
      * Constructor for collections. Expects this.urlKey and/or this.topicKey
@@ -42,6 +38,15 @@ angular.module('app.components.resources.BaseCollection', [
         this.topic = getUri.topic(this.topicKey, params);
       }
     },
+
+    /**
+     * Default options to be passed to the set method.
+     * @type {Object}
+     */
+    defaultSetOptions: {
+      remove: false
+    },
+
     /**
      * Called when new data from the server comes in, e.g. from fetch or webSocket.
      * 
@@ -53,7 +58,7 @@ angular.module('app.components.resources.BaseCollection', [
       options = options || {};
 
       // Add default options
-      _.defaults(options, defaultSetOptions);
+      _.defaults(options, this.defaultSetOptions);
 
       // References to data and context
       var data = this.data;
