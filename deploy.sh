@@ -29,15 +29,25 @@ PROJECT_NAME=malhar-ui-console
 ARTIFACT_BASE=${PROJECT_NAME}-$(date +%Y.%m.%d_%H.%M)
 ARTIFACT_FNAME=${ARTIFACT_BASE}.tar.gz
 
+# file that contains the deployed revision
+REVISION_FILE=REVISION
+git log --oneline HEAD^..HEAD > $REVISION_FILE
+DIFF=$(git diff)
+if [ ! -z "$DIFF" ]; then
+  echo "Repo dirty. Diff is below:" >> $REVISION_FILE
+  echo "$DIFF" >> $REVISION_FILE
+fi
+
 # artifact
 mv node_modules node_modules.orig
 ln -s $PROD_MODULES/node_modules .
-tar -czhf $ARTIFACT_FNAME dist kafka kafkaserver.js config.js dist_start.sh package.json node_modules
+tar -czhf $ARTIFACT_FNAME dist kafka kafkaserver.js config.js dist_start.sh package.json node_modules $REVISION_FILE
 rm node_modules
 mv node_modules.orig node_modules
+rm $REVISION_FILE
 
 # deploy
-scp $ARTIFACT_FNAME $DEST_HOST:
+scp $ARTIFACT_FNAME hadoop@$DEST_HOST:
 rm $ARTIFACT_FNAME
 # extract artifact into deploy dir and move project symlink to point to the new release
 ssh -l hadoop $DEST_HOST "cd /usr/local/deploy && mkdir $ARTIFACT_BASE && cd $ARTIFACT_BASE && tar -xzf ~/$ARTIFACT_FNAME && cd .. && rm -f $PROJECT_NAME && ln -s $ARTIFACT_BASE $PROJECT_NAME && rm ~/$ARTIFACT_FNAME"

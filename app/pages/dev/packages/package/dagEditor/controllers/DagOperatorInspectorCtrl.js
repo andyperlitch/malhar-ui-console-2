@@ -23,6 +23,6 @@ angular.module('app.pages.dev.packages.package.dagEditor.controllers.DagOperator
     return prop.canSet;
   };
   $scope.canEditType = function(prop) {
-    return [ 'BOOLEAN', 'INTEGER', 'LONG', 'JAVA.LANG.STRING' ].indexOf(prop.type.toUpperCase()) > -1;
+    return [ 'boolean', 'int', 'double', 'integer', 'long', 'java.lang.string' ].indexOf(prop.type.toLowerCase()) > -1;
   };
 });
