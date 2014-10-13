@@ -14,7 +14,7 @@
   clientSettings.kafka = {};
 
   function createKeyValues (list) {
-    return _.map(list, function (name, index) { return { name: name, value: (index + 1) }; });
+    return _.map(_.sortBy(list), function (name, index) { return { name: name, value: (index + 1) }; });
   }
 
   var productCategories = ['Smart Phones', 'Tablets', 'Laptops', 'Printers', 'Routers'];
