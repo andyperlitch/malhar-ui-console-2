@@ -12,6 +12,19 @@
   clientSettings.keepAliveInterval = 5000;
 
   clientSettings.kafka = {};
+
+  function createKeyValues (list) {
+    return _.map(list, function (name, index) { return { name: name, value: (index + 1) }; });
+  }
+
+  var productCategories = ['Smart Phones', 'Tablets', 'Laptops', 'Printers', 'Routers'];
+  var channelIds = ['Online', 'Mobile', 'Store'];
+
+  clientSettings.kafka.dictionary = {
+    productCategory: createKeyValues(productCategories),
+    channelId: createKeyValues(channelIds)
+  };
+
   clientSettings.kafka.discovery = {};
   clientSettings.kafka.discovery.inputOperatorFilter = {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortStringInputOperator'};
   clientSettings.kafka.discovery.outputOperatorFilter = {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortOutputOperator'};

@@ -30,84 +30,15 @@ angular.module('app.components.directives.dtQueryEditor', [])
         scope.ngModel = ngModel;
         scope.jsonMode = false;
 
-        //scope.selOption = null;
-        //scope.options = ['op1', 'op2', 'op3'];
-        //scope.selOption = scope.options[0];
-        scope.selOption = null;
-        scope.selValue = null;
-
-
-        scope.$watch('properties', function () {
-          scope.updateModel();
-        }, true);
-
         angular.extend(scope, {
           switchToDesignerMode: function () {
             scope.jsonMode = false;
-            scope.update(ngModel.$viewValue);
+            //scope.update(ngModel.$viewValue);
           },
 
           switchToJsonMode: function () {
             scope.jsonMode = true;
             scope.jsonText = JSON.stringify(ngModel.$viewValue, null, ' ');
-          },
-
-          updateModel: function () {
-            var keys = _.reduce(scope.properties, function (result, property) {
-              result[property.key] = property.value;
-              return result;
-            }, {});
-
-            var viewValue = scope.ngModel.$viewValue ? _.clone(scope.ngModel.$viewValue) : {};
-            angular.extend(viewValue, {
-              keys: keys
-            });
-
-            ngModel.$setViewValue(viewValue);
-          },
-
-          add: function (value) {
-            if (!scope.selOption) {
-              return;
-            }
-
-            var property = _.findWhere(scope.properties, {key: scope.selOption});
-
-            var newProperty = {
-              key: scope.selOption,
-              value: value
-            };
-
-            if (property) {
-              angular.extend(property, newProperty); //override
-            } else {
-              scope.properties.push(newProperty);
-            }
-          },
-
-          onChange: function (value) {
-            scope.selOption = value; //TODO
-          },
-
-          apply: function () {
-            console.log(scope.properties);
-          },
-
-          remove: function (property) {
-            _.remove(scope.properties, property);
-          },
-
-          update: function (json) {
-            if (!json || !json.keys) {
-              return;
-            }
-
-            scope.properties = _.map(_.pairs(json.keys), function (pair) {
-              return {
-                key: pair[0],
-                value: pair[1]
-              };
-            });
           }
         });
 
@@ -116,6 +47,109 @@ angular.module('app.components.directives.dtQueryEditor', [])
         };
       }
     };
+  })
+  .controller('QueryEditorCtrl', function ($scope, clientSettings) {
+    var ngModel = $scope.ngModel;
+    var scope = $scope;
+
+    scope.dictionary = clientSettings.kafka.dictionary;
+
+    //scope.keyValues = null;
+    scope.$watch('selOption', function () {
+      if (scope.selOption) {
+        scope.keyValues = scope.dictionary[scope.selOption];
+      } else {
+        scope.keyValues = null;
+      }
+      scope.selKeyValue = !_.isEmpty(scope.keyValues) ? scope.keyValues[0] : null;
+    });
+
+    scope.$watch('properties', function () {
+      scope.updateModel();
+    }, true);
+
+    angular.extend(scope, {
+      updateModel: function () {
+        var keys = _.reduce(scope.properties, function (result, property) {
+          if (property.selKeyValue) {
+            result[property.key] = property.selKeyValue.value;
+          } else {
+            result[property.key] = property.value;
+          }
+          return result;
+        }, {});
+
+        var viewValue = scope.ngModel.$viewValue ? _.clone(scope.ngModel.$viewValue) : {};
+        angular.extend(viewValue, {
+          keys: keys
+        });
+
+        ngModel.$setViewValue(viewValue);
+      },
+
+      add: function () {
+        if (!scope.selOption) {
+          return;
+        }
+
+        var propertyIndex = _.findIndex(scope.properties, {key: scope.selOption});
+
+        var newProperty;
+        if (scope.keyValues && scope.selKeyValue) {
+          newProperty = {
+            key: scope.selOption,
+            selKeyValue: scope.selKeyValue,
+            keyValues: scope.keyValues
+          };
+        } else {
+          newProperty = {
+            key: scope.selOption,
+            value: scope.selValue
+          };
+        }
+
+        if (propertyIndex >= 0) {
+          scope.properties[propertyIndex] = newProperty;
+          //angular.extend(property, newProperty); //override
+        } else {
+          scope.properties.push(newProperty);
+        }
+
+        // reset
+        scope.selOption = null;
+        scope.selValue = null;
+      },
+
+      remove: function (property) {
+        _.remove(scope.properties, property);
+      },
+
+      update: function (json) {
+        if (!json || !json.keys) {
+          return;
+        }
+
+        scope.properties = _.map(_.pairs(json.keys), function (pair) {
+          var key = pair[0];
+          var keyValues = scope.dictionary[key];
+          if (keyValues) {
+            var selKeyValue = _.findWhere(keyValues, { value: pair[1] });
+            return {
+              key: key,
+              selKeyValue: selKeyValue,
+              keyValues: keyValues
+            };
+          } else {
+            return {
+              key: key,
+              value: pair[1]
+            };
+          }
+        });
+      }
+    });
+
+    scope.update(ngModel.$viewValue);
   })
   .controller('QueryEditorJsonCtrl', function ($scope) {
     $scope.valid = true;
