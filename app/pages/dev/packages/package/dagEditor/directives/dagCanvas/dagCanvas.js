@@ -39,7 +39,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
     return _.map(ports, function(port) {
       return {
         name: port.name,
-        attributes: {},
+        attributes: _(port.attributes).clone(),
         type: port.type,
         optional: port.optional,
         portType: portType,
@@ -157,6 +157,14 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagCanvas', 
     }
     if (sourceOperator.opClass.simpleName === 'JsonToMapConverter' &&
         sinkOperator.opClass.simpleName === 'GenericDimensionComputation') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    if (sourceOperator.opClass.simpleName === 'EnrichmentOperator' &&
+        sinkOperator.opClass.simpleName === 'GenericDimensionComputation') {
+      stream.locality = 'CONTAINER_LOCAL';
+    }
+    if (sourceOperator.opClass.simpleName === 'JsonToMapConverter' &&
+        sinkOperator.opClass.simpleName === 'EnrichmentOperator') {
       stream.locality = 'CONTAINER_LOCAL';
     }
     // HADOOP WORLD DEMO HACKS ABOVE

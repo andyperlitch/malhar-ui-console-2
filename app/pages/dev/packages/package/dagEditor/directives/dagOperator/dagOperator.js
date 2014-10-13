@@ -290,4 +290,10 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
     $event.stopPropagation();
     $scope.$emit('selectEntity', 'operator', $scope.operator);
   };
+}).filter('camelToZeroSpace', function() {
+  // inserts a zero-width space
+  return function(str) {
+    return str.replace(/(?!^)([A-Z])/g, '\u200b$1');
+  };
 });
+

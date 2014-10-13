@@ -49,6 +49,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         }
         if (op.simpleName === 'EnrichmentOperator') {
           op.default_properties.filePath = 'products.json';
+          op.default_properties.lookupKey = 'productId';
         }
         if (op.simpleName === 'DimensionStoreOperator') {
           op.attributes.INITIAL_PARTITION_COUNT = 4;
