@@ -20,7 +20,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
   'ui.models',
   'app.pages.dev.kafka.KafkaRestService'
 ])
-  .factory('KafkaLineChartWidgetDataModel', function (KafkaWidgetDataModel) {
+  .factory('KafkaLineChartWidgetDataModel', function (KafkaWidgetDataModel, clientSettings) {
     function MetricsWidgetDataModel() {
     }
 
@@ -32,6 +32,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel
         KafkaWidgetDataModel.prototype.updateScope.call(this, []);
         KafkaWidgetDataModel.prototype.init.call(this);
         this.series = [];
+        this.widgetScope.timeAxisFormat = clientSettings.dashboard.timeAxisFormat;
       },
 
       updateScope: function (data) {

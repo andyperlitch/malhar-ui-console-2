@@ -125,7 +125,8 @@ angular.module('app.components.directives.dtQueryEditor', [])
       },
 
       update: function (json) {
-        if (!json || !json.keys) {
+        if (!json || !json.keys || _.isEmpty(json.keys)) {
+          scope.properties = [];
           return;
         }
 

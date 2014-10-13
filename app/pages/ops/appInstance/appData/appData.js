@@ -72,23 +72,6 @@ angular.module('app.pages.ops.appInstance.appData', [
 
     var widgetDefinitions = [
       {
-        name: 'Kafka Discovery',
-        title: 'Kafka Discovery',
-        templateUrl: 'pages/ops/appInstance/appData/widgets/discovery/discovery.html',
-        size: {
-          width: '100%'
-        },
-        dataModelOptions: {
-          query: {
-            keys: {
-              publisherId: 1,
-              advertiserId: 0,
-              adUnit: 0
-            }
-          }
-        }
-      },
-      {
         name: 'Time Series Bar Chart',
         title: 'Time Series Bar Chart',
         directive: 'wt-time-series',
@@ -99,7 +82,8 @@ angular.module('app.pages.ops.appInstance.appData', [
         },
         attrs: {
           'metric-value': 'metricValue',
-          'exclude-metrics': 'excludeMetrics'
+          'exclude-metrics': 'excludeMetrics',
+          'time-axis-format': 'timeAxisFormat'
         },
         size: {
           width: '50%'
@@ -120,7 +104,9 @@ angular.module('app.pages.ops.appInstance.appData', [
         },
         attrs: {
           style: 'height:300px',
-          'show-legend': true
+          'show-time-range': false,
+          'show-legend': true,
+          'time-axis-format': 'timeAxisFormat'
         },
         size: {
           width: '50%'
@@ -139,6 +125,23 @@ angular.module('app.pages.ops.appInstance.appData', [
         },
         dataModelOptions: {
           query: clientSettings.kafka.defaultQuery
+        }
+      },
+      {
+        name: 'Kafka Discovery',
+        title: 'Kafka Discovery',
+        templateUrl: 'pages/ops/appInstance/appData/widgets/discovery/discovery.html',
+        size: {
+          width: '100%'
+        },
+        dataModelOptions: {
+          query: {
+            keys: {
+              publisherId: 1,
+              advertiserId: 0,
+              adUnit: 0
+            }
+          }
         }
       }
     ];
