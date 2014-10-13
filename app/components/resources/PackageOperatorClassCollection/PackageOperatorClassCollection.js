@@ -24,7 +24,11 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
     debugName: 'Package Operators',
     urlKey: 'PackageOperatorClass',
     transformResponse: function(raw) {
+      ///////////////////////////////////////////////////
+      // HADOOP WORLD DEMO HACK BELOW
       var hacky_timestamp = (new Date()).getTime();
+      // HADOOP WORLD DEMO HACK ABOVE
+      ///////////////////////////////////////////////////
       _.each(raw.operatorClasses, function(op) {
         // Add packageName and className to operator object
         op.packageName = op.name.replace(/\.[^\.]+$/, '');
@@ -44,7 +48,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
           op.default_properties.maxTuplesPerWindow = 40000;
         }
         if (op.simpleName === 'EnrichmentOperator') {
-          op.default_properties.filePath = 'TODO'; // TODO
+          op.default_properties.filePath = 'products.json';
         }
         if (op.simpleName === 'DimensionStoreOperator') {
           op.attributes.INITIAL_PARTITION_COUNT = 4;

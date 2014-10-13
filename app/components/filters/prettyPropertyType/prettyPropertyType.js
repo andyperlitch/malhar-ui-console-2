@@ -21,10 +21,11 @@ angular.module('app.components.filters.prettyPropertyType', [])
     if (!str) {
       return '';
     }
-    if (str === 'java.lang.String') {
+    str = str.toLowerCase();
+    if (str === 'java.lang.string') {
       return 'String';
     }
-    if (str === 'Integer' || str === 'Long') {
+    if (str === 'integer' || str === 'int' || str === 'double' || str === 'long') {
       return 'Number';
     }
     if (str === 'boolean') {
