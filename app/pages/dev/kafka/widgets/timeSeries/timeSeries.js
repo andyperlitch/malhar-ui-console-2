@@ -71,12 +71,6 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
             return d.value;
           };
         };
-
-        $scope.$watch('mode', function (mode) {
-          if (mode) {
-            $scope.dateFormat = getFormat(mode);
-          }
-        });
       },
       link: function postLink(scope) {
         scope.timeAxisFormat = scope.timeAxisFormat || 'HH:mm';
