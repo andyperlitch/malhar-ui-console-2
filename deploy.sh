@@ -22,6 +22,7 @@ PROD_MODULES=./node_modules.production
 mkdir -p $PROD_MODULES
 cp package.json $PROD_MODULES
 npm install --production --prefix $PROD_MODULES
+bower install
 PHANTOMJS_BIN=node_modules/.bin/phantomjs gulp
 DATA_SERVER_HOST="http://${DEST_HOST}:3015" gulp prodenv
 

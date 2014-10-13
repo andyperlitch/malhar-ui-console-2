@@ -17,7 +17,7 @@
       <span dt-text="launch">launch</span>
     </button>
     <span class="saving" ng-show="saveLaunchState.saveInProgress">Saving...</span>
-    <span class="saving" title="Last saved at {{ saveLaunchState.saveLastTimestamp | relativeTimestamp }}" ng-show="!saveLaunchState.saveRequested && !saveLaunchState.saveInProgress && saveLaunchState.saveLastTimestamp">All changes saved to server</span>
+    <span class="saving" title="Last saved at {{ saveLaunchState.saveLastTimestamp | relativeTimestamp }}" ng-show="!saveLaunchState.saveRequested && !saveLaunchState.saveInProgress && saveLaunchState.saveLastTimestamp">All changes saved to HDFS</span>
   </div>
   <div class="canvasControls">
     <button role="button" class="btn btn-xs btn-default" ng-click="zoomIn()" ng-disabled="zoom >= settings.dagEditor.MAX_ZOOM_LEVEL">
