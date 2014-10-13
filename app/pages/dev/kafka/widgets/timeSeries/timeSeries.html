@@ -1,13 +1,10 @@
 <div class="bar-chart" style="height: 300px;">
     <div style="display: table;width: 100%;">
         <div style="display: table-cell;vertical-align: middle;">
-
-        </div>
-        <div style="display: table-cell;vertical-align: middle;">
             Metric: <select ng-model="metric" ng-options="opt for opt in metrics" ng-change="metricChanged();"
                     class="form-control" style="width: 200px; margin-bottom: 0;display: inline;"></select>
         </div>
-        <div style="display: table-cell;text-align: right;vertical-align: middle;">
+        <div ng-if="showTimeRange" style="display: table-cell;text-align: right;vertical-align: middle;">
             <span ng-if="start && end">{{start|date:summaryDateFormat}} - {{end|date:summaryDateFormat}}</span>&nbsp;
         </div>
     </div>

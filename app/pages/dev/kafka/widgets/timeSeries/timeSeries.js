@@ -24,9 +24,10 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
       templateUrl: 'pages/dev/kafka/widgets/timeSeries/timeSeries.html',
       scope: {
         data: '=data',
-        mode: '=',
         metricValue: '=',
-        excludeMetrics: '='
+        excludeMetrics: '=',
+        showTimeRange: '=',
+        timeAxisFormat: '=?'
       },
       controller: function ($scope) {
         var filter = $filter('date');
@@ -35,15 +36,9 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
         $scope.summaryDateFormat = 'yyyy/MM/dd HH:mm:ss';
         $scope.dateFormat = 'HH:mm';
 
-        function getFormat(mode) {
-          return (mode === 'MINUTES') ? 'HH:mm' : 'MMM dd HH:mm';
-        }
-
         $scope.xAxisTickFormatFunction = function () {
-          var format = getFormat($scope.mode);
-
           return function (d) {
-            return filter(d, format);
+            return filter(d, $scope.timeAxisFormat);
           };
         };
 
@@ -84,6 +79,8 @@ angular.module('app.pages.dev.kafka.widgets.timeSeries', [])
         });
       },
       link: function postLink(scope) {
+        scope.timeAxisFormat = scope.timeAxisFormat || 'HH:mm';
+
         scope.chartData = [{
           key: '',
           values: []

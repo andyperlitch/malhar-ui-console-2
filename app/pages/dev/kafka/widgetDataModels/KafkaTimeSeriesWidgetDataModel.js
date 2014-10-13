@@ -21,7 +21,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
   'app.pages.dev.kafka.KafkaRestService',
   'app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel'
 ])
-  .factory('KafkaBarChartWidgetDataModel', function (KafkaWidgetDataModel) {
+  .factory('KafkaBarChartWidgetDataModel', function (KafkaWidgetDataModel, clientSettings) {
     function KafkaTimeSeriesWidgetDataModel() {
     }
 
@@ -48,6 +48,8 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
             this.widgetScope.$emit('widgetChanged', this.widget);
           }
         }.bind(this));
+
+        this.widgetScope.timeAxisFormat = clientSettings.dashboard.timeAxisFormat;
       }
     });
 

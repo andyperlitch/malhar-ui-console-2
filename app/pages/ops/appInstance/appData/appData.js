@@ -82,7 +82,8 @@ angular.module('app.pages.ops.appInstance.appData', [
         },
         attrs: {
           'metric-value': 'metricValue',
-          'exclude-metrics': 'excludeMetrics'
+          'exclude-metrics': 'excludeMetrics',
+          'time-axis-format': 'timeAxisFormat'
         },
         size: {
           width: '50%'
@@ -103,7 +104,9 @@ angular.module('app.pages.ops.appInstance.appData', [
         },
         attrs: {
           style: 'height:300px',
-          'show-legend': true
+          'show-time-range': false,
+          'show-legend': true,
+          'time-axis-format': 'timeAxisFormat'
         },
         size: {
           width: '50%'

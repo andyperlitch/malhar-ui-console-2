@@ -46,6 +46,7 @@
   clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek5';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
+  clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
   clientSettings.dashboard.appData = {};
   clientSettings.dashboard.appData.storageKey = clientSettings.dashboard.storageKey + 'InstanceAppData';
   clientSettings.dashboard.appData.layouts = [
