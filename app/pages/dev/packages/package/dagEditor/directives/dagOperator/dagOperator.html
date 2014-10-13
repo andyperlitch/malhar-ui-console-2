@@ -6,7 +6,7 @@
   >
   <div class="dag-operator-content">
     <h4 class="dag-operator-name" ng-dblclick="editName($event,operator)" ng-show="!editing.name" ng-class="{ long1: operator.name.length > 20, long2: operator.name.length > 30}">
-        {{ operator.name }}
+        {{ operator.name | camelToZeroSpace }}
     </h4>
     <form action="" class="h4 edit-name-form" ng-show="editing.name" name="dag_operator_name_form">
       <div class="popover-group">

@@ -27,6 +27,15 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
       ///////////////////////////////////////////////////
       // HADOOP WORLD DEMO HACK BELOW
       var hacky_timestamp = (new Date()).getTime();
+      var hadoop_world_operator_classnames = [
+        'JsonSalesGenerator',
+        'JsonToMapConverter',
+        'EnrichmentOperator',
+        'GenericDimensionComputation',
+        'KafkaSinglePortStringInputOperator',
+        'DimensionStoreOperator',
+        'KafkaSinglePortOutputOperator'
+      ];
       // HADOOP WORLD DEMO HACK ABOVE
       ///////////////////////////////////////////////////
       _.each(raw.operatorClasses, function(op) {
@@ -37,6 +46,11 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
 
         ///////////////////////////////////////////////////
         // HADOOP WORLD DEMO HACKS BELOW
+        if (hadoop_world_operator_classnames.indexOf(op.simpleName) > -1) {
+          op.tags.push('hwdemo');
+          op.tags.push('o15demo');
+          op.tags.push('o15');
+        }
         if (!op.attributes) {
           op.attributes = {};
         }
@@ -49,6 +63,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         }
         if (op.simpleName === 'EnrichmentOperator') {
           op.default_properties.filePath = 'products.json';
+          op.default_properties.lookupKey = 'productId';
         }
         if (op.simpleName === 'DimensionStoreOperator') {
           op.attributes.INITIAL_PARTITION_COUNT = 4;
