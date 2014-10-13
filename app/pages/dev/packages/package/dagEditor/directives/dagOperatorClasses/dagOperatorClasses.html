@@ -58,7 +58,7 @@
     <!-- search listing -->
     <ul 
       ng-if="search.term"
-      class="operator-list search-results">
+      class="operator-list search-results noselect">
       <li 
         ng-repeat="operator in operatorClasses | filter:search.term | orderBy:'displayName'"
         dag-operator-class
