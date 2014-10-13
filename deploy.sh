@@ -31,7 +31,7 @@ ARTIFACT_FNAME=${ARTIFACT_BASE}.tar.gz
 
 # file that contains the deployed revision
 REVISION_FILE=REVISION
-git show --oneline HEAD > $REVISION_FILE
+git log --oneline HEAD^..HEAD > $REVISION_FILE
 DIFF=$(git diff)
 if [ ! -z "$DIFF" ]; then
   echo "Repo dirty. Diff is below:" >> $REVISION_FILE
