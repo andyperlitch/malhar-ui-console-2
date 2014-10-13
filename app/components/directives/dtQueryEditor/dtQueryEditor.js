@@ -52,7 +52,7 @@ angular.module('app.components.directives.dtQueryEditor', [])
     var ngModel = $scope.ngModel;
     var scope = $scope;
 
-    scope.dictionary = clientSettings.kafka.dictionary;
+    scope.dictionary = clientSettings.kafka.dictionary; //TODO this should be directive attribute
 
     //scope.keyValues = null;
     scope.$watch('selOption', function () {

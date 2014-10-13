@@ -19,10 +19,12 @@
 
   var productCategories = ['Smart Phones', 'Tablets', 'Laptops', 'Printers', 'Routers'];
   var channelIds = ['Online', 'Mobile', 'Store'];
+  var regionIds = ['Boston', 'New York',  'Philadelphia', 'Cleveland', 'Atlanta', 'Chicago', 'St. Louis', 'Minneapolis', 'Dallas', 'San Francisco'];
 
   clientSettings.kafka.dictionary = {
     productCategory: createKeyValues(productCategories),
-    channelId: createKeyValues(channelIds)
+    channelId: createKeyValues(channelIds),
+    regionId: createKeyValues(regionIds)
   };
 
   clientSettings.kafka.discovery = {};
