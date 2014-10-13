@@ -62,6 +62,10 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
           op.default_properties.maxTuplesPerWindow = 40000;
         }
         if (op.simpleName === 'EnrichmentOperator') {
+          if (!op.inputPorts[0].attributes) {
+            op.inputPorts[0].attributes = {};
+          }
+          op.inputPorts[0].attributes.PARTITION_PARALLEL = true;
           op.default_properties.filePath = 'products.json';
           op.default_properties.lookupKey = 'productId';
         }
