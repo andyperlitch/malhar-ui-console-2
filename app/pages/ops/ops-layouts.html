@@ -5,14 +5,14 @@
             <form action="" class="layout-title" ng-show="layout.editingTitle" ng-submit="saveTitleEdit(layout)">
                 <input type="text" ng-model="layout.title" class="form-control" data-layout="{{layout.id}}">
             </form>
-            <span ng-if="!layout.locked" ng-click="removeLayout(layout)" class="glyphicon glyphicon-remove remove-layout-icon"></span>
+            <span ng-if="!layout.locked" ng-click="removeLayout(layout)" class="glyphicon dt-delete remove-layout-icon"></span>
             <!-- <span class="glyphicon glyphicon-pencil"></span> -->
             <!-- <span class="glyphicon glyphicon-remove"></span> -->
         </a>
     </li>
     <li>
         <a ng-click="createNewLayout()" dt-text-tooltip="add another dashboard" tooltip-placement="bottom" tooltip-popup-delay="1000">
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="glyphicon dt-add"></span>
         </a>
     </li>
 </ul>
