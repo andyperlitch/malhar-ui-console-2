@@ -18,13 +18,16 @@ fi
 DEST_HOST=$1
 
 # build
+npm install
+bower install
+gulp
+DATA_SERVER_HOST="http://${DEST_HOST}:3015" gulp prodenv
+
+# node_modules for production
 PROD_MODULES=./node_modules.production
 mkdir -p $PROD_MODULES
 cp package.json $PROD_MODULES
 npm install --production --prefix $PROD_MODULES
-bower install
-PHANTOMJS_BIN=node_modules/.bin/phantomjs gulp
-DATA_SERVER_HOST="http://${DEST_HOST}:3015" gulp prodenv
 
 PROJECT_NAME=malhar-ui-console
 ARTIFACT_BASE=${PROJECT_NAME}-$(date +%Y.%m.%d_%H.%M)
