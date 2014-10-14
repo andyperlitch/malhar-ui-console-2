@@ -37,10 +37,10 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagStream', 
           cssClass: 'stream-label'
         }]);
         scope.connection.addOverlay(['Custom', {
-          create: function() { return $('<button><span>&times;</span></button>'); },
+          create: function() { return $('<span></span>'); },
           location: 0.5,
           id: 'streamDel',
-          cssClass: 'stream-del close'
+          cssClass: 'glyphicon dt-delete stream-del'
         }]);
         scope.connection.hideOverlay('streamDel');
         overlay = scope.connection.getOverlay('streamLabel');

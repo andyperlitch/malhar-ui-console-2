@@ -1,7 +1,7 @@
 @dag-editor-default-canvas-height: 650px;
 @dag-editor-operator-side-length: 130px;
 
-@dag-editor-operator-color: lighten(#000, 90%);
+@dag-editor-operator-color: #ddd;
 @dag-editor-selected-operator-highlight: lighten(@brand-primary, 50%);
 @dag-editor-selected-operator-color: lighten(@dt-green, 15%);
 
@@ -160,18 +160,15 @@
       }
     }
   }
-  .close {
+  .dag-editor-delete {
+    cursor: pointer;
     visibility: hidden;
     position: absolute;
     top: 7px;
     left: 45%;
     line-height: 0.6;
-    &:hover {
-      background:transparent;
-      color:#600;
-    }
   }
-  &:hover .close {
+  &:hover .dag-editor-delete {
     visibility: visible;
   }
 }
@@ -224,13 +221,12 @@
     z-index: 3;
   }
 }
-.close.stream-del {
-  margin:-21px 0 0 0;
+.stream-del {
+  margin:-15px 0 0 0;
+  cursor: pointer;
   padding:5px;
   border-radius:50%;
   line-height: 0.6;
-  font-size:21px;
-  font-weight:bold;
   &:hover {
     color:#600;
   }

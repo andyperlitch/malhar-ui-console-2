@@ -14,6 +14,37 @@
   color:#888;
 }
 
+@dt-icon-resting-color: rgba(0,0,0,0.2);
+
+.dt-settings {
+  color: @dt-icon-resting-color;
+  opacity:1 !important;
+  cursor: pointer;
+  &:before { content: "\e019"; } /* glyphicon-cog */
+  &:hover {
+    color: @brand-primary;
+  }
+}
+
+.dt-delete {
+  color: @dt-icon-resting-color;
+  opacity:1 !important;
+  cursor: pointer;
+  &:before { content: "\e014"; } /* glyphicon-remove */
+  &:hover {
+    color: #933;
+  }
+}
+
+.dt-add {
+  color: @dt-icon-resting-color;
+  cursor: pointer;
+  &:before { content: "\2b"; }
+  &:hover {
+    color: #393;
+  }
+}
+
 .notification {
   width: 500px;
   overflow: hidden;
