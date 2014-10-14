@@ -81,10 +81,10 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
           op.inputPorts[0].attributes.PARTITION_PARALLEL = true;
         }
         if (op.simpleName === 'GenericDimensionComputation') {
-          if (!op.outputPorts[0].attributes) {
-            op.outputPorts[0].attributes = {};
+          if (!op.inputPorts[0].attributes) {
+            op.inputPorts[0].attributes = {};
           }
-          op.outputPorts[0].attributes.PARTITION_PARALLEL = true;
+          op.inputPorts[0].attributes.PARTITION_PARALLEL = true;
           op.attributes.APPLICATION_WINDOW_COUNT = 4;
         }
         if (op.simpleName === 'KafkaSinglePortStringInputOperator') {
