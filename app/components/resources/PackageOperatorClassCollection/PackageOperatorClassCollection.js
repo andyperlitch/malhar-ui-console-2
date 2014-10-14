@@ -44,6 +44,12 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         op.simpleName = op.name.replace(/.*(?=\.)\./, '');
         op.simpleNameNoOperator = op.simpleName.replace(/Operator$/, '');
 
+        // The gateway eats trailing periods on the description.
+        // This is a band-aid fix.
+        if (op.shortDesc && op.shortDesc.slice(-1) !== '.') {
+          op.shortDesc += '.';
+        }
+
         ///////////////////////////////////////////////////
         // HADOOP WORLD DEMO HACKS BELOW
         if (hadoop_world_operator_classnames.indexOf(op.simpleName) > -1) {
