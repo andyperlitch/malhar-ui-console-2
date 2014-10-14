@@ -21,7 +21,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
   'app.pages.dev.kafka.KafkaRestService',
   'app.pages.dev.kafka.KafkaSocketService'
 ])
-  .factory('KafkaWidgetDataModel', function (WidgetDataModel, KafkaRestService, KafkaSocketService) {
+  .factory('KafkaWidgetDataModel', function (WidgetDataModel, KafkaRestService, KafkaSocketService, clientSettings) {
     function KafkaTimeSeriesWidgetDataModel() {
     }
 
@@ -33,6 +33,30 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
         if (this.dataModelOptions && this.dataModelOptions.query) {
           this.query = this.dataModelOptions.query;
           this.fetchData();
+          this.updateQueryInfo();
+        }
+      },
+
+      updateQueryInfo: function () {
+        if (this.query && this.query.keys) {
+          var dictionary = clientSettings.kafka.dictionary;
+          var properties = _.map(this.query.keys, function (value, key) {
+            var displayValue;
+            var keyValues = dictionary[key];
+            if (keyValues) {
+              var dictionaryEntry = _.findWhere(keyValues, { value: value });
+              if (dictionaryEntry) {
+                displayValue = dictionaryEntry.name;
+              } else {
+                displayValue = value;
+              }
+            } else {
+              displayValue = value;
+            }
+            return key + ': ' + displayValue;
+          });
+          var info = properties.join(', ');
+          this.widgetScope.extendedTitle = info;
         }
       },
 
@@ -68,6 +92,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
         //this.widgetScope.$emit('widgetChanged', this.widget); // this is implicitly called
 
         this.fetchData();
+        this.updateQueryInfo();
       },
 
       destroy: function () {
