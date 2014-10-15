@@ -72,7 +72,6 @@ angular.module('app.components.directives.dtQueryEditor', [])
           }
           return result;
         }, {});
-        console.log(keys);
 
         var viewValue = scope.ngModel.$viewValue ? _.clone(scope.ngModel.$viewValue) : {};
         angular.extend(viewValue, {
