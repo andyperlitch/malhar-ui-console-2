@@ -93,14 +93,11 @@ KafkaEndPoint.prototype = {
 
   addConsumer: function (topic) {
     if (!_.has(this.consumers, topic)) {
-      //this.consumers[topic] = true; // TODO store consumer
-      //this.createConsumer(this.client, topic);
-      //var client = new Client(connectionString);
-      this.createConsumer(null, topic);
+      this.createConsumer(topic);
     }
   },
 
-  createConsumer: function (abc, topicOut, retryCount) {
+  createConsumer: function (topicOut, retryCount) {
     var client = new Client(connectionString);
     var offset = new Offset(client);
 
