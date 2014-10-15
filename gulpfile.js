@@ -170,7 +170,7 @@ gulp.task('clean', function() {
     .pipe($.rimraf({ force: true }));
 });
 
-gulp.task('copy', ['clean'], function () {
+gulp.task('copy', ['clean','usemin'], function () {
   gulp.src(dev.fonts)
     .pipe(gulp.dest(prod.fonts));
 
@@ -184,7 +184,7 @@ gulp.task('copy', ['clean'], function () {
     .pipe(gulp.dest(prod.dir));
 });
 
-gulp.task('usemin', ['less'], function () {
+gulp.task('usemin', ['less','ngtemplates'], function () {
   gulp.src(dev.index)
     //.pipe($.inject(gulp.src(dev.clientSettings), {
     //  read: false,
@@ -231,7 +231,7 @@ gulp.task('prodenv', function () {
   }
 });
 
-gulp.task('build', ['clean', 'jshint', 'ngtemplates', 'test', 'less', 'copy', 'usemin']);
+gulp.task('build', ['clean', 'jshint', 'test', 'copy']);
 
 gulp.task('travis', ['jshint', 'test']);
 
