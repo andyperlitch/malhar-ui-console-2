@@ -16,11 +16,9 @@ if [ "$#" == "0" ]; then
   exit 1
 fi
 
-# build
+# build prereqs
 npm install
 bower install
-gulp
-DATA_SERVER_HOST="http://127.0.0.1:3015" gulp prodenv
 
 # node_modules for production
 PROD_MODULES=./node_modules.production
@@ -41,24 +39,34 @@ if [ ! -z "$DIFF" ]; then
   echo "$DIFF" >> $REVISION_FILE
 fi
 
-# artifact
+# move node_modules around
 mv node_modules node_modules.orig
 ln -s $PROD_MODULES/node_modules .
-tar -czhf $ARTIFACT_FNAME dist kafka kafkaserver.js config.js dist_start.sh package.json node_modules $REVISION_FILE
-rm node_modules
-mv node_modules.orig node_modules
-rm $REVISION_FILE
 
+# build per dest host because client.settings.js needs to be different per host (for now)
 while (( "$#" )); do
   DEST_HOST=$1
 
+  # build and set up client.settings.js for the host we are deploying to
+  gulp
+  DATA_SERVER_HOST="http://${DEST_HOST}:3015" gulp prodenv
+
+  # build tarball
+  tar -czhf $ARTIFACT_FNAME dist kafka kafkaserver.js config.js dist_start.sh package.json node_modules $REVISION_FILE
+
   # deploy
   scp $ARTIFACT_FNAME hadoop@$DEST_HOST:
-  # extract artifact into deploy dir and move project symlink to point to the new release
+  # extract tarball into deploy dir and move project symlink to point to the new release
   ssh -l hadoop $DEST_HOST "cd /usr/local/deploy && mkdir $ARTIFACT_BASE && cd $ARTIFACT_BASE && tar -xzf ~/$ARTIFACT_FNAME && cd .. && rm -f $PROJECT_NAME && ln -s $ARTIFACT_BASE $PROJECT_NAME && rm ~/$ARTIFACT_FNAME"
+  # restart gateway
   ssh -l hadoop -t $DEST_HOST "/home/hadoop/repos/core/gateway/src/main/scripts/dtgateway restart"
 
+  # next host
   shift
 done
 
+# clean up and put things back how they were
+rm node_modules
+mv node_modules.orig node_modules
+rm $REVISION_FILE
 rm $ARTIFACT_FNAME
