@@ -101,10 +101,7 @@ angular.module('app.components.directives.dtQueryEditor', [])
       },
 
       update: function (json) {
-        if (!scope.options) {
-          scope.properties = [];
-          return;
-        }
+        var options = scope.options ? scope.options : [];
 
         var keys = {};
         if (json && json.keys) {
@@ -113,10 +110,25 @@ angular.module('app.components.directives.dtQueryEditor', [])
           keys = {};
         }
 
-        scope.properties = _.map(scope.options, function (key) {
+        scope.properties = _.map(options, function (key) {
           var value = _.has(keys, key) ? keys[key] : null;
           return this.createProperty(key, value);
         }.bind(this));
+
+        // add keys that are not in options
+        if (!_.isEmpty(keys)) {
+          var optionsMap = _.reduce(options, function (result, option) {
+            result[option] = true;
+            return result;
+          }, {});
+
+          _.each(keys, function (value, key) {
+            if (!_.has(optionsMap, key)) {
+              var property = this.createProperty(key, value);
+              scope.properties.push(property);
+            }
+          }.bind(this));
+        }
       }
     });
 
