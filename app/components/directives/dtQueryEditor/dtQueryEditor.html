@@ -1,7 +1,7 @@
-<div class="query-editor">
+<div class="dt-query-editor">
     <tabset>
         <tab heading="Query" select="switchToDesignerMode();">
-            <div ng-if="!jsonMode" class="properties-table" ng-controller="QueryEditorCtrl">
+            <div ng-if="!jsonMode" class="properties-table" ng-controller="DTQueryEditorCtrl">
                 <div class="row">
                     <div class="cell">
                         <form>
@@ -45,7 +45,7 @@
             </div>
         </tab>
         <tab heading="JSON" select="switchToJsonMode();">
-            <div ng-if="jsonMode" ng-controller="QueryEditorJsonCtrl">
+            <div ng-if="jsonMode" ng-controller="DTQueryEditorJsonCtrl">
                 <textarea ng-model="jsonText" ng-change="textChanged(jsonText);"></textarea>
                 <div ng-if="!valid"class="alert alert-danger">
                     Invalid JSON
