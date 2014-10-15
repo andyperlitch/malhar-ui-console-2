@@ -124,7 +124,7 @@ KafkaEndPoint.prototype = {
         if (retryCount < 5) {
           console.log('_retry fetching offset for topic', topicOut, ', retry count', retryCount);
           setTimeout(function () {
-            self.createConsumer(client, topicOut, retryCount + 1);
+            self.createConsumer(topicOut, retryCount + 1);
           }, 1000);
         }
       }
