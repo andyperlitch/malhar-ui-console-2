@@ -10,18 +10,17 @@
 # commands that fail will cause the shell script to exit immediately
 set -e
 
-if [ -z $1 ]; then
-  echo "Usage: $0 {destination_hostname}"
+
+if [ "$#" == "0" ]; then
+  echo "Usage: $0 host1 host2 ..."
   exit 1
 fi
-
-DEST_HOST=$1
 
 # build
 npm install
 bower install
 gulp
-DATA_SERVER_HOST="http://${DEST_HOST}:3015" gulp prodenv
+DATA_SERVER_HOST="http://127.0.0.1:3015" gulp prodenv
 
 # node_modules for production
 PROD_MODULES=./node_modules.production
@@ -50,9 +49,16 @@ rm node_modules
 mv node_modules.orig node_modules
 rm $REVISION_FILE
 
-# deploy
-scp $ARTIFACT_FNAME hadoop@$DEST_HOST:
+while (( "$#" )); do
+  DEST_HOST=$1
+
+  # deploy
+  scp $ARTIFACT_FNAME hadoop@$DEST_HOST:
+  # extract artifact into deploy dir and move project symlink to point to the new release
+  ssh -l hadoop $DEST_HOST "cd /usr/local/deploy && mkdir $ARTIFACT_BASE && cd $ARTIFACT_BASE && tar -xzf ~/$ARTIFACT_FNAME && cd .. && rm -f $PROJECT_NAME && ln -s $ARTIFACT_BASE $PROJECT_NAME && rm ~/$ARTIFACT_FNAME"
+  ssh -l hadoop -t $DEST_HOST "/home/hadoop/repos/core/gateway/src/main/scripts/dtgateway restart"
+
+  shift
+done
+
 rm $ARTIFACT_FNAME
-# extract artifact into deploy dir and move project symlink to point to the new release
-ssh -l hadoop $DEST_HOST "cd /usr/local/deploy && mkdir $ARTIFACT_BASE && cd $ARTIFACT_BASE && tar -xzf ~/$ARTIFACT_FNAME && cd .. && rm -f $PROJECT_NAME && ln -s $ARTIFACT_BASE $PROJECT_NAME && rm ~/$ARTIFACT_FNAME"
-ssh -l hadoop -t $DEST_HOST "/home/hadoop/repos/core/gateway/src/main/scripts/dtgateway restart"
