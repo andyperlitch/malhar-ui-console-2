@@ -32,7 +32,7 @@ var dev = {
     'app/bower_components/malhar-angular-widgets/dist/malhar-angular-widgets.js'
   ],
   images: 'app/images/*',
-  fonts: ['app/bower_components/bootstrap/fonts/*', 'app/fonts/*'],
+  fonts: ['app/fonts/*', 'app/bower_components/bootstrap/fonts/*', 'app/bower_components/font-awesome/fonts/*'],
   templates: [
     'app/pages/**/*.html',
     'app/components/**/*.html'

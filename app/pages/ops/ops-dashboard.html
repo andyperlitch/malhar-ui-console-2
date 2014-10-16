@@ -11,7 +11,7 @@
             </ul>
         </div>
 
-        <button class="btn btn-xs btn-warning" ng-click="resetWidgetsToDefault()" dt-text-tooltip="reset to default widgets"><span class="glyphicon glyphicon-refresh"></span></button
+        <button class="btn btn-xs btn-warning" ng-click="resetWidgetsToDefault()" dt-text-tooltip="reset to default widgets"><span class="glyphicon glyphicon-fa glyphicon-fa-undo"></span></button
         ><button ng-if="options.storage && options.explicitSave" ng-click="options.saveDashboard()" class="btn btn-success" ng-disabled="!options.unsavedChangeCount">{{ !options.unsavedChangeCount ? "all saved" : "save changes (" + options.unsavedChangeCount + ")" }}</button
         ><button ng-click="clear();" type="button" class="btn btn-xs btn-info" dt-text-tooltip="clear all widgets"><span class="glyphicon glyphicon-trash"></span></button>
     </div>
