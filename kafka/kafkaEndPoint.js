@@ -16,21 +16,14 @@
 
 'use strict';
 
-var config = require('../config');
 var _ = require('lodash');
 var kafka = require('kafka-node');
-var LRU = require('lru-cache');
+var config = require('../config');
 
 var Consumer = kafka.Consumer;
-//var Consumer = kafka.HighLevelConsumer;
 var Producer = kafka.Producer;
 var Offset = kafka.Offset;
 var Client = kafka.Client;
-var topicOut = config.kafka.topic.out || 'test';
-var connectionString = config.kafka.zookeeper;
-var topicIn = config.kafka.topic.in || 'test';
-
-var topicOutPartition = 0;
 
 var existingTopicConsumerOptions = {
   autoCommit: false,
@@ -43,7 +36,7 @@ var existingTopicConsumerOptions = {
 function KafkaEndPoint (messageCallback) {
   this.messageCallback = messageCallback;
 
-  this.client = new Client(connectionString);
+  this.client = new Client(config.kafka.zookeeper);
   this.producer = new Producer(this.client);
   this.consumers = {};
 }
@@ -98,18 +91,18 @@ KafkaEndPoint.prototype = {
   },
 
   createConsumer: function (topicOut, retryCount) {
-    var client = new Client(connectionString);
+    var client = new Client(config.kafka.zookeeper);
     var offset = new Offset(client);
 
     offset.fetch([
-      { topic: topicOut, partition: topicOutPartition, time: -1, maxNum: 1 }
+      { topic: topicOut, partition: 0, time: -1, maxNum: 1 }
     ], function (err, data) {
       if (!err) {
         if (!_.has(this.consumers, topicOut)) {
           var initialOffset = data[topicOut][0][0];
           console.log('__initial fetched offset:', initialOffset, ', topic:', topicOut);
           var topics = [
-            {topic: topicOut, partition: topicOutPartition, offset: initialOffset}
+            {topic: topicOut, partition: 0, offset: initialOffset}
           ];
           this.consumers[topicOut] = true; // TODO store consumer
           var consumer = new Consumer(client, topics, existingTopicConsumerOptions);
@@ -131,7 +124,6 @@ KafkaEndPoint.prototype = {
     }.bind(this));
   }
 };
-
 
 module.exports = KafkaEndPoint;
 
