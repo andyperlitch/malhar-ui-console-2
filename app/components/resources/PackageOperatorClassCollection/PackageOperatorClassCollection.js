@@ -45,7 +45,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         op.simpleNameNoOperator = op.simpleName.replace(/Operator$/, '');
 
         // The gateway eats trailing periods on the description.
-        // This is a band-aid fix.
+        // This is a band-aid fix. SPOI-3327
         if (op.shortDesc && op.shortDesc.slice(-1) !== '.') {
           op.shortDesc += '.';
         }

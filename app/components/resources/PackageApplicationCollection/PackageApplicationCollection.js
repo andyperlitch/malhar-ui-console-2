@@ -16,13 +16,17 @@
 
 'use strict';
 
-angular.module('app.components.resources.PackageApplicationCollection', ['app.components.resources.BaseCollection'])
-  .factory('PackageApplicationCollection', function (BaseCollection) {
+angular.module('app.components.resources.PackageApplicationCollection', ['app.components.resources.PackageApplicationModel','app.components.resources.BaseCollection'])
+  .factory('PackageApplicationCollection', function (BaseCollection, PackageApplicationModel) {
 
     var PackageApplicationCollection = BaseCollection.extend({
       debugName: 'PackageApplicationCollection',
       urlKey: 'PackageApplications',
-      transformResponse: 'applications'
+      transformResponse: 'applications',
+      model: PackageApplicationModel,
+      defaultSetOptions: {
+        remove: true
+      }
     });
 
     return PackageApplicationCollection;
