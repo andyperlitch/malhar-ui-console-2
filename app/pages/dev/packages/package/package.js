@@ -20,7 +20,8 @@ angular.module('app.pages.dev.packages.package', [
   'app.components.resources.PackageApplicationModel',
   'app.components.resources.PackageApplicationCollection',
   'app.components.services.getUri',
-  'app.pages.dev.packages.package.newAppModal'
+  'app.pages.dev.packages.package.newAppModal',
+  'app.pages.dev.packages.package.removeAppModal'
 ])
 
 // Routing
@@ -35,7 +36,7 @@ angular.module('app.pages.dev.packages.package', [
   })
 
 // Controller
-  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection, newAppModal, $log, $location, getUri) {
+  .controller('PackageCtrl', function($scope, $routeParams, PackageModel, PackageApplicationModel, PackageApplicationCollection, newAppModal, removeAppModal, $log, $location, getUri) {
     $scope.packageName = $routeParams.packageName;
     $scope.packageVersion = $routeParams.packageVersion;
 
@@ -53,6 +54,12 @@ angular.module('app.pages.dev.packages.package', [
 
     $scope.alerts = [];
     var msgIds = 0;
+
+    $scope.remove = function(event, name) {
+      removeAppModal(name).then(function() {
+        $scope.apps.fetch();
+      });
+    };
 
     $scope.launch = function (event, name) {
       var app = new PackageApplicationModel({

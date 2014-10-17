@@ -1,0 +1,18 @@
+<div class="modal-header modal-header-danger">
+    <h3 class="modal-title"><span class="glyphicon glyphicon-remove"></span> <span dt-text>Delete Application</span></h3>
+</div>
+<div class="modal-body">
+  <p>Are you sure you want to delete {{appName}}?</p>
+  <form name="remove_app_form" ng-submit="remove(remove_app_form)">
+    <input type="hidden" ng-model="appName" class="form-control" id="remove_app_name" name="remove_app_name">
+    <div ng-messages="new_app_form.new_app_name.$error">
+      <p ng-message="serverError" class="help-block">
+        <span class="text-danger">Server error: <span ng-bind="remove_app_form.remove_app_name.$errorMessages.serverError"></span></span>
+      </p>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" ng-click="remove(remove_app_form)" ng-disabled="remove_app_form.$invalid || removing">{{ removing ? 'Deleting...' : 'Delete'}}</button>
+    <button class="btn btn-default" ng-click="$dismiss()" dt-text>Cancel</button>
+</div>

@@ -22,6 +22,7 @@ angular.module('app.components.resources.PackageApplicationModel',[
     var PackageApplicationModel = BaseModel.extend({
       debugName: 'PackageApplicationModel',
       urlKey: 'PackageApplication',
+      idAttribute: 'name',
       transformResponse: function(raw) {
         if (raw.fileContent && raw.fileContent.operators) {
           _.each(raw.fileContent.operators, function(o) {

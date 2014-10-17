@@ -274,7 +274,7 @@ angular.module('app.pages.dev.packages.package.dagEditor.directives.dagOperator'
 
     if (destroyed_streams.length) {
       return confirm({
-        title: dtText.get('Delete this operator?'),
+        title: dtText.get('Operator Delete'),
         body: dtText.get('Are you sure you want to delete this operator? Doing so will delete the following streams: ') + destroyed_streams.join(', ') + '.'
       })
       .then(function() {
