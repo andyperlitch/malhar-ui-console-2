@@ -44,7 +44,20 @@ angular.module('app.components.resources.BaseCollection', [
      * @type {Object}
      */
     defaultSetOptions: {
-      remove: false
+      /**
+       * If enabled, members of the collection that are not receiving
+       * an update will be removed from this.data
+       * @type {Boolean}
+       */
+      remove: false,
+      /**
+       * If the 'remove' option is enabled and this is enabled,
+       * the collection will simply be replaced by the updates
+       * passed to this.set. This can improve performance significantly,
+       * especially with large datasets.
+       * @type {Boolean}
+       */
+      alwaysReset: false
     },
 
     /**
@@ -59,6 +72,11 @@ angular.module('app.components.resources.BaseCollection', [
 
       // Add default options
       _.defaults(options, this.defaultSetOptions);
+
+      if (options.remove && options.alwaysReset) {
+        this.data = updates;
+        return;
+      }
 
       // References to data and context
       var data = this.data;
