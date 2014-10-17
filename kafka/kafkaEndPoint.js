@@ -17,6 +17,7 @@
 'use strict';
 
 var _ = require('lodash');
+var EventEmitter = require('events').EventEmitter;
 var kafka = require('kafka-node');
 var config = require('../config');
 
@@ -33,15 +34,28 @@ var existingTopicConsumerOptions = {
   fromOffset: true
 };
 
-function KafkaEndPoint (messageCallback) {
-  this.messageCallback = messageCallback;
+var MESSAGE_EVENT = 'message';
 
+function KafkaEndPoint () {
+  this.emitter = new EventEmitter();
   this.client = new Client(config.kafka.zookeeper);
   this.producer = new Producer(this.client);
   this.consumers = {};
 }
 
 KafkaEndPoint.prototype = {
+  addMessageListener: function (callback) {
+    this.emitter.on(MESSAGE_EVENT, callback);
+  },
+
+  removeMessageListener: function (callback) {
+    this.emitter.removeListener(MESSAGE_EVENT, callback);
+  },
+
+  emitMessage: function (message) {
+    this.emitter.emit(MESSAGE_EVENT, message);
+  },
+
   send: function (topic, message) {
     var payload = {topic: topic, messages: [message], partition: 0};
     this.producer.send([payload], function (err) {
@@ -68,7 +82,7 @@ KafkaEndPoint.prototype = {
       }
 
       if (message.offset >= initialOffset) {
-        this.messageCallback(message);
+        this.emitMessage(message);
       }
     }.bind(this));
     consumer.on('error', function (err) {

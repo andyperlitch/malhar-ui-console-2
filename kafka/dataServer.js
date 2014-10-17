@@ -25,7 +25,8 @@ function DataServer(io) {
   this.io = io;
   this.lruCache = LRU(config.kafka.lruCacheMax);
   this.queries = new QueryMap();
-  this.kafkaEndPoint = new KafkaEndPoint(this.onMessage.bind(this)); //TODO add onready
+  this.kafkaEndPoint = new KafkaEndPoint();
+  this.kafkaEndPoint.addMessageListener(this.onMessage.bind(this));
 
   this.io.on('connection', function (socket) {
     socket.on('subscribe', function (data) {
