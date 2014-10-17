@@ -81,7 +81,7 @@ DataServer.prototype = {
         });
         //console.log('emit', msg.id);
         //console.log(queries.getQueryList());
-        this.io.to(msg.id).emit(msg.id, message);
+        this.emitResult(msg.id, message);
       }
     }
   },
@@ -128,6 +128,10 @@ DataServer.prototype = {
   onDisconnect: function (socket) {
     console.log(socket.id + ' disconnected ' + socket.connected);
     this.queries.removeId(socket.id);
+  },
+
+  emitResult: function (query, message) {
+    this.io.to(query).emit(query, message);
   },
 
   emitCachedResult: function (id) {
