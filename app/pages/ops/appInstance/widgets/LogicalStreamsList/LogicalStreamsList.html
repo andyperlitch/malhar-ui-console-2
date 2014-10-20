@@ -1,38 +1,40 @@
-<div class="palette">
+<div dt-table-resize options="table_options">
+  <div class="palette">
 
-  <!-- when none are selected -->
-  <span ng-if="!selected.length">
-    <button class="btn btn-default" disabled>
-      <span class="glyphicon glyphicon-check"></span>
-      <span dt-text>select a stream</span>
-    </button>
-  </span>
+    <!-- when none are selected -->
+    <span ng-if="!selected.length">
+      <button class="btn btn-default" disabled>
+        <span class="glyphicon glyphicon-check"></span>
+        <span dt-text>select a stream</span>
+      </button>
+    </span>
 
-  <!-- when exactly one is selected -->
-  <span ng-if="selected.length === 1">
-    <a class="btn btn-primary" dt-page-href="LogicalStream" params="{ appId: appId, streamName: selected[0] }">
-      <span class="glyphicon glyphicon-eye-open"></span>
-      <span dt-text="inspect"></span>
-    </a>
-  </span>
+    <!-- when exactly one is selected -->
+    <span ng-if="selected.length === 1">
+      <a class="btn btn-primary" dt-page-href="LogicalStream" params="{ appId: appId, streamName: selected[0] }">
+        <span class="glyphicon glyphicon-eye-open"></span>
+        <span dt-text="inspect"></span>
+      </a>
+    </span>
 
-  <!-- when one or more are selected -->
-  <span ng-if="selected.length >= 2">
-    <button class="btn btn-default" ng-click="deselectAll()">
-      <span class="glyphicon glyphicon-unchecked"></span>
-      <span dt-text>deselect all</span>
-    </button>
-  </span>
+    <!-- when one or more are selected -->
+    <span ng-if="selected.length >= 2">
+      <button class="btn btn-default" ng-click="deselectAll()">
+        <span class="glyphicon glyphicon-unchecked"></span>
+        <span dt-text>deselect all</span>
+      </button>
+    </span>
 
-  <!-- <span dt-table-selected-count="selected"></span> -->
+    <span dt-table-selected-count="selected"></span>
 
+  </div>
+  <mlhr-table 
+  options="table_options"
+  columns="columns" 
+  rows="resource.data" 
+  track-by="name"
+  class="dt-table"
+  table-class="table" 
+  selected="selected">
+  </mlhr-table>
 </div>
-<mlhr-table 
-options="table_options"
-columns="columns" 
-rows="resource.data" 
-track-by="name"
-class="dt-table"
-table-class="table" 
-selected="selected">
-</mlhr-table>

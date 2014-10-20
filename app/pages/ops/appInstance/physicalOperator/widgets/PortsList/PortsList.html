@@ -1,4 +1,5 @@
-<div class="palette">
+<div dt-table-resize options="table_options">
+  <div class="palette">
 
     <!-- when none are selected -->
     <span ng-if="!selected.length">
@@ -21,13 +22,14 @@
     </span>    
 
     <span dt-table-selected-count="selected"></span>
-</div>
-<mlhr-table 
-    options="table_options"
-    columns="columns" 
-    rows="physicalOperator.data.ports" 
-    class="dt-table"
-    track-by="name"
-    table-class="table"
-    selected="selected">
+  </div>
+  <mlhr-table 
+  options="table_options"
+  columns="columns" 
+  rows="physicalOperator.data.ports" 
+  class="dt-table"
+  track-by="name"
+  table-class="table"
+  selected="selected">
 </mlhr-table>
+</div>

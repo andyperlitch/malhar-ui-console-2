@@ -28,7 +28,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
   'app.components.resources.PhysicalOperatorCollection',
   'app.components.services.dtText',
   'app.components.services.tableOptionsFactory',
-  'app.components.filters.percent2cpu'
+  'app.components.filters.percent2cpu',
+  'app.components.directives.dtTableResize'
 ])
 
 // Widget Data Model
@@ -39,6 +40,14 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
       
       var scope = this.widgetScope;
 
+      // Set the table options
+      scope.table_options = tableOptionsFactory({
+        initial_sorts: [
+          { id: 'id', dir: '+' }
+        ],
+        appInstance: scope.appInstance
+      }, scope.widget, scope);
+
       // Set up resource
       var resource = this.resource = scope.resource = new PhysicalOperatorCollection({
         // Will always be available
@@ -48,17 +57,25 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
         // May be defined if on logical operator page
         operatorName: scope.operatorName
       });
+
+      var latest;
+      resource.set = function(updates) {
+        if (scope.table_options.scrollingPromise) {
+          var self = this;
+          latest = updates;
+          scope.table_options.scrollingPromise.then(function() {
+            if (latest === updates) {
+              self.data = updates;
+            }
+          });
+        }
+        else {
+          this.data = updates;
+        }
+      };
+
       resource.fetch();
       resource.subscribe(scope);
-
-      // Set the table options
-      scope.table_options = tableOptionsFactory({
-        row_limit: 10,
-        initial_sorts: [
-          { id: 'id', dir: '+' }
-        ],
-        appInstance: scope.appInstance
-      }, scope.widget, scope);
 
       // Set the table columns
       scope.columns = [
@@ -125,7 +142,7 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('current_wid_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span window-id="row.currentWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
+          template: '<span window-id="row.currentWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
         },
         {
           id: 'recoveryWindowId',
@@ -133,7 +150,7 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('recovery_wid_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span window-id="row.recoveryWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
+          template: '<span window-id="row.recoveryWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
         },
         {
           id: 'failureCount',

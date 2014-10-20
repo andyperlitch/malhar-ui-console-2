@@ -17,7 +17,8 @@
 'use strict';
 
 angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
-  'app.components.resources.OpPropertiesModel'
+  'app.components.resources.OpPropertiesModel',
+  'app.components.directives.dtTableResize'
 ])
   .factory('OpPropertiesWidgetDataModel', function (WidgetDataModel, OpPropertiesModel, tableOptionsFactory, dtText) {
     function OpPropertiesWidgetDataModel(options) {

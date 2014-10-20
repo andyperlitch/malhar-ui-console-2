@@ -27,7 +27,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
   'app.components.resources.LogicalStreamCollection',
   'app.settings',
   'app.components.services.tableOptionsFactory',
-  'app.components.services.dtText'
+  'app.components.services.dtText',
+  'app.components.directives.dtTableResize'
 ])
 
 // Widget Data Model

@@ -24,6 +24,7 @@
 // Module Definition
 angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
   'app.components.directives.containerLogsDropdown',
+  'app.components.directives.dtTableResize',
   'app.components.services.dtText',
   'app.components.resources.ContainerCollection',
   'app.components.widgets.Base',

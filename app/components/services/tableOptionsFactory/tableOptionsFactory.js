@@ -50,7 +50,11 @@ angular.module('app.components.services.tableOptionsFactory', [
       }
       defaults = {
         storage: tableStorageFactory(widget, scope),
-        storage_key: 'table'
+        storage_key: 'table',
+        loading: true,
+        loadingTemplateUrl: 'components/services/tableOptionsFactory/tableLoadingTemplate.html',
+        bgSizeMultiplier: 2,
+        defaultRowHeight: 29
       };
       return angular.extend({}, defaults, o);
   };
