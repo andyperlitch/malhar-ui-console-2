@@ -29,7 +29,9 @@ angular.module('app.components.directives.dtTableResize', [])
         var fullHeight = updates.height;
         var paletteHeight = element.find('.palette').outerHeight(true);
         var headerHeight = element.find('.mlhr-header-table').outerHeight(true);
-        options.bodyHeight = fullHeight - paletteHeight - headerHeight - 10;
+        var contentPadding = parseInt(element.parents('.widget-content').css('padding-bottom'));
+        var resizerHeight = element.parents('.widget').find('.widget-s-resizer').height();
+        options.bodyHeight = fullHeight - paletteHeight - headerHeight - contentPadding - resizerHeight;
         if(!scope.$$phase) {
           scope.$digest();
         }
