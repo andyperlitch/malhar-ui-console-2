@@ -26,7 +26,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
   'app.components.widgets.Base',
   'app.settings',
   'app.components.services.dtText',
-  'app.components.services.tableOptionsFactory'
+  'app.components.services.tableOptionsFactory',
+  'app.components.directives.dtTableResize'
 ])
 
 // Widget Data Model

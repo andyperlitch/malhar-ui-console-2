@@ -29,7 +29,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
   'app.components.services.dtText',
   'app.components.filters.percent2cpu',
   'app.components.services.tableOptionsFactory',
-  'app.components.directives.logicalOperatorStatus'
+  'app.components.directives.logicalOperatorStatus',
+  'app.components.directives.dtTableResize'
 ])
 
 // Widget Data Model

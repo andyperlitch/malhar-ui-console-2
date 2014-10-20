@@ -27,7 +27,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
   'app.components.resources.LogicalStreamCollection',
   'app.settings',
   'app.components.services.tableOptionsFactory',
-  'app.components.services.dtText'
+  'app.components.services.dtText',
+  'app.components.directives.dtTableResize'
 ])
 
 // Widget Data Model
@@ -72,8 +73,7 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
           label: dtText.get('name_label'), 
           key: 'name', 
           filter: 'like', 
-          sort: 'string', 
-          template: '<a dt-page-href="LogicalStream" params="{ appId: \'' + scope.appId + '\', streamName: row.name }">{{ row.name }}</a>'
+          sort: 'string'
         },
         {
           id: 'locality', 
