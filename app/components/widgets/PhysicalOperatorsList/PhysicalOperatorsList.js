@@ -191,23 +191,23 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('latency_ms_label'),
           sort: 'number',
           filter: 'number'
+        },
+        {
+          id: 'totalTuplesProcessed',
+          key: 'totalTuplesProcessed',
+          label: dtText.get('processed_total'),
+          sort: 'number',
+          filter: 'number',
+          ngFilter: 'commaGroups'
+        },
+        {
+          id: 'totalTuplesEmitted',
+          key: 'totalTuplesEmitted',
+          label: dtText.get('emitted_total'),
+          sort: 'number',
+          filter: 'number',
+          ngFilter: 'commaGroups'
         }
-        // {
-        //   id: 'totalTuplesProcessed',
-        //   key: 'totalTuplesProcessed',
-        //   label: dtText.get('processed_total'),
-        //   sort: 'number',
-        //   filter: 'number',
-        //   ngFilter: 'commaGroups'
-        // },
-        // {
-        //   id: 'totalTuplesEmitted',
-        //   key: 'totalTuplesEmitted',
-        //   label: dtText.get('emitted_total'),
-        //   sort: 'number',
-        //   filter: 'number',
-        //   ngFilter: 'commaGroups'
-        // }
       ];
 
       // Splice out name column if this is a partitions table
