@@ -24,7 +24,8 @@ angular.module('app.pages.dev.kafka', [
   'app.pages.dev.kafka.socket',
   'app.pages.dev.kafka.KafkaSocketService',
   'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel'
+  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
+  'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel'
 ])
 
 // Route
@@ -45,7 +46,7 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function ($scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
+  .controller('KafkaCtrl', function (webSocket, $scope, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
                                      dashboardOptionsFactory, defaultOnSettingsClose, clientSettings) {
     function onSettingsClose (result, widget) {
       defaultOnSettingsClose(result, widget);
@@ -100,6 +101,32 @@ angular.module('app.pages.dev.kafka', [
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
         onSettingsClose: onSettingsClose
+      },
+      {
+        name: 'Top N',
+        title: 'Twitter Top N',
+        templateUrl: 'pages/dev/kafka/widgets/table/table.html',
+        dataAttrName: 'data',
+        dataModelType: 'TopNWidgetDataModel',
+        dataModelOptions: {
+          defaultTopic: 'demos.twitter.topURLs'
+        },
+        size: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'Web Socket Debug',
+        title: 'Web Socket Debug',
+        templateUrl: 'pages/dev/kafka/widgets/webSocketDebug/webSocketDebug.html',
+        dataAttrName: 'data',
+        dataModelType: 'WebSocketDataModel',
+        dataModelOptions: {
+          defaultTopic: 'demos.twitter.topURLs'
+        },
+        size: {
+          width: '50%'
+        }
       },
       {
         name: 'Kafka Debug',
