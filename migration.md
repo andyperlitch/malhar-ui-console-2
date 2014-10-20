@@ -24,7 +24,7 @@ Nice-To-Haves
 - Log Level Setter (3 d) [[MLHR-1455](https://malhar.atlassian.net/browse/MLHR-1455)]
 - Recording + Tuple Viewer (2 w) [[MLHR-1294](https://malhar.atlassian.net/browse/MLHR-1294)], [[MLHR-1261](https://malhar.atlassian.net/browse/MLHR-1261), [MLHR-1262](https://malhar.atlassian.net/browse/MLHR-1262), [MLHR-1232](https://malhar.atlassian.net/browse/MLHR-1232)]
 - Better charting widget (1 w) [[MLHR-1233](https://malhar.atlassian.net/browse/MLHR-1233)]
-- Loading feedback for tables (1 d) [[MLHR-1451](https://malhar.atlassian.net/browse/MLHR-1451)]
-- Lock layouts (3 d) [[MLHR-1312](https://malhar.atlassian.net/browse/MLHR-1312)]
+- ~~Loading feedback for tables (1 d) [[MLHR-1451](https://malhar.atlassian.net/browse/MLHR-1451)]~~
+- ~~Lock layouts (3 d) [[MLHR-1312](https://malhar.atlassian.net/browse/MLHR-1312)]~~
 
 **remaining total**: 5 weeks
