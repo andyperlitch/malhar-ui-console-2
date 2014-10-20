@@ -13,13 +13,15 @@
 
   clientSettings.kafka = {};
 
-  function createKeyValues (list) {
-    return _.map(_.sortBy(list), function (name, index) { return { name: name, value: (index + 1) }; });
+  function createKeyValues(list) {
+    return _.map(_.sortBy(list), function (name, index) {
+      return { name: name, value: (index + 1) };
+    });
   }
 
   var productCategories = ['Smart Phones', 'Tablets', 'Laptops', 'Printers', 'Routers'];
   var channelIds = ['Online', 'Mobile', 'Store'];
-  var regionIds = ['Boston', 'New York',  'Philadelphia', 'Cleveland', 'Atlanta', 'Chicago', 'St. Louis', 'Minneapolis', 'Dallas', 'San Francisco'];
+  var regionIds = ['Boston', 'New York', 'Philadelphia', 'Cleveland', 'Atlanta', 'Chicago', 'St. Louis', 'Minneapolis', 'Dallas', 'San Francisco'];
 
   clientSettings.kafka.dictionary = {
     productCategory: createKeyValues(productCategories),
@@ -43,7 +45,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek5';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek7';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -146,8 +148,8 @@
     {
       title: 'default', active: true, defaultWidgets: [
       _.assign({
-          title: 'AdsDemo - Time Series Bar Chart'
-        }, _.findWhere(clientSettings.dashboard.kafka.AdsDemo.defaultWidgets, { name: 'Time Series Bar Chart' })),
+        title: 'AdsDemo - Time Series Bar Chart'
+      }, _.findWhere(clientSettings.dashboard.kafka.AdsDemo.defaultWidgets, { name: 'Time Series Bar Chart' })),
       _.assign({
         title: 'AdsDemo - Time Series Line Chart'
       }, _.findWhere(clientSettings.dashboard.kafka.AdsDemo.defaultWidgets, { name: 'Time Series Line Chart' })),
@@ -161,6 +163,16 @@
     },
     clientSettings.dashboard.kafka.AdsDemo,
     clientSettings.dashboard.kafka.DimensionsDemo,
+    {
+      title: 'Web Socket', active: false, defaultWidgets: [
+      {
+        name: 'Top N'
+      },
+      {
+        name: 'Web Socket Debug'
+      }
+    ]
+    },
     {
       title: 'debug', active: false, defaultWidgets: [
       {
