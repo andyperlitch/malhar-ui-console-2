@@ -16,21 +16,15 @@
 
 'use strict';
 
-var config = require('../config');
 var _ = require('lodash');
+var EventEmitter = require('events').EventEmitter;
 var kafka = require('kafka-node');
-var LRU = require('lru-cache');
+var config = require('../config');
 
 var Consumer = kafka.Consumer;
-//var Consumer = kafka.HighLevelConsumer;
 var Producer = kafka.Producer;
 var Offset = kafka.Offset;
 var Client = kafka.Client;
-var topicOut = config.kafka.topic.out || 'test';
-var connectionString = config.kafka.zookeeper;
-var topicIn = config.kafka.topic.in || 'test';
-
-var topicOutPartition = 0;
 
 var existingTopicConsumerOptions = {
   autoCommit: false,
@@ -40,15 +34,28 @@ var existingTopicConsumerOptions = {
   fromOffset: true
 };
 
-function KafkaEndPoint (messageCallback) {
-  this.messageCallback = messageCallback;
+var MESSAGE_EVENT = 'message';
 
-  this.client = new Client(connectionString);
+function KafkaEndPoint () {
+  this.emitter = new EventEmitter();
+  this.client = new Client(config.kafka.zookeeper);
   this.producer = new Producer(this.client);
   this.consumers = {};
 }
 
 KafkaEndPoint.prototype = {
+  addMessageListener: function (callback) {
+    this.emitter.on(MESSAGE_EVENT, callback);
+  },
+
+  removeMessageListener: function (callback) {
+    this.emitter.removeListener(MESSAGE_EVENT, callback);
+  },
+
+  emitMessage: function (message) {
+    this.emitter.emit(MESSAGE_EVENT, message);
+  },
+
   send: function (topic, message) {
     var payload = {topic: topic, messages: [message], partition: 0};
     this.producer.send([payload], function (err) {
@@ -75,7 +82,7 @@ KafkaEndPoint.prototype = {
       }
 
       if (message.offset >= initialOffset) {
-        this.messageCallback(message);
+        this.emitMessage(message);
       }
     }.bind(this));
     consumer.on('error', function (err) {
@@ -98,18 +105,18 @@ KafkaEndPoint.prototype = {
   },
 
   createConsumer: function (topicOut, retryCount) {
-    var client = new Client(connectionString);
+    var client = new Client(config.kafka.zookeeper);
     var offset = new Offset(client);
 
     offset.fetch([
-      { topic: topicOut, partition: topicOutPartition, time: -1, maxNum: 1 }
+      { topic: topicOut, partition: 0, time: -1, maxNum: 1 }
     ], function (err, data) {
       if (!err) {
         if (!_.has(this.consumers, topicOut)) {
           var initialOffset = data[topicOut][0][0];
           console.log('__initial fetched offset:', initialOffset, ', topic:', topicOut);
           var topics = [
-            {topic: topicOut, partition: topicOutPartition, offset: initialOffset}
+            {topic: topicOut, partition: 0, offset: initialOffset}
           ];
           this.consumers[topicOut] = true; // TODO store consumer
           var consumer = new Consumer(client, topics, existingTopicConsumerOptions);
@@ -131,7 +138,6 @@ KafkaEndPoint.prototype = {
     }.bind(this));
   }
 };
-
 
 module.exports = KafkaEndPoint;
 

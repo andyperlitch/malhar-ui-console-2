@@ -25,7 +25,8 @@ function DataServer(io) {
   this.io = io;
   this.lruCache = LRU(config.kafka.lruCacheMax);
   this.queries = new QueryMap();
-  this.kafkaEndPoint = new KafkaEndPoint(this.onMessage.bind(this)); //TODO add onready
+  this.kafkaEndPoint = new KafkaEndPoint();
+  this.kafkaEndPoint.addMessageListener(this.onMessage.bind(this));
 
   this.io.on('connection', function (socket) {
     socket.on('subscribe', function (data) {
@@ -80,7 +81,7 @@ DataServer.prototype = {
         });
         //console.log('emit', msg.id);
         //console.log(queries.getQueryList());
-        this.io.to(msg.id).emit(msg.id, message);
+        this.emitResult(msg.id, message);
       }
     }
   },
@@ -127,6 +128,10 @@ DataServer.prototype = {
   onDisconnect: function (socket) {
     console.log(socket.id + ' disconnected ' + socket.connected);
     this.queries.removeId(socket.id);
+  },
+
+  emitResult: function (query, message) {
+    this.io.to(query).emit(query, message);
   },
 
   emitCachedResult: function (id) {
