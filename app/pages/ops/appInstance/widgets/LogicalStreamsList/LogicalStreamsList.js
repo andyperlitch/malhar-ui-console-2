@@ -73,8 +73,7 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
           label: dtText.get('name_label'), 
           key: 'name', 
           filter: 'like', 
-          sort: 'string', 
-          template: '<a dt-page-href="LogicalStream" params="{ appId: \'' + scope.appId + '\', streamName: row.name }">{{ row.name }}</a>'
+          sort: 'string'
         },
         {
           id: 'locality', 
