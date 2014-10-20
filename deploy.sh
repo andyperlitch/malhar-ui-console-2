@@ -39,9 +39,7 @@ if [ ! -z "$DIFF" ]; then
   echo "$DIFF" >> $REVISION_FILE
 fi
 
-# move node_modules around
-mv node_modules node_modules.orig
-ln -s $PROD_MODULES/node_modules .
+
 
 # build per dest host because client.settings.js needs to be different per host (for now)
 while (( "$#" )); do
@@ -51,8 +49,16 @@ while (( "$#" )); do
   gulp
   DATA_SERVER_HOST="http://${DEST_HOST}:3015" gulp prodenv
 
+  # move original node_modules, link production node_modules around
+  mv node_modules node_modules.orig
+  ln -s $PROD_MODULES/node_modules .
+
   # build tarball
   tar -czhf $ARTIFACT_FNAME dist kafka kafkaserver.js config.js dist_start.sh package.json node_modules $REVISION_FILE
+
+  # put original node_modules back
+  rm node_modules
+  mv node_modules.orig node_modules
 
   # deploy
   scp $ARTIFACT_FNAME hadoop@$DEST_HOST:
@@ -66,7 +72,6 @@ while (( "$#" )); do
 done
 
 # clean up and put things back how they were
-rm node_modules
-mv node_modules.orig node_modules
 rm $REVISION_FILE
 rm $ARTIFACT_FNAME
+rm -rf $PROD_MODULES
