@@ -19,6 +19,16 @@ angular.module('app.components.directives.windowId', [
   'app.components.filters.relativeTimestamp',
   'jsbn.BigInteger'
 ])
+
+/**
+ * @ngdoc directive
+ * @name app.components.directive:windowId
+ * @description Converts an opaque window id into offset with the timestamp tooltip.
+ * @example 
+ *   <span window-id="my.windowId"></span>
+ *   <span window-id="my.windowId" window-size="appWindowSize"></span>
+ *   <span window-id="my.windowId" window-size="appWindowSize" title-only></span>
+ **/
 .directive('windowId', function(BigInteger) {
 
   return {
@@ -27,38 +37,49 @@ angular.module('app.components.directives.windowId', [
       windowSize: '='
     },
     templateUrl: 'components/directives/windowId/windowId.html',
-    link: function(scope) {
+    compile: function(iElement, iAttrs) {
 
-      var watchHandler = function() {
+      if (iAttrs.hasOwnProperty('titleOnly')) {
+        var innerSpan = iElement.find('span');
+        innerSpan.removeAttr('tooltip-popup-delay');
+        var tooltipValue = innerSpan.attr('tooltip');
+        innerSpan.attr('title', tooltipValue);
+        innerSpan.removeAttr('tooltip');
+      }
 
-        var raw = scope.windowId;
+      return function(scope) {
 
-        // Convert to "long"
-        var value = new BigInteger(raw);
+        var watchHandler = function() {
 
-        // Offset is lower 16 bits
-        scope.offset = value.and(new BigInteger('0x00000000ffffffff',16)).toString() * 1;
+          var raw = scope.windowId;
 
-        // Check if windowSize
-        if (scope.windowSize) {
-          
-          // Basetime is upper 16 bits, in seconds
-          var basetime = new Date((value.shiftRight(32).toString() + '000') * 1);
+          // Convert to "long"
+          var value = new BigInteger(raw);
 
-          // Add offset * windowSize to basetime
-          scope.timestamp = (scope.windowSize * scope.offset) + basetime.valueOf();
-        }
+          // Offset is lower 16 bits
+          scope.offset = value.and(new BigInteger('0x00000000ffffffff',16)).toString() * 1;
 
-        // Otherwise unset
-        else {
-          scope.timestamp = null;
-        }
+          // Check if windowSize
+          if (scope.windowSize) {
+            
+            // Basetime is upper 16 bits, in seconds
+            var basetime = new Date((value.shiftRight(32).toString() + '000') * 1);
 
+            // Add offset * windowSize to basetime
+            scope.timestamp = (scope.windowSize * scope.offset) + basetime.valueOf();
+          }
+
+          // Otherwise unset
+          else {
+            scope.timestamp = null;
+          }
+
+        };
+
+        scope.$watch('windowId', watchHandler);
+        // TODO: only watch once
+        scope.$watch('windowSize', watchHandler);
       };
-
-      scope.$watch('windowId', watchHandler);
-      // TODO: only watch once
-      scope.$watch('windowSize', watchHandler);
     }
   };
 

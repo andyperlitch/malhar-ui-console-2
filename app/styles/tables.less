@@ -19,7 +19,12 @@
     border-color: @table-border-color;
     border-width: 0 1px 1px 1px;
 }
-.table tbody tr:nth-child(odd){
+
+.dt-table .mlhr-rows-table thead > tr > th{
+    padding: 0;
+}
+
+.table tbody tr.odd{
     background-color: @table-alternate-row-color;
 }
 .dt-table tfoot {
@@ -82,6 +87,9 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+.dt-table .mlhr-table-dummy-row {
+    background-image: url('@{imagedir}/table_bg.svg');
 }
 .palette {
     margin: 0 0 (@line-height-computed / 2);
