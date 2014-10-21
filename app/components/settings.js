@@ -246,7 +246,7 @@ angular.module('app.settings', [])
       LogicalStream            :'/ops/apps/:appId/logicalPlan/streams/:streamName',
       Operations               :'/ops',
       PhysicalOperator         :'/ops/apps/:appId/physicalPlan/operators/:operatorId',
-      Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portId',
+      Port                     :'/ops/apps/:appId/physicalPlan/operators/:operatorId/ports/:portName',
 
       // Development
       Packages                 :'/packages',
@@ -265,7 +265,7 @@ angular.module('app.settings', [])
       logicalStream            :':streamName',
       packageName              :':packageName @ :packageVersion',
       physicalOperator         :':operatorId',
-      port                     :':portId'
+      port                     :':portName'
       
     },
 

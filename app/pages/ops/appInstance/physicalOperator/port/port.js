@@ -18,7 +18,7 @@
 angular.module('app.pages.ops.appInstance.physicalOperator.port', [
   'ngRoute',
   'app.settings',
-  'app.components.services.dashboardOptionsFactory',
+  'app.components.resources.PortModel',
   'app.components.resources.PortCollection'
 ])
 
@@ -39,19 +39,11 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
   })
 
   // Controller
-  .controller('PortPageCtrl', function($scope, $routeParams, dashboardOptionsFactory) {
+  .controller('PortPageCtrl', function($scope, $routeParams, PortModel) {
 
-    var widgetDefinitions = [];
-    var defaultWidgets = [];
-
-    $scope.dashboardOptions = dashboardOptionsFactory({
-      storageId: 'dashboard.ops.appInstance.physicalOperator.port',
-      storageHash: 'asd0f8a7sdf',
-      widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
-      defaultLayouts: [
-        { title: 'default', active: true , defaultWidgets: defaultWidgets }
-      ]
-    });
+    console.log('routeParams', $routeParams);
+    $scope.port = new PortModel($routeParams);
+    $scope.port.fetch();
+    $scope.port.subscribe($scope);
 
   });

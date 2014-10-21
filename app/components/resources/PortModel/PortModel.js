@@ -21,7 +21,20 @@ angular.module('app.components.resources.PortModel',[
 .factory('PortModel', function(BaseModel) {
   var PortModel = BaseModel.extend({
     debugName: 'Port',
-    idAttribute: 'name'
+    urlKey: 'PhysicalOperator',
+    topicKey: 'PhysicalOperators',
+    idAttribute: 'name',
+    transformResponse: function(raw) {
+      var operatorId = this.operatorId;
+      var op = _.find(raw.operators, function(o){
+        return o.id === operatorId;
+      });
+      var name = this.portName;
+      var port = _.find(op.ports, function(p) {
+        return p.name === name;
+      });
+      return port;
+    }
   });
   return PortModel;
 });
