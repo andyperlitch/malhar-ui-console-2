@@ -31,6 +31,20 @@ angular.module('app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel', [
     angular.extend(TopNWidgetDataModel.prototype, {
       init: function () {
         WebSocketDataModel.prototype.init.call(this);
+
+        this.widgetScope.gridOptions = {
+          enableColumnResizing: true,
+          columnDefs: [
+            {
+              name: 'key',
+              width: '70%'
+            },
+            {
+              name: 'value',
+              width: '30%'
+            }
+          ]
+        };
       },
 
       updateScope: function (value) {
@@ -47,27 +61,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel', [
           });
         }
 
-        var widgetScope = this.widgetScope;
-
-        if (!widgetScope.gridOptions) {
-          widgetScope.gridOptions = {
-            enableColumnResizing: true,
-            enableRowSelection: true,
-            multiSelect: true,
-            columnDefs: [
-              {
-                name: 'key',
-                width: '70%'
-              },
-              {
-                name: 'value',
-                width: '30%'
-              }
-            ]
-          };
-        }
-
-        widgetScope.gridOptions.data = value;
+        this.widgetScope.gridOptions.data = value;
       }
     });
 
