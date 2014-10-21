@@ -18,11 +18,15 @@
         </h2>
         <h4>
             <small>id:</small>
-            <span dt-container-shorthand="data.id" ng-attr-title="{{ data.id }}"></span>
+            <span tooltip-popup-delay="0" tooltip="{{ data.id }}" tooltip-placement="bottom">
+                <span dt-container-shorthand="data.id"></span>
+            </span>
             <small>user:</small>
             <span>{{ data.user }}</span>
             <small>version:</small>
-            <span ng-bind="data.version.split(' ')[0]" ng-attr-title="{{ data.version }}"></span>
+            <span ng-bind="data.version.split(' ')[0]" popover-placement="bottom" popover="{{ data.version }}" popover-append-to-body="true" popover-popup-delay="0"></span>
+            <small>started</small>
+            <span tooltip="{{data.startedTime | timeSince}} ago" tooltip-popup-delay="0" tooltip-placement="bottom">{{ data.startedTime | relativeTimestamp }}</span>
 
         </h4>        
     </div>
