@@ -45,7 +45,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek7';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek9';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -150,6 +150,31 @@
     ]
   };
 
+  clientSettings.dashboard.kafka.DatabaseDemo = {
+    title: 'DatabaseDemo', active: false, defaultWidgets: [
+      {
+        name: 'Table',
+        title: 'Replicated Table',
+        dataModelOptions: {
+          query: clientSettings.kafka.dimensionsDemoQuery
+        },
+        size: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'Table',
+        title: 'Original Table',
+        dataModelOptions: {
+          query: clientSettings.kafka.dimensionsDemoQuery
+        },
+        size: {
+          width: '50%'
+        }
+      }
+    ]
+  };
+
   clientSettings.dashboard.kafka.layouts = [
     {
       title: 'default', active: true, defaultWidgets: [
@@ -167,10 +192,11 @@
       }, _.findWhere(clientSettings.dashboard.kafka.DimensionsDemo.defaultWidgets, { name: 'Time Series Line Chart' }))
     ]
     },
+    clientSettings.dashboard.kafka.DatabaseDemo,
     clientSettings.dashboard.kafka.AdsDemo,
     clientSettings.dashboard.kafka.DimensionsDemo,
     {
-      title: 'Web Socket', active: false, defaultWidgets: [
+      title: 'WebSocketDemo', active: false, defaultWidgets: [
       {
         name: 'Top N'
       },
