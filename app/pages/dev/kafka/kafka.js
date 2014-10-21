@@ -117,6 +117,19 @@ angular.module('app.pages.dev.kafka', [
         onSettingsClose: onSettingsClose
       },
       {
+        name: 'Text',
+        title: 'Text',
+        templateUrl: 'pages/dev/kafka/widgets/text/text.html',
+        dataModelType: 'KafkaWidgetDataModel',
+        size: {
+          width: '50%'
+        },
+        settingsModalOptions: {
+          partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
+        },
+        onSettingsClose: onSettingsClose
+      },
+      {
         name: 'Top N',
         title: 'Twitter Top N',
         templateUrl: 'pages/dev/kafka/widgets/table/table.html',
