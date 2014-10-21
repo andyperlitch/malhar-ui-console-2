@@ -156,8 +156,29 @@
         name: 'Table',
         title: 'Replicated Table',
         dataModelOptions: {
-          query: clientSettings.kafka.dimensionsDemoQuery
+          query: {
+            selector: 'GET_RECENT_TABLE_ENTRIES',
+            tableName: 'employee',
+            numberEntries: 10,
+            keys: {},
+            kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
+          }
         },
+        size: {
+          width: '50%'
+        }
+      },
+      {
+        name: 'Text',
+        title: 'File Content',
+        dataModelOptions: {
+          query: {
+            selector: 'GET_LATEST_FILE_CONTENTS',
+            filePath: null,
+            numberLines: 10,
+            keys: {},
+            kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
+          }        },
         size: {
           width: '50%'
         }
@@ -166,7 +187,13 @@
         name: 'Table',
         title: 'Original Table',
         dataModelOptions: {
-          query: clientSettings.kafka.dimensionsDemoQuery
+          query: {
+            selector: 'GET_RECENT_TABLE_ENTRIES',
+            tableName: 'processedemployee',
+            numberEntries: 10,
+            keys: {},
+            kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
+          }
         },
         size: {
           width: '50%'
