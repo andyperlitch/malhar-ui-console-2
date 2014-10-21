@@ -39,7 +39,7 @@ angular.module('app.components.directives.viewRawInModal', [
           templateUrl: 'components/directives/viewRawInModal/viewRawInModal.html',
           resolve: {
             title: function() {
-              return attrs.modalTitle;
+              return scope.$eval(attrs.modalTitle);
             },
             raw: function() {
               return scope.$eval(attrs.viewRawInModal);
