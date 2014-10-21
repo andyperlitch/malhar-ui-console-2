@@ -136,6 +136,12 @@
         }
       },
       {
+        name: 'Table',
+        dataModelOptions: {
+          query: clientSettings.kafka.dimensionsDemoQuery
+        }
+      },
+      {
         name: 'Kafka Debug',
         dataModelOptions: {
           query: clientSettings.kafka.dimensionsDemoQuery

@@ -25,7 +25,8 @@ angular.module('app.pages.dev.kafka', [
   'app.pages.dev.kafka.KafkaSocketService',
   'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel'
+  'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel',
+  'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel'
 ])
 
 // Route
@@ -96,6 +97,19 @@ angular.module('app.pages.dev.kafka', [
         },
         size: {
           width: '50%'
+        },
+        settingsModalOptions: {
+          partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
+        },
+        onSettingsClose: onSettingsClose
+      },
+      {
+        name: 'Table',
+        title: 'Table',
+        templateUrl: 'pages/dev/kafka/widgets/table/table.html',
+        dataModelType: 'TableWidgetDataModel',
+        size: {
+          width: '100%'
         },
         settingsModalOptions: {
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
