@@ -1,5 +1,57 @@
-<div class="row">
-    <div class="col-md-12">
-        <div dashboard-layouts="dashboardOptions" class="dashboard-container" template-url="pages/ops/ops-layouts.html"></div>
+<div class="widget panel panel-default">
+
+  <!-- <div class="panel-heading widget-header"></div> -->
+  
+  <div class="panel-body widget-content">
+      
+    <div class="overview-container">
+      <div class="overview-info">
+        <h2>{{port.data.name || 'Loading...'}}</h2>
+        <h4 ng-show="port.data.type">
+          <small>type:</small>
+          <span ng-class="'port-type-' + port.data.type">{{port.data.type}}</span>
+        </h4>
+      </div>
+
+
+      <fieldset class="overview-group">
+        <legend>State</legend>
+        <div class="overview-item">
+          <div class="key" dt-text>recording</div>
+          <div class="value">{{ port.data.recordingStartTime != '-1' ? 'yes' : 'no' }}</div>
+        </div>
+      </fieldset>
+
+
+
+      <fieldset class="overview-group">
+        <legend>Performance</legend>
+
+        <div class="overview-item">
+          <div class="key" dt-text>tuples/sec</div>
+          <div class="value">{{port.data.tuplesPSMA | commaGroups}}</div>
+        </div>
+
+        <div class="overview-item">
+          <div class="key" dt-text>total tuples</div>
+          <div class="value">{{port.data.totalTuples | commaGroups}}</div>
+        </div>
+
+        <div class="overview-item">
+          <div class="key" dt-text>buffer size</div>
+          <div class="value">{{ port.data.bufferServerBytesPSMA | byte }}</div>
+        </div>
+
+        <div class="overview-item">
+          <div class="key" dt-text>queue size</div>
+          <div class="value">{{port.data.queueSizePSMA | commaGroups}}</div>
+        </div>
+        
+      </fieldset>
+
     </div>
+
+  </div>
 </div>
+<!-- <pre>{{ port.data | json }}</pre> -->
+<!-- <pre>{{ attributes.data | json }}</pre> -->
