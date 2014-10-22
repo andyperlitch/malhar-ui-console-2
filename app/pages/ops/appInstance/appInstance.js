@@ -154,7 +154,7 @@ angular.module('app.pages.ops.appInstance', [
       switch(dashboardType) {
         case 'running': 
           widgetDefinitions = [
-            new AppInstanceOverviewWidgetDef({ name: 'Application Overview', size: { width: '66%' } }),
+            new AppInstanceOverviewWidgetDef({ name: 'Application Overview' }),
             new StramEventsWidgetDef({
               name: 'Stram Events',
               style: { float: 'right' },
@@ -177,10 +177,7 @@ angular.module('app.pages.ops.appInstance', [
             new LogicalOperatorsListWidgetDef({ name: 'Logical Operators List' }),
             new PhysicalOperatorsListWidgetDef({ name: 'Physical Operators List' }),
             new ContainersListWidgetDef({
-              name: 'Containers List',
-              size: {
-                width: '66%'
-              }
+              name: 'Containers List'
             }),
             new LogicalStreamsListWidgetDef({ name: 'Logical Streams' }),
             new MetricsWidgetDef({
@@ -191,11 +188,21 @@ angular.module('app.pages.ops.appInstance', [
             })
           ];
 
-          var logicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG', 'Logical Operators List', 'Logical Streams', 'Metrics Chart'], function (name) {
+          var logicalLayoutWidgets = _.map([
+            { name: 'Application Overview', size: { width: '66%' } },
+            'Stram Events',
+            'Logical DAG',
+            'Logical Operators List',
+            'Logical Streams',
+            'Metrics Chart'
+          ], function (name) {
+            if (typeof name === 'object') {
+              return name;
+            }
             return { name: name };
           });
 
-          var physicalLayoutWidgets = _.map(['Application Overview', 'Stram Events', 'Containers List', 'Physical Operators List', 'Metrics Chart'], function (name) {
+          var physicalLayoutWidgets = _.map(['Application Overview', 'Physical Operators List', 'Containers List', 'Metrics Chart'], function (name) {
             return { name: name };
           });
 
