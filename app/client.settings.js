@@ -268,7 +268,7 @@
   clientSettings.dashboard.database = {};
   clientSettings.dashboard.database.storageKey = clientSettings.dashboard.storageKey + 'InstanceDatabase';
   clientSettings.dashboard.database.layouts = [
-    _.extend({}, clientSettings.dashboard.kafka.DatabaseDemo, {default: true}),
+    _.extend({}, clientSettings.dashboard.kafka.DatabaseDemo, {title: 'default', default: true}),
     {
       title: 'debug', active: false, defaultWidgets: [
       {
