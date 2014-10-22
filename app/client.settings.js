@@ -47,7 +47,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek19';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek21';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
