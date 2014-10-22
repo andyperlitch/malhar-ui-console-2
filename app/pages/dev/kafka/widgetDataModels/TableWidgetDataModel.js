@@ -36,8 +36,15 @@ angular.module('app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel', [
       },
 
       updateScope: function (data) {
-        if (data && data.length > 0) {
-          this.widgetScope.gridOptions.data = data;
+        if (data && data.rows && data.rows.length > 0) {
+          var gridOptions = this.widgetScope.gridOptions;
+          if (!gridOptions.columnDefs) {
+            gridOptions.columnDefs = [];
+            _.each(data.headers, function (header, index) {
+              gridOptions.columnDefs.push({ field: String(index), displayName: header });
+            });
+          }
+          gridOptions.data = data.rows;
         } else {
           this.widgetScope.gridOptions.data = [];
         }

@@ -94,6 +94,13 @@
     }
   });
 
+  clientSettings.kafka.databaseDemoQuery = {
+    kafka: {
+      queryTopic: 'GoldenGateQueryPi',
+      resultTopic: 'GoldenGateQueryResultsPi'
+    }
+  };
+
   clientSettings.dashboard.kafka = {};
   clientSettings.dashboard.kafka.storageKey = clientSettings.dashboard.storageKey + 'AppData';
 
@@ -161,7 +168,7 @@
             tableName: 'processedemployee',
             numberEntries: 10,
             keys: {},
-            kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
+            kafka: clientSettings.kafka.databaseDemoQuery.kafka
           }
         },
         size: {
@@ -177,7 +184,7 @@
             filePath: null,
             numberLines: 10,
             keys: {},
-            kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
+            kafka: clientSettings.kafka.databaseDemoQuery.kafka
           }        },
         size: {
           width: '50%',
@@ -196,7 +203,7 @@
             tableName: 'employee',
             numberEntries: 10,
             keys: {},
-            kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
+            kafka: clientSettings.kafka.databaseDemoQuery.kafka
           }
         },
         size: {
