@@ -45,7 +45,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek11';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek15';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -180,7 +180,11 @@
             kafka: clientSettings.kafka.dimensionsDemoQuery.kafka
           }        },
         size: {
-          width: '50%'
+          width: '50%',
+          height: '664px'
+        },
+        style: {
+          float: 'right'
         }
       },
       {

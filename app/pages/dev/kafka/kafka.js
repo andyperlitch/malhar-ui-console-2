@@ -21,6 +21,7 @@ angular.module('app.pages.dev.kafka', [
   'ui.models',
   'app.pages.dev.kafka.widgets.timeSeries',
   'app.pages.dev.kafka.widgets.kafkaDebug',
+  'app.pages.dev.kafka.widgets.textContent',
   'app.pages.dev.kafka.socket',
   'app.pages.dev.kafka.KafkaSocketService',
   'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
@@ -119,10 +120,11 @@ angular.module('app.pages.dev.kafka', [
       {
         name: 'Text',
         title: 'Text',
-        templateUrl: 'pages/dev/kafka/widgets/text/text.html',
+        directive: 'wt-text-content',
         dataModelType: 'KafkaWidgetDataModel',
         size: {
-          width: '50%'
+          width: '50%',
+          height: '500px'
         },
         settingsModalOptions: {
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
