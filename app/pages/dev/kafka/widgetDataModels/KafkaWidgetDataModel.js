@@ -69,7 +69,7 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
 
         var kafkaQuery = this.query;
 
-        if (this.widgetScope.kafkaDiscovery) {
+        if (this.widgetScope.kafkaDiscovery && !kafkaQuery.kafka) {
           kafkaQuery = _.clone(kafkaQuery);
           angular.extend(kafkaQuery, {
             kafka: this.widgetScope.kafkaDiscovery.getKafkaTopics()
