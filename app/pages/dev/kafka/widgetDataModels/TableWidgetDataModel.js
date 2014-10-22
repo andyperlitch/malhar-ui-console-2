@@ -36,7 +36,6 @@ angular.module('app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel', [
       },
 
       updateScope: function (data) {
-        console.log(data);
         if (data && data.length > 0) {
           this.widgetScope.gridOptions.data = data;
         } else {
