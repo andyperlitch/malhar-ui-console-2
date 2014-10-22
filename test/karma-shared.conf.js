@@ -59,7 +59,7 @@ module.exports = function() {
     files : script_srcs.concat([
       
       // test framework-related code
-      'bower_components/angular-mocks/angular-mocks.js'
+      'app/bower_components/angular-mocks/angular-mocks.js'
 
     ])
   };
