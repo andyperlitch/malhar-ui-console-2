@@ -24,8 +24,6 @@ angular.module('app.pages.dev.kafka', [
   'app.pages.dev.kafka.widgets.textContent',
   'app.pages.dev.kafka.socket',
   'app.pages.dev.kafka.KafkaSocketService',
-  'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel',
   'app.pages.dev.kafka.GatewayAppDataService',
@@ -50,7 +48,7 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function (webSocket, $scope, appDataWidgetDefinitions, GatewayAppDataService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
+  .controller('KafkaCtrl', function (webSocket, $scope, appDataWidgetDefinitions, GatewayAppDataService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, ClusterMetricsWidget,
                                      dashboardOptionsFactory, defaultOnSettingsClose, clientSettings) {
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
