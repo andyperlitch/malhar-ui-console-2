@@ -45,7 +45,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek15';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek18';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -165,7 +165,7 @@
         dataModelOptions: {
           query: {
             selector: 'GET_RECENT_TABLE_ENTRIES',
-            tableName: 'processedemployee',
+            tableName: 'employee',
             numberEntries: 10,
             keys: {},
             kafka: clientSettings.kafka.databaseDemoQuery.kafka
@@ -200,7 +200,7 @@
         dataModelOptions: {
           query: {
             selector: 'GET_RECENT_TABLE_ENTRIES',
-            tableName: 'employee',
+            tableName: 'processedemployee',
             numberEntries: 10,
             keys: {},
             kafka: clientSettings.kafka.databaseDemoQuery.kafka

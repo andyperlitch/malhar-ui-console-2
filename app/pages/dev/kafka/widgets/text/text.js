@@ -21,6 +21,20 @@ angular.module('app.pages.dev.kafka.widgets.textContent', [])
     return {
       restrict: 'A',
       replace: true,
+      scope1: {
+        text: '='
+      },
       templateUrl: 'pages/dev/kafka/widgets/text/text.html'
+    };
+  })
+  .filter('textContent', function() {
+    return function (input) {
+      var text;
+      if (input && input.lines && _.isArray(input.lines)) {
+        text = input.lines.join('\n');
+      } else {
+        text = input;
+      }
+      return text;
     };
   });
