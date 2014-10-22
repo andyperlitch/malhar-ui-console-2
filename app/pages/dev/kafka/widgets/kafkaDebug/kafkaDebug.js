@@ -33,7 +33,7 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
 
     $scope.kafkaQuery = defaultMessage;
 
-    if ($scope.kafkaDiscovery) {
+    if ($scope.kafkaDiscovery && !$scope.kafkaQuery.kafka) {
       $scope.dimensions = $scope.kafkaDiscovery.getDimensionList();
 
       $scope.kafkaQuery = _.clone($scope.kafkaQuery);

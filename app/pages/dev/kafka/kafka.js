@@ -58,6 +58,7 @@ angular.module('app.pages.dev.kafka', [
       widgetDefinitions: appDataWidgetDefinitions,
       defaultLayouts: clientSettings.dashboard.kafka.layouts
     });
+
   })
   .controller('KafkaOptionsCtrl', function ($scope) {
     var widget = $scope.widget;
