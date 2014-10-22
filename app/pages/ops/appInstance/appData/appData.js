@@ -41,7 +41,7 @@ angular.module('app.pages.ops.appInstance.appData', [
   })
 
 // Controller
-  .controller('AppDataCtrl', function ($scope, $routeParams, $q, ApplicationModel, KafkaDiscovery) {
+  .controller('AppDataCtrl', function ($scope, $routeParams, $q, ApplicationModel, KafkaDiscovery, clientSettings) {
     var appId = $routeParams.appId;
 
     $scope.appId = appId;
@@ -57,17 +57,24 @@ angular.module('app.pages.ops.appInstance.appData', [
 
     $scope.fetched = false;
     $q.all([appInstancePromise, kafkaDiscoveryPromise]).then(function () {
-      $scope.fetched = true;
+      var discoveredType = $scope.kafkaDiscovery.getDiscoveredType();
+      if (discoveredType && _.has(clientSettings.dashboard, discoveredType)) {
+        $scope.dashboard = clientSettings.dashboard[discoveredType];
+        $scope.fetched = true;
+      } else {
+        $scope.error = true;
+      }
     });
   })
   .controller('AppDataDashboardCtrl', function ($scope, $routeParams, appDataWidgetDefinitions, defaultOnSettingsClose, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget,
-                                                dashboardOptionsFactory, clientSettings) {
+                                                dashboardOptionsFactory) {
+    var dashboard = $scope.dashboard;
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
-      storageId: clientSettings.dashboard.appData.storageKey + '_' + $scope.appInstance.data.name,
+      storageId: dashboard.storageKey + '_' + $scope.appInstance.data.name,
       widgetButtons: false,
       widgetDefinitions: appDataWidgetDefinitions,
-      defaultLayouts: clientSettings.dashboard.appData.layouts
+      defaultLayouts: dashboard.layouts
     });
   })
   .controller('KafkaOptionsCtrl', function ($scope) {

@@ -46,6 +46,7 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
           this.kafakInputOperator = _.findWhere(operators, clientSettings.kafka.discovery.inputOperatorFilter);
           this.kafakOutputOperator = _.findWhere(operators, clientSettings.kafka.discovery.outputOperatorFilter);
           this.dimensionsOperator = _.findWhere(operators, clientSettings.kafka.discovery.dimensionsOperatorFilter);
+          this.databaseOperator = _.findWhere(operators, clientSettings.kafka.discovery.databaseOperatorFilter);
           //this.dimensionsOperator = _.findWhere(operators, {className: 'com.datatorrent.demos.adsdimension.generic.GenericDimensionComputation'});
 
           $q.all([
@@ -59,9 +60,20 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
             }.bind(this));
         }.bind(this), function (reason) { // fail
           this.deferred.reject(reason);
-        });
+        }.bind(this));
 
         return this.deferred.promise;
+      },
+
+      getDiscoveredType: function () {
+        //TODO discovery mechanism
+        if (this.databaseOperator) {
+          return 'database';
+        } else if (this.dimensionsOperator) {
+          return 'appData'; //TODO change to 'dimensions'
+        } else {
+          return null;
+        }
       },
 
       getFetchPromise: function () {

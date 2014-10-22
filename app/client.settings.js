@@ -39,13 +39,15 @@
       className
     );
   };
+  clientSettings.kafka.discovery.databaseOperatorFilter = {className: 'com.datatorrent.contrib.goldengate.lib.OracleDBOutputOperator'};
+
   clientSettings.kafka.defaultQuery = {
     keys: {
     }
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek18';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek19';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -96,8 +98,8 @@
 
   clientSettings.kafka.databaseDemoQuery = {
     kafka: {
-      queryTopic: 'GoldenGateQueryPi',
-      resultTopic: 'GoldenGateQueryResultsPi'
+      queryTopic: 'GoldenGateQueryDBPi',
+      resultTopic: 'GoldenGateQueryResultsDBPi'
     }
   };
 
@@ -164,10 +166,11 @@
         title: 'Original Table',
         dataModelOptions: {
           query: {
-            selector: 'GET_RECENT_TABLE_ENTRIES',
-            tableName: 'employee',
-            numberEntries: 10,
-            keys: {},
+            keys: {
+              selector: 'GET_RECENT_TABLE_ENTRIES',
+              tableName: 'employee',
+              numberEntries: 10
+            },
             kafka: clientSettings.kafka.databaseDemoQuery.kafka
           }
         },
@@ -180,12 +183,17 @@
         title: 'File Content',
         dataModelOptions: {
           query: {
-            selector: 'GET_LATEST_FILE_CONTENTS',
-            filePath: null,
-            numberLines: 10,
-            keys: {},
-            kafka: clientSettings.kafka.databaseDemoQuery.kafka
-          }        },
+            keys: {
+              selector: 'GET_LATEST_FILE_CONTENTS',
+              filePath: null,
+              numberLines: 10
+            },
+            kafka: {
+              queryTopic: 'GoldenGateQueryFilePi',
+              resultTopic: 'GoldenGateQueryResultsFilePi'
+            }
+          }
+        },
         size: {
           width: '50%',
           height: '664px'
@@ -199,10 +207,11 @@
         title: 'Replicated Table',
         dataModelOptions: {
           query: {
-            selector: 'GET_RECENT_TABLE_ENTRIES',
-            tableName: 'processedemployee',
-            numberEntries: 10,
-            keys: {},
+            keys: {
+              selector: 'GET_RECENT_TABLE_ENTRIES',
+              tableName: 'processedemployee',
+              numberEntries: 10
+            },
             kafka: clientSettings.kafka.databaseDemoQuery.kafka
           }
         },
@@ -250,6 +259,29 @@
         dataModelOptions: {
           query: clientSettings.kafka.defaultQueryWithTopics
           //query: clientSettings.kafka.dimensionsDemoQuery
+        }
+      }
+    ]
+    }
+  ];
+
+  clientSettings.dashboard.database = {};
+  clientSettings.dashboard.database.storageKey = clientSettings.dashboard.storageKey + 'InstanceDatabase';
+  clientSettings.dashboard.database.layouts = [
+    _.extend({}, clientSettings.dashboard.kafka.DatabaseDemo, {default: true}),
+    {
+      title: 'debug', active: false, defaultWidgets: [
+      {
+        name: 'Kafka Debug',
+        dataModelOptions: {
+          query: {
+            keys: {
+              selector: 'GET_RECENT_TABLE_ENTRIES',
+              tableName: 'processedemployee',
+              numberEntries: 10
+            },
+            kafka: clientSettings.kafka.databaseDemoQuery.kafka
+          }
         }
       }
     ]
