@@ -35,12 +35,11 @@
                 <a data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                   <li class="dropdown-header">cluster info</li>
-                  <li><a href="#" class="displayLicenseInfo">License Info</a></li>
-                  <li><a href="#" class="displayGatewayInfo">Gateway Info</a></li>
-                  <li><a href="#" class="displayConsoleInfo">Console Info</a></li>
+                  <li><a href="#/config/license-information">License Info</a></li>
+                  <li><a href="#/config/system-diagnostics">Gateway Info</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">docs &amp; help</li>
-                  <li><a target="_blank" href="ttps://www.datatorrent.com/developers/">Developer Center</a></li>
+                  <li><a target="_blank" href="https://www.datatorrent.com/developers/">Developer Center</a></li>
                   <li><a target="_blank" href="https://www.datatorrent.com/docs/apidocs/">API Docs</a></li>
                   <li><a target="_blank" href="https://www.datatorrent.com/contact/">Contact DataTorrent</a></li>
                   <li><a target="_blank" href="https://github.com/DataTorrent/Malhar">Malhar Repository</a></li>
@@ -176,7 +175,6 @@
     <script src="bower_components/visibilityjs/lib/visibility.core.js"></script>
     <script src="bower_components/visibilityjs/lib/visibility.timers.js"></script>
     <script src="bower_components/dagre-d3/js/dagre-d3.js"></script>
-    <script src="bower_components/dagre-d3/js/dagre-d3.min.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
     <!-- endbower -->
@@ -310,7 +308,10 @@
     <script src="pages/dev/kafka/widgetDataModels/KafkaMetricsWidgetDataModel.js"></script>
     <script src="pages/dev/kafka/widgetDataModels/KafkaTimeSeriesWidgetDataModel.js"></script>
     <script src="pages/dev/kafka/widgetDataModels/KafkaWidgetDataModel.js"></script>
+    <script src="pages/dev/kafka/widgetDataModels/TableWidgetDataModel.js"></script>
+    <script src="pages/dev/kafka/widgetDataModels/TopNWidgetDataModel.js"></script>
     <script src="pages/dev/kafka/widgets/kafkaDebug/kafkaDebug.js"></script>
+    <script src="pages/dev/kafka/widgets/text/text.js"></script>
     <script src="pages/dev/kafka/widgets/timeSeries/timeSeries.js"></script>
     <script src="pages/dev/packages/import/import.js"></script>
     <script src="pages/dev/packages/package/application/application.js"></script>
@@ -330,8 +331,8 @@
     <script src="pages/dev/packages/package/dagEditor/services/freezeDagModel.js"></script>
     <script src="pages/dev/packages/package/dagEditor/services/thawDagModel.js"></script>
     <script src="pages/dev/packages/package/newAppModal.js"></script>
-    <script src="pages/dev/packages/package/removeAppModal.js"></script>
     <script src="pages/dev/packages/package/package.js"></script>
+    <script src="pages/dev/packages/package/removeAppModal.js"></script>
     <script src="pages/dev/packages/packages.js"></script>
     <script src="pages/ops/appInstance/appData/appData.js"></script>
     <script src="pages/ops/appInstance/appData/service/discovery.js"></script>
