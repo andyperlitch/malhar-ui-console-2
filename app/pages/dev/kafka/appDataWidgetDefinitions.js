@@ -113,12 +113,13 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
       },
       {
         name: 'Top N',
-        title: 'Twitter Top N',
+        title: 'Top N',
         templateUrl: 'pages/dev/kafka/widgets/table/table.html',
         dataAttrName: 'data',
         dataModelType: 'TopNWidgetDataModel',
         dataModelOptions: {
-          defaultTopic: 'demos.twitter.topURLs'
+          //defaultTopic: 'demos.twitter.topURLs'
+          defaultTopic: 'cluster.metrics'
         },
         size: {
           width: '50%'
@@ -131,7 +132,8 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
         dataAttrName: 'data',
         dataModelType: 'WebSocketDataModel',
         dataModelOptions: {
-          defaultTopic: 'demos.twitter.topURLs'
+          //defaultTopic: 'demos.twitter.topURLs'
+          defaultTopic: 'cluster.metrics'
         },
         size: {
           width: '50%'
