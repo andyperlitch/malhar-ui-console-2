@@ -27,7 +27,8 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
   'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel'
+  'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel',
+  'app.pages.dev.kafka.widgets.gatewayAppDataDebug'
 ])
   .factory('appDataWidgetDefinitions', function (webSocket, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
                                                  dashboardOptionsFactory, defaultOnSettingsClose, clientSettings) {
@@ -110,6 +111,23 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
         onSettingsClose: onSettingsClose
+      },
+      {
+        name: 'Gateway Web Socket',
+        title: 'Gateway Web Socket',
+        templateUrl: 'pages/dev/kafka/widgets/gatewayAppDataDebug/gatewayAppDataDebug.html',
+        size: {
+          width: '100%'
+        },
+        dataModelOptions: {
+          query: {
+            keys: {},
+            gateway: {
+              queryTopic: 'AdsQuery',
+              resultTopic: 'AdsQueryResult'
+            }
+          }
+        }
       },
       {
         name: 'Top N',

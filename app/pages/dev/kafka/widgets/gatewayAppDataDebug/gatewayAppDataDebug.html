@@ -1,0 +1,32 @@
+<div class="row" ng-controller="GatewayAppDataDebugCtrl">
+    <div class="col-md-6">
+        <div>
+            <p>Gateway WebSocket Message Received</p>
+            <p>
+            <div class="alert alert-info">
+                <pre>{{kafkaMessage|json}}</pre>
+            </div>
+            </p>
+
+            <p>Gateway WebSocket Data</p>
+            <div class="alert alert-info">
+                <pre style="max-height: 200px;overflow: auto;">{{kafkaMessageValue|json}}</pre>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <p>Request:</p>
+            <div dt-query-editor ng-model="kafkaQuery" options="dimensions"></div>
+            <p><button class="btn btn-primary" ng-click="sendRequest();">send request</button></p>
+            <p>Query:</p>
+            <div class="alert alert-info">
+                <pre>{{kafkaQuery|json}}</pre>
+            </div>
+            <p>Query ID:</p>
+            <div class="alert alert-info" ng-if="request">
+                <pre>{{request|json}}</pre>
+            </div>
+        </div>
+    </div>
+</div>

@@ -47,7 +47,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek21';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek22';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -244,6 +244,9 @@
     clientSettings.dashboard.kafka.DimensionsDemo,
     {
       title: 'WebSocketDemo', active: false, defaultWidgets: [
+      {
+        name: 'Gateway Web Socket'
+      },
       {
         name: 'Top N'
       },

@@ -28,6 +28,7 @@ angular.module('app.pages.dev.kafka', [
   'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel',
+  'app.pages.dev.kafka.GatewayAppDataService',
   'app.pages.dev.kafka.appDataWidgetDefinitions'
 ])
 
@@ -49,7 +50,7 @@ angular.module('app.pages.dev.kafka', [
   })
 
 // Controller
-  .controller('KafkaCtrl', function (webSocket, $scope, appDataWidgetDefinitions, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
+  .controller('KafkaCtrl', function (webSocket, $scope, appDataWidgetDefinitions, GatewayAppDataService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
                                      dashboardOptionsFactory, defaultOnSettingsClose, clientSettings) {
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,
@@ -59,6 +60,28 @@ angular.module('app.pages.dev.kafka', [
       defaultLayouts: clientSettings.dashboard.kafka.layouts
     });
 
+    var query = {
+      keys: {},
+      gateway: {
+        queryTopic: 'AdsQuery',
+        resultTopic: 'AdsQueryResult'
+      }
+    };
+    if (false) {
+      query.id = JSON.stringify(query);
+      var message = { type : 'publish', topic : 'AdsQuery', data : JSON.stringify(query) };
+      webSocket.send(message);
+      webSocket.subscribe('AdsQueryResult', function (data) {
+        console.log(data);
+      }, $scope);
+    }
+
+    if (false) {
+      var service = new GatewayAppDataService();
+      service.subscribe(query, function (data) {
+        console.log(data);
+      });
+    }
   })
   .controller('KafkaOptionsCtrl', function ($scope) {
     var widget = $scope.widget;
