@@ -39,11 +39,20 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
   })
 
   // Controller
-  .controller('PortPageCtrl', function($scope, $routeParams, PortModel) {
+  .controller('PortPageCtrl', function($scope, $routeParams, PortModel, $http, getUri) {
 
-    console.log('routeParams', $routeParams);
     $scope.port = new PortModel($routeParams);
-    $scope.port.fetch();
+    $scope.port.fetch().then(function() {
+      $http.get(getUri.url('PortAttributes', {
+        appId: $routeParams.appId,
+        operatorName: $scope.port.operator.name,
+        portName: $routeParams.portName
+      })).then(function(response) {
+        $scope.attributes = response.data;
+      });
+    });
     $scope.port.subscribe($scope);
+
+    
 
   });

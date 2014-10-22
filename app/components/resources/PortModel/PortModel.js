@@ -18,21 +18,33 @@
 angular.module('app.components.resources.PortModel',[
   'app.components.resources.BaseModel'
 ])
-.factory('PortModel', function(BaseModel) {
+.factory('PortModel', function(BaseModel, $log) {
   var PortModel = BaseModel.extend({
     debugName: 'Port',
     urlKey: 'PhysicalOperator',
     topicKey: 'PhysicalOperators',
     idAttribute: 'name',
-    transformResponse: function(raw) {
+    transformResponse: function(raw, type) {
       var operatorId = this.operatorId;
       var op = _.find(raw.operators, function(o){
         return o.id === operatorId;
       });
+      if (!op) {
+        $log.warn('Operator #"' + operatorId + '" not found in operators ', raw.operators);
+        return this.data;
+      }
       var name = this.portName;
       var port = _.find(op.ports, function(p) {
         return p.name === name;
       });
+      if (!port) {
+        $log.warn('Port "' + name + '" not found in operator ', op);
+        return this.data;
+      }
+      if (type === 'fetch') {
+        delete op.ports;
+        this.operator = op;
+      }
       return port;
     }
   });
