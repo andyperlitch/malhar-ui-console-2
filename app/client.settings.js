@@ -55,7 +55,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek23';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek24';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -67,7 +67,6 @@
       {
         name: 'Time Series Bar Chart',
         dataModelOptions: {
-          metric: 'impressions',
           query: clientSettings.kafka.defaultQuery
         }
       },
