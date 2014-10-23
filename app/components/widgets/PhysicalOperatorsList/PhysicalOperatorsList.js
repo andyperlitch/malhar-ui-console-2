@@ -93,14 +93,16 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           filter: 'number',
           sort: 'number',
           template: '<a dt-page-href="PhysicalOperator" params="{ appId: \'' + scope.appId + '\', operatorId: row.id }">{{ row.id }}</a>',
-          width: '4em'
+          width: '4em',
+          title: dtText.get('ID of this operator instance. Click to view details about this physical operator.')
         },
         {
           id: 'name',
           key: 'name',
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.name }">{{ row.name }}</a>',
+          title: dtText.get('Logical name of the operator. Click to view details about the logical operator.')
         },
         {
           id: 'status',
@@ -108,7 +110,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('status_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span dt-status="row.status"></span>'
+          template: '<span dt-status="row.status"></span>',
+          title: dtText.get('Status of the physical operator.')
         },
         {
           id: 'tuplesProcessedPSMA',
@@ -116,7 +119,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('processed_per_sec'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Moving average number of tuples ingested/processed per second.')
         },
         {
           id: 'tuplesEmittedPSMA',
@@ -124,7 +128,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('emitted_per_sec'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Moving average number of tuples emitted per second.')
         },
         {
           id: 'cpuPercentageMA',
@@ -134,7 +139,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           filter: 'number',
           format: function(value) {
             return (value * 1).toFixed(2) + '%';
-          }
+          },
+          title: dtText.get('CPU percentage being used by the physical operator.')
         },
         {
           id: 'currentWindowId',
@@ -142,7 +148,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('current_wid_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span window-id="row.currentWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
+          template: '<span window-id="row.currentWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
+          title: dtText.get('Current window that the physical operator is processing')
         },
         {
           id: 'recoveryWindowId',
@@ -150,7 +157,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('recovery_wid_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span window-id="row.recoveryWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
+          template: '<span window-id="row.recoveryWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
+          title: dtText.get('The window that was last checkpointed to disk for this physical operator.')
         },
         {
           id: 'failureCount',
@@ -159,6 +167,7 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           sort: 'string',
           filter: 'like',
           width: '4em',
+          title: dtText.get('Number of failures this physical operator has had.')
         },
         {
           id: 'lastHeartbeat',
@@ -166,7 +175,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: 'last heartbeat',
           sort: 'number',
           filter: 'date',
-          ngFilter: 'relativeTimestamp'
+          ngFilter: 'relativeTimestamp',
+          title: dtText.get('The last time this operator sent information to the application master.')
         },
         // host
         {
@@ -175,7 +185,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('host_label'),
           sort: 'string',
           filter: 'like',
-          width: '20em'
+          width: '20em',
+          title: dtText.get('The node and port that the operator is running on.')
         },
         // container
         {
@@ -183,14 +194,16 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           key: 'container',
           label: dtText.get('container_label'),
           sort: 'string',
-          template: '<a dt-page-href="Container" params="{ appId: \'' + scope.appId + '\', containerId: row.container }" dt-container-shorthand="row.container"></a>'
+          template: '<a dt-page-href="Container" params="{ appId: \'' + scope.appId + '\', containerId: row.container }" dt-container-shorthand="row.container"></a>',
+          title: dtText.get('The container that the operator is running in. Click to view this container.')
         },
         {
           id: 'latencyMA',
           key: 'latencyMA',
           label: dtText.get('latency_ms_label'),
           sort: 'number',
-          filter: 'number'
+          filter: 'number',
+          title: dtText.get('The latency in milliseconds of the physical operator')
         },
         {
           id: 'totalTuplesProcessed',
@@ -198,7 +211,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('processed_total'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Total number of tuples processed by the operator.')
         },
         {
           id: 'totalTuplesEmitted',
@@ -206,7 +220,8 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           label: dtText.get('emitted_total'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Total number of tuples emitted by the operator.')
         }
       ];
 

@@ -110,7 +110,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'id',
           sort: 'string',
           filter: 'like',
-          template: '<a dt-page-href="Container" params="{ appId: \'' + scope.appId + '\', containerId: row.id }" dt-container-shorthand="row.id"></a>'
+          template: '<a dt-page-href="Container" params="{ appId: \'' + scope.appId + '\', containerId: row.id }" dt-container-shorthand="row.id"></a>',
+          title: dtText.get('Container ID. Click to view the container.')
         },
         {
           id: 'process_id',
@@ -118,7 +119,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'jvmName',
           sort: 'string',
           filter: 'like',
-          format: processFormatter
+          format: processFormatter,
+          title: dtText.get('The process ID of the container.')
         },
         {
           id: 'node',
@@ -126,7 +128,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'jvmName',
           sort: nodeSorter,
           filter: 'like',
-          format: nodeFormatter
+          format: nodeFormatter,
+          title: dtText.get('The node where the container is running.')
         },
         {
           id: 'lastHeartbeat',
@@ -134,7 +137,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'lastHeartbeat',
           sort: 'number',
           filter: 'date',
-          format: heartbeatFormatter
+          format: heartbeatFormatter,
+          title: dtText.get('Time when the container last sent information to the application master.')
         },
         {
           id: 'memoryMBAllocated',
@@ -142,7 +146,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'memoryMBAllocated',
           template: '{{ row.memoryMBAllocated | byte:\'mb\' }}',
           filter: 'number',
-          sort: 'number'
+          sort: 'number',
+          title: dtText.get('Amount of memory allocated to the container.')
         },
         {
           id: 'numOperators',
@@ -150,7 +155,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'numOperators',
           ngFilter: 'commaGroups',
           filter: 'number',
-          sort: 'number'
+          sort: 'number',
+          title: dtText.get('Number of operators running in the container.')
         },
         {
           id: 'state',
@@ -158,7 +164,8 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           key: 'state',
           sort: 'string',
           filter:'like',
-          template: '<div dt-status="row.state"></div>'
+          template: '<div dt-status="row.state"></div>',
+          title: dtText.get('State of the container.')
         }
       ];
     

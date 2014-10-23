@@ -70,7 +70,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           key: 'name',
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.name }">{{ row.name }}</a>'
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.name }">{{ row.name }}</a>',
+          title: dtText.get('Name of the operator.')
         },
         {
           id: 'className',
@@ -78,7 +79,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: 'class',
           sort: 'string',
           filter: 'like',
-          width: '300px'
+          width: '300px',
+          title: dtText.get('Fully-qualified Java class name of operator.')
         },
         {
           id: 'cpuPercentageMA',
@@ -88,7 +90,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           filter: 'number',
           format: function(value) {
             return (value * 1).toFixed(2) + '%';
-          }
+          },
+          title: dtText.get('Aggregated CPU percentage being used by logical operator.')
         },
         {
           id: 'currentWindowId',
@@ -96,7 +99,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('current_wid_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span window-id="row.currentWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
+          template: '<span window-id="row.currentWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
+          title: dtText.get('Minimum current window that all instances of this operator is processing.')
         },
         {
           id: 'recoveryWindowId',
@@ -104,14 +108,16 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('recovery_wid_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span window-id="row.recoveryWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>'
+          template: '<span window-id="row.recoveryWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
+          title: dtText.get('Minimum recovery window that all instances of this operator has checkpointed to.')
         },
         {
           id: 'failureCount',
           key: 'failureCount',
           label: dtText.get('failure_count_label'),
           sort: 'string',
-          filter: 'like'
+          filter: 'like',
+          title: dtText.get('Number of failures that this logical operator has had.')
         },
         {
           id: 'lastHeartbeat',
@@ -119,14 +125,16 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: 'last heartbeat',
           sort: 'number',
           filter: 'date',
-          ngFilter: 'relativeTimestamp'
+          ngFilter: 'relativeTimestamp',
+          title: dtText.get('The last time this operator sent information to the application master.')
         },
         {
           id: 'latencyMA',
           key: 'latencyMA',
           label: dtText.get('latency_ms_label'),
           sort: 'number',
-          filter: 'number'
+          filter: 'number',
+          title: dtText.get('Aggregate latency for all physical instances of this operator.')
         },
         {
           id: 'status',
@@ -134,7 +142,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('status_label'),
           sort: 'string',
           filter: 'like',
-          template: '<span logical-operator-status="row.status"></span>'
+          template: '<span logical-operator-status="row.status"></span>',
+          title: dtText.get('Statuses of the physical instances of this operator.')
         },
         {
           id: 'tuplesProcessedPSMA',
@@ -142,7 +151,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('processed_per_sec'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Moving average number of tuples ingested/processed per second.')
         },
         {
           id: 'tuplesEmittedPSMA',
@@ -150,7 +160,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('emitted_per_sec'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Moving average number of tuples emitted per second.')
         },
         {
           id: 'totalTuplesProcessed',
@@ -158,7 +169,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('processed_total'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Total number of tuples ingested/processed by this logical operator.')
         },
         {
           id: 'totalTuplesEmitted',
@@ -166,7 +178,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           label: dtText.get('emitted_total'),
           sort: 'number',
           filter: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Total number of tuples emitted by this logical operator.')
         }
       ];
 
