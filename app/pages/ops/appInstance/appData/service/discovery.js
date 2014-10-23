@@ -46,23 +46,48 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
           this.kafakInputOperator = _.findWhere(operators, clientSettings.kafka.discovery.inputOperatorFilter);
           this.kafakOutputOperator = _.findWhere(operators, clientSettings.kafka.discovery.outputOperatorFilter);
           this.dimensionsOperator = _.findWhere(operators, clientSettings.kafka.discovery.dimensionsOperatorFilter);
+
+          this.wsInputOperator = _.findWhere(operators, clientSettings.kafka.discovery.wsInputOperatorFilter);
+          this.wsOutputOperator = _.findWhere(operators, clientSettings.kafka.discovery.wsOutputOperatorFilter);
+
           this.databaseOperator = _.findWhere(operators, clientSettings.kafka.discovery.databaseOperatorFilter);
           //this.dimensionsOperator = _.findWhere(operators, {className: 'com.datatorrent.demos.adsdimension.generic.GenericDimensionComputation'});
 
-          $q.all([
-              this.fetchOpProperties(this.kafakInputOperator),
-              this.fetchOpProperties(this.kafakOutputOperator),
-              this.fetchOpProperties(this.dimensionsOperator)]
-          ).then(function () { // success
+          var propertiesPromise = null;
+          if (this.isKafka()) {
+            propertiesPromise = $q.all([
+                this.fetchOpProperties(this.kafakInputOperator),
+                this.fetchOpProperties(this.kafakOutputOperator),
+                this.fetchOpProperties(this.dimensionsOperator)]);
+          } else if (this.isGatewayWebSocket()) {
+            propertiesPromise = $q.all([
+                this.fetchOpProperties(this.wsInputOperator),
+                this.fetchOpProperties(this.wsOutputOperator),
+                this.fetchOpProperties(this.dimensionsOperator)]);
+          } else {
+            this.deferred.reject('no supported operator type found');
+          }
+
+          if (propertiesPromise) {
+            propertiesPromise.then(function () { // success
               this.deferred.resolve();
             }.bind(this), function () { // fail
               this.deferred.reject('failed to fetch operator properties');
             }.bind(this));
+          }
         }.bind(this), function (reason) { // fail
           this.deferred.reject(reason);
         }.bind(this));
 
         return this.deferred.promise;
+      },
+
+      isKafka: function () {
+        return (this.kafakInputOperator && this.kafakOutputOperator && this.dimensionsOperator);
+      },
+
+      isGatewayWebSocket: function () {
+        return (this.wsInputOperator && this.wsOutputOperator && this.dimensionsOperator);
       },
 
       getDiscoveredType: function () {
@@ -84,6 +109,13 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
         return {
           queryTopic: this.kafakInputOperator.properties.consumer.topic,
           resultTopic: this.kafakOutputOperator.properties.topic
+        };
+      },
+
+      getGatewayWebSocketTopics: function () {
+        return {
+          queryTopic: this.wsInputOperator.properties.topic,
+          resultTopic: this.wsOutputOperator.properties.topic
         };
       },
 

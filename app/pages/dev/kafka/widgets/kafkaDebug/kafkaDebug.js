@@ -20,8 +20,8 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
   'app.pages.dev.kafka.KafkaSocketService',
   'app.components.directives.dtQueryEditor'
 ])
-  .controller('KafkaDebugCtrl', function ($scope, KafkaRestService, KafkaSocketService, KafkaDiscovery, clientSettings, $timeout) {
-    $scope.kafkaService = new KafkaSocketService();
+  .controller('KafkaDebugCtrl', function ($scope, KafkaSocketService, GatewayAppDataService, KafkaDiscovery, clientSettings, $timeout) {
+    //$scope.kafkaService = new KafkaSocketService();
 
     var defaultMessage;
 
@@ -31,9 +31,9 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       defaultMessage = clientSettings.kafka.defaultQuery;
     }
 
-    $scope.kafkaQuery = defaultMessage;
+    var kafkaQuery = defaultMessage;
 
-    if ($scope.kafkaDiscovery && !$scope.kafkaQuery.kafka) {
+    if ($scope.kafkaDiscovery && $scope.kafkaDiscovery.isKafka() && !$scope.kafkaQuery.kafka) {
       $scope.dimensions = $scope.kafkaDiscovery.getDimensionList();
 
       $scope.kafkaQuery = _.clone($scope.kafkaQuery);
@@ -42,6 +42,32 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
         kafka: $scope.kafkaDiscovery.getKafkaTopics()
       });
     }
+
+    var kafkaDiscovery = $scope.kafkaDiscovery;
+
+    if (kafkaDiscovery) {
+      $scope.dimensions = kafkaDiscovery.getDimensionList();
+
+      if (kafkaDiscovery.isKafka() && !kafkaQuery.kafka) {
+        kafkaQuery = _.clone(kafkaQuery);
+        angular.extend(kafkaQuery, {
+          kafka: kafkaDiscovery.getKafkaTopics()
+        });
+      } else if (kafkaDiscovery.isGatewayWebSocket() && !kafkaQuery.gateway) {
+        kafkaQuery = _.clone(kafkaQuery);
+        angular.extend(kafkaQuery, {
+          gateway: kafkaDiscovery.getGatewayWebSocketTopics()
+        });
+      }
+    }
+
+    if (kafkaQuery.kafka) {
+      $scope.kafkaService = new KafkaSocketService();
+    } else {
+      $scope.kafkaService = new GatewayAppDataService();
+    }
+
+    $scope.kafkaQuery = kafkaQuery;
 
     $scope.sendRequest = function () {
       $timeout.cancel($scope.timeout);
@@ -60,10 +86,14 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
           }
           $scope.kafkaMessage = _.clone(kafkaMessage);
 
-          if (kafkaMessage && kafkaMessage.value) {
-            var kafkaMessageValue = JSON.parse(kafkaMessage.value);
-            $scope.kafkaMessageValue = kafkaMessageValue;
-            $scope.kafkaMessage.value = '<see data below>';
+          if (kafkaMessage) {
+            var valueProperty = _.has(kafkaMessage, 'value') ? 'value' : 'data';
+            var value = kafkaMessage[valueProperty];
+            if (value) {
+              var kafkaMessageValue = _.isString(value) ? JSON.parse(value) : value;
+              $scope.kafkaMessageValue = kafkaMessageValue;
+              $scope.kafkaMessage[valueProperty] = '<see data below>';
+            }
           } else {
             $scope.kafkaMessageValue = null; //TODO
           }
