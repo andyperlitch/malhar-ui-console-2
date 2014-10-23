@@ -64,6 +64,8 @@ angular.module('app.pages.ops.appInstance.appData', [
       } else {
         $scope.error = true;
       }
+    }, function () {
+      $scope.error = true;
     });
   })
   .controller('AppDataDashboardCtrl', function ($scope, $routeParams, appDataWidgetDefinitions, dashboardOptionsFactory) {
