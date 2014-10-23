@@ -94,9 +94,6 @@ angular.module('app.pages.ops.appInstance', [
         $scope.onStateChange(newValue);
       });
 
-      // Subscribe to updates.
-      $scope.appInstance.subscribe($scope);
-      
     });
 
     // Unsubscribe when the scope is destroyed.
@@ -114,13 +111,16 @@ angular.module('app.pages.ops.appInstance', [
     $scope.onStateChange = function(state) {
       if (state === 'RUNNING') {
         $scope.dashboardType = 'running';
+        $scope.appInstance.subscribe($scope);
       }
 
       else if (settings.STARTING_APP_STATES.indexOf(state) >= 0) {
         $scope.dashboardType = 'starting';
+        $scope.appInstance.subscribe($scope);
       }
 
       else {
+        $scope.appInstance.unsubscribe();
         $scope.dashboardType = 'ended';
       }
 
