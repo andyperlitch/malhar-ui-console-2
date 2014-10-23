@@ -61,6 +61,10 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       }
     }
 
+    if ($scope.kafkaService) {
+      $scope.kafkaService.unsubscribe();
+    }
+
     if (kafkaQuery.kafka) {
       $scope.kafkaService = new KafkaSocketService();
     } else {
