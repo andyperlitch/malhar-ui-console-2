@@ -77,33 +77,13 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
         visible: true
       }
     ];
-
-    function transformData(data) {
-      var result = [];
-      _.each($scope.portMetrics, function(series) {
-        result.push({
-          key: series.key,
-          values: _.map(data, function(d) {
-            return { value: d[series.key] * 1 };
-          })
-        });
-      });
-      console.log('result', result);
-      return result;
-    }
     
     $scope.chartData = [];
-
-    $scope.$watch('port.data', function(data) {
-      $scope.chartData.push(angular.copy(data));
-      if ($scope.chartData.length >= 100) {
-        $scope.chartData.shift();
-      }
-      $scope.transformedData = transformData($scope.chartData);
-    }, true);
-
     $scope.portMetricsController = {
       addPoint: function() {}
     };
+    $scope.$watch('port.data', function(data) {
+      $scope.portMetricsController.addPoint(angular.copy(data));      
+    }, true);
 
   });
