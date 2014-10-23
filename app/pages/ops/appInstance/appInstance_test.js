@@ -17,9 +17,23 @@
 
 describe('Controller: AppInstanceCtrl', function() {
 
-    var $scope;
+    var $scope, MockAppModel, appInstance, fetchDFD;
     
     beforeEach(module('app.pages.ops.appInstance', function($provide) {
+      $provide.value('ApplicationModel', MockAppModel = function() {
+        appInstance = this;
+      });
+      MockAppModel.prototype = {
+        fetch: function() {
+          return fetchDFD.promise;
+        },
+        subscribe: function() {
+
+        },
+        unsubscribe: function() {
+          
+        }
+      };
       $provide.value('webSocket', {
         subscribe: jasmine.createSpy(),
         unsubscribe: jasmine.createSpy()
@@ -27,10 +41,14 @@ describe('Controller: AppInstanceCtrl', function() {
       $provide.value('breadcrumbs', {
         options: {}
       });
+      $provide.constant('settings', {
+        STARTING_APP_STATES: ['ACCEPTED']
+      });
     }));
 
-    beforeEach(inject(function($rootScope, $controller){
+    beforeEach(inject(function($rootScope, $controller, $q){
         $scope = $rootScope.$new();
+        fetchDFD = $q.defer();
         $controller('AppInstanceCtrl', {
             $scope: $scope,
 
@@ -43,14 +61,47 @@ describe('Controller: AppInstanceCtrl', function() {
       expect(typeof $scope.dashboardOptions).toEqual('object');
     });
 
-    it('should have an appInstance', inject(function(ApplicationModel) {
-      expect($scope.appInstance instanceof ApplicationModel).toEqual(true);
-    }));
+    it('should have an appInstance', function() {
+      expect($scope.appInstance instanceof MockAppModel).toEqual(true);
+    });
 
     it('should call unsubscribe on appInstance when the $scope is destroyed', function() {
       spyOn($scope.appInstance, 'unsubscribe');
       $scope.$destroy();
       expect($scope.appInstance.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('should call subscribe if the app is running', function() {
+      // spy on subscribe
+      spyOn(MockAppModel.prototype, 'subscribe');
+      // set the state to running
+      appInstance.data = {state: 'RUNNING'};
+      // resolve the fetch deferred
+      fetchDFD.resolve();
+      $scope.$apply();
+      expect(MockAppModel.prototype.subscribe).toHaveBeenCalled();
+    });
+
+    it('should call subscribe if the app is starting', function() {
+      // spy on subscribe
+      spyOn(MockAppModel.prototype, 'subscribe');
+      // set the state to running
+      appInstance.data = {state: 'ACCEPTED'};
+      // resolve the fetch deferred
+      fetchDFD.resolve();
+      $scope.$apply();
+      expect(MockAppModel.prototype.subscribe).toHaveBeenCalled();
+    });
+
+    it('should not call subscribe if the app has ended', function() {
+      // spy on subscribe
+      spyOn(MockAppModel.prototype, 'subscribe');
+      // set the state to running
+      appInstance.data = {state: 'KILLED'};
+      // resolve the fetch deferred
+      fetchDFD.resolve();
+      $scope.$apply();
+      expect(MockAppModel.prototype.subscribe).not.toHaveBeenCalled();
     });
 
 });
