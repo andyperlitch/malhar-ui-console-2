@@ -19,7 +19,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
   'ngRoute',
   'app.settings',
   'app.components.resources.PortModel',
-  'app.components.resources.PortCollection'
+  'app.components.resources.PortCollection',
+  'app.components.services.dtText'
 ])
 
   // Route
@@ -39,7 +40,9 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
   })
 
   // Controller
-  .controller('PortPageCtrl', function($scope, $routeParams, PortModel, $http, getUri) {
+  .controller('PortPageCtrl', function($scope, $routeParams, PortModel, $http, getUri, dtText) {
+
+
 
     $scope.port = new PortModel($routeParams);
     $scope.port.fetch().then(function() {
@@ -53,6 +56,54 @@ angular.module('app.pages.ops.appInstance.physicalOperator.port', [
     });
     $scope.port.subscribe($scope);
 
+    // Chart
+    $scope.portMetrics = [
+      {
+        key: 'tuplesPSMA',
+        color: '#64c539',
+        label: dtText.get('tuples/sec'),
+        visible: true
+      },
+      {
+        key: 'bufferServerBytesPSMA',
+        color: '#1da8db',
+        label: dtText.get('buffer size (K)'),
+        visible: true
+      },
+      {
+        key: 'queueSizePSMA',
+        color: '#AE08CE',
+        label: dtText.get('queue size'),
+        visible: true
+      }
+    ];
+
+    function transformData(data) {
+      var result = [];
+      _.each($scope.portMetrics, function(series) {
+        result.push({
+          key: series.key,
+          values: _.map(data, function(d) {
+            return { value: d[series.key] * 1 };
+          })
+        });
+      });
+      console.log('result', result);
+      return result;
+    }
     
+    $scope.chartData = [];
+
+    $scope.$watch('port.data', function(data) {
+      $scope.chartData.push(angular.copy(data));
+      if ($scope.chartData.length >= 100) {
+        $scope.chartData.shift();
+      }
+      $scope.transformedData = transformData($scope.chartData);
+    }, true);
+
+    $scope.portMetricsController = {
+      addPoint: function() {}
+    };
 
   });
