@@ -16,7 +16,7 @@
 
 'use strict';
 
-angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel', [
+angular.module('app.pages.dev.kafka.widgetDataModels.KafkaBarChartWidgetDataModel', [
   'ui.models',
   'app.pages.dev.kafka.KafkaRestService',
   'app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel'
@@ -50,47 +50,6 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataMo
         }.bind(this));
 
         this.widgetScope.timeAxisFormat = clientSettings.dashboard.timeAxisFormat;
-      }
-    });
-
-    return KafkaTimeSeriesWidgetDataModel;
-  })
-  .factory('KafkaTimeSeriesWidgetDataModel', function (WidgetDataModel) {
-    function KafkaTimeSeriesWidgetDataModel() {
-    }
-
-    KafkaTimeSeriesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
-    KafkaTimeSeriesWidgetDataModel.prototype.constructor = WidgetDataModel;
-
-    angular.extend(KafkaTimeSeriesWidgetDataModel.prototype, {
-      init: function () {
-        if (this.dataModelOptions && this.dataModelOptions.metric) {
-          this.widgetScope.metricValue = this.dataModelOptions.metric;
-        }
-
-        this.widgetScope.$on('kafkaMessage', function (event, data) {
-          if (data) {
-            this.updateScope(data);
-          } else {
-            this.updateScope(null);
-          }
-        }.bind(this));
-
-        this.widgetScope.$on('metricChanged', function (event, metric) {
-          event.stopPropagation();
-          if (this.dataModelOptions) {
-            this.dataModelOptions.metric = metric;
-            this.widgetScope.$emit('widgetChanged', this.widget);
-          }
-        }.bind(this));
-      },
-
-      updateQuery: function (query) {
-        console.log(query);
-      },
-
-      destroy: function () {
-        //TODO
       }
     });
 

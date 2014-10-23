@@ -66,8 +66,7 @@ angular.module('app.pages.ops.appInstance.appData', [
       }
     });
   })
-  .controller('AppDataDashboardCtrl', function ($scope, $routeParams, appDataWidgetDefinitions, defaultOnSettingsClose, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget, AppsListWidget,
-                                                dashboardOptionsFactory) {
+  .controller('AppDataDashboardCtrl', function ($scope, $routeParams, appDataWidgetDefinitions, dashboardOptionsFactory) {
     var dashboard = $scope.dashboard;
     $scope.dashboardOptions = dashboardOptionsFactory({
       storage: localStorage,

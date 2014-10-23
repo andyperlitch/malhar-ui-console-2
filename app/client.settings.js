@@ -30,6 +30,8 @@
   };
 
   clientSettings.kafka.discovery = {};
+
+  // kafka discovery
   clientSettings.kafka.discovery.inputOperatorFilter = {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortStringInputOperator'};
   clientSettings.kafka.discovery.outputOperatorFilter = {className: 'com.datatorrent.contrib.kafka.KafkaSinglePortOutputOperator'};
   clientSettings.kafka.discovery.dimensionsOperatorFilter = function (operator) {
@@ -39,6 +41,12 @@
       className
     );
   };
+
+  // Gateway WebSocket discovery
+  clientSettings.kafka.discovery.wsInputOperatorFilter = {className: 'com.datatorrent.lib.io.PubSubWebSocketInputOperator'};
+  clientSettings.kafka.discovery.wsOutputOperatorFilter = {className: 'com.datatorrent.lib.io.PubSubWebSocketOutputOperator'};
+
+  // Database demo discovery
   clientSettings.kafka.discovery.databaseOperatorFilter = {className: 'com.datatorrent.contrib.goldengate.lib.OracleDBOutputOperator'};
 
   clientSettings.kafka.defaultQuery = {
@@ -47,7 +55,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek21';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek23';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -125,6 +133,34 @@
         name: 'Kafka Debug',
         dataModelOptions: {
           query: clientSettings.kafka.defaultQueryWithTopics
+        }
+      }
+    ]
+  };
+  clientSettings.dashboard.kafka.AdsWebSocketDemo = {
+    title: 'AdsWebSocketDemo', active: false, defaultWidgets: [
+      {
+        name: 'Time Series Bar Chart',
+        dataModelOptions: {
+          query: {
+            keys: {},
+            gateway: {
+              queryTopic: 'AdsQuery',
+              resultTopic: 'AdsQueryResult'
+            }
+          }
+        }
+      },
+      {
+        name: 'Time Series Line Chart',
+        dataModelOptions: {
+          query: {
+            keys: {},
+            gateway: {
+              queryTopic: 'AdsQuery',
+              resultTopic: 'AdsQueryResult'
+            }
+          }
         }
       }
     ]
@@ -241,9 +277,13 @@
     },
     clientSettings.dashboard.kafka.DatabaseDemo,
     clientSettings.dashboard.kafka.AdsDemo,
+    clientSettings.dashboard.kafka.AdsWebSocketDemo,
     clientSettings.dashboard.kafka.DimensionsDemo,
     {
       title: 'WebSocketDemo', active: false, defaultWidgets: [
+      {
+        name: 'Gateway Web Socket'
+      },
       {
         name: 'Top N'
       },

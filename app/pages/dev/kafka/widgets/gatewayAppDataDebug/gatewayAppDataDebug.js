@@ -16,12 +16,12 @@
 
 'use strict';
 
-angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
-  'app.pages.dev.kafka.KafkaSocketService',
+angular.module('app.pages.dev.kafka.widgets.gatewayAppDataDebug', [
+  'app.pages.dev.kafka.GatewayAppDataService',
   'app.components.directives.dtQueryEditor'
 ])
-  .controller('KafkaDebugCtrl', function ($scope, KafkaSocketService, GatewayAppDataService, KafkaDiscovery, clientSettings, $timeout) {
-    //$scope.kafkaService = new KafkaSocketService();
+  .controller('GatewayAppDataDebugCtrl', function ($scope, GatewayAppDataService, clientSettings, $timeout) {
+    $scope.kafkaService = new GatewayAppDataService();
 
     var defaultMessage;
 
@@ -31,9 +31,9 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       defaultMessage = clientSettings.kafka.defaultQuery;
     }
 
-    var kafkaQuery = defaultMessage;
+    $scope.kafkaQuery = defaultMessage;
 
-    if ($scope.kafkaDiscovery && $scope.kafkaDiscovery.isKafka() && !$scope.kafkaQuery.kafka) {
+    if ($scope.kafkaDiscovery && !$scope.kafkaQuery.kafka) { //TODO
       $scope.dimensions = $scope.kafkaDiscovery.getDimensionList();
 
       $scope.kafkaQuery = _.clone($scope.kafkaQuery);
@@ -42,32 +42,6 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
         kafka: $scope.kafkaDiscovery.getKafkaTopics()
       });
     }
-
-    var kafkaDiscovery = $scope.kafkaDiscovery;
-
-    if (kafkaDiscovery) {
-      $scope.dimensions = kafkaDiscovery.getDimensionList();
-
-      if (kafkaDiscovery.isKafka() && !kafkaQuery.kafka) {
-        kafkaQuery = _.clone(kafkaQuery);
-        angular.extend(kafkaQuery, {
-          kafka: kafkaDiscovery.getKafkaTopics()
-        });
-      } else if (kafkaDiscovery.isGatewayWebSocket() && !kafkaQuery.gateway) {
-        kafkaQuery = _.clone(kafkaQuery);
-        angular.extend(kafkaQuery, {
-          gateway: kafkaDiscovery.getGatewayWebSocketTopics()
-        });
-      }
-    }
-
-    if (kafkaQuery.kafka) {
-      $scope.kafkaService = new KafkaSocketService();
-    } else {
-      $scope.kafkaService = new GatewayAppDataService();
-    }
-
-    $scope.kafkaQuery = kafkaQuery;
 
     $scope.sendRequest = function () {
       $timeout.cancel($scope.timeout);
@@ -79,21 +53,18 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
       var msg = $scope.kafkaQuery;
 
       if (msg) {
-        $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) {
+        $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) { //TODO
           if ($scope.timeout) {
             $timeout.cancel($scope.timeout);
             delete $scope.timeout;
           }
           $scope.kafkaMessage = _.clone(kafkaMessage);
+          //$scope.kafkaMessageValue = data;
 
-          if (kafkaMessage) {
-            var valueProperty = _.has(kafkaMessage, 'value') ? 'value' : 'data';
-            var value = kafkaMessage[valueProperty];
-            if (value) {
-              var kafkaMessageValue = _.isString(value) ? JSON.parse(value) : value;
-              $scope.kafkaMessageValue = kafkaMessageValue;
-              $scope.kafkaMessage[valueProperty] = '<see data below>';
-            }
+          if (kafkaMessage && kafkaMessage.data) {
+            var kafkaMessageValue = kafkaMessage.data;
+            $scope.kafkaMessageValue = kafkaMessageValue;
+            $scope.kafkaMessage.data = '<see data below>';
           } else {
             $scope.kafkaMessageValue = null; //TODO
           }

@@ -24,12 +24,14 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
   'app.pages.dev.kafka.widgets.textContent',
   'app.pages.dev.kafka.socket',
   'app.pages.dev.kafka.KafkaSocketService',
-  'app.pages.dev.kafka.widgetDataModels.KafkaTimeSeriesWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.KafkaMetricsWidgetDataModel',
+  'app.pages.dev.kafka.widgetDataModels.KafkaLineChartWidgetDataModel',
+  'app.pages.dev.kafka.widgetDataModels.KafkaBarChartWidgetDataModel',
   'app.pages.dev.kafka.widgetDataModels.TopNWidgetDataModel',
-  'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel'
+  'app.pages.dev.kafka.widgetDataModels.TableWidgetDataModel',
+  'app.pages.dev.kafka.widgets.gatewayAppDataDebug'
+
 ])
-  .factory('appDataWidgetDefinitions', function (webSocket, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, KafkaTimeSeriesWidgetDataModel, KafkaMetricsWidgetDataModel, ClusterMetricsWidget,
+  .factory('appDataWidgetDefinitions', function (webSocket, KafkaRestService, KafkaBarChartWidgetDataModel, KafkaLineChartWidgetDataModel, ClusterMetricsWidget,
                                                  dashboardOptionsFactory, defaultOnSettingsClose, clientSettings) {
     function onSettingsClose (result, widget) {
       defaultOnSettingsClose(result, widget);
@@ -66,7 +68,6 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
         title: 'Time Series Line Chart',
         directive: 'wt-nvd3-line-chart',
         dataAttrName: 'data',
-        //dataModelType: KafkaMetricsWidgetDataModel,
         dataModelType: KafkaLineChartWidgetDataModel,
         dataModelOptions: {
         },
@@ -110,6 +111,23 @@ angular.module('app.pages.dev.kafka.appDataWidgetDefinitions', [
           partialTemplateUrl: 'pages/dev/kafka/configurableWidgetModalOptions.html'
         },
         onSettingsClose: onSettingsClose
+      },
+      {
+        name: 'Gateway Web Socket',
+        title: 'Gateway Web Socket',
+        templateUrl: 'pages/dev/kafka/widgets/gatewayAppDataDebug/gatewayAppDataDebug.html',
+        size: {
+          width: '100%'
+        },
+        dataModelOptions: {
+          query: {
+            keys: {},
+            gateway: {
+              queryTopic: 'AdsQuery',
+              resultTopic: 'AdsQueryResult'
+            }
+          }
+        }
       },
       {
         name: 'Top N',

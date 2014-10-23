@@ -16,19 +16,19 @@
 
 'use strict';
 
-angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
+angular.module('app.pages.dev.kafka.widgetDataModels.GatewayAppDataWidgetDataModel', [
   'ui.models',
   'app.pages.dev.kafka.KafkaRestService',
   'app.pages.dev.kafka.KafkaSocketService'
 ])
-  .factory('KafkaWidgetDataModel', function (WidgetDataModel, KafkaRestService, KafkaSocketService, GatewayAppDataService, clientSettings) {
-    function KafkaWidgetDataModel() {
+  .factory('GatewayAppDataWidgetDataModel', function (WidgetDataModel, KafkaRestService, KafkaSocketService, clientSettings) {
+    function GatewayAppDataWidgetDataModel() {
     }
 
-    KafkaWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
-    KafkaWidgetDataModel.prototype.constructor = WidgetDataModel;
+    GatewayAppDataWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
+    GatewayAppDataWidgetDataModel.prototype.constructor = WidgetDataModel;
 
-    angular.extend(KafkaWidgetDataModel.prototype, {
+    angular.extend(GatewayAppDataWidgetDataModel.prototype, {
       init: function () {
         if (this.dataModelOptions && this.dataModelOptions.query) {
           this.query = this.dataModelOptions.query;
@@ -63,36 +63,17 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
       fetchData: function () {
         this.updateScope([]); //TODO
 
-        if (false && !this.kafkaService) { //TODO
-          //this.kafkaService = new KafkaSocketService();
-          this.kafkaService = new GatewayAppDataService();
+        if (!this.kafkaService) {
+          this.kafkaService = new KafkaSocketService();
         }
 
         var kafkaQuery = this.query;
 
-        var kafkaDiscovery = this.widgetScope.kafkaDiscovery;
-        if (kafkaDiscovery) {
-          if (kafkaDiscovery.isKafka() && !kafkaQuery.kafka) {
-            kafkaQuery = _.clone(kafkaQuery);
-            angular.extend(kafkaQuery, {
-              kafka: kafkaDiscovery.getKafkaTopics()
-            });
-          } else if (kafkaDiscovery.isGatewayWebSocket() && !kafkaQuery.gateway) {
-            kafkaQuery = _.clone(kafkaQuery);
-            angular.extend(kafkaQuery, {
-              gateway: kafkaDiscovery.getGatewayWebSocketTopics()
-            });
-          }
-        }
-
-        if (this.kafkaService) {
-          this.kafkaService.unsubscribe();
-        }
-
-        if (kafkaQuery.kafka) {
-          this.kafkaService = new KafkaSocketService();
-        } else {
-          this.kafkaService = new GatewayAppDataService();
+        if (this.widgetScope.kafkaDiscovery && !kafkaQuery.kafka) {
+          kafkaQuery = _.clone(kafkaQuery);
+          angular.extend(kafkaQuery, {
+            kafka: this.widgetScope.kafkaDiscovery.getKafkaTopics()
+          });
         }
 
         this.kafkaService.subscribe(kafkaQuery, function (data) {
@@ -121,5 +102,5 @@ angular.module('app.pages.dev.kafka.widgetDataModels.KafkaWidgetDataModel', [
       }
     });
 
-    return KafkaWidgetDataModel;
+    return GatewayAppDataWidgetDataModel;
   });
