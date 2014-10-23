@@ -47,7 +47,13 @@
   clientSettings.kafka.discovery.wsOutputOperatorFilter = {className: 'com.datatorrent.lib.io.PubSubWebSocketOutputOperator'};
 
   // Database demo discovery
-  clientSettings.kafka.discovery.databaseOperatorFilter = {className: 'com.datatorrent.contrib.goldengate.lib.OracleDBOutputOperator'};
+  clientSettings.kafka.discovery.databaseOperatorFilter = function (operator) {
+    var className = operator.className;
+    return _.contains(['com.datatorrent.contrib.goldengate.lib.OracleDBOutputOperator',
+        'com.datatorrent.contrib.goldengate.lib.GoldenGateJMSOutputOperator'],
+      className
+    );
+  };
 
   clientSettings.kafka.defaultQuery = {
     keys: {
@@ -55,7 +61,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek24';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek25';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
