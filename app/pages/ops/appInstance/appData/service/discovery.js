@@ -64,6 +64,8 @@ angular.module('app.pages.ops.appInstance.appData.service.KafkaDiscovery', [])
                 this.fetchOpProperties(this.wsInputOperator),
                 this.fetchOpProperties(this.wsOutputOperator),
                 this.fetchOpProperties(this.dimensionsOperator)]);
+          } else if (this.databaseOperator) {
+            this.deferred.resolve();
           } else {
             this.deferred.reject('no supported operator type found');
           }
