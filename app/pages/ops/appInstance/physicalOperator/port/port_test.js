@@ -17,20 +17,59 @@
 
 describe('Controller: PortPageCtrl', function() {
 
-    var $scope;
-    
-    beforeEach(module('app.pages.ops.appInstance.physicalOperator.port'));
+  var $scope, $q, fetchDFD, $httpBackend, PortModel;
+  
+  beforeEach(module('app.pages.ops.appInstance.physicalOperator.port', function($provide){
+    PortModel = function() {
+      this.operator = {
+        name: 'operatorName'
+      };
+    };
+    PortModel.prototype.fetch = function() {
+      return fetchDFD.promise;
+    };
+    PortModel.prototype.subscribe = function() {
 
-    beforeEach(inject(function($rootScope, $controller){
-
-        $scope = $rootScope.$new();
-        $controller('PortPageCtrl', {
-            $scope: $scope
-        });
-    }));
-
-    it('should put a dashboardOptions object on the $scope', function() {
-      expect(typeof $scope.dashboardOptions).toEqual('object');
+    };
+    $provide.value('PortModel', PortModel);
+    $provide.constant('settings', {
+      urls: {
+        PortAttributes: '/port-attributes'
+      }
     });
+  }));
+  
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  beforeEach(inject(function(_$httpBackend_, _$q_, $rootScope, $controller){
+    spyOn(PortModel.prototype, 'fetch').and.callThrough();
+    spyOn(PortModel.prototype, 'subscribe').and.callThrough();
+    $httpBackend = _$httpBackend_;
+    $q = _$q_;
+    fetchDFD = $q.defer();
+    $scope = $rootScope.$new();
+
+    $controller('PortPageCtrl', {
+      $scope: $scope
+    });
+  }));
+
+  it('should put a port object on the $scope', function() {
+    expect(typeof $scope.port).toEqual('object');
+  });
+
+  it('should call port.fetch', function() {
+    expect($scope.port.fetch).toHaveBeenCalled();
+  });
+
+  it('should try to get port attributes if the port fetch succeeds', function() {
+    $httpBackend.whenGET('/port-attributes').respond({});
+    fetchDFD.resolve();
+    $httpBackend.expectGET('/port-attributes');
+    $httpBackend.flush();
+  });
 
 });

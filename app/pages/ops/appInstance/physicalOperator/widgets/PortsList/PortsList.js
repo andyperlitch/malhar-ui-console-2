@@ -64,7 +64,7 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('name_label'),
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="Port" params="{ appId: \'' + scope.appId + '\', operatorId: \'' + scope.operatorId + '\', portId: row.name }">{{row.name}}</a>'
+          template: '<a dt-page-href="Port" params="{ appId: \'' + scope.appId + '\', operatorId: \'' + scope.operatorId + '\', portName: row.name }">{{row.name}}</a>'
         },
         {
           id: 'type',
