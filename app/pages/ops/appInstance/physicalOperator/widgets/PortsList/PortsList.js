@@ -64,7 +64,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('name_label'),
           filter: 'like',
           sort: 'string',
-          template: '<a dt-page-href="Port" params="{ appId: \'' + scope.appId + '\', operatorId: \'' + scope.operatorId + '\', portName: row.name }">{{row.name}}</a>'
+          template: '<a dt-page-href="Port" params="{ appId: \'' + scope.appId + '\', operatorId: \'' + scope.operatorId + '\', portName: row.name }">{{row.name}}</a>',
+          title: dtText.get('Name of the port.')
         },
         {
           id: 'type',
@@ -72,7 +73,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('type_label'),
           filter: 'like',
           sort: 'string',
-          template: '<span ng-class="\'port-type-\' + row.type">{{ row.type }}</span>'
+          template: '<span ng-class="\'port-type-\' + row.type">{{ row.type }}</span>',
+          title: dtText.get('Port type, e.g. input or output.')
         },
         {
           id: 'tuplesPSMA',
@@ -80,7 +82,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('tuples_per_sec'),
           filter: 'number',
           sort: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Moving average number of tuples emitted or ingested by this port per second.')
         },
         {
           id: 'totalTuples',
@@ -88,7 +91,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('tuples_total'),
           filter: 'number',
           sort: 'number',
-          ngFilter: 'commaGroups'
+          ngFilter: 'commaGroups',
+          title: dtText.get('Total number of tuples emitted or ingested by this port')
         },
         {
           id: 'bufferServerBytesPSMA',
@@ -96,7 +100,8 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           label: dtText.get('buffer_server_bps_label'),
           filter: 'number',
           sort: 'number',
-          ngFilter: 'commaGroups'
+          template: '{{ row.bufferServerBytesPSMA | byte }}',
+          title: dtText.get('Memory taken up in the buffer server.')
         }
       ];
 

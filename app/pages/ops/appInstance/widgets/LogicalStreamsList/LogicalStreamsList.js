@@ -73,7 +73,8 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
           label: dtText.get('name_label'), 
           key: 'name', 
           filter: 'like', 
-          sort: 'string'
+          sort: 'string',
+          title: dtText.get('Stream name.')
         },
         {
           id: 'locality', 
@@ -81,21 +82,24 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalStreamsList', [
           key: 'locality', 
           filter: 'like', 
           sort: 'string', 
-          template: '<span ng-if="row.locality">{{ row.locality }}</span><span ng-if="!row.locality" dt-text>locality_not_assigned</span>'
+          template: '<span ng-if="row.locality">{{ row.locality }}</span><span ng-if="!row.locality" dt-text>locality_not_assigned</span>',
+          title: dtText.get('The locality set for the stream.')
         },
         {
           id: 'source', 
           label: dtText.get('source_label'), 
           key: 'source', 
           filter: sourceFilter,
-          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.source.operatorName }">{{row.source.operatorName}}</a>: {{ row.source.portName }}'
+          template: '<a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: row.source.operatorName }">{{row.source.operatorName}}</a>: {{ row.source.portName }}',
+          title: dtText.get('The source of a stream, i.e. where data is flowing from.')
         },
         {
           id: 'sinks', 
           label: dtText.get('sinks_label'), 
           key: 'sinks', 
           filter: 'likeFormatted', 
-          template: '<span ng-repeat="sink in row.sinks"><a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: sink.operatorName }">{{sink.operatorName}}</a>: {{ sink.portName }}</span>'
+          template: '<span ng-repeat="sink in row.sinks"><a dt-page-href="LogicalOperator" params="{ appId: \'' + scope.appId + '\', operatorName: sink.operatorName }">{{sink.operatorName}}</a>: {{ sink.portName }}</span>',
+          title: dtText.get('The sinks of the stream, i.e. where data is flowing to.')
         }
       ];
     }

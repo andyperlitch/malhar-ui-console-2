@@ -35,7 +35,7 @@ angular.module('app.components.services.dtText', [])
       'buffer_server_writes_label' :  'buffer server writes',
       'buffer_server_reads_ps'     :  'buffer server reads/s',
       'buffer_server_writes_ps'    :  'buffer server writes/s',
-      'buffer_server_bps_label'    :  'buffer server bytes/s',
+      'buffer_server_bps_label'    :  'buffer server size',
       'container_id_label'         :  'container id',
       'container_label'            :  'container',
       'cores_label'                :  'cores',

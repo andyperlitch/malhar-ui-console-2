@@ -103,7 +103,8 @@ angular.module('app.pages.ops.widgets.AppsList', [
       sort: idSorter,
       filter: 'like',
       template: '<a href="#" app-id-link="row.id" short="true"></a>',
-      trustFormat: true
+      trustFormat: true,
+      title: dtText.get('Shortened YARN application id. Click a link to view an instance.')
     },
     {
       id: 'name',
@@ -111,7 +112,8 @@ angular.module('app.pages.ops.widgets.AppsList', [
       label: dtText.get('name_label'),
       sort: 'string',
       filter: 'like',
-      template: '<a href="#" dt-page-href="AppInstance" params="{ appId: row.id }">{{row.name}}</a>'
+      template: '<a href="#" dt-page-href="AppInstance" params="{ appId: row.id }">{{row.name}}</a>',
+      title: dtText.get('Name of application. Click a link to view an instance.')
     },
     {
       id: 'state',
@@ -119,14 +121,16 @@ angular.module('app.pages.ops.widgets.AppsList', [
       key: 'state',
       template: '<span dt-status="row.state" final-status="row.finalStatus"></span>',
       sort: stateSorter,
-      filter:'like'
+      filter:'like',
+      title: dtText.get('State of an application, e.g. ACCEPTED, RUNNING, KILLED.')
     },
     {
       id: 'user',
       key: 'user',
       label: dtText.get('user_label'),
       sort: 'string',
-      filter:'like'
+      filter:'like',
+      title: dtText.get('The user who started the application.')
     },
     {
       id: 'startedTime',
@@ -134,14 +138,16 @@ angular.module('app.pages.ops.widgets.AppsList', [
       key: 'startedTime',
       sort: 'number',
       filter: 'date',
-      format: startedTimeFormatter
+      format: startedTimeFormatter,
+      title: dtText.get('The time the application was started.')
     },
     {
       id: 'lifetime',
       label: dtText.get('lifetime_label'),
       key: 'startedTime',
       filter: 'date',
-      format: lifetimeFormatter
+      format: lifetimeFormatter,
+      title: dtText.get('The lifetime of the application.')
     },
     {
       id: 'allocatedMB',
@@ -149,7 +155,8 @@ angular.module('app.pages.ops.widgets.AppsList', [
       key: 'allocatedMB',
       sort: memorySorter,
       filter: 'number',
-      template: '{{ row[column.key] | byte:"mb"}}'
+      template: '{{ row[column.key] | byte:"mb"}}',
+      title: dtText.get('Amount of allocated memory that this application is consuming.')
     }
   ];
 
