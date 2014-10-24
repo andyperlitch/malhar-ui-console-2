@@ -35,6 +35,11 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
 
   var PortsListWidgetDataModel = BaseDataModel.extend({
 
+    constructor: function(options) {
+      this.fetchPromise = options.operatorFetchPromise;
+      BaseDataModel.apply(this, arguments);
+    },
+
     init: function() {
 
       var scope = this.widgetScope;
@@ -48,6 +53,11 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
           { id: 'name', dir: '+' }
         ]
       }, scope.widget, scope);
+
+      scope.fetchPromise.finally(function() {
+        scope.table_options.setLoading(false);
+      });
+
       scope.selected = [];
       scope.columns = [
         {

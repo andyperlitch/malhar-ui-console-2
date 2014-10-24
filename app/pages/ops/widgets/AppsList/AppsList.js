@@ -175,7 +175,9 @@ angular.module('app.pages.ops.widgets.AppsList', [
       }, scope.widget, scope);
 
       this.resource = new ApplicationCollection();
-      this.resource.fetch();
+      this.resource.fetch().then(function() {
+        scope.options.setLoading(false);
+      });
       this.resource.subscribe(scope);
       scope.resource = this.resource;
       scope.endApps = function(signal, selected) {

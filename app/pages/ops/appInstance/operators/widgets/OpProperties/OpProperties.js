@@ -25,7 +25,6 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
     function OpPropertiesWidgetDataModel(options) {
       this.appId = options.appId;
       this.operatorName = options.operatorName;
-      this.operatorFetchPromise = options.operatorFetchPromise;
     }
 
     OpPropertiesWidgetDataModel.prototype = Object.create(WidgetDataModel.prototype);
@@ -33,9 +32,11 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
 
     angular.extend(OpPropertiesWidgetDataModel.prototype, {
       init: function () {
-        this.widgetScope.data = [];
+        var scope = this.widgetScope;
+        scope.data = [];
 
-        this.widgetScope.columns = [
+
+        scope.columns = [
           {
             id: 'name',
             key: 'name',
@@ -51,17 +52,19 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
           }
         ];
 
-        this.widgetScope.options = tableOptionsFactory({
+
+        scope.options = tableOptionsFactory({
           row_limit: 10,
           initial_sorts: [
             { id: 'name', dir: '+' }
           ]
-        }, this.widgetScope.widget, this.widgetScope);
 
-        if (!this.operatorFetchPromise) {
+        }, scope.widget, scope);
+
+        if (!scope.fetchPromise) {
           this.load();
         } else {
-          this.operatorFetchPromise.then(function (operator) {
+          scope.fetchPromise.then(function (operator) {
             this.operatorName = operator.name;
             this.load();
           }.bind(this));
@@ -75,7 +78,11 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
         });
 
         propertiesResource.fetch().then(function (properties) {
-          this.widgetScope.data = _.map(_.pairs(properties), function (pair) {
+          var scope = this.widgetScope;
+          _.defer(function() {
+            scope.options.setLoading(false);
+          });
+          scope.data = _.map(_.pairs(properties), function (pair) {
             return {
               name: pair[0],
               value: pair[1]
