@@ -8,7 +8,7 @@ angular.module('app.pages.dev.kafka.GatewayAppDataService', [
     }
 
     angular.extend(GatewayAppDataService.prototype, {
-      createResultCallback: function (callback, topic) {
+      createResultCallback: function (callback) {
         var that = this;
         return function (result) {
           if (result && result.id && (result.id === that.queryId)) { // ignore stale responses
@@ -36,7 +36,7 @@ angular.module('app.pages.dev.kafka.GatewayAppDataService', [
         this.unsubscribe(); // unsubscribe from the last query
 
         this.topic = query.gateway.resultTopic;
-        this.resultCallback = this.createResultCallback(callback, JSON.stringify(this.query.keys));
+        this.resultCallback = this.createResultCallback(callback);
 
         this.unsubscribeCallback = webSocket.subscribe(this.topic, this.resultCallback, scope);
 
