@@ -24,6 +24,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'app.components.resources.ContainerLogCollection',
   'app.components.directives.validation.readableBytes',
   'app.components.directives.validation.greaterThan',
+  'app.components.directives.uiResizable',
   'app.components.services.getUri',
   'app.components.services.confirm',
   'app.components.services.dtText'
@@ -146,7 +147,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     getUri,
     byteCount,
     getLogContent,
-    dtText
+    dtText,
+    userStorage
   ) {
 
     // Set up the download link
@@ -157,6 +159,18 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       limit: 1000,
       offset: 0
     };
+
+    // Options for resizing the viewport
+    $scope.resizableOptions = {
+      handles: 's',
+      stop: function(event, ui) {
+        // update saved height of viewport
+        userStorage.setItem('containerLogViewportHeight', ui.size.height);
+      }
+    };
+
+    // Set up initial height of viewport
+    $scope.initialViewportHeight = userStorage.getItem('containerLogViewportHeight') || 600;
 
     // This holds the lines returned by the
     // API call with includeOffset turned on:

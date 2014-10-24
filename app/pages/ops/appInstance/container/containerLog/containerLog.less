@@ -10,11 +10,16 @@
     vertical-align: middle;
   }
 
+  #container-log-viewer-wrapper {
+    height: 600px;
+  }
+
   #container-log-viewer {
-    max-height: 600px;
+    height: 100%;
     overflow: auto;
     white-space: nowrap;
     word-break: break-all;
+    background-color: #FFF;
 
     .loading-msg {
       margin: 0;
@@ -22,9 +27,9 @@
     .log-content {
       white-space: pre-wrap;
       word-wrap: normal;
-      border-style: solid;
-      border-color: #DEDEDE;
-      border-width: 0 0 1px 0;
+      // border-style: solid;
+      // border-color: #DEDEDE;
+      // border-width: 0 0 1px 0;
       background: none;
       margin: 0;
       padding: 5px;

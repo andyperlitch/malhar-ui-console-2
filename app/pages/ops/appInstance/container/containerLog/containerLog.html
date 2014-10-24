@@ -67,15 +67,14 @@
     </button>
 
   </form>
+  <div ui-resizable resizable-options="resizableOptions" id="container-log-viewer-wrapper" ng-style="{ height: initialViewportHeight + 'px' }">
+    <div class="well well-sm" id="container-log-viewer" container-log-viewer msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
+      <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
 
-  <div class="well well-sm" id="container-log-viewer" container-log-viewer msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
-    <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
+      <div class="log-content" ng-repeat="line in logContent.lines track by $index"><span class="glyphicon glyphicon-eye-open go-to-log-location" ng-click="goToLogLocation(line)"></span>{{ line.line }}</div>
 
-    <div class="log-content" ng-repeat="line in logContent.lines track by $index"><span class="glyphicon glyphicon-eye-open go-to-log-location" ng-click="goToLogLocation(line)"></span>{{ line.line }}</div>
-
-    <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
-    <div ng-if="appendMessage" ng-class="'loading-msg prepend alert alert-' + appendMessage.type">{{ appendMessage.message }}</div>
+      <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
+      <div ng-if="appendMessage" ng-class="'loading-msg prepend alert alert-' + appendMessage.type">{{ appendMessage.message }}</div>
+    </div>
   </div>
-
-
 </div>
