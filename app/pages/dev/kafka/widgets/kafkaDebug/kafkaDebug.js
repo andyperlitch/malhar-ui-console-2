@@ -21,8 +21,6 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
   'app.components.directives.dtQueryEditor'
 ])
   .controller('KafkaDebugCtrl', function ($scope, KafkaSocketService, GatewayAppDataService, KafkaDiscovery, clientSettings, $timeout) {
-    //$scope.kafkaService = new KafkaSocketService();
-
     var defaultMessage;
 
     if ($scope.widget.dataModelOptions && $scope.widget.dataModelOptions.query) {
@@ -32,16 +30,6 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
     }
 
     var kafkaQuery = defaultMessage;
-
-    if ($scope.kafkaDiscovery && $scope.kafkaDiscovery.isKafka() && !$scope.kafkaQuery.kafka) {
-      $scope.dimensions = $scope.kafkaDiscovery.getDimensionList();
-
-      $scope.kafkaQuery = _.clone($scope.kafkaQuery);
-
-      angular.extend($scope.kafkaQuery, {
-        kafka: $scope.kafkaDiscovery.getKafkaTopics()
-      });
-    }
 
     var kafkaDiscovery = $scope.kafkaDiscovery;
 
@@ -59,6 +47,10 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
           gateway: kafkaDiscovery.getGatewayWebSocketTopics()
         });
       }
+    }
+
+    if ($scope.kafkaService) {
+      $scope.kafkaService.unsubscribe();
     }
 
     if (kafkaQuery.kafka) {
