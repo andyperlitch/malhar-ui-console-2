@@ -61,7 +61,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek27';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek28';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -143,7 +143,7 @@
     ]
   };
 
-  var adsWebSocketDemoQuery = {
+  var AdsDemoWebSocketQuery = {
     keys: {},
     gateway: {
       queryTopic: 'AdsQuery',
@@ -151,24 +151,24 @@
     }
   };
 
-  clientSettings.dashboard.kafka.AdsWebSocketDemo = {
-    title: 'AdsWebSocketDemo', active: false, defaultWidgets: [
+  clientSettings.dashboard.kafka.AdsDemoWebSocket = {
+    title: 'AdsDemoWebSocket', active: false, defaultWidgets: [
       {
         name: 'Time Series Bar Chart',
         dataModelOptions: {
-          query: adsWebSocketDemoQuery
+          query: AdsDemoWebSocketQuery
         }
       },
       {
         name: 'Time Series Line Chart',
         dataModelOptions: {
-          query: adsWebSocketDemoQuery
+          query: AdsDemoWebSocketQuery
         }
       },
       {
         name: 'Kafka Debug',
         dataModelOptions: {
-          query: adsWebSocketDemoQuery
+          query: AdsDemoWebSocketQuery
         }
       }
     ]
@@ -285,7 +285,7 @@
     },
     clientSettings.dashboard.kafka.DatabaseDemo,
     clientSettings.dashboard.kafka.AdsDemoKafka,
-    clientSettings.dashboard.kafka.AdsWebSocketDemo,
+    clientSettings.dashboard.kafka.AdsDemoWebSocket,
     clientSettings.dashboard.kafka.DimensionsDemo,
     {
       title: 'WebSocketDemo', active: false, defaultWidgets: [
