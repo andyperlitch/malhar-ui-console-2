@@ -122,7 +122,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           label: dtText.get('process_id_label'),
           key: 'jvmName',
           sort: 'string',
-          filter: 'like',
+          filter: 'likeFormatted',
           format: processFormatter,
           title: dtText.get('The process ID of the container.')
         },
@@ -131,7 +131,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           label: dtText.get('host_label'),
           key: 'jvmName',
           sort: nodeSorter,
-          filter: 'like',
+          filter: 'likeFormatted',
           format: nodeFormatter,
           title: dtText.get('The node where the container is running.')
         },
