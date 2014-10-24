@@ -27,7 +27,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'app.components.directives.uiResizable',
   'app.components.services.getUri',
   'app.components.services.confirm',
-  'app.components.services.dtText'
+  'app.components.services.dtText',
+  'app.components.services.userStorage'
 ])
   // Route
   .config(function($routeProvider, settings) {
@@ -160,17 +161,17 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       offset: 0
     };
 
+    // Set up initial height of viewport
+    $scope.initialViewportHeight = userStorage.getItem(settings.containerLogs.VIEWPORT_HEIGHT_KEY) || settings.containerLogs.DEFAULT_HEIGHT;
+
     // Options for resizing the viewport
     $scope.resizableOptions = {
       handles: 's',
       stop: function(event, ui) {
         // update saved height of viewport
-        userStorage.setItem('containerLogViewportHeight', ui.size.height);
+        userStorage.setItem(settings.containerLogs.VIEWPORT_HEIGHT_KEY, ui.size.height);
       }
     };
-
-    // Set up initial height of viewport
-    $scope.initialViewportHeight = userStorage.getItem('containerLogViewportHeight') || 600;
 
     // This holds the lines returned by the
     // API call with includeOffset turned on:

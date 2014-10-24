@@ -281,7 +281,9 @@ angular.module('app.settings', [])
       UNSET_REQUEST_FLAG_WAIT: 100,
       RETRIEVE_DEBOUNCE_WAIT: 500,
       GREP_DEBOUNCE_WAIT: 500,
-      CONFIRM_REQUEST_THRESHOLD_KB: 8 * 1024 // in byes
+      CONFIRM_REQUEST_THRESHOLD_KB: 8 * 1024, // in byes
+      VIEWPORT_HEIGHT_KEY: 'containerLogViewportHeight',
+      DEFAULT_HEIGHT: 600
     },
 
     dagEditor: {
