@@ -72,7 +72,7 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
       appId: $routeParams.appId
     });
 
-    var fetchPromise = $scope.physicalOperator.fetch();
+    var fetchPromise = $scope.fetchPromise = $scope.physicalOperator.fetch();
 
     $scope.physicalOperator.subscribe($scope);
     $scope.$on('$destroy', function() {
@@ -82,7 +82,12 @@ angular.module('app.pages.ops.appInstance.physicalOperator', [
     // Create widgets arrays
     var widgetDefinitions = [
       new PhysicalOperatorOverviewWidgetDef({ name: 'Overview'}),
-      new PortsListWidgetDef({ name: 'Ports List' }),
+      new PortsListWidgetDef({
+        name: 'Ports List',
+        dataModelArgs: {
+          operatorFetchPromise: fetchPromise
+        }
+      }),
       new OpMetricsWidgetDef({
         name: 'Metrics Chart',
         dataModelArgs: { operatorResource: $scope.physicalOperator },

@@ -81,9 +81,7 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
 
       var fetchParams = this.dataModelOptions && this.dataModelOptions.loadKilled ? {} : { states: settings.NONENDED_CONTAINER_STATES.join(',') };
 
-      this.resource.fetch({
-        params: fetchParams
-      }, { remove: false });
+
       this.resource.subscribe(scope, undefined, { remove: false });
       scope.resource = this.resource;
       scope.selected = [];
@@ -94,6 +92,12 @@ angular.module('app.pages.ops.appInstance.widgets.ContainersList', [
           { id: 'id', dir: '+' }
         ]
       }, scope.widget, scope);
+
+      this.resource.fetch({
+        params: fetchParams
+      }, { remove: false }).finally(function() {
+        scope.table_options.setLoading(false);
+      });
 
       scope.columns = [
         {

@@ -74,7 +74,9 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
         }
       };
 
-      resource.fetch();
+      resource.fetch().finally(function() {
+        scope.table_options.setLoading(false);
+      });
       resource.subscribe(scope);
 
       // Set the table columns
