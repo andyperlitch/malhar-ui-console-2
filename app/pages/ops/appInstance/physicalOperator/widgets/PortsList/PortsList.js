@@ -55,7 +55,6 @@ angular.module('app.pages.ops.appInstance.physicalOperator.widgets.PortsList', [
       }, scope.widget, scope);
 
       scope.fetchPromise.finally(function() {
-        console.log('ports list fetch promise');
         scope.table_options.setLoading(false);
       });
 

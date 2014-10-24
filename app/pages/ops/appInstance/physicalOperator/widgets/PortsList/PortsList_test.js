@@ -50,9 +50,11 @@ describe('Factory: PortsListWidgetDataModel', function () {
   }));
 
   // instantiate service
-  var PortsListWidgetDataModel;
-  beforeEach(inject(function (_PortsListWidgetDataModel_) {
+  var PortsListWidgetDataModel, $q, $rootScope;
+  beforeEach(inject(function (_PortsListWidgetDataModel_, _$q_, _$rootScope_) {
     PortsListWidgetDataModel = _PortsListWidgetDataModel_;
+    $q = _$q_;
+    $rootScope = _$rootScope_;
   }));
 
   it('should be a function', function() {
@@ -66,15 +68,14 @@ describe('Factory: PortsListWidgetDataModel', function () {
 
   describe('the init function', function() {
     
-    var m, scope;
+    var m, scope, dfd;
 
     beforeEach(function() {
+      dfd = $q.defer();
       m = new PortsListWidgetDataModel();
-      m.widgetScope = scope = {
-        physicalOperator: {
-          data: {}
-        }
-      };
+      m.widgetScope = scope = $rootScope.$new();
+      scope.physicalOperator = { data: {} };
+      scope.fetchPromise = dfd.promise;
       scope.widget = {};
     });
 
@@ -94,6 +95,14 @@ describe('Factory: PortsListWidgetDataModel', function () {
       expect(typeof scope.table_options).toEqual('object');
       expect(scope.selected instanceof Array).toEqual(true);
       expect(scope.columns instanceof Array).toEqual(true);
+    });
+
+    it('should call table_options.setLoading(false) when the fetchPromise is resolved', function() {
+      m.init();
+      scope.table_options.setLoading = jasmine.createSpy();
+      dfd.resolve();
+      scope.$apply();
+      expect(scope.table_options.setLoading).toHaveBeenCalled();
     });
 
   });
