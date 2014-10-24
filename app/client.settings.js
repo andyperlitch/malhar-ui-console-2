@@ -61,7 +61,7 @@
   };
 
   clientSettings.dashboard = {};
-  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek25';
+  clientSettings.dashboard.storageMasterKey = 'ErZ8mC2Jek27';
   clientSettings.dashboard.storageKey = 'dashboard.{masterKey}.appdata.'
     .replace('{masterKey}', clientSettings.dashboard.storageMasterKey);
   clientSettings.dashboard.timeAxisFormat = 'MMM dd HH:mm';
@@ -98,8 +98,8 @@
 
   clientSettings.kafka.defaultQueryWithTopics = _.assign({}, clientSettings.kafka.defaultQuery, {
     kafka: {
-      queryTopic: 'AdsDemoQuery',
-      resultTopic: 'AdsDemoQueryResult'
+      queryTopic: 'AdsQuery',
+      resultTopic: 'AdsQueryResult'
     }
   });
   clientSettings.kafka.dimensionsDemoQuery = _.assign({}, clientSettings.kafka.defaultQuery, {
@@ -119,8 +119,8 @@
   clientSettings.dashboard.kafka = {};
   clientSettings.dashboard.kafka.storageKey = clientSettings.dashboard.storageKey + 'AppData';
 
-  clientSettings.dashboard.kafka.AdsDemo = {
-    title: 'AdsDemo', active: false, defaultWidgets: [
+  clientSettings.dashboard.kafka.AdsDemoKafka = {
+    title: 'AdsDemoKafka', active: false, defaultWidgets: [
       {
         name: 'Time Series Bar Chart',
         dataModelOptions: {
@@ -142,30 +142,33 @@
       }
     ]
   };
+
+  var adsWebSocketDemoQuery = {
+    keys: {},
+    gateway: {
+      queryTopic: 'AdsQuery',
+      resultTopic: 'AdsQueryResult'
+    }
+  };
+
   clientSettings.dashboard.kafka.AdsWebSocketDemo = {
     title: 'AdsWebSocketDemo', active: false, defaultWidgets: [
       {
         name: 'Time Series Bar Chart',
         dataModelOptions: {
-          query: {
-            keys: {},
-            gateway: {
-              queryTopic: 'AdsQuery',
-              resultTopic: 'AdsQueryResult'
-            }
-          }
+          query: adsWebSocketDemoQuery
         }
       },
       {
         name: 'Time Series Line Chart',
         dataModelOptions: {
-          query: {
-            keys: {},
-            gateway: {
-              queryTopic: 'AdsQuery',
-              resultTopic: 'AdsQueryResult'
-            }
-          }
+          query: adsWebSocketDemoQuery
+        }
+      },
+      {
+        name: 'Kafka Debug',
+        dataModelOptions: {
+          query: adsWebSocketDemoQuery
         }
       }
     ]
@@ -268,10 +271,10 @@
       title: 'default', active: true, defaultWidgets: [
       _.assign({
         title: 'AdsDemo - Time Series Bar Chart'
-      }, _.findWhere(clientSettings.dashboard.kafka.AdsDemo.defaultWidgets, { name: 'Time Series Bar Chart' })),
+      }, _.findWhere(clientSettings.dashboard.kafka.AdsDemoKafka.defaultWidgets, { name: 'Time Series Bar Chart' })),
       _.assign({
         title: 'AdsDemo - Time Series Line Chart'
-      }, _.findWhere(clientSettings.dashboard.kafka.AdsDemo.defaultWidgets, { name: 'Time Series Line Chart' })),
+      }, _.findWhere(clientSettings.dashboard.kafka.AdsDemoKafka.defaultWidgets, { name: 'Time Series Line Chart' })),
       _.assign({
         title: 'DimensionsDemo - Time Series Bar Chart'
       }, _.findWhere(clientSettings.dashboard.kafka.DimensionsDemo.defaultWidgets, { name: 'Time Series Bar Chart' })),
@@ -281,7 +284,7 @@
     ]
     },
     clientSettings.dashboard.kafka.DatabaseDemo,
-    clientSettings.dashboard.kafka.AdsDemo,
+    clientSettings.dashboard.kafka.AdsDemoKafka,
     clientSettings.dashboard.kafka.AdsWebSocketDemo,
     clientSettings.dashboard.kafka.DimensionsDemo,
     {

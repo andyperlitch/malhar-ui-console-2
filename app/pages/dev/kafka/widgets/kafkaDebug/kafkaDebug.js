@@ -26,7 +26,9 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
     if ($scope.widget.dataModelOptions && $scope.widget.dataModelOptions.query) {
       defaultMessage = $scope.widget.dataModelOptions.query;
     } else {
-      defaultMessage = clientSettings.kafka.defaultQuery;
+      defaultMessage = {
+        keys: {}
+      };
     }
 
     var kafkaQuery = defaultMessage;
@@ -68,10 +70,8 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
         delete $scope.kafkaMessageValue;
       }, 500); // clean results if query does not produce fast results
 
-      var msg = $scope.kafkaQuery;
-
-      if (msg) {
-        $scope.kafkaService.subscribe(msg, function (data, kafkaMessage) {
+      if ($scope.kafkaQuery) {
+        $scope.kafkaService.subscribe($scope.kafkaQuery, function (data, kafkaMessage) {
           if ($scope.timeout) {
             $timeout.cancel($scope.timeout);
             delete $scope.timeout;
@@ -94,7 +94,7 @@ angular.module('app.pages.dev.kafka.widgets.kafkaDebug', [
 
         $scope.request = $scope.kafkaService.getQuery();
         if ($scope.widget.dataModelOptions) {
-          $scope.widget.dataModelOptions.query = msg;
+          $scope.widget.dataModelOptions.query = $scope.kafkaQuery;
           $scope.$emit('widgetChanged', $scope.widget); // persist new query
         }
       }
