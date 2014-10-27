@@ -147,7 +147,7 @@ angular.module('app.pages.ops.appInstance', [
       var defaultWidgets;
       var defaultLayouts;
       var storageId = 'dashboard.ops.appInstance:' + dashboardType;
-      var storageHash = 's9dfa98sd7f';
+      var storageHash = 's9df9a7sdf';
 
       // Sets up the widgetDefinitions, defaultWidgets, and defaultLayouts
       // to be used when defining this dashboard options object.
