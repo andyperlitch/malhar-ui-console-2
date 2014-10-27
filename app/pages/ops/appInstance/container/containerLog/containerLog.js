@@ -24,9 +24,11 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'app.components.resources.ContainerLogCollection',
   'app.components.directives.validation.readableBytes',
   'app.components.directives.validation.greaterThan',
+  'app.components.directives.uiResizable',
   'app.components.services.getUri',
   'app.components.services.confirm',
-  'app.components.services.dtText'
+  'app.components.services.dtText',
+  'app.components.services.userStorage'
 ])
   // Route
   .config(function($routeProvider, settings) {
@@ -146,7 +148,8 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     getUri,
     byteCount,
     getLogContent,
-    dtText
+    dtText,
+    userStorage
   ) {
 
     // Set up the download link
@@ -156,6 +159,18 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     $scope.displayParams = {
       limit: 1000,
       offset: 0
+    };
+
+    // Set up initial height of viewport
+    $scope.initialViewportHeight = userStorage.getItem(settings.containerLogs.VIEWPORT_HEIGHT_KEY) || settings.containerLogs.DEFAULT_HEIGHT;
+
+    // Options for resizing the viewport
+    $scope.resizableOptions = {
+      handles: 's',
+      stop: function(event, ui) {
+        // update saved height of viewport
+        userStorage.setItem(settings.containerLogs.VIEWPORT_HEIGHT_KEY, ui.size.height);
+      }
     };
 
     // This holds the lines returned by the
