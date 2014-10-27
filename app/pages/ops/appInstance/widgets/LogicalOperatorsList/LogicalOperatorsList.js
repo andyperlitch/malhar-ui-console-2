@@ -43,8 +43,6 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
 
       // Set up resource
       var resource = this.resource = scope.resource = new LogicalOperatorCollection({ appId: scope.appId });
-      resource.fetch();
-      resource.subscribe(scope);
 
       // Set the table options
       scope.table_options = tableOptionsFactory({
@@ -54,6 +52,11 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
         ],
         appInstance: scope.appInstance
       }, scope.widget, scope);
+
+      resource.fetch().finally(function() {
+        scope.table_options.setLoading(false);
+      });
+      resource.subscribe(scope);
 
       // Set the table columns
       scope.columns = [
