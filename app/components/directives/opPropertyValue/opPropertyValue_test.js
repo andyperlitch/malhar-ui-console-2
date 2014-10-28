@@ -38,7 +38,7 @@ describe('Directive: opPropertyValue', function () {
     scope.number = {
       name: 'number',
       value: 1234
-    }
+    };
     scope.longStr = {
       name: 'longStr',
       value:'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod' + 

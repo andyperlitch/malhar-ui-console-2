@@ -19,7 +19,7 @@ angular.module('app.components.directives.opPropertyValue', [
   'app.components.directives.viewRawInModal',
   'app.components.directives.dtText'
 ])
-.directive('opPropertyValue', function(dtText) {
+.directive('opPropertyValue', function() {
 
   var defaultMaxStringLength = 50;
 
