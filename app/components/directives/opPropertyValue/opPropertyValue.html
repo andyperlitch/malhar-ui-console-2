@@ -1,0 +1,7 @@
+  <span>
+    <span ng-if="!viewInModal">{{ displayValue }}</span>
+    <span ng-if="viewInModal">
+      {{ truncatedValue }}
+      <strong><a href="" view-raw-in-modal="value" dt-text>view</a></strong>
+    </span>
+  </span>

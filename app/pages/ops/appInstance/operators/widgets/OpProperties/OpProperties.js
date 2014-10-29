@@ -19,7 +19,8 @@
 angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
   'app.components.resources.OpPropertiesModel',
   'app.components.directives.dtTableResize',
-  'app.components.directives.viewRawInModal'
+  'app.components.directives.viewRawInModal',
+  'app.components.directives.opPropertyValue'
 ])
   .factory('OpPropertiesWidgetDataModel', function (WidgetDataModel, OpPropertiesModel, tableOptionsFactory, dtText) {
     function OpPropertiesWidgetDataModel(options) {
@@ -48,7 +49,7 @@ angular.module('app.pages.ops.appInstance.operators.widgets.OpProperties', [
             key: 'value',
             label: dtText.get('property_value_label'),
             width: '50%',
-            template: '<button class="btn btn-primary" view-raw-in-modal="row.value" modal-title="\'property: \' + row.name" modal-size="lg">view</button>'
+            template: '<op-property-value name="row.name" value="row.value"></op-property-value>'
           }
         ];
 
