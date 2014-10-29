@@ -1,74 +1,77 @@
-<fieldset class="overview-group">
+<div class="">
+  <h2 class="h5" dt-text>Cluster Metrics</h2>
+  <fieldset class="overview-group">
     <legend dt-text>CPU/Memory</legend>
     <div class="overview-item">
-        <div class="value">{{ data.cpuPercentage | percent2cpu }}</div>
-        <div class="key" dt-text>cores_label</div>
+      <div class="value">{{ clusterMetrics.data.cpuPercentage | percent2cpu }}</div>
+      <div class="key" dt-text>cores_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value">{{ data.currentMemoryAllocatedMB | byte:'mb' }}</div>
-        <div class="key" dt-text>current alloc mem</div>
+      <div class="value">{{ clusterMetrics.data.currentMemoryAllocatedMB | byte:'mb' }}</div>
+      <div class="key" dt-text>current alloc mem</div>
     </div>
 
     <div class="overview-item">
-        <div class="value">{{ data.maxMemoryAllocatedMB | byte:'mb' }}</div>
-        <div class="key" dt-text>peak alloc mem</div>
+      <div class="value">{{ clusterMetrics.data.maxMemoryAllocatedMB | byte:'mb' }}</div>
+      <div class="key" dt-text>peak alloc mem</div>
     </div>
-</fieldset>
+  </fieldset>
 
-<fieldset class="overview-group">
+  <fieldset class="overview-group">
     <legend dt-text>Applications</legend>
     <div class="overview-item">
-        <div class="value status-running">{{ data.numAppsRunning | commaGroups }}</div>
-        <div class="key" dt-text>running_label</div>
+      <div class="value status-running">{{ clusterMetrics.data.numAppsRunning | commaGroups }}</div>
+      <div class="key" dt-text>running_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value status-pending-deploy">{{ data.numAppsPending | commaGroups }}</div>
-        <div class="key" dt-text>pending_label</div>
+      <div class="value status-pending-deploy">{{ clusterMetrics.data.numAppsPending | commaGroups }}</div>
+      <div class="key" dt-text>pending_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value status-failed">{{ data.numAppsFailed | commaGroups }}</div>
-        <div class="key" dt-text>failed_label</div>
+      <div class="value status-failed">{{ clusterMetrics.data.numAppsFailed | commaGroups }}</div>
+      <div class="key" dt-text>failed_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value status-finished">{{ data.numAppsFinished | commaGroups }}</div>
-        <div class="key" dt-text>finished_label</div>
+      <div class="value status-finished">{{ clusterMetrics.data.numAppsFinished | commaGroups }}</div>
+      <div class="key" dt-text>finished_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value status-killed">{{ data.numAppsKilled | commaGroups }}</div>
-        <div class="key" dt-text>killed_label</div>
+      <div class="value status-killed">{{ clusterMetrics.data.numAppsKilled | commaGroups }}</div>
+      <div class="key" dt-text>killed_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value status-submitted">{{ data.numAppsSubmitted | commaGroups }}</div>
-        <div class="key" dt-text>submitted_label</div>
+      <div class="value status-submitted">{{ clusterMetrics.data.numAppsSubmitted | commaGroups }}</div>
+      <div class="key" dt-text>submitted_label</div>
     </div>
 
-</fieldset>
+  </fieldset>
 
-<fieldset class="overview-group">
+  <fieldset class="overview-group">
     <legend dt-text>Performance</legend>
     <div class="overview-item">
-        <div class="value">{{ data.numContainers | commaGroups }}</div>
-        <div class="key" dt-text>num_containers_label</div>
+      <div class="value">{{ clusterMetrics.data.numContainers | commaGroups }}</div>
+      <div class="key" dt-text>num_containers_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value">{{ data.numOperators | commaGroups }}</div>
-        <div class="key" dt-text>num_operators_label</div>
+      <div class="value">{{ clusterMetrics.data.numOperators | commaGroups }}</div>
+      <div class="key" dt-text>num_operators_label</div>
     </div>
 
     <div class="overview-item">
-        <div class="value">{{ data.tuplesProcessedPSMA | commaGroups }}</div>
-        <div class="key" dt-text>tuples_per_sec</div>
+      <div class="value">{{ clusterMetrics.data.tuplesProcessedPSMA | commaGroups }}</div>
+      <div class="key" dt-text>tuples_per_sec</div>
     </div>
 
     <div class="overview-item">
-        <div class="value">{{ data.tuplesEmittedPSMA | commaGroups }}</div>
-        <div class="key" dt-text>emitted_per_sec</div>
+      <div class="value">{{ clusterMetrics.data.tuplesEmittedPSMA | commaGroups }}</div>
+      <div class="key" dt-text>emitted_per_sec</div>
     </div>
-</fieldset>
+  </fieldset>
+</div>
