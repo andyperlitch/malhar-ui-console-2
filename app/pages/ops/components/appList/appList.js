@@ -16,8 +16,7 @@
 
 'use strict';
 
-angular.module('app.pages.ops.widgets.AppsList', [
-  'app.components.widgets.Base',
+angular.module('app.pages.ops.components.appList', [
   'app.settings',
   'app.components.filters.byte',
   'app.components.filters.timeSince',
@@ -27,24 +26,10 @@ angular.module('app.pages.ops.widgets.AppsList', [
   'app.components.directives.appIdLink',
   'app.components.directives.dtStatus',
   'app.components.directives.dtPageHref',
-  'app.components.directives.dtTableResize',
-  'datatorrent.mlhrTable',
-  'app.components.resources.ApplicationCollection'
+  'datatorrent.mlhrTable'
 ])
 
-.factory('AppsListWidget', function(BaseWidget, AppsListDataModel) {
-  var AppsListWidget = BaseWidget.extend({
-    defaults: {
-      dataModelType: AppsListDataModel,
-      templateUrl: 'pages/ops/widgets/AppsList/AppsList.html',
-      title: 'Applications'
-    }
-  });
-
-  return AppsListWidget;
-})
-
-.factory('AppsListDataModel', function(BaseDataModel, ApplicationCollection, settings, dtText, $filter, appManager, tableOptionsFactory) {
+.factory('appListColumns', function(settings, dtText, $filter) {
 
   function idSorter(row1, row2) {
     var id1 = row1.id.split('_').pop() * 1;
@@ -160,60 +145,6 @@ angular.module('app.pages.ops.widgets.AppsList', [
     }
   ];
 
-  var AppsListDataModel = BaseDataModel.extend({
-
-    init: function() {
-      var scope = this.widgetScope;
-      scope.columns = columns;
-      scope.selected = [];
-      scope.options = tableOptionsFactory({
-        row_limit: 10,
-        initial_sorts: [
-          { id: 'state', dir: '+' },
-          { id: 'id', dir: '-' }
-        ]
-      }, scope.widget, scope);
-
-      this.resource = new ApplicationCollection();
-      this.resource.fetch().then(function() {
-        scope.options.setLoading(false);
-      });
-      this.resource.subscribe(scope);
-      scope.resource = this.resource;
-      scope.endApps = function(signal, selected) {
-          
-        if (selected.length === 0) {
-          return;
-        }
-
-        var apps = _.map(selected, function(id) {
-          return { id: id };
-        });
-
-        var promise;
-
-        if (apps.length === 1) {
-          promise = appManager.endApp(signal, apps[0]);
-        }
-
-        else {
-          promise = appManager.endApps(signal, apps);
-        }
-
-        // Deselect all apps
-        promise.then(function() {
-          scope.selected = [];
-        });
-
-      };
-    },
-
-    destroy: function() {
-      this.resource.unsubscribe();
-    }
-
-  });
-
-  return AppsListDataModel;
+  return columns;
 
 });

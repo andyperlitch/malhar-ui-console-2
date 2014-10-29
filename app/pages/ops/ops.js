@@ -33,7 +33,8 @@ angular.module('app.pages.ops', [
   'app.components.directives.dtPageHref',
   'app.components.directives.dtTableResize',
   'datatorrent.mlhrTable',
-  'app.components.resources.ApplicationCollection'
+  'app.components.resources.ApplicationCollection',
+  'app.pages.ops.components.appList'
 ])
 
 // Route
@@ -47,7 +48,7 @@ angular.module('app.pages.ops', [
   })
 
 // Controller
-  .controller('OpsCtrl', function ($scope, ClusterMetrics, tableOptionsFactory, ApplicationCollection) {
+  .controller('OpsCtrl', function ($scope, ClusterMetrics, tableOptionsFactory, ApplicationCollection, appListColumns, appManager) {
 
     // Set up cluster metrics resource
     $scope.clusterMetrics = new ClusterMetrics();
@@ -55,9 +56,10 @@ angular.module('app.pages.ops', [
     $scope.clusterMetrics.fetch();
 
     // Set up the apps list table options
-    // $scope.columns = columns;
+    $scope.columns = appListColumns;
     $scope.selected = [];
     $scope.appListOptions = tableOptionsFactory({
+      storage_key: 'pages.ops.appList.table',
       initial_sorts: [
         { id: 'state', dir: '+' },
         { id: 'id', dir: '-' }
@@ -70,6 +72,34 @@ angular.module('app.pages.ops', [
     $scope.apps.fetch().then(function() {
       $scope.appListOptions.setLoading(false);
     });
+
+    // Kills or destroys selected apps
+    $scope.endApps = function(signal, selected) {
+          
+        if (selected.length === 0) {
+          return;
+        }
+
+        var apps = _.map(selected, function(id) {
+          return { id: id };
+        });
+
+        var promise;
+
+        if (apps.length === 1) {
+          promise = appManager.endApp(signal, apps[0]);
+        }
+
+        else {
+          promise = appManager.endApps(signal, apps);
+        }
+
+        // Deselect all apps
+        promise.then(function() {
+          $scope.selected.splice(0, $scope.selected.length);
+        });
+
+      };
 
     // Clean up
     $scope.$on('$destroy', function() {

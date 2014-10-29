@@ -1,4 +1,5 @@
-<div dt-table-resize options="options">
+<div class="">
+  <h2 class="h5" dt-text>DataTorrent Applications</h2>
   <div class="palette">
     <span ng-if="selected.length === 1">
       <a dt-page-href="AppInstance" params="{ appId: selected[0] }" class="btn btn-primary">
@@ -18,16 +19,16 @@
         ({{ selected.length }})
       </button>
     </span>
-    <button class="btn btn-default" ng-click="resource.fetch({ params: {} })">
+    <button class="btn btn-default" ng-click="apps.fetch({ params: {} })">
       <span class="glyphicon glyphicon-download"></span>
       <span dt-text="retrieve ended apps"></span>
     </button>
     <span dt-table-selected-count="selected"></span>
   </div>
   <mlhr-table 
-  options="options"
+  options="appListOptions"
   columns="columns" 
-  rows="resource.data" 
+  rows="apps.data" 
   track-by="id"
   class="dt-table"
   table-class="table" 
