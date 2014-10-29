@@ -101,7 +101,6 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           key: 'currentWindowId',
           label: dtText.get('current_wid_label'),
           sort: 'string',
-          filter: 'like',
           template: '<span window-id="row.currentWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
           title: dtText.get('Minimum current window that all instances of this operator is processing.')
         },
@@ -110,7 +109,6 @@ angular.module('app.pages.ops.appInstance.widgets.LogicalOperatorsList', [
           key: 'recoveryWindowId',
           label: dtText.get('recovery_wid_label'),
           sort: 'string',
-          filter: 'like',
           template: '<span window-id="row.recoveryWindowId" window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
           title: dtText.get('Minimum recovery window that all instances of this operator has checkpointed to.')
         },
