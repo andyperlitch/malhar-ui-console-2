@@ -33,19 +33,22 @@ angular.module('app.components.resources.ApplicationModel', [
     urlKey: 'Application',
     topicKey: 'Application',
     transformResponse: function(raw, type) {
+      var rawCopy = angular.copy(raw);
       var updates;
       switch(type) {
         case 'subscribe':
+
           updates = {};
           // Move attributes to main object where applicable
           _.each(['recoveryWindowId', 'currentWindowId', 'state'], function(key) {
             updates[key] = raw[key];
-            delete raw[key];
+            delete rawCopy[key];
           }, this);
-          updates.stats = raw;
+          updates.stats = rawCopy;
+
           break;
         default:
-          updates = raw;
+          updates = rawCopy;
           break;
       }
       return updates;
