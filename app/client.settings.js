@@ -207,7 +207,7 @@
     title: 'DatabaseDemo', active: false, defaultWidgets: [
       {
         name: 'Table',
-        title: 'Original Table',
+        title: 'Source Oracle Table',
         dataModelOptions: {
           query: {
             keys: {
@@ -215,7 +215,11 @@
               tableName: 'employee',
               numberEntries: 10
             },
-            kafka: clientSettings.kafka.databaseDemoQuery.kafka
+            kafka: {
+              queryTopic: 'GoldenGateQueryDBPi',
+              resultTopic: 'GoldenGateQueryResultsDBPi'
+            }
+
           }
         },
         size: {
@@ -224,7 +228,7 @@
       },
       {
         name: 'Text',
-        title: 'File Content',
+        title: 'Hadoop Ingested File (HDFS)',
         dataModelOptions: {
           query: {
             keys: {
@@ -248,7 +252,7 @@
       },
       {
         name: 'Table',
-        title: 'Replicated Table',
+        title: 'Destination Oracle Table',
         dataModelOptions: {
           query: {
             keys: {
@@ -256,7 +260,11 @@
               tableName: 'processedemployee',
               numberEntries: 10
             },
-            kafka: clientSettings.kafka.databaseDemoQuery.kafka
+            kafka: {
+              queryTopic: 'GoldenGateQueryODBPi',
+              resultTopic: 'GoldenGateQueryResultsODBPi'
+            }
+
           }
         },
         size: {
