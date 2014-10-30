@@ -31,7 +31,7 @@ angular.module('app.pages.ops.appInstance.container', [
     $routeProvider
       .when(settings.pages.Container, {
         controller: 'ContainerCtrl',
-        templateUrl: 'pages/ops/ops.html',
+        templateUrl: 'pages/ops/appInstance/container/container.html',
         label: 'container',
         collection: {
           label: 'containers',

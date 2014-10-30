@@ -28,7 +28,7 @@ angular.module('app.pages.ops.appInstance.logicalStream', [
     $routeProvider
       .when(settings.pages.LogicalStream, {
         controller: 'LogicalStreamCtrl',
-        templateUrl: 'pages/ops/ops.html',
+        templateUrl: 'pages/ops/appInstance/logicalStream/logicalStream.html',
         label: 'logicalStream',
         collection: {
           label: 'streams',
