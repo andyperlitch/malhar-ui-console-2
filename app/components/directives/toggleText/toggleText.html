@@ -1,0 +1,9 @@
+<span>{{ text.substr(0, threshold) }}</span
+><span ng-if="text.length > threshold" ng-init="showingText=false"
+  ><span ng-show="showingText">{{ text.substr(threshold) }}
+    <a href="" ng-click="showingText=!showingText" dt-text>less</a>    
+  </span
+  ><span ng-hide="showingText">&hellip;
+    <a href="" ng-click="showingText=!showingText" dt-text>more</a>
+  </span
+></span>
