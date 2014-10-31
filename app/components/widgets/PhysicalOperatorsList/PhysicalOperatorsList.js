@@ -149,7 +149,6 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           key: 'currentWindowId',
           label: dtText.get('current_wid_label'),
           sort: 'string',
-          filter: 'like',
           template: '<span window-id="row.currentWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
           title: dtText.get('Current window that the physical operator is processing')
         },
@@ -158,7 +157,6 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
           key: 'recoveryWindowId',
           label: dtText.get('recovery_wid_label'),
           sort: 'string',
-          filter: 'like',
           template: '<span window-id="row.recoveryWindowId" title-only window-size="options.appInstance.data.attributes.STREAMING_WINDOW_SIZE_MILLIS"></span>',
           title: dtText.get('The window that was last checkpointed to disk for this physical operator.')
         },

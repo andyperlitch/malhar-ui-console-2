@@ -103,6 +103,13 @@ describe('Resource: ApplicationModel', function() {
           }
         }
       });
+
+      it('should not alter the original raw object', function() {
+        var orig = JSON.stringify(s_raw);
+        m.transformResponse(s_raw, 'subscribe');
+        var after = JSON.stringify(s_raw);
+        expect(orig).toEqual(after);
+      });
       
     });
 

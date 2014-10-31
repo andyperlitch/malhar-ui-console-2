@@ -74,7 +74,8 @@ angular.module('app', [
 
     // webSocket
     var host = settings.GATEWAY_WEBSOCKET_HOST ? settings.GATEWAY_WEBSOCKET_HOST : window.location.host;
-    webSocketProvider.setWebSocketURL('ws://' + host + '/pubsub');
+    var ws_proto = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+    webSocketProvider.setWebSocketURL(ws_proto + host + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
 
     // userStorage save function
