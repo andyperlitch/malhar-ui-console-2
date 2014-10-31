@@ -202,7 +202,8 @@ angular.module('app.pages.ops.widgets.AppsList', [
 
         // Deselect all apps
         promise.then(function() {
-          scope.selected = [];
+          // Clear out selected
+          scope.selected.splice(0, scope.selected.length);
         });
 
       };
