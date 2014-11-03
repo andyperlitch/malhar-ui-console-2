@@ -100,7 +100,7 @@ angular.module('app.components.resources.PackageOperatorClassCollection', [
         if (op.simpleName === 'KafkaSinglePortOutputOperator') {
           op.default_properties.topic = 'O15DimensionsQueryResult_' + hacky_timestamp;
           op.default_properties['configProperties(metadata.broker.list)'] = 'node25.morado.com:9092';
-          op.default_properties['configProperties(serializer.class)'] = 'com.datatorrent.demos.dimensions.ads.KafkaJsonEncoder';
+          op.default_properties['configProperties(serializer.class)'] = 'com.datatorrent.contrib.kafka.KafkaJsonEncoder';
         }
         // HADOOP WORLD DEMO HACKS ABOVE
         ///////////////////////////////////////////////////
