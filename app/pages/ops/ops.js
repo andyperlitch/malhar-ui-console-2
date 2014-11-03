@@ -32,6 +32,7 @@ angular.module('app.pages.ops', [
   'app.components.directives.dtStatus',
   'app.components.directives.dtPageHref',
   'app.components.directives.dtTableResize',
+  'app.components.directives.toggleText',
   'datatorrent.mlhrTable',
   'app.components.resources.ApplicationCollection',
   'app.pages.ops.components.appList'
