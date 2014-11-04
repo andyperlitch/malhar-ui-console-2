@@ -34,8 +34,6 @@ angular.module('app.pages.ops.appInstance.appData', [
       .when(settings.pages.AppData, {
         controller: 'AppDataCtrl',
         templateUrl: 'pages/ops/appInstance/appData/appData.html',
-        //controller: 'AppDataDashboardCtrl',
-        //templateUrl: 'pages/ops/ops.html',
         label: 'app data'
       });
   })

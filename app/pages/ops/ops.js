@@ -21,12 +21,23 @@
  */
 
 angular.module('app.pages.ops', [
-  'app.pages.ops.widgets.ClusterMetrics',
-  'app.pages.ops.widgets.AppsList',
-  'app.components.services.defaultWidgetSettings',
-  'app.components.services.dashboardOptionsFactory',
-  'ui.widgets',
-  'ui.models'
+  'app.settings',
+  'app.components.resources.ClusterMetrics',
+  'app.components.resources.ConfigIssueCollection',
+  'app.components.filters.byte',
+  'app.components.filters.timeSince',
+  'app.components.services.dtText',
+  'app.components.services.tableOptionsFactory',
+  'app.components.services.appManager',
+  'app.components.directives.appIdLink',
+  'app.components.directives.dtStatus',
+  'app.components.directives.dtPageHref',
+  'app.components.directives.dtTableResize',
+  'app.components.directives.toggleText',
+  'datatorrent.mlhrTable',
+  'app.components.resources.ApplicationCollection',
+  'app.pages.ops.components.appList',
+  'ui.bootstrap.modal'
 ])
 
 // Route
@@ -40,66 +51,83 @@ angular.module('app.pages.ops', [
   })
 
 // Controller
-  .controller('OpsCtrl', function (
-    $scope,
-    ClusterMetricsWidget,
-    AppsListWidget,
-    RandomPercentageDataModel,
-    RandomNVD3TimeSeriesDataModel,
-    RandomMinutesDataModel,
-    dashboardOptionsFactory
-  ) {
-    var widgetDefinitions = [
-      new ClusterMetricsWidget({ name: 'ClusterMetrics' }),
-      /*
-      {
-        name: 'Line Chart',
-        title: 'Line Chart',
-        directive: 'wt-nvd3-line-chart',
-        dataAttrName: 'data',
-        dataModelType: RandomNVD3TimeSeriesDataModel,
-        size: {
-          width: '40%'
-        }
-      },
-      {
-        name: 'Bar Chart',
-        title: 'Bar Chart',
-        directive: 'wt-bar-chart',
-        dataAttrName: 'data',
-        dataModelType: RandomMinutesDataModel,
-        dataModelArgs: {
-          limit: 1000
-        },
-        size: {
-          width: '40%'
-        }
-      },
-      {
-        name: 'Gauge',
-        title: 'Memory',
-        directive: 'wt-gauge',
-        dataAttrName: 'value',
-        dataModelType: RandomPercentageDataModel,
-        size: {
-          width: '250px'
-        }
-      },
-      */
-      new AppsListWidget({ name: 'AppList' })
-    ];
+  .controller('OpsCtrl', function ($scope, ClusterMetrics, tableOptionsFactory, ApplicationCollection, appListColumns, appManager, ConfigIssueCollection, $modal) {
 
-    var defaultWidgets = _.clone(widgetDefinitions);
+    // Set up cluster metrics resource
+    $scope.clusterMetrics = new ClusterMetrics();
+    $scope.clusterMetrics.subscribe($scope);
+    $scope.clusterMetrics.fetch();
 
-    $scope.dashboardOptions = dashboardOptionsFactory({
-      storage: localStorage,
-      storageId: 'dashboard.ops',
-      widgetButtons: false,
-      widgetDefinitions: widgetDefinitions,
-      defaultWidgets: defaultWidgets,
-      defaultLayouts: [
-        { title: 'default', active: true, defaultWidgets: defaultWidgets }
+    // Set up the apps list table options
+    $scope.columns = appListColumns;
+    $scope.selected = [];
+    $scope.appListOptions = tableOptionsFactory({
+      storage_key: 'pages.ops.appList.table',
+      initial_sorts: [
+        { id: 'state', dir: '+' },
+        { id: 'id', dir: '-' }
       ]
+    });
+
+    // Set up applications resource
+    $scope.apps = new ApplicationCollection();
+    $scope.apps.subscribe($scope);
+    $scope.apps.fetch().then(function() {
+      $scope.appListOptions.setLoading(false);
+    });
+
+    // Kills or destroys selected apps
+    $scope.endApps = function(signal, selected) {
+          
+      if (selected.length === 0) {
+        return;
+      }
+
+      var apps = _.map(selected, function(id) {
+        return { id: id };
+      });
+
+      var promise;
+
+      if (apps.length === 1) {
+        promise = appManager.endApp(signal, apps[0]);
+      }
+
+      else {
+        promise = appManager.endApps(signal, apps);
+      }
+
+      // Deselect all apps
+      promise.then(function() {
+        $scope.selected.splice(0, $scope.selected.length);
+      });
+
+    };
+
+    // Set up issues collection
+    $scope.issues = new ConfigIssueCollection();
+    $scope.issues.fetch().then(function() {
+      $scope.groupedIssues = _.groupBy($scope.issues.data, 'severity');
+    });
+
+    // Opens issue group in modal
+    $scope.showIssuesModal = function(issues) {
+      $modal.open({
+        resolve: {
+          issues: function() {
+            return issues;
+          }
+        },
+        templateUrl: 'pages/ops/components/clusterMetrics/issues-modal.html',
+        controller: function($scope, issues) {
+          $scope.issues = issues;
+        }
+      });
+    };
+
+    // Clean up
+    $scope.$on('$destroy', function() {
+      $scope.clusterMetrics.unsubscribe();
     });
 
   });

@@ -6,7 +6,7 @@
     <div ng-if="issues && issues.data && issues.data.length">
       <h2>Detected Issues</h2>
       <p>Below are potential issues that the system can detect.</p>
-      <div ng-repeat="issue in issues.data" ng-class="severityLookup[issue.severity]">
+      <div ng-repeat="issue in issues.data" ng-class="'issue-severity-' + issue.severity">
         <h4>{{issue.key}} <small>{{issue.severity}}</small></h4>
         <h5 ng-if="issue.property">{{issue.property}}</h5>
         <p>{{ issue.description || 'No description available.' }}</p>

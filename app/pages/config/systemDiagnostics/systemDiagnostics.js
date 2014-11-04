@@ -40,10 +40,6 @@ angular.module('app.pages.config.systemDiagnostics', [
   $scope.dfsLocation = new ConfigPropertyModel('dt.dfsRootDirectory');
   $scope.connectAddress = new ConfigPropertyModel('dt.attr.GATEWAY_CONNECT_ADDRESS');
   $scope.issues = new ConfigIssueCollection();
-  $scope.severityLookup = {
-    error: 'alert alert-danger',
-    warning: 'alert alert-warning'
-  };
   $scope.resourcesLoaded = $q.all([$scope.info.fetch(), $scope.hadoopLocation.fetch(), $scope.dfsLocation.fetch(), $scope.connectAddress.fetch(), $scope.issues.fetch()]);
 
 });

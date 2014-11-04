@@ -1,0 +1,18 @@
+// config issues 
+.issue-severity-warning, .issue-severity-error {
+  padding: 10px;
+  border-radius: 3px;
+  border-width: 1px;
+  border-style: solid;
+  margin-bottom: 5px;
+}
+
+.issue-severity-warning {
+  border-color: @alert-warning-border;
+  .alert-variant(@alert-warning-bg; @alert-warning-border; @alert-warning-text);
+}
+
+.issue-severity-error {
+  border-color: 1px solid @alert-danger-border;
+  .alert-variant(@alert-danger-bg; @alert-danger-border; @alert-danger-text);
+}

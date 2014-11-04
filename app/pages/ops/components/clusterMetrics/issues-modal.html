@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h3 class="modal-title">Configuration Issues</h3>
+</div>
+<div class="modal-body">
+  <div ng-if="issues.length" ng-repeat="issue in issues" ng-class="'issue-severity-' + issue.severity">
+    <strong>{{ issue.severity.toUpperCase() }}</strong> {{ issue.description }}
+  </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close()" dt-text>Okay</button>
+</div>
