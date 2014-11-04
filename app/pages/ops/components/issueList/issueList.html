@@ -1,0 +1,10 @@
+<div>
+  <h2 class="h5" dt-text>Cluster Issues</h2>
+  <div ng-if="issues.fetching">
+    <dt-spinner></dt-spinner>
+    <span dt-text>Loading</span>
+  </div>
+  <div ng-repeat="issue in issues.data" ng-class="'issue-severity-' + issue.severity">
+    <strong>{{ issue.severity.toUpperCase() }}</strong> <span toggle-text="issue.description" threshold="30"></span>
+  </div>
+</div>

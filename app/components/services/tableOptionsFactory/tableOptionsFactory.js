@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.components.services.tableOptionsFactory', [
+  'app.components.services.userStorage'
 ])
 .factory('tableStorageFactory', function() {
   function WidgetStorage(widget, scope) {
@@ -39,7 +40,7 @@ angular.module('app.components.services.tableOptionsFactory', [
     return new WidgetStorage(widget, scope);
   };
 })
-.factory('tableOptionsFactory', function(tableStorageFactory) {
+.factory('tableOptionsFactory', function(tableStorageFactory, userStorage) {
 
   var tableOptionsFactory;
 
@@ -48,8 +49,12 @@ angular.module('app.components.services.tableOptionsFactory', [
       if (!o) {
         o = {};
       }
+      if (!scope) {
+        scope = widget;
+        widget = null;
+      }
       defaults = {
-        storage: tableStorageFactory(widget, scope),
+        storage: widget ? tableStorageFactory(widget, scope) : userStorage,
         storage_key: 'table',
         loading: true,
         loadingTemplateUrl: 'components/services/tableOptionsFactory/tableLoadingTemplate.html',

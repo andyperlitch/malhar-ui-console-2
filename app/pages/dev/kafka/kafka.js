@@ -37,12 +37,12 @@ angular.module('app.pages.dev.kafka', [
     $routeProvider
       .when('/kafka', {
         controller: 'KafkaCtrl',
-        templateUrl: 'pages/ops/ops.html',
+        templateUrl: 'pages/dev/kafka/kafka.html',
         label: 'Application Data'
       })
       .when('/appdata', {
         controller: 'KafkaCtrl',
-        templateUrl: 'pages/ops/ops.html',
+        templateUrl: 'pages/dev/kafka/kafka.html',
         label: 'Application Data'
       });
   })
