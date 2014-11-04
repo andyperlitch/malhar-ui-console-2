@@ -74,4 +74,31 @@
       <div class="key" dt-text>emitted_per_sec</div>
     </div>
   </fieldset>
+  <fieldset class="overview-group">
+    <legend dt-text>Issues</legend>
+    <!-- <div ng-if="!issues.fetching && issues.length" ng-repeat="issue in issues.data" ng-class="'issue-severity-' + issue.severity">
+      <strong>{{ issue.severity.toUpperCase() }}</strong> <span toggle-text="issue.description" threshold="30"></span>
+    </div> -->
+    <div class="overview-item" ng-repeat="(severity,group) in groupedIssues" ng-class="'overview-item-issue-' + severity">
+      <a 
+        href="" 
+        class="value"
+        title="{{ severity }}"
+        ng-click="showIssuesModal(issues.data)"
+      >
+        {{ group.length }}
+      </a>
+
+      <div class="key">{{ severity }}s</div>
+    </div>
+    <div ng-if="!groupedIssues.warning.length" class="overview-item">
+      <div class="value">0</div>
+      <div class="key" dt-text>warnings</div>
+    </div>
+    <div ng-if="!groupedIssues.error.length" class="overview-item">
+      <div class="value">0</div>
+      <div class="key" dt-text>errors</div>
+    </div>
+  </fieldset>
+
 </div>

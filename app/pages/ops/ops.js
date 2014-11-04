@@ -36,7 +36,8 @@ angular.module('app.pages.ops', [
   'app.components.directives.toggleText',
   'datatorrent.mlhrTable',
   'app.components.resources.ApplicationCollection',
-  'app.pages.ops.components.appList'
+  'app.pages.ops.components.appList',
+  'ui.bootstrap.modal'
 ])
 
 // Route
@@ -78,30 +79,51 @@ angular.module('app.pages.ops', [
     // Kills or destroys selected apps
     $scope.endApps = function(signal, selected) {
           
-        if (selected.length === 0) {
-          return;
+      if (selected.length === 0) {
+        return;
+      }
+
+      var apps = _.map(selected, function(id) {
+        return { id: id };
+      });
+
+      var promise;
+
+      if (apps.length === 1) {
+        promise = appManager.endApp(signal, apps[0]);
+      }
+
+      else {
+        promise = appManager.endApps(signal, apps);
+      }
+
+      // Deselect all apps
+      promise.then(function() {
+        $scope.selected.splice(0, $scope.selected.length);
+      });
+
+    };
+
+    // Set up issues collection
+    $scope.issues = new ConfigIssueCollection();
+    $scope.issues.fetch().then(function() {
+      $scope.groupedIssues = _.groupBy($scope.issues.data, 'severity');
+    });
+
+    // Opens issue group in modal
+    $scope.showIssuesModal = function(issues) {
+      $modal.open({
+        resolve: {
+          issues: function() {
+            return issues;
+          }
+        },
+        templateUrl: 'pages/ops/components/clusterMetrics/issues-modal.html',
+        controller: function($scope, issues) {
+          $scope.issues = issues;
         }
-
-        var apps = _.map(selected, function(id) {
-          return { id: id };
-        });
-
-        var promise;
-
-        if (apps.length === 1) {
-          promise = appManager.endApp(signal, apps[0]);
-        }
-
-        else {
-          promise = appManager.endApps(signal, apps);
-        }
-
-        // Deselect all apps
-        promise.then(function() {
-          $scope.selected.splice(0, $scope.selected.length);
-        });
-
-      };
+      });
+    };
 
     // Clean up
     $scope.$on('$destroy', function() {

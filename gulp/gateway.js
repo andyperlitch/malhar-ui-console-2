@@ -140,24 +140,28 @@ function startServer(baseDirs, port) {
   // ----------------------------
   // MOCK CALLS FOR CONFIG ISSUES
   // ----------------------------
-  app.get('/ws/v1/config/issues', function(req, res) {
-    res.json({
-      issues: [
-        {
-          key: 'EXAMPLE_ISSUE_KEY_ONE',
-          propertyName: 'dt.example.issue.propertyName',
-          description: 'This issue is due to the fact that andy is testing the issues API.',
-          severity: 'warning'
-        },
-        {
-          key: 'ANOTHER_EXAMPLE_ISSUE',
-          description: 'Sometimes things just go wrong. There is no rhyme or reason, just chaos.',
-          severity: 'error'
-        }
-      ]
-    });
-  });
-
+  // app.get('/ws/v1/config/issues', function(req, res) {
+  //   res.json({
+  //     issues: [
+  //       {
+  //         key: 'EXAMPLE_ISSUE_KEY_ONE',
+  //         propertyName: 'dt.example.issue.propertyName',
+  //         description: 'This issue is due to the fact that andy is testing the issues API.',
+  //         severity: 'warning'
+  //       },
+  //       {
+  //         key: 'ANOTHER_EXAMPLE_ISSUE',
+  //         description: 'Sometimes things just go wrong. There is no rhyme or reason, just chaos.',
+  //         severity: 'error'
+  //       }
+  //     ]
+  //   });
+  // });
+  // --------------------------------
+  // END MOCK CALLS FOR CONFIG ISSUES
+  // --------------------------------
+  
+  
   app.use(livereload({ port: 35729 }));
 
   baseDirs.forEach(function (dir) {
