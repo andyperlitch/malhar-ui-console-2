@@ -23,6 +23,7 @@
 angular.module('app.pages.ops', [
   'app.settings',
   'app.components.resources.ClusterMetrics',
+  'app.components.resources.ConfigIssueCollection',
   'app.components.filters.byte',
   'app.components.filters.timeSince',
   'app.components.services.dtText',
@@ -49,7 +50,7 @@ angular.module('app.pages.ops', [
   })
 
 // Controller
-  .controller('OpsCtrl', function ($scope, ClusterMetrics, tableOptionsFactory, ApplicationCollection, appListColumns, appManager) {
+  .controller('OpsCtrl', function ($scope, ClusterMetrics, tableOptionsFactory, ApplicationCollection, appListColumns, appManager, ConfigIssueCollection, $modal) {
 
     // Set up cluster metrics resource
     $scope.clusterMetrics = new ClusterMetrics();
