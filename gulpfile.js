@@ -231,6 +231,21 @@ gulp.task('prodenv', function () {
   }
 });
 
+gulp.task('ngdocs', [], function () {
+  var gulpDocs = require('gulp-ngdocs');
+  var options = {
+    html5Mode: false
+  };
+
+  return gulp.src([
+    'app/components/**/!(*_test)+(.js)',
+    'app/pages/**/!(*_test)+(.js)',
+    'app/app!(*_test)+(.js)'
+  ])
+    .pipe(gulpDocs.process(options))
+    .pipe(gulp.dest('./ngdocs'));
+});
+
 gulp.task('build', ['clean', 'jshint', 'test', 'copy']);
 
 gulp.task('travis', ['jshint', 'test']);
