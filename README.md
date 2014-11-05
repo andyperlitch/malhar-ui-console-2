@@ -4,6 +4,8 @@ DataTorrent Console
 Open-source, web-based user interface for use with [DataTorrent](http://datatorrent.com), a stream-processing platform for developing real-time, big data applications in Hadoop.
 Built with Angular.
 
+For a more thorough overview, [see the wiki](https://github.com/DataTorrent/malhar-ui-console/wiki).
+
 Building
 --------
 ### Note regarding npm version
