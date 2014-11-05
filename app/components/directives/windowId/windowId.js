@@ -22,12 +22,17 @@ angular.module('app.components.directives.windowId', [
 
 /**
  * @ngdoc directive
- * @name app.components.directive:windowId
+ * @name app.components.directives.directives:windowId
  * @description Converts an opaque window id into offset with the timestamp tooltip.
- * @example 
+ * @element ANY
+ * @param {String} windowId    The string version of a window ID.
+ * @param {number} windowSize  The size of a window, in milliseconds.
+ * @param {boolean=} titleOnly If present, a fancy tooltip will not be used. Instead, a simple title="" attribute will be used.
+ * @example <pre>
  *   <span window-id="my.windowId"></span>
  *   <span window-id="my.windowId" window-size="appWindowSize"></span>
  *   <span window-id="my.windowId" window-size="appWindowSize" title-only></span>
+ * </pre>
  **/
 .directive('windowId', function(BigInteger) {
 

@@ -11,6 +11,8 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
+var argv = require('optimist').argv;
+var express = require('express');
 var runSequence = require('run-sequence');
 require('./gulp/gateway');
 var updateAppScripts = require('./util/update-app-scripts');
@@ -229,6 +231,29 @@ gulp.task('prodenv', function () {
       .pipe($.replace('http://localhost:3003', process.env.DATA_SERVER_HOST)) //TODO have more configurable replace
       .pipe(gulp.dest(prod.dir));
   }
+});
+
+gulp.task('ngdocs', [], function () {
+  var gulpDocs = require('gulp-ngdocs');
+  var options = {
+    html5Mode: false
+  };
+
+  return gulp.src([
+    'app/components/**/!(*_test)+(.js)',
+    'app/pages/**/!(*_test)+(.js)',
+    'app/app!(*_test)+(.js)'
+  ])
+    .pipe(gulpDocs.process(options))
+    .pipe(gulp.dest('./ngdocs'));
+});
+
+gulp.task('serve:ngdocs', function() {
+  var app = express();
+  var port = argv.p || 9002;
+  app.use(express.static(__dirname + '/ngdocs'));
+  app.listen(port);
+  console.log('Docs being served at http://localhost:' + port);
 });
 
 gulp.task('build', ['clean', 'jshint', 'test', 'copy']);

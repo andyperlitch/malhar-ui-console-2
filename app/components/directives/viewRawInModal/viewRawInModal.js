@@ -19,17 +19,20 @@ angular.module('app.components.directives.viewRawInModal', [
   'app.components.directives.dtText',
   'ui.bootstrap.modal'
 ])
+
+/**
+ * @ngdoc directive
+ * @name app.components.directives.directives:viewRawInModal
+ * @restrict A
+ * @description Opens a modal with a &lt;pre&gt; tag that contains the provided content.
+ * @element ANY
+ * @param {object|String} viewRawInModal The object or string to view in a modal.
+ * @param {String}        modalTitle     The title that the modal will have.
+ * @param {String}        modalSize      The size of the modal. 'lg' for large, 'sm' for small.
+ * @example 
+ * <pre><button view-raw-in-modal="objectOrString" modal-title="Title for the Modal" modal-size="lg">view details</button></pre>
+**/
 .directive('viewRawInModal', function($modal) {
-  
-  /**
-   * @ngdoc directive
-   * @name app.components.directives.directive:viewRawInModal
-   * @restrict A
-   * @description Opens a modal with a <pre> tag that contains the provided content.
-   * @element Any element works
-   * @example 
-   * <button view-raw-in-modal="objectOrString" modal-title="Title for the Modal" modal-size="lg">view details</button>
-  **/
       
   return {
     link: function(scope, element, attrs) {
