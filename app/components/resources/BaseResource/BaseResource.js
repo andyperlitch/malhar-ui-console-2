@@ -23,22 +23,27 @@ angular.module('app.components.resources.BaseResource', [
 .factory('BaseResource', function($http, webSocket, extend, $log, $q) {
 
   /**
-   * Abstract class for all resources (models and collections).
-   * Contains shared logic for subscribe/unsubscribe, fetching,
-   * transforming server response, etc.
+   * @ngdoc service
+   * @name  app.components.resources.BaseResource
+   * @description  Abstract class for all resources (models and collections).
+   *               Contains shared logic for subscribe/unsubscribe, fetching,
+   *               transforming server response, etc.
    */
   function BaseResource() {}
   BaseResource.prototype = {
 
     /**
-     * Uses this.url to retrieve info from the server.
-     * While fetching, this.fetching will be true. When
-     * the server responds, this.fetching will be false.
-     * Additionally, if the server errors, the original
-     * response object will be stored as this.fetchError.
+     * @ngdoc method
+     * @name  fetch
+     * @methodOf app.components.resources.BaseResource
+     * @description  Uses this.url to retrieve info from the server.
+     *               While fetching, this.fetching will be true. When
+     *               the server responds, this.fetching will be false.
+     *               Additionally, if the server errors, the original
+     *               response object will be stored as this.fetchError.
      * 
      * @param  {object} options   (optional) The config object to be past to $http.get().
-     * @return {Promise}          The original $http promise.
+     * @return {Promise}          Decorated $http promise, resolves with transformed data.
      */
     fetch: function(options, setOptions) {
 
@@ -96,8 +101,10 @@ angular.module('app.components.resources.BaseResource', [
     },
 
     /**
-     * Called when there is an error while trying to fetch this resource
-     * 
+     * @ngdoc method
+     * @name  onFetchError
+     * @methodOf app.components.resources.BaseResource
+     * @description Called when there is an error while trying to fetch this resource. Override in child classes for custom behavior.
      * @param  {object} response The response object returned by the $http.get call.
      */
     onFetchError: function(response) {
@@ -105,8 +112,10 @@ angular.module('app.components.resources.BaseResource', [
     },
 
     /**
-     * Saves this resource with put (by default)
-     *  
+     * @ngdoc method
+     * @name  save
+     * @methodOf app.components.resources.BaseResource
+     * @description  Saves this resource with put (by default)
      * @param  {object} options Options to be passed to $http.put
      * @param  {object} data    Data to send to the server instead of this.data.
      * @return {Promise}        The promise returned by $http.put
@@ -148,13 +157,16 @@ angular.module('app.components.resources.BaseResource', [
     },
 
     /**
-     * Called when saving a resource fails.
-     * 
+     * @ngdoc method
+     * @name  onSaveError
+     * @methodOf app.components.resources.BaseResource
+     * @description  Called when saving a resource fails.
      * @param  {object} response The response returned by the failed $http.put command.
      */
     onSaveError: function(response) {
       $log.error(this.debugName + ' failed to save to the server. Response: ', response);
     },
+
 
     post: function (payload, action) {
       var url = action ? (this.url + '/' + action) : this.url;
@@ -166,9 +178,15 @@ angular.module('app.components.resources.BaseResource', [
     },
 
     /**
-     * Subscribes to this.topic for updates.
-     * A scope can optionally be passed in order
-     * to call $digest on updates. Highly recommended.
+     * @ngdoc method
+     * @name  subscribe
+     * @methodOf app.components.resources.BaseResource
+     * @description  Subscribes to this.topic for updates.
+     *               A scope can optionally be passed in order
+     *               to call $digest on updates. Highly recommended.
+     * @param  {Scope}    scope        The scope to update when data is received on the resource topic.
+     * @param  {Function} [callback]     An optional callback that gets called when data is received on the resource topic.
+     * @param  {object}   [setOptions] (Optional) Options to pass to the resource's set method. See {@link app.components.resources.BaseCollection#set}.
      */
     subscribe: function(scope, callback, setOptions) {
       // Ensure there is a topic to subscribe to
@@ -193,6 +211,15 @@ angular.module('app.components.resources.BaseResource', [
       webSocket.subscribe(this.topic, this.__subscribeFn__, scope);
     },
 
+    /**
+     * @ngdoc method
+     * @name  fetchAndSubscribe
+     * @methodOf app.components.resources.BaseResource
+     * @description  Convenience method that calls {@link app.components.resources.BaseResource#fetch fetch} and {@link app.components.resources.BaseResource#subscribe subscribe}.
+     * @param  {Scope}    scope    same as scope param in {@link app.components.resources.BaseResource#subscribe subscribe}.
+     * @param  {Function} [callback] same as callback param in {@link app.components.resources.BaseResource#subscribe subscribe}
+     * @return {Promise}            The promise returned by the {@link app.components.resources.BaseResource#fetch fetch} function.
+     */
     fetchAndSubscribe: function (scope, callback) {
       var fetchPromise = this.fetch();
 
@@ -206,17 +233,23 @@ angular.module('app.components.resources.BaseResource', [
     },
 
     /**
-     * Unsubscribes to this.topic. Should only be called after
-     * this.subscribe has been called at least once.
+     * @ngdoc method
+     * @name  unsubscribe
+     * @methodOf app.components.resources.BaseResource
+     * @description Unsubscribes to this.topic. Should only be called after
+     *              this.subscribe has been called at least once.
      */
     unsubscribe: function() {
       webSocket.unsubscribe(this.topic, this.__subscribeFn__);
     },
 
     /**
-     * The function that actually updates this.data. Since this
-     * is different for models and collections, it must be
-     * implemented in child classes.
+     * @ngdoc method
+     * @name  set
+     * @methodOf app.components.resources.BaseResource
+     * @description  The function that actually updates this.data. Since this
+     *               is different for models and collections, it must be
+     *               implemented in child classes.
      */
     set: function() {
       throw new TypeError('The set method must be implemented in a child class of BaseResource!');
@@ -256,7 +289,13 @@ angular.module('app.components.resources.BaseResource', [
       return data;
     },
 
-    // Used for logging statements
+    /**
+     * @ngdoc property
+     * @name  debugName
+     * @propertyOf app.components.resources.BaseResource
+     * @description  Name that is written to the console for debugging purposes.
+     * @type {String}
+     */
     debugName: 'resource'
 
   };

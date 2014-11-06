@@ -235,17 +235,23 @@ gulp.task('prodenv', function () {
 
 gulp.task('ngdocs', [], function () {
   var gulpDocs = require('gulp-ngdocs');
-  var options = {
+  var docOptions = {
     html5Mode: false
   };
 
-  return gulp.src([
-    'app/components/**/!(*_test)+(.js)',
-    'app/pages/**/!(*_test)+(.js)',
-    'app/app!(*_test)+(.js)'
-  ])
-    .pipe(gulpDocs.process(options))
-    .pipe(gulp.dest('./ngdocs'));
+  gulp.src('./ngdocs', options.clean)
+    .pipe($.rimraf({ force: true }))
+    .on('finish', function() {
+      gulp.src([
+          'app/components/**/!(*_test)+(.js)',
+          'app/pages/**/!(*_test)+(.js)',
+          'app/app!(*_test)+(.js)'
+        ])
+        .pipe(gulpDocs.process(docOptions))
+        .pipe(gulp.dest('./ngdocs'));
+    });
+
+  
 });
 
 gulp.task('serve:ngdocs', function() {
@@ -254,6 +260,12 @@ gulp.task('serve:ngdocs', function() {
   app.use(express.static(__dirname + '/ngdocs'));
   app.listen(port);
   console.log('Docs being served at http://localhost:' + port);
+  // TODO: get this working
+  // gulp.watch([
+  //   'app/components/**/!(*_test)+(.js)',
+  //   'app/pages/**/!(*_test)+(.js)',
+  //   'app/app!(*_test)+(.js)'
+  // ], ['ngdocs']);
 });
 
 gulp.task('build', ['clean', 'jshint', 'test', 'copy']);

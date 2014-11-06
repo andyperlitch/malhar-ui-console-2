@@ -22,6 +22,15 @@ angular.module('app.components.resources.ApplicationCollection', [
   'app.components.resources.ApplicationModel',
   'app.settings'
 ])
+/**
+ * @ngdoc service
+ * @name  app.components.resources.ApplicationCollection
+ * @description  Represents a collection of application instances
+ * @requires  app.settings
+ * @requires  app.components.services.getUri
+ * @requires  app.components.resources.BaseCollection
+ * @requires  app.components.resources.ApplicationModel
+ */
 .factory('ApplicationCollection', function(BaseCollection, ApplicationModel, settings) {
 
   var ApplicationCollection = BaseCollection.extend({
