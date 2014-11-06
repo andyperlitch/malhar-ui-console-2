@@ -239,26 +239,37 @@ gulp.task('prodenv', function () {
 });
 
 gulp.task('ngdocs', [], function () {
-  var gulpDocs = require('gulp-ngdocs');
-  var options = {
-    html5Mode: false
-  };
 
-  return gulp.src([
-    'app/components/**/!(*_test)+(.js)',
-    'app/pages/**/!(*_test)+(.js)',
-    'app/app!(*_test)+(.js)'
-  ])
-    .pipe(gulpDocs.process(options))
-    .pipe(gulp.dest('./ngdocs'));
+  var options = {
+    title: 'API',
+    html5Mode: false,
+    image: './docs/ngDocNavImage.svg',
+    navTemplate: './docs/ngDocNavTemplate.html',
+    styles: ['./docs/ngDocStyles.css']
+
+  };
+  var ngdocs = require('gulp-ngdocs');
+  return gulp.src(dev.scripts.src)
+    .pipe($.ngdocs.process(options))
+    .pipe(gulp.dest('./ngdocs'))
+    .on('error', function(err) {
+      console.log('Error from ngdocs: ', err);
+    });
 });
 
-gulp.task('serve:ngdocs', function() {
-  var app = express();
+gulp.task('serve:ngdocs', function(next) {
+  var server = express();
   var port = argv.p || 9002;
-  app.use(express.static(__dirname + '/ngdocs'));
-  app.listen(port);
+  server.use(express.static('ngdocs')).listen(port, next);
   console.log('Docs being served at http://localhost:' + port);
+});
+
+gulp.task('watch:ngdocs', ['serve:ngdocs'], function() {
+  var server = $.livereload(35731);
+  gulp.watch(dev.scripts.src, ['ngdocs']);
+  gulp.watch('ngdocs/**').on('change', function(file) {
+    server.changed(file.path);
+  });
 });
 
 gulp.task('build', ['clean', 'jshint', 'test', 'copy']);
