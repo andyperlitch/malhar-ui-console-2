@@ -5,3 +5,6 @@
   text-shadow: none;
   color: #DDD;
 }
+.nav-header.module .code {
+  word-wrap: break-word;
+}
