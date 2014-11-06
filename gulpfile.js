@@ -1,3 +1,5 @@
+/* global -$ */
+
 'use strict';
 
 //TODO
@@ -17,17 +19,23 @@ var runSequence = require('run-sequence');
 require('./gulp/gateway');
 var updateAppScripts = require('./util/update-app-scripts');
 var wiredep = require('wiredep').stream;
-
 var dev = {
   dir: 'app',
   index: 'app/index.html',
   favicon: 'app/favicon.ico',
   less: 'app/styles/main.less',
-  scripts: [
-    'app/*.js',
-    'app/components/**/*.js',
-    'app/pages/**/*.js'
-  ],
+  scripts: {
+    src: [
+      'app/components/**/!(*_test)+(.js)',
+      'app/pages/**/!(*_test)+(.js)',
+      'app/app!(*_test)+(.js)'
+    ],
+    test: [
+      'app/*_test.js',
+      'app/components/**/*_test.js',
+      'app/pages/**/*_test.js'
+    ]
+  },
   clientSettings: 'app/client.settings.js',
   watchDependencies: [
     'app/bower_components/malhar-angular-dashboard/dist/angular-ui-dashboard.js',
@@ -55,20 +63,16 @@ var options = {
 
 gulp.task('jshint', ['jshint_main', 'jshint_test']);
 
-var testFileCondition = /_test\.js/;
-
 gulp.task('jshint_main', function () {
-  gulp.src(dev.scripts)
-    .pipe($.ignore.include(testFileCondition))
-    .pipe($.jshint('test/.jshintrc'))
+  gulp.src(dev.scripts.src)
+    .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
 });
 
 gulp.task('jshint_test', function () {
-  return gulp.src(dev.scripts)
-    .pipe($.ignore.exclude(testFileCondition))
-    .pipe($.jshint())
+  return gulp.src(dev.scripts.test)
+    .pipe($.jshint('test/.jshintrc'))
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
 });
@@ -154,7 +158,8 @@ gulp.task('watch', [], function () {
     dev.index,
     '.tmp/styles/main.css',
     dev.templates,
-    dev.scripts,
+    dev.scripts.src,
+    dev.scripts.test,
     dev.watchDependencies
   ]).on('change', function (file) {
     server.changed(file.path);
