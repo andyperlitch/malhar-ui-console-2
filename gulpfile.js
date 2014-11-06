@@ -1,3 +1,5 @@
+/* global -$ */
+
 'use strict';
 
 //TODO
@@ -17,17 +19,23 @@ var runSequence = require('run-sequence');
 require('./gulp/gateway');
 var updateAppScripts = require('./util/update-app-scripts');
 var wiredep = require('wiredep').stream;
-
 var dev = {
   dir: 'app',
   index: 'app/index.html',
   favicon: 'app/favicon.ico',
   less: 'app/styles/main.less',
-  scripts: [
-    'app/*.js',
-    'app/components/**/*.js',
-    'app/pages/**/*.js'
-  ],
+  scripts: {
+    src: [
+      'app/components/**/!(*_test)+(.js)',
+      'app/pages/**/!(*_test)+(.js)',
+      'app/app!(*_test)+(.js)'
+    ],
+    test: [
+      'app/*_test.js',
+      'app/components/**/*_test.js',
+      'app/pages/**/*_test.js'
+    ]
+  },
   clientSettings: 'app/client.settings.js',
   watchDependencies: [
     'app/bower_components/malhar-angular-dashboard/dist/angular-ui-dashboard.js',
@@ -55,20 +63,16 @@ var options = {
 
 gulp.task('jshint', ['jshint_main', 'jshint_test']);
 
-var testFileCondition = /_test\.js/;
-
 gulp.task('jshint_main', function () {
-  gulp.src(dev.scripts)
-    .pipe($.ignore.include(testFileCondition))
-    .pipe($.jshint('test/.jshintrc'))
+  gulp.src(dev.scripts.src)
+    .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
 });
 
 gulp.task('jshint_test', function () {
-  return gulp.src(dev.scripts)
-    .pipe($.ignore.exclude(testFileCondition))
-    .pipe($.jshint())
+  return gulp.src(dev.scripts.test)
+    .pipe($.jshint('test/.jshintrc'))
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.jshint.reporter('fail'));
 });
@@ -154,7 +158,8 @@ gulp.task('watch', [], function () {
     dev.index,
     '.tmp/styles/main.css',
     dev.templates,
-    dev.scripts,
+    dev.scripts.src,
+    dev.scripts.test,
     dev.watchDependencies
   ]).on('change', function (file) {
     server.changed(file.path);
@@ -234,38 +239,37 @@ gulp.task('prodenv', function () {
 });
 
 gulp.task('ngdocs', [], function () {
-  var gulpDocs = require('gulp-ngdocs');
-  var docOptions = {
-    html5Mode: false
+
+  var options = {
+    title: 'API',
+    html5Mode: false,
+    image: './docs/ngDocNavImage.svg',
+    navTemplate: './docs/ngDocNavTemplate.html',
+    styles: ['./docs/ngDocStyles.css']
+
   };
-
-  gulp.src('./ngdocs', options.clean)
-    .pipe($.rimraf({ force: true }))
-    .on('finish', function() {
-      gulp.src([
-          'app/components/**/!(*_test)+(.js)',
-          'app/pages/**/!(*_test)+(.js)',
-          'app/app!(*_test)+(.js)'
-        ])
-        .pipe(gulpDocs.process(docOptions))
-        .pipe(gulp.dest('./ngdocs'));
+  var ngdocs = require('gulp-ngdocs');
+  return gulp.src(dev.scripts.src)
+    .pipe($.ngdocs.process(options))
+    .pipe(gulp.dest('./ngdocs'))
+    .on('error', function(err) {
+      console.log('Error from ngdocs: ', err);
     });
-
-  
 });
 
-gulp.task('serve:ngdocs', function() {
-  var app = express();
+gulp.task('serve:ngdocs', function(next) {
+  var server = express();
   var port = argv.p || 9002;
-  app.use(express.static(__dirname + '/ngdocs'));
-  app.listen(port);
+  server.use(express.static('ngdocs')).listen(port, next);
   console.log('Docs being served at http://localhost:' + port);
-  // TODO: get this working
-  // gulp.watch([
-  //   'app/components/**/!(*_test)+(.js)',
-  //   'app/pages/**/!(*_test)+(.js)',
-  //   'app/app!(*_test)+(.js)'
-  // ], ['ngdocs']);
+});
+
+gulp.task('watch:ngdocs', ['serve:ngdocs'], function() {
+  var server = $.livereload(35731);
+  gulp.watch(dev.scripts.src, ['ngdocs']);
+  gulp.watch('ngdocs/**').on('change', function(file) {
+    server.changed(file.path);
+  });
 });
 
 gulp.task('build', ['clean', 'jshint', 'test', 'copy']);

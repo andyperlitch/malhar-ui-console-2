@@ -1,0 +1,7 @@
+.navbar, .navbar-inner {
+  background: #005A7A;
+}
+.header .navbar .brand {
+  text-shadow: none;
+  color: #DDD;
+}
