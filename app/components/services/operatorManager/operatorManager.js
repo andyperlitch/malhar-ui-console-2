@@ -24,6 +24,7 @@ angular.module('app.components.services.operatorManager', [
 /**
  * @ngdoc service
  * @name app.components.services.services:operatorManager
+ * @description  Service containing helper methods for dealing with operators, both logical and physical.
  * @requires app.components.services.services:getUri
  * @requires app.settings.recording
  * @requires app.components.resources.RecordingModel
