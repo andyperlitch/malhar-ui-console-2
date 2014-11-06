@@ -16,6 +16,11 @@
 
 'use strict';
 
+/**
+ * @ngdoc object
+ * @name  app.settings
+ * @description Holds various configuration data for the DataTorrent Console.
+ */
 angular.module('app.settings', [])
   .constant('settings', {
     //wsRoot: 'http://localhost:3000',
@@ -155,6 +160,14 @@ angular.module('app.settings', [])
     NONENDED_CONTAINER_STATES: ['ACTIVE', 'ALLOCATED'],
     STORAGE_KEY: 'datatorrent-ui-console',
     VISIBILITY_TIMEOUT: 20000,
+
+    /**
+     * @ngdoc property
+     * @name urls
+     * @propertyOf app.settings
+     * @description Holds URL templates for gateway API resources.
+     * @type {Object}
+     */
     urls: {
 
       Alert                    :'/ws/:v/applications/:appId/alerts',
@@ -198,6 +211,13 @@ angular.module('app.settings', [])
       PackageApplication       :'/ws/:v/appPackages/:packageName/:packageVersion/applications/:appName'
     },
     
+    /**
+     * @ngdoc property
+     * @name actions
+     * @propertyOf app.settings
+     * @description Holds URL templates for gateway API actions.
+     * @type {Object}
+     */
     actions: {
       killApp                  :'/ws/:v/applications/:appId/kill',
       killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
@@ -212,6 +232,13 @@ angular.module('app.settings', [])
       stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop'
     },
     
+    /**
+     * @ngdoc property
+     * @name topics
+     * @propertyOf app.settings
+     * @description Holds URI templates for gateway API WebSocket topics.
+     * @type {Object}
+     */
     topics: {
       
       ClusterMetrics           :'cluster.metrics',
@@ -225,12 +252,13 @@ angular.module('app.settings', [])
 
     },
 
-    // Page Routes
-    // 
-    // Used by routing definitions and 
-    // by the dt-page-href directive.
-    // This is the single source of truth
-    // for routes.
+    /**
+     * @ngdoc property
+     * @name pages
+     * @propertyOf app.settings
+     * @description Used by routing definitions and by the dt-page-href directive. This is the single source of truth for routes.
+     * @type {Object}
+     */
     pages: {
       // Configuration
       Config                   :'/config',
@@ -257,6 +285,13 @@ angular.module('app.settings', [])
       DagEditor                :'/packages/:packageName/:packageVersion/applications/:appName/edit'
     },
 
+    /**
+     * @ngdoc property
+     * @name  breadcrumbs
+     * @propertyOf app.settings
+     * @description Used to form the text in breadcrumbs.
+     * @type {Object}
+     */
     breadcrumbs: {
       appInstance              :':appId',
       appName                  :':appName',
