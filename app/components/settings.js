@@ -162,9 +162,8 @@ angular.module('app.settings', [])
     VISIBILITY_TIMEOUT: 20000,
 
     /**
-     * @ngdoc property
-     * @name urls
-     * @propertyOf app.settings
+     * @ngdoc object
+     * @name app.settings.urls
      * @description Holds URL templates for gateway API resources.
      * @type {Object}
      */
@@ -212,9 +211,8 @@ angular.module('app.settings', [])
     },
     
     /**
-     * @ngdoc property
-     * @name actions
-     * @propertyOf app.settings
+     * @ngdoc object
+     * @name app.settings.actions
      * @description Holds URL templates for gateway API actions.
      * @type {Object}
      */
@@ -233,9 +231,8 @@ angular.module('app.settings', [])
     },
     
     /**
-     * @ngdoc property
-     * @name topics
-     * @propertyOf app.settings
+     * @ngdoc object
+     * @name app.settings.topics
      * @description Holds URI templates for gateway API WebSocket topics.
      * @type {Object}
      */
@@ -253,9 +250,8 @@ angular.module('app.settings', [])
     },
 
     /**
-     * @ngdoc property
-     * @name pages
-     * @propertyOf app.settings
+     * @ngdoc object
+     * @name app.settings.pages
      * @description Used by routing definitions and by the dt-page-href directive. This is the single source of truth for routes.
      * @type {Object}
      */
@@ -286,9 +282,8 @@ angular.module('app.settings', [])
     },
 
     /**
-     * @ngdoc property
-     * @name  breadcrumbs
-     * @propertyOf app.settings
+     * @ngdoc object
+     * @name  app.settings.breadcrumbs
      * @description Used to form the text in breadcrumbs.
      * @type {Object}
      */
@@ -349,5 +344,31 @@ angular.module('app.settings', [])
           dasharray: '1,5'
         }
       }
+    },
+
+    /**
+     * @ngdoc object
+     * @name  app.settings.recording
+     * @description Settings pertaining to the recording feature.
+     * @type {Object}
+     */
+    recording: {
+      /**
+       * @ngdoc property
+       * @name  app.settings.recording.POLLING_FOR_RECORDING_TIMEOUT
+       * @propertyOf app.settings.recording
+       * @description Amount of time that a new recording should be looked for.
+       * @type {Object}
+       */
+      POLLING_FOR_RECORDING_TIMEOUT: 10000,
+      /**
+       * @ngdoc property
+       * @name  app.settings.recording.POLLING_FOR_RECORDING_TIMEOUT
+       * @propertyOf app.settings.recording
+       * @description Interval time that should be used when polling for a recording
+       * @type {Object}
+       */
+      POLLING_FOR_RECORDING_INTERVAL: 1000
     }
+
   });
