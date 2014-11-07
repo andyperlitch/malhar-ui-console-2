@@ -122,8 +122,9 @@ gulp.task('karma:watch', [], function () {
     .pipe($.karma({
       configFile: 'test/karma-coverage.conf.js',
       action: 'watch',
-      //browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
-      browsers: ['PhantomJS', 'Chrome']
+      // browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+      // browsers: ['PhantomJS', 'Chrome']
+      browsers: ['Chrome']
     }));
 });
 
