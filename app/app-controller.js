@@ -18,7 +18,7 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function ($scope, breadcrumbs, $routeParams, setupBreadcrumbs) {
+.controller('AppCtrl', function (settings, $log, userStorage, $scope, breadcrumbs, $routeParams, setupBreadcrumbs) {
   // Initialize options
   breadcrumbs.options = {};
 
@@ -26,8 +26,35 @@ angular.module('app')
   $scope.breadcrumbs = breadcrumbs;
   $scope.$routeParams = $routeParams;
 
+  // Route events
+  $scope.$on('$locationChangeStart', function($event, route) {
+    console.log('$locationChangeStart');
+    console.log(route);
+    console.log($event);
+    // $event.preventDefault();
+    // console.log(arguments);
+  });
   $scope.$on('$routeChangeSuccess', function() {
     setupBreadcrumbs(breadcrumbs, $routeParams);
   });
+
+  // load saved state in userStorage
+  var json = localStorage.getItem(settings.STORAGE_KEY);
+  var storage;
+
+  if (json) {
+    try {
+      storage = JSON.parse(json);
+    } catch (e) {
+      $log.warn('State from localStorage could not be parsed! ', e);
+      localStorage.removeItem(settings.STORAGE_KEY);
+      storage = {};
+    }
+  } else {
+    storage = {};
+  }
+  userStorage.load(storage);
+
+
 
 });

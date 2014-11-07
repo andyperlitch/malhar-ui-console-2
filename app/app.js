@@ -90,25 +90,6 @@ angular.module('app', [
         redirectTo: '/ops'
       });
 
-  })
-  .run(function(userStorage, settings, $log) {
-    // load saved state in userStorage
-    var json = localStorage.getItem(settings.STORAGE_KEY);
-    var storage;
-
-    if (json) {
-      try {
-        storage = JSON.parse(json);
-      } catch (e) {
-        $log.warn('State from localStorage could not be parsed! ', e);
-        localStorage.removeItem(settings.STORAGE_KEY);
-        storage = {};
-      }
-    } else {
-      storage = {};
-    }
-      
-    userStorage.load(storage);
   });
 
 angular.module('exceptionOverride', []).factory('$exceptionHandler', function () {
