@@ -21,32 +21,49 @@ describe('Service: userSession', function () {
 
   describe('the create method', function() {
     
-    var sessionId, userPrinciple, userRole;
+    var sessionScheme, principle, roles;
 
     beforeEach(function() {
-      sessionId = 123;
-      userPrinciple = 456;
-      userRole = 'admin';
+      sessionScheme = 'kerberos';
+      principle = 456;
+      roles = ['admin'];
 
-      userSession.create(sessionId, userPrinciple, userRole);
+      userSession.create(sessionScheme, principle, roles);
     });
 
-    it('should set id', function() {
-      expect(userSession.id).toEqual(sessionId);
+    it('should set scheme', function() {
+      expect(userSession.scheme).toEqual(sessionScheme);
     });
 
-    it('should set userPrinciple', function() {
-      expect(userSession.userPrinciple).toEqual(userPrinciple);
+    it('should set principle', function() {
+      expect(userSession.principle).toEqual(principle);
     });
 
-    it('should set userRole', function() {
-      expect(userSession.userRole).toEqual(userRole);
+    it('should set roles', function() {
+      expect(userSession.roles).toEqual(roles);
     });
 
   });
 
   describe('the destroy method', function() {
-      
+    
+    var sessionScheme, principle, roles;
+
+    beforeEach(function() {
+      sessionScheme = 'kerberos';
+      principle = 456;
+      roles = ['admin'];
+
+      userSession.create(sessionScheme, principle, roles);
+    });
+
+    it('should clear out scheme, principle, and roles of the userSession', function() {
+      userSession.destroy();
+      expect(userSession.scheme).toEqual(null);
+      expect(userSession.principle).toEqual(null);
+      expect(userSession.roles).toEqual(null);
+    });    
+
   });
 
 });

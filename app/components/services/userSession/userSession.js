@@ -29,14 +29,14 @@ angular.module('app.components.services.userSession', [])
      * @methodOf app.components.services.userSession
      * @description
      * Sets the session information.
-     * @param  {string} sessionId The session ID
-     * @param  {string} userPrinciple    The user's principle, e.g. username or kerberos principle.
-     * @param  {string} userRole  The role of the user
+     * @param  {string} scheme       The auth scheme being used.
+     * @param  {string} principle    The user's principle, e.g. username or kerberos principle.
+     * @param  {Array=} roles        The roles of the user
      */
-    this.create = function (sessionId, userPrinciple, userRole) {
-      this.id = sessionId;
-      this.userPrinciple = userPrinciple;
-      this.userRole = userRole;
+    this.create = function (scheme, principle, roles) {
+      this.scheme = scheme;
+      this.principle = principle;
+      this.roles = roles;
     };
 
     /**
@@ -47,9 +47,9 @@ angular.module('app.components.services.userSession', [])
      * Destroys the session information
      */
     this.destroy = function () {
-      this.id = null;
-      this.userPrinciple = null;
-      this.userRole = null;
+      this.scheme = null;
+      this.principle = null;
+      this.roles = null;
     };
 
     return this;

@@ -32,6 +32,7 @@ angular.module('app.components.services.authentication', [
   .factory('authentication', function(settings, userSession, $http, getUri, $q) {
     
     var authentication = {};
+    var authStatusChecked = false;
 
     /**
      * @ngdoc method
@@ -45,6 +46,23 @@ angular.module('app.components.services.authentication', [
         return false;
       }
       return true;
+    };
+
+    /**
+     * @ngdoc method
+     * @name  isAuthenticated
+     * @description Returns true if the user is authenticated in the system, false if user has not or auth is disabled.
+     * @methodOf app.components.services.authentication
+     * @return {Boolean} The boolean of whether user is authenticated or not
+     */
+    authentication.isAuthenticated = function() {
+      if (!this.isEnabled()) {
+        return false;
+      }
+      if (userSession.id && userSession.principle) {
+        return true;
+      }
+      return false;
     };
 
     /**
@@ -64,7 +82,7 @@ angular.module('app.components.services.authentication', [
           // check if auth-scheme is empty
           if (data['auth-scheme']) {
             userSession.authStatus = true;
-            // user should be logged in
+            userSession.create(data['auth-scheme'], data.principle);
           }
           else {
             userSession.authStatus = false;
@@ -83,7 +101,22 @@ angular.module('app.components.services.authentication', [
         }
       );
 
+      dfd.promise.finally(function() {
+        authStatusChecked = true;
+      });
+
       return dfd.promise;
+    };
+
+    /**
+     * @ngdoc method
+     * @name  hasRetrievedAuthStatus
+     * @description Returns true if the auth status has been retrieved on this page load.
+     * @methodOf app.components.services.authentication
+     * @return {Boolean} The boolean indicating whether or not auth status has been retrieved.
+     */
+    authentication.hasRetrievedAuthStatus = function() {
+      return authStatusChecked;
     };
 
 
