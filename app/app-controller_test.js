@@ -40,6 +40,12 @@ describe('Controller: AppCtrl', function() {
 
     beforeEach(function() {
       $location.url = jasmine.createSpy();
+      getUri.page = function(key) {
+        if (key === 'Login') {
+          return '/testing/login';
+        }
+        return '/not/the/page';
+      };
       notifier.error = jasmine.createSpy();
       dfd = $q.defer();
       authentication.retrieveAuthStatus = function() {
@@ -135,12 +141,6 @@ describe('Controller: AppCtrl', function() {
       });
 
       it('should call preventDefault and $location.url with login page if auth is enabled and the user is not logged in', function() {
-        getUri.page = function(key) {
-          if (key === 'Login') {
-            return '/testing/login';
-          }
-          return '/not/the/page';
-        };
         authentication.isEnabled = function() {
           return true;
         };
@@ -150,6 +150,19 @@ describe('Controller: AppCtrl', function() {
         obj.handler($event, url);
         expect($event.preventDefault).toHaveBeenCalled();
         expect($location.url).toHaveBeenCalledWith('/testing/login');
+      });
+
+      it('should not call preventDefault or $location.url if auth is enabled, user is not logged in, and the url is the login screen', function() {
+        
+        authentication.isEnabled = function() {
+          return true;
+        };
+        authentication.isAuthenticated = function() {
+          return false;
+        };
+        obj.handler($event, getUri.page('Login'));
+        expect($event.preventDefault).not.toHaveBeenCalled();
+        expect($location.url).not.toHaveBeenCalledWith('/testing/login');
       });
 
       it('should not call preventDefault or $location.url if auth is enabled and the user is logged', function() {

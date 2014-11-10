@@ -58,10 +58,12 @@ angular.module('app')
     // Auth status has been retrieved
     if (authentication.isEnabled()) {
 
+      var loginScreenUrl = getUri.page('Login');
+
       // Auth is enabled, check if authenticated
-      if (!authentication.isAuthenticated()) {
+      if (!authentication.isAuthenticated() && route !== loginScreenUrl) {
         $event.preventDefault();
-        $location.url(getUri.page('Login'));
+        $location.url(loginScreenUrl);
         return;
       }
 
