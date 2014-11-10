@@ -18,7 +18,7 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function (settings, $log, userStorage, $scope, breadcrumbs, $routeParams, setupBreadcrumbs) {
+.controller('AppCtrl', function (settings, $log, authentication, userStorage, $scope, $location, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri) {
   // Initialize options
   breadcrumbs.options = {};
 
@@ -28,11 +28,45 @@ angular.module('app')
 
   // Route events
   $scope.$on('$locationChangeStart', function($event, route) {
-    console.log('$locationChangeStart');
-    console.log(route);
-    console.log($event);
-    // $event.preventDefault();
-    // console.log(arguments);
+    
+    if (!authentication.hasRetrievedAuthStatus()) {
+      // Stop the page load
+      $event.preventDefault();
+
+      // Get the auth status
+      authentication.retrieveAuthStatus().then(
+        function() {
+          // Once auth status has been set, try re-triggering this route
+          $location.url(route);
+        },
+        function(err) {
+          // Error occurred trying to determine auth status, error and trigger anyway
+          notificationService.error({
+            title: dtText.get('Could not get authentication status'),
+            text: dtText.get('It could not be determined whether or not your DataTorrent cluster has authentication enabled or disabled.')
+          });
+
+          $log.error('Auth status check failed. Server response: ', err);
+          $location.url(route);
+        }
+      );
+
+      // Exit out
+      return;
+    }
+
+    // Auth status has been retrieved
+    if (authentication.isEnabled()) {
+
+      // Auth is enabled, check if authenticated
+      if (!authentication.isAuthenticated()) {
+        $event.preventDefault();
+        $location.url(getUri.page('Login'));
+        return;
+      }
+
+    }
+
   });
   $scope.$on('$routeChangeSuccess', function() {
     setupBreadcrumbs(breadcrumbs, $routeParams);
@@ -54,7 +88,5 @@ angular.module('app')
     storage = {};
   }
   userStorage.load(storage);
-
-
 
 });

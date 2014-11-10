@@ -42,8 +42,10 @@ angular.module('app', [
   'app.components.directives.dtSpinner',
   'app.components.services.dtText',
   'app.components.services.extend',
+  'app.components.services.getUri',
   'app.components.services.userStorage',
   'app.components.services.setupBreadcrumbs',
+  'app.components.services.authentication',
 
   // pages
   'app.pages.config',

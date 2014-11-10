@@ -236,6 +236,7 @@ angular.module('app.settings', [])
       Config                   :'/config',
       InstallWizard            :'/config/installation-wizard',
       LicenseInfo              :'/config/license-information',
+      Login                    :'/login',
       SystemDiagnostics        :'/config/system-diagnostics',
 
       // Operations
