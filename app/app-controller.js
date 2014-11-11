@@ -18,7 +18,7 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function (settings, $log, authentication, userStorage, $scope, $location, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri) {
+.controller('AppCtrl', function (settings, $log, authentication, userStorage, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri) {
   // Initialize options
   breadcrumbs.options = {};
 
@@ -27,17 +27,39 @@ angular.module('app')
   $scope.$routeParams = $routeParams;
 
   // Route events
-  $scope.$on('$locationChangeStart', function($event, route) {
-    
+  function routeChangeHandler($event, route) {
+
+    $log.debug('routeChangeHandler firing');
+
     if (!authentication.hasRetrievedAuthStatus()) {
+
       // Stop the page load
+      $log.debug('Auth status has not been retrieved.');
       $event.preventDefault();
 
       // Get the auth status
       authentication.retrieveAuthStatus().then(
         function() {
           // Once auth status has been set, try re-triggering this route
-          $location.url(route);
+          $log.debug('Auth status retrieved successfully');
+          if (authentication.isEnabled()) {
+
+            $log.debug('Auth is enabled');
+
+            var loginScreenUrl = getUri.page('Login', null, true);
+
+            // Auth is enabled, check if authenticated
+            if (!authentication.isAuthenticated() && route !== loginScreenUrl) {
+              
+              $log.debug('User not authenticated, redirecting to login page.');
+              $location.url(loginScreenUrl);
+              return;
+            }
+
+            $log.debug('User is authenticated.');
+
+          }
+          $route.reload();
         },
         function(err) {
           // Error occurred trying to determine auth status, error and trigger anyway
@@ -47,7 +69,7 @@ angular.module('app')
           });
 
           $log.error('Auth status check failed. Server response: ', err);
-          $location.url(route);
+          $route.reload();
         }
       );
 
@@ -58,18 +80,31 @@ angular.module('app')
     // Auth status has been retrieved
     if (authentication.isEnabled()) {
 
-      var loginScreenUrl = getUri.page('Login');
+      $log.debug('Auth is enabled');
+
+      // Get uri for login page, with no hash
+      var loginScreenUrl = getUri.page('Login', null, true);
 
       // Auth is enabled, check if authenticated
       if (!authentication.isAuthenticated() && route !== loginScreenUrl) {
+        
+        $log.debug('User not authenticated, redirecting to login page.');
         $event.preventDefault();
         $location.url(loginScreenUrl);
         return;
       }
 
+      $log.debug('User is authenticated.');
+
     }
 
+  }
+
+  $scope.$on('$locationChangeStart', function($event) {
+    var path = $location.path();
+    routeChangeHandler($event, path);
   });
+
   $scope.$on('$routeChangeSuccess', function() {
     setupBreadcrumbs(breadcrumbs, $routeParams);
   });
