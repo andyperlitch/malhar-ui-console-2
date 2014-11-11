@@ -60,20 +60,20 @@ describe('Factory: authentication', function () {
       expect(authentication.isAuthenticated()).toEqual(false);
     });
     
-    it('should return false if userSession.authStatus is true && userSession.data.scheme and userSession.data.principle are not defined', function() {
+    it('should return false if userSession.authStatus is true && userSession.data.authScheme and userSession.data.principle are not defined', function() {
       authentication.isEnabled = function() {
         return true;
       };
-      delete userSession.data.scheme;
+      delete userSession.data.authScheme;
       delete userSession.data.principle;
       expect(authentication.isAuthenticated()).toEqual(false);
     });
 
-    it('should return true if userSession.authStatus and userSession.data.scheme and userSession.data.principle', function() {
+    it('should return true if userSession.authStatus and userSession.data.authScheme and userSession.data.principle', function() {
       authentication.isEnabled = function() {
         return true;
       };
-      userSession.data.scheme = 'kerberos';
+      userSession.data.authScheme = 'kerberos';
       userSession.data.principle = 'mrbojangles';
       expect(authentication.isAuthenticated()).toEqual(true);
     });
@@ -94,9 +94,9 @@ describe('Factory: authentication', function () {
 
     describe('when fetch is successful', function() {
 
-      it('should mark auth as enabled if userSession.data.scheme is truthy', function() {
+      it('should mark auth as enabled if userSession.data.authScheme is truthy', function() {
         authentication.retrieveAuthStatus();
-        userSession.data.scheme = 'kerberos';
+        userSession.data.authScheme = 'kerberos';
         dfd.resolve({
           status: status
         });
@@ -104,9 +104,9 @@ describe('Factory: authentication', function () {
         expect(authentication.isEnabled()).toEqual(true);
       });
 
-      it('should mark auth as disabled if userSession.data.scheme is falsey', function() {
+      it('should mark auth as disabled if userSession.data.authScheme is falsey', function() {
         authentication.retrieveAuthStatus();
-        userSession.data.scheme = '';
+        userSession.data.authScheme = '';
         dfd.resolve({
           status: status
         });

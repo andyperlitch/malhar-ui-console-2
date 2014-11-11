@@ -20,26 +20,37 @@
  * @name  app.components.resources.UserModel
  * @description  Represents a user.
  * @requires  app.components.resources.BaseModel
+ * @requires  app.components.services.getUri
  */
 angular.module('app.components.resources.UserModel', [
   'app.components.resources.BaseModel'
 ])
-.factory('UserModel', function(BaseModel) {
+.factory('UserModel', function(BaseModel, getUri, $http) {
   var UserModel = BaseModel.extend({
     debugName: 'User',
     urlKey: 'User',
-    transformResponse: function(raw) {
-      var result = angular.copy(raw);
-      result.scheme = result['auth-scheme'];
-      delete result['auth-scheme'];
-      return result;
-    },
     onFetchError: function(res) {
       // Check for authentication issue
       if (res.status === 401 || res.status === 403) {
         this.data = {};
       }
       BaseModel.prototype.onFetchError.call(this, res);
+    },
+    /**
+     * @ngdoc method
+     * @name  login
+     * @description Attempt a login with provided credentials.
+     * @methodOf app.components.resources.UserModel
+     * @param  {string} userName  The username/principle to login with.
+     * @param  {string} password  The password to login with
+     * @return {Promise}          Resolves if login succeeds, rejects if login fails
+     */
+    login: function(userName, password) {
+      var loginUrl = getUri.action('login');
+      return $http.post(loginUrl, {
+        userName: userName,
+        password: password
+      });
     }
   });
   return UserModel;

@@ -60,7 +60,7 @@ angular.module('app.components.services.authentication', [
       if (!this.isEnabled()) {
         return false;
       }
-      if (userSession.data.scheme && userSession.data.principle) {
+      if (userSession.data.authScheme && userSession.data.principle) {
         return true;
       }
       return false;
@@ -79,8 +79,8 @@ angular.module('app.components.services.authentication', [
 
       userSession.fetch().then(
         function() {
-          // check if auth-scheme is empty
-          if (userSession.data.scheme) {
+          // check if authScheme is empty
+          if (userSession.data.authScheme) {
             authStatus = true;
           }
           else {

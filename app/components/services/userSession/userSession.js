@@ -21,7 +21,9 @@ angular.module('app.components.services.userSession', [
   /**
     * @ngdoc service
     * @name app.components.services.userSession
-    * @description Holds the user's state as far as authentication and authorization is concerned.
+    * @description 
+    * Holds the user's state as far as authentication and authorization is concerned. 
+    * <br>This is an instance of {@link app.components.resources.UserModel UserModel}.
   **/
   .factory('userSession', function(UserModel) {
 

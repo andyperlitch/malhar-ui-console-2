@@ -19,7 +19,7 @@
 describe('Resource: UserModel', function () {
 
   // load the service's module
-  var url;
+  var url, loginUrl;
   beforeEach(module('app.components.resources.UserModel', function($provide) {
     $provide.value('webSocket', {
       subscribe: function() {},
@@ -28,6 +28,9 @@ describe('Resource: UserModel', function () {
     $provide.constant('settings', {
       urls: {
         User: url = '/profile/user'
+      },
+      actions: {
+        login: loginUrl = '/login'
       }
     });
   }));
@@ -40,32 +43,6 @@ describe('Resource: UserModel', function () {
 
   it('should be a function', function() {
     expect(typeof UserModel).toEqual('function');
-  });
-
-  describe('the transformResponse method', function() {
-
-    var u;
-
-    beforeEach(function() {
-      u = new UserModel();
-    });
-    
-    it('should not return the raw object', function() {
-      var raw = {};
-      var result = u.transformResponse(raw);
-      expect(raw === result).toEqual(false);
-    });
-
-    it('should change the key "auth-scheme" to "scheme"', function() {
-      var raw = {
-        'auth-scheme': 'kerberos',
-        principle: 'mrbojangles'
-      };
-      var result = u.transformResponse(raw);
-      expect(result.scheme).toEqual('kerberos');
-      expect(result['auth-scheme']).toBeUndefined();
-    });
-
   });
 
   describe('the fetch method', function() {
@@ -97,13 +74,13 @@ describe('Resource: UserModel', function () {
 
     describe('when the server responds with no auth', function() {
       
-      it('should set data.scheme to an empty string', function() {
+      it('should set data.authScheme to an empty string', function() {
         $httpBackend.whenGET(url).respond({
-          'auth-scheme': ''
+          'authScheme': ''
         });
         u.fetch();
         $httpBackend.flush();
-        expect(u.data.scheme).toEqual('');
+        expect(u.data.authScheme).toEqual('');
       });
 
     });
@@ -134,6 +111,55 @@ describe('Resource: UserModel', function () {
           u.fetch();
           $httpBackend.flush();
           expect(u.data).toEqual({ scheme: 'kerberos', principle: 'mrbojangles' });
+      });
+
+    });
+
+  });
+
+  describe('the login method', function() {
+    
+    // test backend
+    var u, $httpBackend;
+    
+    beforeEach(inject(function(_$httpBackend_) {
+      u = new UserModel();
+      $httpBackend = _$httpBackend_;
+    
+      // USAGE:
+      // $httpBackend.whenGET('/my-url?key=value').respond({});
+      // $httpBackend.expectGET('/my-url?key=value');
+      // $httpBackend.flush();
+    }));
+    
+    afterEach(function() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should make a call to settings.actions.login', function() {
+      $httpBackend.whenPOST(loginUrl).respond(200, {});
+      u.login('mr', 'bojangles');
+      $httpBackend.expectPOST(loginUrl);
+      $httpBackend.flush();
+    });
+
+    it('should return a promise', function() {
+      $httpBackend.whenPOST(loginUrl).respond(200, {});
+      var result = u.login('mr', 'bojangles');
+      expect(typeof result.then).toEqual('function');
+      $httpBackend.flush();
+    });
+
+    describe('when the server responds with success', function() {
+      
+      it('should call the set method with the server response', function() {
+        $httpBackend.whenPOST(loginUrl).respond(200, {
+          authScheme: 'kerberos',
+          principal: 'mrbojangles'
+        });
+        u.login('mrbojangles', 'admin');
+        $httpBackend.flush();
       });
 
     });

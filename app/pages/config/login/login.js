@@ -15,7 +15,15 @@
 */
 'use strict';
 
-angular.module('app.pages.config.login', [])
+/**
+ * @ngdoc object
+ * @name  app.pages.config.login
+ * @description  Login page module.
+ * @requires app.components.services.userSession
+ */
+angular.module('app.pages.config.login', [
+  'app.components.services.userSession'
+])
 
 // Routing
 .config(function(settings, $routeProvider) {
@@ -27,14 +35,23 @@ angular.module('app.pages.config.login', [])
 })
 
 // Controller
-.controller('LoginPageCtrl', function($scope) {
+.controller('LoginPageCtrl', function($scope, userSession) {
 
   // Initialize credentials object
   $scope.credentials = {};
 
   // Define login action
   $scope.login = function(credentials) {
-    console.log('login submitted', credentials);
+    userSession
+      .login(credentials.principle, credentials.password)
+      .then(
+        function() {
+          // login successful
+        },
+        function() {
+          // login unsuccessful
+        }
+      );
   };
 
 });
