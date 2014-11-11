@@ -1,0 +1,15 @@
+<form novalidate ng-submit="login(credentials)" class="info-page-container" id="login-page-form">
+  <h1 class="h3">Login</h1>
+  <p>
+    <label for="principle"><span class="glyphicon glyphicon-user"></span> username</label>
+    <input type="text" name="principle" class="form-control" ng-model="credentials.principle">
+  </p>
+
+  <p>
+    <label for="password"><span class="glyphicon glyphicon-lock"></span> password</label>
+    <input type="password" name="password" class="form-control" ng-model="credentials.password">
+  </p>
+  <hr>
+  <pre>{{ credentials | json }}</pre>
+  <input type="submit" class="btn btn-success submit-btn" value="Login">
+</form>
