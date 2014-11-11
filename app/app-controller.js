@@ -49,10 +49,16 @@ angular.module('app')
             var loginScreenUrl = getUri.page('Login', null, true);
 
             // Auth is enabled, check if authenticated
-            if (!authentication.isAuthenticated() && route !== loginScreenUrl) {
-              
-              $log.debug('User not authenticated, redirecting to login page.');
-              $location.url(loginScreenUrl);
+            if (!authentication.isAuthenticated()) {
+
+              if (route !== loginScreenUrl) {
+                $log.debug('User not authenticated, redirecting to login page.');
+                $location.url(loginScreenUrl);
+              }
+              else {
+                $route.reload();
+              }
+
               return;
             }
 

@@ -33,6 +33,7 @@ angular.module('app.components.services.authentication', [
     
     var authentication = {};
     var authStatusChecked = false;
+    var authStatus;
 
     /**
      * @ngdoc method
@@ -42,7 +43,7 @@ angular.module('app.components.services.authentication', [
      * @returns {boolean}    Returns true if authentication is enabled or unknown status and false if it is disabled.
     **/
     authentication.isEnabled = function() {
-      if (userSession.authStatus === false) {
+      if (authStatus === false) {
         return false;
       }
       return true;
@@ -59,7 +60,7 @@ angular.module('app.components.services.authentication', [
       if (!this.isEnabled()) {
         return false;
       }
-      if (userSession.id && userSession.principle) {
+      if (userSession.data.scheme && userSession.data.principle) {
         return true;
       }
       return false;
@@ -73,26 +74,24 @@ angular.module('app.components.services.authentication', [
      * @return {Promise}   Resolves when this action has completed
      */
     authentication.retrieveAuthStatus = function() {
-      var url = getUri.url('User');
+      
       var dfd = $q.defer();
 
-      $http.get(url).then(
-        function(res) {
-          var data = res.data;
+      userSession.fetch().then(
+        function() {
           // check if auth-scheme is empty
-          if (data['auth-scheme']) {
-            userSession.authStatus = true;
-            userSession.create(data['auth-scheme'], data.principle);
+          if (userSession.data.scheme) {
+            authStatus = true;
           }
           else {
-            userSession.authStatus = false;
+            authStatus = false;
           }
 
           dfd.resolve();
         },
         function(res) {
           if (res.status === 401 || res.status === 403) {
-            userSession.authStatus = true;
+            authStatus = true;
             dfd.resolve();
           }
           else {

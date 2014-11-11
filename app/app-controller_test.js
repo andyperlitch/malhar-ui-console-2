@@ -18,9 +18,11 @@
 
 describe('Controller: AppCtrl', function() {
 
-  var $scope, $q, authentication, $location, $route, notifier, getUri;
+  var $scope, $q, authentication, $location, $route, notifier, getUri, userSession;
 
-  beforeEach(module('app'));
+  beforeEach(module('app', function($provide) {
+    $provide.value('userSession', userSession = {});
+  }));
 
   beforeEach(inject(function($rootScope, $controller, _$q_){
     $scope = $rootScope.$new();
@@ -124,14 +126,35 @@ describe('Controller: AppCtrl', function() {
               authentication.isAuthenticated = function() {
                 return false;
               };
-              obj.handler($event, url);
-              dfd.resolve();
-              $scope.$digest();
             });
 
-            it('should redirect to login', function() {
-              expect($location.url).toHaveBeenCalledWith('/testing/login');
+            describe('and the initial route is not the login page', function() {
+              beforeEach(function() {
+                obj.handler($event, url);
+                dfd.resolve();
+                $scope.$digest();
+              });
+
+              it('should redirect to login', function() {
+                expect($location.url).toHaveBeenCalledWith('/testing/login');
+              });
             });
+
+            describe('and the initial route is the login page', function() {
+              beforeEach(function() {
+                $location.path = function() {
+                  return '/testing/login';
+                };
+                obj.handler($event, '/testing/login');
+                dfd.resolve();
+                $scope.$digest();
+              });
+
+              it('should reload the page', function() {
+                expect($route.reload).toHaveBeenCalled();
+              });
+            });
+
           });
 
         });

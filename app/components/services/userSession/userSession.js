@@ -15,43 +15,16 @@
 */
 'use strict';
 
-angular.module('app.components.services.userSession', [])
+angular.module('app.components.services.userSession', [
+  'app.components.resources.UserModel'
+])
   /**
     * @ngdoc service
     * @name app.components.services.userSession
     * @description Holds the user's state as far as authentication and authorization is concerned.
   **/
-  .service('userSession', function() {
+  .factory('userSession', function(UserModel) {
 
-    /**
-     * @ngdoc method
-     * @name app.components.services.userSession#create
-     * @methodOf app.components.services.userSession
-     * @description
-     * Sets the session information.
-     * @param  {string} scheme       The auth scheme being used.
-     * @param  {string} principle    The user's principle, e.g. username or kerberos principle.
-     * @param  {Array=} roles        The roles of the user
-     */
-    this.create = function (scheme, principle, roles) {
-      this.scheme = scheme;
-      this.principle = principle;
-      this.roles = roles;
-    };
-
-    /**
-     * @ngdoc method
-     * @name app.components.services.userSession#create
-     * @methodOf app.components.services.userSession
-     * @description 
-     * Destroys the session information
-     */
-    this.destroy = function () {
-      this.scheme = null;
-      this.principle = null;
-      this.roles = null;
-    };
-
-    return this;
+    return new UserModel();
 
   });

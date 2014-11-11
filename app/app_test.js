@@ -34,6 +34,7 @@ describe('Top-level app module', function() {
       $provide.constant('settings', {
         STORAGE_KEY: storageKey
       });
+      $provide.value('userSession', {});
     }));
 
     // controller needs to be created
@@ -69,6 +70,7 @@ describe('Top-level app module', function() {
       $provide.constant('settings', {
         STORAGE_KEY: storageKey
       });
+      $provide.value('userSession', {});
       $provide.value('$log', $log = {
         warn: jasmine.createSpy()
       });
@@ -102,6 +104,7 @@ describe('Top-level app module', function() {
       $provide.constant('settings', {
         STORAGE_KEY: storageKey
       });
+      $provide.value('userSession', {});
     }));
     // controller needs to be created
     beforeEach(inject(function($rootScope, $controller){

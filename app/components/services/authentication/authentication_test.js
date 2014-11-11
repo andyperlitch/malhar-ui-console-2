@@ -18,224 +18,164 @@
 
 describe('Factory: authentication', function () {
 
-  var userSession, settings;
+  var userSession;
 
   // load the service's module
   beforeEach(module('app.components.services.authentication', function($provide) {
-    $provide.constant('settings', settings = {
-      urls: {
-        User: '/fakeuser'
-      }
+    $provide.value('userSession', userSession = {
+      data: {}
     });
+    $provide.value('webSocket', {});
   }));
 
   // instantiate service
-  var authentication;
-  beforeEach(inject(function (_authentication_, _userSession_) {
+  var authentication, $q, $rootScope;
+  beforeEach(inject(function (_authentication_, _$q_, _$rootScope_) {
     authentication = _authentication_;
-    userSession = _userSession_;
-    spyOn(userSession, 'create').and.callThrough();
+    $q = _$q_;
+    $rootScope = _$rootScope_;
   }));
 
-  describe('isEnabled method', function() {
-    
-    it('should return true if userSession.authStatus is true OR undefined', function() {
-      userSession.authStatus = undefined;
-      expect(authentication.isEnabled()).toEqual(true);
-      delete userSession.authStatus;
-      expect(authentication.isEnabled()).toEqual(true);
-      userSession.authStatus = true;
-      expect(authentication.isEnabled()).toEqual(true);
-    });
+  var dfd;
 
-    it('should return false if userSession.authStatus is false', function() {
-      userSession.authStatus = false;
-      expect(authentication.isEnabled()).toEqual(false);
-    });
+  beforeEach(function() {
+    dfd = $q.defer();
 
+    userSession.fetch = function() {
+      return dfd.promise;
+    };
+    spyOn(userSession, 'fetch').and.callThrough();
+  });
+
+  it('should assume auth is enabled by default', function() {
+    expect(authentication.isEnabled()).toEqual(true);
   });
 
   describe('isAuthenticated method', function() {
 
-    it('should return false if userSession.authStatus is false', function() {
-      userSession.authStatus = false;
+    it('should return false if auth is disabled', function() {
+      authentication.isEnabled = function() {
+        return false;
+      };
       expect(authentication.isAuthenticated()).toEqual(false);
     });
     
-    it('should return false if userSession.authStatus is true && userSession.id and userSession.principle are not defined', function() {
-      userSession.authStatus = true;
-      delete userSession.id;
-      delete userSession.principle;
+    it('should return false if userSession.authStatus is true && userSession.data.scheme and userSession.data.principle are not defined', function() {
+      authentication.isEnabled = function() {
+        return true;
+      };
+      delete userSession.data.scheme;
+      delete userSession.data.principle;
       expect(authentication.isAuthenticated()).toEqual(false);
     });
 
-    it('should return true if userSession.authStatus and userSession.id and userSession.principle', function() {
-      userSession.authStatus = true;
-      userSession.id = '1234';
-      userSession.principle = 'mrbojangles';
+    it('should return true if userSession.authStatus and userSession.data.scheme and userSession.data.principle', function() {
+      authentication.isEnabled = function() {
+        return true;
+      };
+      userSession.data.scheme = 'kerberos';
+      userSession.data.principle = 'mrbojangles';
       expect(authentication.isAuthenticated()).toEqual(true);
     });
 
   });
 
   describe('retrieveAuthStatus method', function() {
-    
-    // test backend
-    var $httpBackend;
-    
-    beforeEach(inject(function(_$httpBackend_) {
-      $httpBackend = _$httpBackend_;
-    }));
-    
-    afterEach(function() {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+
+    it('should call userSession.fetch', function() {
+      authentication.retrieveAuthStatus();
+      expect(userSession.fetch).toHaveBeenCalled();
     });
 
-    describe('the general case', function() {
-      
-      beforeEach(function() {
-        $httpBackend.whenGET(settings.urls.User).respond({});
-      });
+    it('should return a promise', function() {
+      var result = authentication.retrieveAuthStatus();
+      expect(typeof result.then).toEqual('function');
+    });
 
-      it('should make a request to the User url from settings.urls', function() {
+    describe('when fetch is successful', function() {
+
+      it('should mark auth as enabled if userSession.data.scheme is truthy', function() {
         authentication.retrieveAuthStatus();
-        $httpBackend.expectGET(settings.urls.User);
-        $httpBackend.flush();
-      });
-
-      it('should return a promise', function() {
-        var result = authentication.retrieveAuthStatus();
-        expect(typeof result.then).toEqual('function');
-        $httpBackend.flush();
-      });
-
-    });
-
-    describe('hasRetrievedAuthStatus helper method', function() {
-      
-      it('should return false if retrieveAuthStatus has not been called yet', function() {
-        expect(authentication.hasRetrievedAuthStatus()).toEqual(false);  
-      });
-
-    });
-
-    describe('when the response has no auth scheme', function() {
-
-      beforeEach(function() {
-        $httpBackend.whenGET(settings.urls.User).respond({
-          'auth-scheme': ''
+        userSession.data.scheme = 'kerberos';
+        dfd.resolve({
+          status: status
         });
-      });
-      
-      it('should set authentication state as disabled', function() {
-        authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
-        expect(authentication.isEnabled()).toEqual(false); 
-      });
-
-      it('should make hasRetrievedAuthStatus return true', function() {
-        authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
-        expect(authentication.hasRetrievedAuthStatus()).toEqual(true);
-      });
-
-    });
-
-    describe('when the response has auth scheme', function() {
-      
-      beforeEach(function() {
-        $httpBackend.whenGET(settings.urls.User).respond({
-          'auth-scheme': 'kerberos',
-          'principle': 'mrbojangles'
-        });
-      });
-
-      it('should set authentication state as enabled', function() {
-        authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
+        $rootScope.$apply();
         expect(authentication.isEnabled()).toEqual(true);
       });
 
-      it('should call userSession.create with the supplied values', function() {
+      it('should mark auth as disabled if userSession.data.scheme is falsey', function() {
         authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
-        expect(userSession.create).toHaveBeenCalled();
-        expect(userSession.scheme).toEqual('kerberos');
-        expect(userSession.principle).toEqual('mrbojangles');
+        userSession.data.scheme = '';
+        dfd.resolve({
+          status: status
+        });
+        $rootScope.$apply();
+        expect(authentication.isEnabled()).toEqual(false);
       });
-
+      
     });
 
-    var when401or403 = function() {
+    var when401or403 = function(status) {
 
       it('should set authentication state as enabled', function() {
         authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
+        dfd.reject({
+          status: status
+        });
+        $rootScope.$apply();
         expect(authentication.isEnabled()).toEqual(true);
       });
 
       it('should make hasRetrievedAuthStatus return true', function() {
         authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
+        dfd.reject({
+          status: status
+        });
+        $rootScope.$apply();
         expect(authentication.hasRetrievedAuthStatus()).toEqual(true);
       });
 
       it('user should not be authenticated', function() {
         authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
+        dfd.reject({
+          status: status
+        });
+        $rootScope.$apply();
         expect(authentication.isAuthenticated()).toEqual(false);
       });
 
-      it('user should not be authenticated even if they were before', function() {
-        userSession.principle = 'mrbojangles';
-        userSession.scheme = 'kerberos';
-        authentication.retrieveAuthStatus();
-        $httpBackend.flush();
-        
-        expect(authentication.isAuthenticated()).toEqual(false);
+      it('should still resolve the promise returned', function() {
+        var promise = authentication.retrieveAuthStatus();
+        var spy = jasmine.createSpy();
+        promise.then(spy);
+        dfd.reject({
+          status: status
+        });
+        $rootScope.$apply();
+        expect(spy).toHaveBeenCalled();
       });
 
     };
 
     describe('when the response is a 401', function() {
-      
-      beforeEach(function() {
-        $httpBackend.whenGET(settings.urls.User).respond(401, {});
-      });
-
-      when401or403();
-
+      when401or403(401);
     });
 
-    describe('when the response is a 401', function() {
-      
-      beforeEach(function() {
-        $httpBackend.whenGET(settings.urls.User).respond(403, {});
-      });
-
-      when401or403();
-
+    describe('when the response is a 403', function() {
+      when401or403(403);
     });
 
     describe('when the response is an error but not from authentication', function() {
-      
-      beforeEach(function() {
-        $httpBackend.whenGET(settings.urls.User).respond(500, { message: 'an error occurred' });
-      });
 
       it('should reject the promise that gets returned', function() {
         var spy = jasmine.createSpy();
         var promise = authentication.retrieveAuthStatus();
         promise.catch(spy);
-        $httpBackend.flush();
+        dfd.reject({
+          status: 500
+        });
+        $rootScope.$apply();
         expect(spy).toHaveBeenCalled();
       });
 
@@ -243,5 +183,58 @@ describe('Factory: authentication', function () {
 
   });
 
+  describe('hasRetrievedAuthStatus helper method', function() {
+      
+    describe('when retrieveAuthStatus has not been called', function() {
+      it('should return false if retrieveAuthStatus has not been called yet', function() {
+        expect(authentication.hasRetrievedAuthStatus()).toEqual(false);  
+      });
+    });
+
+    describe('when retrieveAuthStatus has been called', function() {
+
+      beforeEach(function() {
+        authentication.retrieveAuthStatus();
+      });
+      
+      describe('and the promise has not been resolved', function() {
+        
+        it('should return false', function() {
+          expect(authentication.hasRetrievedAuthStatus()).toEqual(false);
+        });
+
+      });
+
+      describe('and the promise has been resolved', function() {
+        
+        beforeEach(function() {
+          dfd.resolve();
+        });
+
+        it('should return true', function() {
+          $rootScope.$apply();
+          expect(authentication.hasRetrievedAuthStatus()).toEqual(true);
+        });
+
+      });
+
+      describe('and the promise has been rejected', function() {
+        
+        beforeEach(function() {
+          dfd.reject({
+            status: 501
+          });
+        });
+
+        it('should return true', function() {
+          $rootScope.$apply();
+          expect(authentication.hasRetrievedAuthStatus()).toEqual(true);
+        });
+
+      });
+
+    });
+
+  });
 
 });
