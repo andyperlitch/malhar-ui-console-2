@@ -81,6 +81,7 @@ angular.module('app', [
     var ws_proto = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
     webSocketProvider.setWebSocketURL(ws_proto + host + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
+    webSocketProvider.setExplicitConnection(true);
 
     // userStorage save function
     userStorageProvider.setSaveFunction(function() {

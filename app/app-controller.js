@@ -18,7 +18,7 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function (settings, $log, authentication, userStorage, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri) {
+.controller('AppCtrl', function (settings, $log, authentication, userStorage, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri, webSocket) {
   // Initialize options
   breadcrumbs.options = {};
 
@@ -65,6 +65,7 @@ angular.module('app')
             $log.debug('User is authenticated.');
 
           }
+          webSocket.connect();
           $route.reload();
         },
         function(err) {

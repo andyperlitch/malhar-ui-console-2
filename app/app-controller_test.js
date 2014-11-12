@@ -18,7 +18,7 @@
 
 describe('Controller: AppCtrl', function() {
 
-  var $scope, $q, authentication, $location, $route, notifier, getUri, userSession;
+  var $scope, $q, authentication, $location, $route, notifier, getUri, userSession, webSocket;
 
   beforeEach(module('app', function($provide) {
     $provide.value('userSession', userSession = {});
@@ -33,7 +33,10 @@ describe('Controller: AppCtrl', function() {
       $location: $location = {},
       notificationService: notifier = {},
       getUri: getUri = {},
-      $route: $route = {}
+      $route: $route = {},
+      webSocket: webSocket = {
+        connect: jasmine.createSpy()
+      }
     });
   }));
 
@@ -118,7 +121,11 @@ describe('Controller: AppCtrl', function() {
 
             it('should not call the error method of notificationService', function() {
               expect(notifier.error).not.toHaveBeenCalled();   
-            });    
+            });
+
+            it('should call connect on the websocket', function() {
+              expect(webSocket.connect).toHaveBeenCalled();
+            });
           });
 
           describe('and the user is not logged in', function() {
@@ -172,6 +179,10 @@ describe('Controller: AppCtrl', function() {
 
           it('should reload the current page', function() {
             expect($route.reload).toHaveBeenCalled();
+          });
+
+          it('should call connect on the websocket', function() {
+            expect(webSocket.connect).toHaveBeenCalled();
           });
 
         });
