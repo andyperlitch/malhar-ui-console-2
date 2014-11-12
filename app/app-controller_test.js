@@ -46,6 +46,7 @@ describe('Controller: AppCtrl', function() {
 
     beforeEach(function() {
       $location.url = jasmine.createSpy();
+      $location.search = jasmine.createSpy();
       $location.path = function() {
         return '/testing/path';
       };

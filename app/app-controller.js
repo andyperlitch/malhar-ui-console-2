@@ -54,8 +54,10 @@ angular.module('app')
               if (route !== loginScreenUrl) {
                 $log.debug('User not authenticated, redirecting to login page.');
                 $location.url(loginScreenUrl);
+                $location.search('redirect', route);
               }
               else {
+                $log.debug('User not authenticated, already on login page.');
                 $route.reload();
               }
 
@@ -84,6 +86,10 @@ angular.module('app')
       return;
     }
 
+    else {
+      $log.debug('Auth status has been retrieved');
+    }
+
     // Auth status has been retrieved
     if (authentication.isEnabled()) {
 
@@ -93,15 +99,24 @@ angular.module('app')
       var loginScreenUrl = getUri.page('Login', null, true);
 
       // Auth is enabled, check if authenticated
-      if (!authentication.isAuthenticated() && route !== loginScreenUrl) {
+      if (!authentication.isAuthenticated()) {
         
-        $log.debug('User not authenticated, redirecting to login page.');
-        $event.preventDefault();
-        $location.url(loginScreenUrl);
-        return;
+        if (route === loginScreenUrl) {
+          $log.debug('User is not authenticated, but already on login page.');
+        }
+
+        else {
+          $log.debug('User not authenticated, redirecting to login page.');
+          $event.preventDefault();
+          $location.url(loginScreenUrl);
+          return;
+        }
+
       }
 
-      $log.debug('User is authenticated.');
+      else {
+        $log.debug('User is authenticated.');  
+      }
 
     }
 
