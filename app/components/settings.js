@@ -203,6 +203,7 @@ angular.module('app.settings', [])
       killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
       launchApp                :'/ws/:v/jars/:fileName/applications/:appName/launch',
       login                    :'/ws/:v/login',
+      logout                   :'/ws/:v/logout',
       makeLicenseCurrent       :'/ws/:v/licenses/files/:fileName/makeCurrent',
       restartGateway           :'/ws/:v/config/restart',
       shutdownApp              :'/ws/:v/applications/:appId/shutdown',

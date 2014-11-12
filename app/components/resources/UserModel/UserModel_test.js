@@ -19,7 +19,7 @@
 describe('Resource: UserModel', function () {
 
   // load the service's module
-  var url, loginUrl;
+  var url, loginUrl, logoutUrl;
   beforeEach(module('app.components.resources.UserModel', function($provide) {
     $provide.value('webSocket', {
       subscribe: function() {},
@@ -30,7 +30,8 @@ describe('Resource: UserModel', function () {
         User: url = '/profile/user'
       },
       actions: {
-        login: loginUrl = '/login'
+        login: loginUrl = '/login',
+        logout: logoutUrl = '/logout'
       }
     });
   }));
@@ -183,6 +184,86 @@ describe('Resource: UserModel', function () {
         var promise = u.login('mrbojangles', 'admin');
         $httpBackend.flush();
         expect(promise.$$state.status).toEqual(2);
+      });
+
+    });
+
+  });
+
+  describe('the logout method', function() {
+
+    var u;
+
+    beforeEach(function() {
+      u = new UserModel();
+      u.set({
+        principal: 'mrbojangles',
+        authScheme: 'kerberos'
+      });
+    });
+
+    // test backend
+    var $httpBackend;
+    
+    beforeEach(inject(function(_$httpBackend_) {
+      $httpBackend = _$httpBackend_;
+    
+      // USAGE:
+      // $httpBackend.expectGET('/my-url?key=value');
+      // $httpBackend.flush();
+    }));
+    
+    afterEach(function() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should return a promise', function() {
+      $httpBackend.whenPOST(logoutUrl).respond(200, {});
+      var result = u.logout();
+      expect(typeof result.then).toEqual('function');
+      $httpBackend.flush();
+    });
+
+    it('should post to the logout url', function() {
+      $httpBackend.whenPOST(logoutUrl).respond(200, {});
+      u.logout();
+      $httpBackend.expectPOST(logoutUrl);
+      $httpBackend.flush();
+    });
+
+    describe('when the logout succeeds', function() {
+      
+      it('should clear everything in the data object', function() {
+        $httpBackend.whenPOST(logoutUrl).respond(200, {});
+        u.logout();
+        $httpBackend.flush(); 
+        expect(u.data).toEqual({});
+      });
+
+      it('should resolve the returned promise', function() {
+        $httpBackend.whenPOST(logoutUrl).respond(200, {});
+        var result = u.logout();
+        $httpBackend.flush(); 
+        expect(result.$$state.status).toEqual(1);
+      });
+
+    });
+
+    describe('when the logout fails', function() {
+      
+      it('should not clear anything in the data object', function() {
+        $httpBackend.whenPOST(logoutUrl).respond(500, {});
+        u.logout();
+        $httpBackend.flush(); 
+        expect(u.data).not.toEqual({});
+      });
+
+      it('should reject the returned promise', function() {
+        $httpBackend.whenPOST(logoutUrl).respond(500, {});
+        var result = u.logout();
+        $httpBackend.flush(); 
+        expect(result.$$state.status).toEqual(2);
       });
 
     });

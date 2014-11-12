@@ -60,7 +60,32 @@ angular.module('app.components.resources.UserModel', [
         }
       );
       return dfd.promise;
+    },
+
+    /**
+     * @ngdoc method
+     * @name  logout
+     * @description  Logs out the current user.
+     * @methodOf app.components.resources.UserModel
+     * @return {Promise}  Promise that resolves if logout was successful and rejects if logout is unsuccessful.
+     */
+    logout: function() {
+      var self = this;
+      var dfd = $q.defer();
+      var logoutUrl = getUri.action('logout');
+      $http.post(logoutUrl).then(
+        function() {
+          // Clear all data here
+          self.clear();
+          dfd.resolve();
+        },
+        function() {
+          dfd.reject();
+        }
+      );
+      return dfd.promise;
     }
+
   });
   return UserModel;
 });
