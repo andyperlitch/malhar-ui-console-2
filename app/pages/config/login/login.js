@@ -42,16 +42,22 @@ angular.module('app.pages.config.login', [
 
   // Define login action
   $scope.login = function(credentials) {
+    $scope.loginError = null;
+    $scope.attemptingLogin = true;
     userSession
-      .login(credentials.principle, credentials.password)
+      .login(credentials.principal, credentials.password)
       .then(
         function() {
           // login successful
         },
         function() {
           // login unsuccessful
+          $scope.loginError = 'Login failed.';
         }
-      );
+      )
+      .finally(function() {
+        $scope.attemptingLogin = false;
+      });
   };
 
 });

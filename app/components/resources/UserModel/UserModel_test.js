@@ -89,7 +89,7 @@ describe('Resource: UserModel', function () {
       
       _.each([401, 403], function(status) {
         it('should reset the data object', function() {
-          u.data = { scheme: 'kerberos', principle: 'mrbojangles' };
+          u.data = { scheme: 'kerberos', principal: 'mrbojangles' };
           $httpBackend.whenGET(url).respond(status, {
             message: 'unauthenticated'
           });
@@ -104,13 +104,13 @@ describe('Resource: UserModel', function () {
     describe('when the server responds with a non-auth related error code', function() {
 
       it('should not reset the data object', function() {
-          u.data = { scheme: 'kerberos', principle: 'mrbojangles' };
+          u.data = { scheme: 'kerberos', principal: 'mrbojangles' };
           $httpBackend.whenGET(url).respond(500, {
             message: 'unauthenticated'
           });
           u.fetch();
           $httpBackend.flush();
-          expect(u.data).toEqual({ scheme: 'kerberos', principle: 'mrbojangles' });
+          expect(u.data).toEqual({ scheme: 'kerberos', principal: 'mrbojangles' });
       });
 
     });
@@ -123,6 +123,7 @@ describe('Resource: UserModel', function () {
     var u, $httpBackend;
     
     beforeEach(inject(function(_$httpBackend_) {
+      spyOn(UserModel.prototype, 'set');
       u = new UserModel();
       $httpBackend = _$httpBackend_;
     
@@ -153,6 +154,16 @@ describe('Resource: UserModel', function () {
 
     describe('when the server responds with success', function() {
       
+      it('should resolve the promise returned by the login call', function() {
+        $httpBackend.whenPOST(loginUrl).respond(200, {
+          authScheme: 'kerberos',
+          principal: 'mrbojangles'
+        });
+        var promise = u.login('mrbojangles', 'admin');
+        $httpBackend.flush();
+        expect(promise.$$state.status).toEqual(1);
+      });
+
       it('should call the set method with the server response', function() {
         $httpBackend.whenPOST(loginUrl).respond(200, {
           authScheme: 'kerberos',
@@ -160,6 +171,18 @@ describe('Resource: UserModel', function () {
         });
         u.login('mrbojangles', 'admin');
         $httpBackend.flush();
+        expect(u.set).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('when the server responds with error', function() {
+      
+      it('should reject the promise returned by the login call', function() {
+        $httpBackend.whenPOST(loginUrl).respond(401, { message: 'Login failed' });
+        var promise = u.login('mrbojangles', 'admin');
+        $httpBackend.flush();
+        expect(promise.$$state.status).toEqual(2);
       });
 
     });

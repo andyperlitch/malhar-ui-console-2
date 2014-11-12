@@ -60,7 +60,7 @@ angular.module('app.components.services.authentication', [
       if (!this.isEnabled()) {
         return false;
       }
-      if (userSession.data.authScheme && userSession.data.principle) {
+      if (userSession.data.authScheme && userSession.data.principal) {
         return true;
       }
       return false;

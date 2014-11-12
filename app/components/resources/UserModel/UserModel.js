@@ -25,7 +25,7 @@
 angular.module('app.components.resources.UserModel', [
   'app.components.resources.BaseModel'
 ])
-.factory('UserModel', function(BaseModel, getUri, $http) {
+.factory('UserModel', function(BaseModel, getUri, $http, $q) {
   var UserModel = BaseModel.extend({
     debugName: 'User',
     urlKey: 'User',
@@ -41,16 +41,25 @@ angular.module('app.components.resources.UserModel', [
      * @name  login
      * @description Attempt a login with provided credentials.
      * @methodOf app.components.resources.UserModel
-     * @param  {string} userName  The username/principle to login with.
+     * @param  {string} userName  The username/principal to login with.
      * @param  {string} password  The password to login with
      * @return {Promise}          Resolves if login succeeds, rejects if login fails
      */
     login: function(userName, password) {
+      var dfd = $q.defer();
+      var self = this;
       var loginUrl = getUri.action('login');
-      return $http.post(loginUrl, {
-        userName: userName,
-        password: password
-      });
+      $http.post(loginUrl, { userName: userName, password: password }).then(
+        function(res) {
+          var data = res.data;
+          self.set(data);
+          dfd.resolve(res);
+        },
+        function(res) {
+          dfd.reject(res);
+        }
+      );
+      return dfd.promise;
     }
   });
   return UserModel;

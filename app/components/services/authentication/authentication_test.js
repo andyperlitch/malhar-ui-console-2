@@ -60,21 +60,21 @@ describe('Factory: authentication', function () {
       expect(authentication.isAuthenticated()).toEqual(false);
     });
     
-    it('should return false if userSession.authStatus is true && userSession.data.authScheme and userSession.data.principle are not defined', function() {
+    it('should return false if userSession.authStatus is true && userSession.data.authScheme and userSession.data.principal are not defined', function() {
       authentication.isEnabled = function() {
         return true;
       };
       delete userSession.data.authScheme;
-      delete userSession.data.principle;
+      delete userSession.data.principal;
       expect(authentication.isAuthenticated()).toEqual(false);
     });
 
-    it('should return true if userSession.authStatus and userSession.data.authScheme and userSession.data.principle', function() {
+    it('should return true if userSession.authStatus and userSession.data.authScheme and userSession.data.principal', function() {
       authentication.isEnabled = function() {
         return true;
       };
       userSession.data.authScheme = 'kerberos';
-      userSession.data.principle = 'mrbojangles';
+      userSession.data.principal = 'mrbojangles';
       expect(authentication.isAuthenticated()).toEqual(true);
     });
 
