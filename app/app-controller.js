@@ -18,13 +18,35 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function (settings, $log, authentication, userStorage, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri, webSocket) {
+.controller('AppCtrl', function (settings, $log, authentication, userStorage, userSession, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri, webSocket) {
   // Initialize options
   breadcrumbs.options = {};
 
   // Set to scope
   $scope.breadcrumbs = breadcrumbs;
   $scope.$routeParams = $routeParams;
+  $scope.userSession = userSession;
+  $scope.authentication = authentication;
+
+  // Create logout method
+  $scope.logout = function() {
+    $scope.loggingOut = true;
+    userSession.logout().then(
+      function() {
+        var path = $location.path();
+        routeChangeHandler({ preventDefault: angular.noop }, path);
+      },
+      function(res) {
+        $log.error('Logout failed. Response: ', res);
+        notificationService.error({
+          title: dtText.get('Could not logout!'),
+          text: dtText.get('An error occurred trying to logout of the system. Please contact your network administrator. More details have been logged to the browser console.')
+        });
+      }
+    ).finally(function() {
+      $scope.loggingOut = false;
+    });
+  };
 
   // Route events
   function routeChangeHandler($event, route) {

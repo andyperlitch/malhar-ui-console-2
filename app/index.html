@@ -53,6 +53,13 @@
             <!-- <form class="navbar-form navbar-right">
               <input type="text" class="form-control" placeholder="Search...">
             </form> -->
+            <div ng-if="authentication.isEnabled() && authentication.isAuthenticated()" ng-cloak id="user-session-info">
+              <span>
+                Hello, {{ userSession.data.principal }}.
+                <a href="" ng-hide="loggingOut" ng-click="logout()">logout <span class="glyphicon glyphicon-log-out"></span></a>
+                <span ng-show="loggingOut">logging out...</a>
+              </span>
+            </div>
           </div>
         </div>
       </div>

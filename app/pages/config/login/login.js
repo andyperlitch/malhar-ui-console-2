@@ -35,7 +35,7 @@ angular.module('app.pages.config.login', [
 })
 
 // Controller
-.controller('LoginPageCtrl', function($scope, userSession) {
+.controller('LoginPageCtrl', function($scope, userSession, $location) {
 
   // Initialize credentials object
   $scope.credentials = {};
@@ -49,6 +49,11 @@ angular.module('app.pages.config.login', [
       .then(
         function() {
           // login successful
+          var redirectUrl = $location.search().redirect;
+          if (typeof redirectUrl !== 'string' || !redirectUrl.length) {
+            redirectUrl = '/ops';
+          }
+          $location.url(redirectUrl);
         },
         function() {
           // login unsuccessful
