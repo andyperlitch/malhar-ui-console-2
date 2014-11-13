@@ -35,6 +35,7 @@ describe('Factory: operatorManager', function () {
         POLLING_FOR_RECORDING_INTERVAL: 1000
       }
     });
+    $provide.value('webSocket', {});
   }));
 
   // instantiate service
@@ -72,6 +73,7 @@ describe('Factory: operatorManager', function () {
       portUrl = '/apps/' + appId + '/physOps/' + opId + '/ports/' + portName + '/recordings/start';
       $httpBackend.whenPOST(opUrl).respond({});
       $httpBackend.whenPOST(portUrl).respond({});
+      spyOn(operatorManager, 'pollForRecording');
     });
     
     it('should be a function', function() {
@@ -159,9 +161,10 @@ describe('Factory: operatorManager', function () {
     });
 
     it('should return a promise', function() {
-       var result = operatorManager.pollForRecording(appId, opUrl, portUrl);
+       var result = operatorManager.pollForRecording(appId, opId, portUrl);
        expect(typeof result).toEqual('object');
        expect(typeof result.then).toEqual('function');
+       $httpBackend.flush();
     });
 
   });
