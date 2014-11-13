@@ -110,15 +110,6 @@ angular.module('app.components.resources.BaseModel', [
       _.extend(this.data, data);
     },
 
-    // TEMP FIX UNTIL RECORDING BRANCH IS MERGED
-    // the recording branch has the proper ngdocs
-    // for this service.
-    /**
-      * @ngdoc service
-      * @name app.components.resources.BaseModel
-    **/
-    // END TEMP FIX
-
     /**
      * @ngdoc method
      * @name  clear
