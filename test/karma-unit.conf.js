@@ -32,6 +32,7 @@ module.exports = function(config, chain) {
     'app/components/**/*_test.js',
     'app/pages/**/*_test.js',
     'app/app_test.js',
+    'app/app-controller_test.js',
 
     // template files
     'app/components/**/*.html',

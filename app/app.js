@@ -42,14 +42,17 @@ angular.module('app', [
   'app.components.directives.dtSpinner',
   'app.components.services.dtText',
   'app.components.services.extend',
+  'app.components.services.getUri',
   'app.components.services.userStorage',
   'app.components.services.setupBreadcrumbs',
+  'app.components.services.authentication',
 
   // pages
   'app.pages.config',
   'app.pages.config.installWizard',
   'app.pages.config.licenseInfo',
   'app.pages.config.systemDiagnostics',
+  'app.pages.config.login',
 
   'app.pages.ops',
   'app.pages.ops.appInstance',
@@ -78,6 +81,7 @@ angular.module('app', [
     var ws_proto = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
     webSocketProvider.setWebSocketURL(ws_proto + host + '/pubsub');
     webSocketProvider.setVisibilityTimeout(settings.VISIBILITY_TIMEOUT);
+    webSocketProvider.setExplicitConnection(true);
 
     // userStorage save function
     userStorageProvider.setSaveFunction(function() {
@@ -90,25 +94,6 @@ angular.module('app', [
         redirectTo: '/ops'
       });
 
-  })
-  .run(function(userStorage, settings, $log) {
-    // load saved state in userStorage
-    var json = localStorage.getItem(settings.STORAGE_KEY);
-    var storage;
-
-    if (json) {
-      try {
-        storage = JSON.parse(json);
-      } catch (e) {
-        $log.warn('State from localStorage could not be parsed! ', e);
-        localStorage.removeItem(settings.STORAGE_KEY);
-        storage = {};
-      }
-    } else {
-      storage = {};
-    }
-      
-    userStorage.load(storage);
   });
 
 angular.module('exceptionOverride', []).factory('$exceptionHandler', function () {
