@@ -32,7 +32,7 @@ angular.module('app.components.resources.UserModel', [
     onFetchError: function(res) {
       // Check for authentication issue
       if (res.status === 401 || res.status === 403) {
-        this.data = {};
+        this.clear();
       }
       BaseModel.prototype.onFetchError.call(this, res);
     },

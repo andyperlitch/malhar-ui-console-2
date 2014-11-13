@@ -161,13 +161,6 @@ function startServer(baseDirs, port) {
   // END MOCK CALLS FOR CONFIG ISSUES
   // --------------------------------
   
-  // --------------------
-  // MOCK CALLS FOR LOGIN
-  // --------------------
-  // require('./mockLoginCalls')(app);
-  // ------------------------
-  // END MOCK CALLS FOR LOGIN
-  // ------------------------
   
   app.use(livereload({ port: 35729 }));
 
