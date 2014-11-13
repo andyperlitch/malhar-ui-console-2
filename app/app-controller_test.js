@@ -18,15 +18,16 @@
 
 describe('Controller: AppCtrl', function() {
 
-  var $scope, $q, authentication, $location, $route, notifier, getUri, userSession, webSocket;
+  var $scope, $q, authentication, $location, $route, notifier, getUri, userSession, webSocket, $log, setupBreadcrumbs;
 
   beforeEach(module('app', function($provide) {
     $provide.value('userSession', userSession = {});
   }));
 
-  beforeEach(inject(function($rootScope, $controller, _$q_){
+  beforeEach(inject(function($rootScope, $controller, _$q_, _$log_){
     $scope = $rootScope.$new();
     $q = _$q_;
+    $log = _$log_;
     $controller('AppCtrl', {
       $scope: $scope,
       authentication: authentication = {},
@@ -36,7 +37,8 @@ describe('Controller: AppCtrl', function() {
       $route: $route = {},
       webSocket: webSocket = {
         connect: jasmine.createSpy()
-      }
+      },
+      setupBreadcrumbs: setupBreadcrumbs = jasmine.createSpy()
     });
   }));
 
@@ -50,8 +52,8 @@ describe('Controller: AppCtrl', function() {
       $location.path = function() {
         return '/testing/path';
       };
-      getUri.page = function(key) {
-        if (key === 'Login') {
+      getUri.page = function(key, params, noHash) {
+        if (key === 'Login' && noHash) {
           return '/testing/login';
         }
         return '/not/the/page';
@@ -243,17 +245,37 @@ describe('Controller: AppCtrl', function() {
         });
 
         describe('and the user is not logged in', function() {
-          
+
           beforeEach(function() {
             authentication.isAuthenticated = function() {
               return false;
             };
-            obj.handler($event, url);
+          });
+                    
+          describe('and the current page is not the login page', function() {
+            beforeEach(function() {
+              obj.handler($event, url);
+            });
+
+            it('should stop the current page from loading and redirect to the login page', function() {
+              expect($event.preventDefault).toHaveBeenCalled();
+              expect($location.url).toHaveBeenCalledWith('/testing/login');
+            });
+
           });
 
-          it('should stop the current page from loading and redirect to the login page', function() {
-            expect($event.preventDefault).toHaveBeenCalled();
-            expect($location.url).toHaveBeenCalledWith('/testing/login');
+          describe('and the current page is the login page', function() {
+            beforeEach(function() {
+              $location.path = function() {
+                return '/testing/login';
+              };
+              obj.handler($event, url);
+            });
+
+            it('should not stop the current page from loading', function() {
+              expect($event.preventDefault).not.toHaveBeenCalled();
+            });
+
           });
 
         });
@@ -276,6 +298,90 @@ describe('Controller: AppCtrl', function() {
 
       });
 
+    });
+
+  });
+
+  describe('the logout function', function() {
+
+    var dfd, obj;
+
+    beforeEach(function() {
+      dfd = $q.defer();
+      userSession.logout = function() {
+        return dfd.promise;
+      };
+      $location.path = function() {
+        return '/current/path';
+      };
+      getUri.page = function(key, params, noHash) {
+        if (key === 'Login' && noHash) {
+          return '/login/page';
+        }
+        return '/not/login';
+      };
+      $location.url = jasmine.createSpy();
+      $location.search = jasmine.createSpy();
+      spyOn(userSession, 'logout').and.callThrough();
+    });
+    
+    it('should be a function', function() {
+      expect(typeof $scope.logout).toEqual('function');
+    });
+
+    it('should call userSession.logout', function() {
+      $scope.logout();
+      expect(userSession.logout).toHaveBeenCalled();
+    });
+
+    it('should set loggingOut on scope to true', function() {
+      $scope.logout();
+      expect($scope.loggingOut).toEqual(true);
+    });
+
+    describe('when the logout promise resolves', function() {
+      
+      beforeEach(function() {
+        $scope.logout();
+        dfd.resolve();
+        $scope.$digest();
+      });
+
+      it('should redirect the page to the login page, with a redirect to the original page', function() {
+        expect($location.url).toHaveBeenCalledWith('/login/page');
+        expect($location.search).toHaveBeenCalledWith('redirect', '/current/path');
+      });
+
+    });
+
+    describe('when the logout promise rejects', function() {
+      
+      beforeEach(function() {
+        spyOn($log, 'error');
+        notifier.error = jasmine.createSpy();
+        $scope.logout();
+        dfd.reject();
+        $scope.$digest();
+      });
+
+      it('should call notificationService.error and $log.error', function() {
+        expect($log.error).toHaveBeenCalled();
+        expect(notifier.error).toHaveBeenCalled();
+      });    
+
+    });
+
+  });
+
+  describe('the $routeChangeSuccess handler', function() {
+    
+    it('should be there', function() {
+      expect($scope.$$listeners.$routeChangeSuccess.length).toEqual(1);
+    });
+
+    it('should call setupBreadcrumbs', function() {
+      $scope.$$listeners.$routeChangeSuccess[0]();
+      expect(setupBreadcrumbs).toHaveBeenCalled();
     });
 
   });

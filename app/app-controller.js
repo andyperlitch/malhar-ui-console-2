@@ -33,8 +33,10 @@ angular.module('app')
     $scope.loggingOut = true;
     userSession.logout().then(
       function() {
+        var loginScreenUrl = getUri.page('Login', null, true);
         var path = $location.path();
-        routeChangeHandler({ preventDefault: angular.noop }, path);
+        $location.url(loginScreenUrl);
+        $location.search('redirect', path);
       },
       function(res) {
         $log.error('Logout failed. Response: ', res);
