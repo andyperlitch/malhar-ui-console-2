@@ -53,6 +53,13 @@
             <!-- <form class="navbar-form navbar-right">
               <input type="text" class="form-control" placeholder="Search...">
             </form> -->
+            <div ng-if="authentication.isEnabled() && authentication.isAuthenticated()" ng-cloak id="user-session-info">
+              <span>
+                Hello, {{ userSession.data.principal }}.
+                <a href="" ng-hide="loggingOut" ng-click="logout()">logout <span class="glyphicon glyphicon-log-out"></span></a>
+                <span ng-show="loggingOut">logging out...</a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -265,7 +272,9 @@
     <script src="components/resources/RecordingModel/RecordingModel.js"></script>
     <script src="components/resources/StramEventCollection/StramEventCollection.js"></script>
     <script src="components/resources/StramEventModel/StramEventModel.js"></script>
+    <script src="components/resources/UserModel/UserModel.js"></script>
     <script src="components/services/appManager/appManager.js"></script>
+    <script src="components/services/authentication/authentication.js"></script>
     <script src="components/services/clientSettings/clientSettings.js"></script>
     <script src="components/services/confirm/confirm.js"></script>
     <script src="components/services/containerManager/containerManager.js"></script>
@@ -279,6 +288,7 @@
     <script src="components/services/operatorManager/operatorManager.js"></script>
     <script src="components/services/setupBreadcrumbs/setupBreadcrumbs.js"></script>
     <script src="components/services/tableOptionsFactory/tableOptionsFactory.js"></script>
+    <script src="components/services/userSession/userSession.js"></script>
     <script src="components/services/userStorage/userStorage.js"></script>
     <script src="components/services/visibly/visibly.js"></script>
     <script src="components/settings.js"></script>
@@ -303,6 +313,7 @@
     <script src="pages/config/installWizard/summary/InstallWizardSummaryCtrl.js"></script>
     <script src="pages/config/installWizard/welcome/InstallWizardWelcomeCtrl.js"></script>
     <script src="pages/config/licenseInfo/licenseInfo.js"></script>
+    <script src="pages/config/login/login.js"></script>
     <script src="pages/config/systemDiagnostics/systemDiagnostics.js"></script>
     <script src="pages/dev/apache-log/apache-log-controller.js"></script>
     <script src="pages/dev/etl/etl-controller.js"></script>

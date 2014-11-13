@@ -17,7 +17,7 @@
 
 describe('Top-level app module', function() {
 
-  var storageKey = 'testing';
+  var storageKey = 'testing', $scope;
 
   beforeEach(function() {
     angular.module('datatorrent.mlhrTable',[]);
@@ -33,6 +33,15 @@ describe('Top-level app module', function() {
     beforeEach(module('app', function($provide) {
       $provide.constant('settings', {
         STORAGE_KEY: storageKey
+      });
+      $provide.value('userSession', {});
+    }));
+
+    // controller needs to be created
+    beforeEach(inject(function($rootScope, $controller){
+      $scope = $rootScope.$new();
+      $controller('AppCtrl', {
+        $scope: $scope
       });
     }));
 
@@ -61,8 +70,16 @@ describe('Top-level app module', function() {
       $provide.constant('settings', {
         STORAGE_KEY: storageKey
       });
+      $provide.value('userSession', {});
       $provide.value('$log', $log = {
         warn: jasmine.createSpy()
+      });
+    }));
+    // controller needs to be created
+    beforeEach(inject(function($rootScope, $controller){
+      $scope = $rootScope.$new();
+      $controller('AppCtrl', {
+        $scope: $scope
       });
     }));
 
@@ -86,6 +103,14 @@ describe('Top-level app module', function() {
     beforeEach(module('app', function($provide) {
       $provide.constant('settings', {
         STORAGE_KEY: storageKey
+      });
+      $provide.value('userSession', {});
+    }));
+    // controller needs to be created
+    beforeEach(inject(function($rootScope, $controller){
+      $scope = $rootScope.$new();
+      $controller('AppCtrl', {
+        $scope: $scope
       });
     }));
 

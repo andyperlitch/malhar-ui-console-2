@@ -1,0 +1,24 @@
+<form novalidate ng-submit="login(credentials)" class="info-page-container" id="login-page-form" name="login_form">
+  <h1 class="h3">Login</h1>
+  <p ng-if="loginError" class="alert-danger alert">
+    {{ loginError }}
+  </p>
+  <p ng-if="attemptingLogin" class="alert alert-info" dt-text>Logging in...</p>
+  <p>
+    <label for="principal"><span class="glyphicon glyphicon-user"></span> username</label>
+    <input type="text" name="principal" class="form-control" ng-model="credentials.principal" required>
+    <span ng-messages="login_form.principal.$error" class="help-block" ng-show="login_form.principal.$touched">
+      <span class="text-danger" ng-message="required" dt-text>Username is required.</span>
+    </span>
+  </p>
+
+  <p>
+    <label for="password"><span class="glyphicon glyphicon-lock"></span> password</label>
+    <input type="password" name="password" class="form-control" ng-model="credentials.password" required>
+    <span ng-messages="login_form.password.$error" class="help-block" ng-show="login_form.password.$touched">
+      <span class="text-danger" ng-message="required" dt-text>Password is required.</span>
+    </span>
+  </p>
+  <hr>
+  <button type="submit" class="btn btn-success submit-btn" ng-disabled="attemptingLogin || login_form.$invalid">{{ attemptingLogin ? 'Logging in...' : 'Login' }}</button>
+</form>

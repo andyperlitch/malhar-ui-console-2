@@ -110,6 +110,29 @@ angular.module('app.components.resources.BaseModel', [
       _.extend(this.data, data);
     },
 
+    // TEMP FIX UNTIL RECORDING BRANCH IS MERGED
+    // the recording branch has the proper ngdocs
+    // for this service.
+    /**
+      * @ngdoc service
+      * @name app.components.resources.BaseModel
+    **/
+    // END TEMP FIX
+
+    /**
+     * @ngdoc method
+     * @name  clear
+     * @description  Clears out this.data object by deleting all keys.
+     * @methodOf app.components.resources.BaseModel
+     */
+    clear: function() {
+      for (var k in this.data) {
+        if (this.data.hasOwnProperty(k)) {
+          delete this.data[k];
+        }
+      }
+    },
+
     debugName: 'model',
 
     idAttribute: 'id'

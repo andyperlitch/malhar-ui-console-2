@@ -135,4 +135,24 @@ describe('BaseModel', function () {
     });
   });
 
+  describe('the clear method', function() {
+    var M, m;
+
+    beforeEach(function() {
+      M = BaseModel.extend({
+        urlKey: 'somekey'
+      });
+      m = new M();
+    });
+
+    it('should clear this.data object and be the same object as before', function() {
+      var thisdata = m.data;
+      m.set({ cool: 'stuff', bruce: 'lee', chuck: 'norris' });
+      m.clear();
+      expect(m.data === thisdata).toEqual(true);
+      expect(JSON.stringify(m.data)).toEqual('{}');
+    });
+
+  });
+
 });
