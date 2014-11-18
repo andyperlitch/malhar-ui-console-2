@@ -15,17 +15,17 @@
 */
 'use strict';
 
-angular.module('app.components.services.userSession', [
+angular.module('app.components.services.currentUser', [
   'app.components.resources.UserModel'
 ])
   /**
     * @ngdoc service
-    * @name app.components.services.userSession
+    * @name app.components.services.currentUser
     * @description 
     * Holds the user's state as far as authentication and authorization is concerned. 
     * <br>This is an instance of {@link app.components.resources.UserModel UserModel}.
   **/
-  .factory('userSession', function(UserModel) {
+  .factory('currentUser', function(UserModel) {
 
     return new UserModel();
 

@@ -20,6 +20,14 @@
 angular.module('app.components.resources.${16:${15:MyNew}${20:Model}}', [
   'app.components.resources.BaseModel'
 ])
+/**
+ * @ngdoc service
+ * @name  app.components.resources.$16
+ * @description  Represents a $15
+ * @requires  app.settings
+ * @requires  app.components.services.getUri
+ * @requires  app.components.resources.BaseModel
+ */
 .factory('$16', function(BaseModel) {
   var $16 = BaseModel.extend({
     debugName: '${30:$15}',

@@ -108,6 +108,7 @@ angular.module('app.components.resources.BaseModel', [
      */
     set: function(data) {
       _.extend(this.data, data);
+      return this;
     },
 
     /**

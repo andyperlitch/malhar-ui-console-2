@@ -18,7 +18,8 @@
 angular.module('app.pages.dev.packages.package.newAppModal', [
   'ui.bootstrap.modal',
   'app.components.filters.urlFriendly',
-  'app.components.resources.PackageApplicationModel'
+  'app.components.resources.PackageApplicationModel',
+  'ui.bootstrap.modal'
 ])
 .factory('newAppModal', function($modal, $timeout) {
   return function() {

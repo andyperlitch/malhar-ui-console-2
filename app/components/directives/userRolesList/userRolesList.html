@@ -1,0 +1,21 @@
+<span ng-if="!user.data.roles.length" class="label label-default">no roles</span>
+<span ng-repeat="role in user.data.roles">
+  <span class="label label-primary">
+    {{ role }}
+    <span 
+      class="fa fa-times remove-label"
+      ng-click="removeRole(role)"
+      ng-if="currentUser.can('MANAGE_USERS')"></span
+  ></span>
+</span>
+<span class="label label-success dropdown" ng-if="currentUser.can('MANAGE_USERS')">
+  <a href class="dropdown-toggle" dt-text-tooltip="Add role" tooltip-popup-delay="0">
+    <span class="fa fa-plus"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header">choose role to add:</li>
+    <li ng-repeat="roleChoice in roles.data">
+      <a href ng-click="addRole(roleChoice.name)">{{ roleChoice.name }}</a>
+    </li>
+  </ul>
+</span>

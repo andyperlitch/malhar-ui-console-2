@@ -55,11 +55,22 @@
             </form> -->
             <div ng-if="authentication.isEnabled() && authentication.isAuthenticated()" ng-cloak id="user-session-info">
               <span>
-                Hello, {{ userSession.data.principal }}.
-                <a href="" ng-hide="loggingOut" ng-click="logout()">logout <span class="glyphicon glyphicon-log-out"></span></a>
-                <span ng-show="loggingOut">logging out...</a>
+                Hello, {{ currentUser.data.userName }}.
+                <span ng-show="loggingOut">logging out...</span>
+                <span ng-hide="loggingOut">
+
+                  <a dt-page-href="UserProfile" dt-text-tooltip="profile" tooltip-popup-delay="0" tooltip-placement="bottom">
+                    <span class="fa fa-user"></span>
+                  </a>
+
+                  <a href="" ng-click="logout()" dt-text-tooltip="logout" tooltip-popup-delay="0" tooltip-placement="bottom">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                  </a>
+
+                </span>
               </span>
             </div>
+            
           </div>
         </div>
       </div>
@@ -113,7 +124,8 @@
           <!-- breadcrumbs -->
           <div class="container-fluid">
             <div class="row">
-              <ol class="ab-nav breadcrumb" id="breadcrumbs-top">
+              <ol class="ab-nav breadcrumb" id="breadcrumbs-top" ng-cloak>
+                <li ng-if="!breadcrumbs.get().length" dt-text class="active"><span dt-text>loading...</span></li>
                 <li ng-repeat-start="breadcrumb in breadcrumbs.get() track by breadcrumb.path" ng-if="breadcrumb.route.collection">
                   <span dt-breadcrumb-collection="breadcrumb.route.collection" route-params="$routeParams" class="breadcrumb-collection-container"></span>
                 </li>
@@ -126,6 +138,15 @@
           </div>
 
           <!-- main view area -->
+          <div class="page-loading-div" ng-if="!authentication.hasRetrievedAuthStatus()">
+            <h2 class="h4" dt-text>loading console</h2>
+            <div class="spinner">
+              <div class="rect1"></div>
+              <div class="rect2"></div>
+              <div class="rect3"></div>
+              <div class="rect4"></div>
+            </div>
+          </div>
           <div class="container-fluid main-page-view" ng-view="" ng-animate></div>
         </td>
       </tr>
@@ -172,8 +193,8 @@
     <script src="bower_components/angular-pines-notify/src/pnotify.js"></script>
     <script src="bower_components/ng-breadcrumbs/dist/ng-breadcrumbs.min.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
-    <script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
     <script src="bower_components/d3/d3.js"></script>
     <script src="bower_components/angular-jsbn-big-integer/big-integer.js"></script>
     <script src="bower_components/ng-grid/build/ng-grid.js"></script>
@@ -182,8 +203,10 @@
     <script src="bower_components/visibilityjs/lib/visibility.core.js"></script>
     <script src="bower_components/visibilityjs/lib/visibility.timers.js"></script>
     <script src="bower_components/dagre-d3/js/dagre-d3.js"></script>
+    <script src="bower_components/dagre-d3/js/dagre-d3.min.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
+    <script src="bower_components/angular-ui-utils/validate.js"></script>
     <!-- endbower -->
     <script src="bower_components/malhar-angular-table/dist/mlhr-table.js"></script>
     <script src="bower_components/malhar-angular-widgets/dist/malhar-angular-widgets.js"></script>
@@ -211,6 +234,7 @@
     <script src="components/directives/dtTableResize/dtTableResize.js"></script>
     <script src="components/directives/dtTableSelectedCount/dtTableSelectedCount.js"></script>
     <script src="components/directives/dtText/dtText.js"></script>
+    <script src="components/directives/focusOn/focusOn.js"></script>
     <script src="components/directives/jsplumbContainer/jsplumbContainer.js"></script>
     <script src="components/directives/licenseMemoryUsage/licenseMemoryUsage.js"></script>
     <script src="components/directives/logicalOperatorStatus/logicalOperatorStatus.js"></script>
@@ -218,6 +242,7 @@
     <script src="components/directives/queryEditor/queryEditor.js"></script>
     <script src="components/directives/toggleText/toggleText.js"></script>
     <script src="components/directives/uiResizable/uiResizable.js"></script>
+    <script src="components/directives/userRolesList/userRolesList.js"></script>
     <script src="components/directives/validation/greaterThan/greaterThan.js"></script>
     <script src="components/directives/validation/readableBytes/readableBytes.js"></script>
     <script src="components/directives/validation/uniqueInSet/uniqueInSet.js"></script>
@@ -271,11 +296,15 @@
     <script src="components/resources/PortModel/PortModel.js"></script>
     <script src="components/resources/RecordingCollection/RecordingCollection.js"></script>
     <script src="components/resources/RecordingModel/RecordingModel.js"></script>
+    <script src="components/resources/RoleCollection/RoleCollection.js"></script>
+    <script src="components/resources/RoleModel/RoleModel.js"></script>
     <script src="components/resources/StramEventCollection/StramEventCollection.js"></script>
     <script src="components/resources/StramEventModel/StramEventModel.js"></script>
+    <script src="components/resources/UserCollection/UserCollection.js"></script>
     <script src="components/resources/UserModel/UserModel.js"></script>
     <script src="components/services/appManager/appManager.js"></script>
     <script src="components/services/authentication/authentication.js"></script>
+    <script src="components/services/changePasswordModal/changePasswordModal.js"></script>
     <script src="components/services/clientSettings/clientSettings.js"></script>
     <script src="components/services/confirm/confirm.js"></script>
     <script src="components/services/containerManager/containerManager.js"></script>
@@ -306,6 +335,9 @@
     <script src="components/widgets/dag/physical/physicalDagDirective.js"></script>
     <script src="components/widgets/fileUpload/fileUpload.js"></script>
     <script src="components/widgets/fileUpload/fileUploadConfig.js"></script>
+    <script src="pages/config/authManagement/authManagement.js"></script>
+    <script src="pages/config/authManagement/newRoleModal.js"></script>
+    <script src="pages/config/authManagement/newUserModal.js"></script>
     <script src="pages/config/config.js"></script>
     <script src="pages/config/installWizard/hadoop/InstallWizardHadoopCtrl.js"></script>
     <script src="pages/config/installWizard/installWizard.js"></script>
@@ -315,6 +347,7 @@
     <script src="pages/config/installWizard/welcome/InstallWizardWelcomeCtrl.js"></script>
     <script src="pages/config/licenseInfo/licenseInfo.js"></script>
     <script src="pages/config/login/login.js"></script>
+    <script src="pages/config/profile/profile.js"></script>
     <script src="pages/config/systemDiagnostics/systemDiagnostics.js"></script>
     <script src="pages/dev/apache-log/apache-log-controller.js"></script>
     <script src="pages/dev/etl/etl-controller.js"></script>

@@ -1,0 +1,58 @@
+<div class="container info-page-container">
+  <h1><span class="fa fa-user"></span> <span dt-text>User Profile</span></h1>
+  <hr>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="h3">Info</h2>  
+      <h5><span class="text-muted" dt-text>username</span>: {{ currentUser.data.userName }}</h5>
+      <h5><span class="text-muted" dt-text>authentication scheme</span>: {{ currentUser.data.authScheme }}</h5>
+    </div>
+
+    <div class="col-md-6">
+      <h2 class="h3">Roles</h2>
+      <p class="text-muted">You have the following roles:</p>
+      <p>
+        <span ng-repeat="role in currentUser.data.roles">
+          <span class="fa fa-user"></span>
+          {{ role }}
+        </span>
+      </p>
+    </div>
+  </div>
+    
+  <hr>
+
+  <h2 class="h3">Permissions</h2>
+  <p class="text-muted">You have the following permissions:</p>
+  <div class="row">
+    <div ng-repeat="(key, ability) in PERMISSIONS" class="col-sm-4">
+      <span ng-class="currentUser.can(key) ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'"></span>
+      {{ key }}
+    </div>
+  </div>
+  <hr>
+
+  <!-- <h2 class="h3">Console Settings</h2>
+  <p class="text-muted">These are your settings for tables and dashboards in the console.</p>
+
+  <form class="row">
+    
+    <div class="col-sm-4">
+      <label for="HOME_PAGE">Start page</label>
+      <select name="HOME_PAGE" ng-model="consoleSettings.HOME_PAGE" class="form-control" ng-options="page for page in startPageOptions">
+        <option value="">default ( {{ settings.DEFAULT_HOME_PAGE }} )</option>
+      </select>
+      <p class="help-block">
+        The page to load by default when you open the console and have signed in.
+        Defaults to <strong>{{ settings.DEFAULT_HOME_PAGE }}</strong>. Do not include "/#" in the path.
+      </p>
+    </div>
+
+  </form>
+
+  <h3 class="h4">Restore Defaults</h3>
+  <p>Reset console settings to defaults by pressing the button below.</p>
+  <button ng-click="clearSettings()" class="btn btn-danger">restore defaults</button> -->
+
+</div>

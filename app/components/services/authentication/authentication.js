@@ -17,7 +17,7 @@
 
 angular.module('app.components.services.authentication', [
   'app.settings',
-  'app.components.services.userSession',
+  'app.components.services.currentUser',
   'app.components.services.getUri'
 ])
 
@@ -25,11 +25,11 @@ angular.module('app.components.services.authentication', [
    * @ngdoc service
    * @name  app.components.services.authentication
    * @description  Service for managing authentication and authorization.
-   * @requires  app.components.services.userSession
+   * @requires  app.components.services.currentUser
    * @requires  app.components.services.getUri
    * @requires  app.settings
    */
-  .factory('authentication', function(settings, userSession, $http, getUri, $q) {
+  .factory('authentication', function(settings, currentUser, $http, getUri, $q) {
     
     var authentication = {};
     var authStatusChecked = false;
@@ -60,7 +60,7 @@ angular.module('app.components.services.authentication', [
       if (!this.isEnabled()) {
         return false;
       }
-      if (userSession.data.authScheme && userSession.data.principal) {
+      if (currentUser.data.authScheme && currentUser.data.userName) {
         return true;
       }
       return false;
@@ -69,7 +69,7 @@ angular.module('app.components.services.authentication', [
     /**
      * @ngdoc method
      * @name  retrieveAuthStatus
-     * @description  GETs information from the Gateway about authentication status. Sets userSession.authStatus to true or false.
+     * @description  GETs information from the Gateway about authentication status. Sets currentUser.authStatus to true or false.
      * @methodOf app.components.services.authentication
      * @return {Promise}   Resolves when this action has completed
      */
@@ -77,10 +77,10 @@ angular.module('app.components.services.authentication', [
       
       var dfd = $q.defer();
 
-      userSession.fetch().then(
+      currentUser.fetch().then(
         function() {
           // check if authScheme is empty
-          if (userSession.data.authScheme) {
+          if (currentUser.data.authScheme) {
             authStatus = true;
           }
           else {

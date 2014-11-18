@@ -75,7 +75,14 @@ angular.module('app.components.resources.BaseCollection', [
        *              especially with large datasets.
        * @type {Boolean}
        */
-      alwaysReset: false
+      alwaysReset: false,
+
+      /**
+       * If enabled, the "set" method will assume it is being passed
+       * pojos rather than an instance of BaseModel.
+       * @type {Boolean}
+       */
+      pojos: false
     },
 
     /**

@@ -25,6 +25,7 @@ angular.module('app.settings', [])
   .constant('settings', {
     //wsRoot: 'http://localhost:3000',
     alertUrlRoot: '/alerts',
+    DEFAULT_HOME_PAGE: '/ops',
     GATEWAY_WEBSOCKET_HOST: null,
     GATEWAY_API_VERSION: 'v1',
     STREAM_LOCALITIES: [
@@ -200,9 +201,11 @@ angular.module('app.settings', [])
       PortAttributes           :'/ws/v1/applications/:appId/logicalPlan/operators/:operatorName/ports/:portName/attributes',
       Recording                :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings',
       RecordingTuples          :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/recordings/:startTime/tuples',
+      Role                     :'/ws/:v/auth/roles',
       StramEvent               :'/ws/:v/applications/:appId/events',
       PhysicalStream           :'/ws/:v/applications/:appId/physicalPlan/streams',
       User                     :'/ws/:v/profile/user',
+      Users                    :'/ws/:v/auth/users',
       Packages                 :'/ws/:v/appPackages',
       Package                  :'/ws/:v/appPackages/:packageName/:packageVersion',
       PackageImport            :'/ws/:v/appPackages/import',
@@ -259,11 +262,14 @@ angular.module('app.settings', [])
      */
     pages: {
       // Configuration
+      AuthManagement           :'/config/auth-management',
       Config                   :'/config',
       InstallWizard            :'/config/installation-wizard',
       LicenseInfo              :'/config/license-information',
       Login                    :'/login',
       SystemDiagnostics        :'/config/system-diagnostics',
+      UserProfile              :'/config/profile',
+      EditUser                 :'/config/auth-management/edit-user/:userName',
 
       // Operations
       AppInstance              :'/ops/apps/:appId',
@@ -373,5 +379,20 @@ angular.module('app.settings', [])
        */
       POLLING_FOR_RECORDING_INTERVAL: 1000
     }
-
+  })
+  .constant('PERMISSIONS', {
+    VIEW_OTHERS_APPS: 'VIEW_OTHERS_APPS',
+    EDIT_AND_KILL_OTHERS_APPS: 'EDIT_AND_KILL_OTHERS_APPS',
+    VIEW_GLOBAL_CONFIG: 'VIEW_GLOBAL_CONFIG',
+    EDIT_GLOBAL_CONFIG: 'EDIT_GLOBAL_CONFIG',
+    ACCESS_RM_PROXY: 'ACCESS_RM_PROXY',
+    VIEW_LICENSES: 'VIEW_LICENSES',
+    MANAGE_LICENSES: 'MANAGE_LICENSES',
+    VIEW_APP_PACKAGES: 'VIEW_APP_PACKAGES',
+    LAUNCH_APP_PACKAGES: 'LAUNCH_APP_PACKAGES',
+    MANAGE_APP_PACKAGES: 'MANAGE_APP_PACKAGES',
+    MANAGE_USERS: 'MANAGE_USERS',
+    MANAGE_ROLES: 'MANAGE_ROLES',
+    VIEW_SYSTEM_ALERTS: 'VIEW_SYSTEM_ALERTS',
+    MANAGE_SYSTEM_ALERTS: 'MANAGE_SYSTEM_ALERTS'
   });
