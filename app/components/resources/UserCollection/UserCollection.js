@@ -35,7 +35,8 @@ angular.module('app.components.resources.UserCollection', [
     model: UserModel,
 
     defaultSetOptions: {
-      alwaysReset: true
+      alwaysReset: true,
+      remove: true
     },
 
     ///////////////////////////////////////////////////

@@ -579,6 +579,17 @@ describe('Resource: UserModel', function () {
       $httpBackend.flush();
     });
 
+    it('should not resolve the promise until the DELETE call has returned', function() {
+      $httpBackend.expectDELETE(delUrl);
+      var thenListener = jasmine.createSpy('thenListener');
+      u.delete().then(thenListener);
+      confirmDfd.resolve();
+      $rootScope.$apply();
+      expect(thenListener).not.toHaveBeenCalled();
+      $httpBackend.flush();
+      expect(thenListener).toHaveBeenCalled();
+    });
+
     describe('when the force flag is used', function() {
 
       it('should DELETE the user without asking for confirmation', function() {
