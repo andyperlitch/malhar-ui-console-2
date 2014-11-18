@@ -4,24 +4,29 @@
 @dt-table-font-size:12px;
 @dt-table-border-color:@table-border-color;
 .table {
-    border: none;
+    border: 1px solid @table-border-color;
 }
 .table th input {
     font-weight: normal;
 }
-.table thead tr:first-child {
+.table thead tr {
     border-style: solid;
     border-color: @table-border-color;
-    border-width: 1px 0 1px 1px;
+    border-width: 0 0 1px 0;
 }
 .table thead tr:last-child {
-    border-style: solid;
-    border-color: @table-border-color;
-    border-width: 0 1px 1px 1px;
+    border-width: 0;
 }
 
+.dt-table .mlhr-rows-table {
+    // border-width: 0;
+}
 .dt-table .mlhr-rows-table thead > tr > th{
     padding: 0;
+}
+
+.table > tbody + tbody {
+    border-top: none;
 }
 
 .table tbody tr.odd{
@@ -54,7 +59,7 @@
     white-space: nowrap;
 }
 .dt-table .table > thead > tr > th {
-    border-bottom-width: 1px;
+    border-bottom: none;
 }
 .scroller-width-transition() {
     .transition(width 200ms linear);
@@ -98,4 +103,14 @@
         float: right;
         margin-right: 0.5em;
     }
+}
+
+
+// Styles for non-malhar-angular-table tables
+.simple.table {
+
+    tbody tr:nth-child(odd) {
+        background-color: @table-alternate-row-color;
+    }
+
 }

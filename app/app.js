@@ -53,6 +53,8 @@ angular.module('app', [
   'app.pages.config.licenseInfo',
   'app.pages.config.systemDiagnostics',
   'app.pages.config.login',
+  'app.pages.config.authManagement',
+  'app.pages.config.profile',
 
   'app.pages.ops',
   'app.pages.ops.appInstance',
@@ -91,7 +93,12 @@ angular.module('app', [
     // Catchall route
     $routeProvider
       .otherwise({
-        redirectTo: '/ops'
+        redirectTo: function() {
+          var userStorage = userStorageProvider.getInstance();
+          if (userStorage) {
+            return userStorage.getItem('HOME_PAGE') || settings.DEFAULT_HOME_PAGE;
+          }
+        }
       });
 
   });

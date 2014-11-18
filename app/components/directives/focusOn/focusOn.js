@@ -15,18 +15,21 @@
 */
 'use strict';
 
-angular.module('app.pages.config', [])
-
-.config(function(settings, $routeProvider) {
-
-  $routeProvider.when(settings.pages.Config, {
-    templateUrl: 'pages/config/config.html',
-    controller: 'ConfigPageCtrl',
-    label: 'Configuration'
-  });
-
-})
-
-.controller('ConfigPageCtrl', function() {
-
+angular.module('app.components.directives.focusOn', [])
+/**
+ * @ngdoc directive
+ * @name app.components.directives.directives:focusOn
+ * @restrict A
+ * @description Listens for the supplied event and puts focus on the element when this event is fired.
+ * @element ANY
+ * @param {String}        focusOn      The event to listen for and trigger focus.
+ * @example 
+ * <pre><input type="text" focus-on="myCustomEvent"></pre>
+**/
+.directive('focusOn', function() {
+   return function(scope, elem, attr) {
+      scope.$on(attr.focusOn, function() {
+        elem[0].focus();
+      });
+   };
 });

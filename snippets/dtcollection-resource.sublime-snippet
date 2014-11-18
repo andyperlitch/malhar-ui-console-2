@@ -21,6 +21,15 @@ angular.module('app.components.resources.${30:${10:MyNew}${20:Collection}}', [
   'app.components.resources.BaseCollection'${40:,
   'app.components.resources.${50:Model}'}
 ])
+/**
+ * @ngdoc service
+ * @name  app.components.resources.$30
+ * @description  Represents a collection of $50s
+ * @requires  app.settings
+ * @requires  app.components.services.getUri
+ * @requires  app.components.resources.BaseCollection
+ * @requires  app.components.resources.${50:Model}
+ */
 .factory('$30', function(BaseCollection${60:, $50}) {
   var $30 = BaseCollection.extend({
     debugName: '$10 $20',

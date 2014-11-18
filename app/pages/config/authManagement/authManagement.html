@@ -1,0 +1,127 @@
+<div class="container info-page-container">
+  <h1><span class="fa fa-users"></span> Auth Management</h1>
+  <hr>
+
+  <p dt-text>
+    Use the sections and tools on this page to manage authentication and authorization on your DataTorrent Gateway.
+  </p>
+
+  <div ng-if="users">
+    <h2 class="h3">Users</h2>
+    <p>
+      <button ng-click="createUser(users, roles)" class="btn btn-sm btn-success ng-scope">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span dt-text="">create new user</span>
+      </button>
+    </p>
+    <table class="simple table">
+      <thead>
+        <tr>
+          <th scope="col" dt-text>Username</th>
+          <th scope="col" dt-text>Roles</th>
+          <th scope="col" dt-text>Change Password</th>
+          <th scope="col" dt-text>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-if="users.fetching">
+          <td colspan="4">
+            <dt-spinner></dt-spinner>
+            <span dt-text>loading...</span>
+          </td>
+        </tr>
+        <tr ng-if="users.fetchError">
+          <td colspan="4">
+            <span class="text-danger" dt-text>An error occurred loading users.</span>
+          </td>
+        </tr>
+        <tr ng-repeat="user in users.data">
+          <td>{{ user.data.userName }}</td>
+          <td><div user-roles-list user="user" roles="roles" auto-save="true"></div></td>
+          <td>
+            <a href="" class="btn btn-xs btn-info" ng-click="changePasswordModal(user)">change password</a>
+          </td>
+          <td>
+            <button class="btn btn-xs btn-danger" ng-click="deleteUser(user)">delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <hr>
+  </div>
+
+  <div ng-if="roles">
+    <h2 class="h3">Roles</h2>
+    <div ng-if="roles.fetching" class="text-muted">
+      <dt-spinner></dt-spinner>
+      <span dt-text>loading...</span>
+    </div>
+    <p class="alert alert-danger" ng-if="roles.fetchError" dt-text>
+      An error occurred getting the list of roles.
+    </p>
+    <p>
+      <!-- create role -->
+      <button ng-click="createRole()" class="btn btn-sm btn-success ng-scope" ng-hide="flags.editingRoles">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span dt-text="">create new role</span>
+      </button>
+
+      <!-- edit roles -->
+      <button ng-click="flags.editingRoles = true" class="btn btn-sm btn-info" ng-hide="flags.editingRoles">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span dt-text>edit roles</span>
+      </button>
+
+      <!-- cancel changes to roles -->
+      <button ng-click="cancelRoleChanges()" class="btn-danger btn-sm btn" ng-show="flags.editingRoles">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span dt-text>cancel edits</span>
+      </button>
+
+      <!-- save changes to roles -->
+      <button ng-click="saveRoles()" class="btn btn-sm btn-success" ng-show="flags.editingRoles">
+        <span class="glyphicon glyphicon-ok"></span>
+        <span dt-text>save edits</span>
+      </button>
+    </p>
+    <p ng-if="saveRolesError" class="alert alert-danger" dt-text>
+      An error occurred saving the role permissions.
+    </p>
+    <table class="simple table">
+      <thead>
+        <tr>
+          <th scope="col" dt-text class="capabilities-col-th">Capabilities</th>
+          <th ng-attr-colspan="{{roles.data.length}}" dt-text>Roles</th>
+        </tr>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" ng-repeat="role in roles.data">
+            {{role.name}}
+            <span
+              class="glyphicon glyphicon-remove text-danger deleteRoleLink"
+              ng-show="flags.editingRoles"
+              ng-click="deleteRole(role)"
+              dt-text-tooltip="delete this role"
+              tooltip-popup-delay="0">
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(ability,value) in PERMISSIONS">
+          <th scope="row">{{ability}}</th>
+          <td ng-repeat="role in roles.data">
+            <input type="checkbox" ng-model="role.permissions[value]" ng-show="flags.editingRoles" ng-disabled="savingRoles">
+            <div ng-hide="flags.editingRoles">
+              <span ng-if="role.permissions[value]" class="text-success glyphicon glyphicon-ok"></span>
+              <span ng-if="!role.permissions[value]" class="text-danger glyphicon glyphicon-remove"></span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>    
+    <hr>
+  </div>
+
+</div>

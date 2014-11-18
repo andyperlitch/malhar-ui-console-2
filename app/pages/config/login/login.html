@@ -5,9 +5,9 @@
   </p>
   <p ng-if="attemptingLogin" class="alert alert-info" dt-text>Logging in...</p>
   <p>
-    <label for="principal"><span class="glyphicon glyphicon-user"></span> username</label>
-    <input type="text" name="principal" class="form-control" ng-model="credentials.principal" required>
-    <span ng-messages="login_form.principal.$error" class="help-block" ng-show="login_form.principal.$touched">
+    <label for="userName"><span class="fa fa-user"></span> username</label>
+    <input type="text" name="userName" class="form-control" ng-model="credentials.userName" required focus-on="loginPageLoaded">
+    <span ng-messages="login_form.userName.$error" class="help-block" ng-show="login_form.userName.$touched">
       <span class="text-danger" ng-message="required" dt-text>Username is required.</span>
     </span>
   </p>
