@@ -1,0 +1,80 @@
+<div class="modal-header modal-header-success">
+    <h3 class="modal-title"><span class="glyphicon glyphicon-plus"></span> <span dt-text>New User</span></h3>
+</div>
+<div class="modal-body">
+  <form name="userForm" ng-submit="create(userForm, newUser)">
+    <p ng-if="createError" class="alert alert-danger">
+      <span dt-text>An error occurred trying to create this user. Details:</span>
+      {{ createError }}
+    </p>
+    <div class="form-group">
+      <label for="userName" dt-text>username</label>
+      <input
+        type="text"
+        ng-model="newUser.data.userName"
+        class="form-control"
+        name="userName"
+        required
+        unique-in-set="users.toArray()"
+        unique-key="userName"
+        focus-on="newUserModalOpened">
+      <div ng-messages="userForm.userName.$error" ng-show="userForm.userName.$touched">
+        <p ng-message="required" class="help-block">
+          <span class="text-danger" dt-text>Please enter a name for the new user.</span>
+        </p>
+        <p ng-message="uniqueInSet" class="help-block">
+          <span class="text-danger" dt-text>This username already exists in the system.</span>
+        </p>
+        <p ng-message="serverError" class="help-block">
+          <span class="text-danger">Server error: <span ng-bind="userForm.userName.$errorMessages.serverError"></span></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label dt-text>roles</label>
+      <div user-roles-list user="newUser" roles="roles"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="password" dt-text>password</label>
+      <input
+        type="password"
+        ng-model="newUser.data.password"
+        class="form-control"
+        name="password"
+        required>
+      <div ng-messages="userForm.password.$error" ng-show="userForm.password.$touched">
+        <p ng-message="required" class="help-block">
+          <span class="text-danger" dt-text>Please enter a password for the new user.</span>
+        </p>
+      </div>
+    </div>
+      
+    <div class="form-group">
+      <label for="password2" dt-text>re-enter password</label>
+      <input
+        type="password"
+        ng-model="newUser.data.password_verify"
+        ui-validate="{mismatch: '$value==newUser.data.password'}"
+        ui-validate-watch="'newUser.data.password'"
+        class="form-control"
+        id="password2"
+        name="password2"
+        required>
+      <div ng-messages="userForm.password2.$error" ng-show="userForm.password2.$touched">
+        <p ng-message="required" class="help-block">
+          <span class="text-danger" dt-text>Please re-enter the password.</span>
+        </p>
+        <p ng-message="mismatch" class="help-block">
+          <span class="text-danger" dt-text>The passwords you entered do not match.</span>
+        </p>
+      </div>
+    </div>
+    <input type="submit" style="position: absolute; left: -9999px"/>
+  </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" ng-click="create(userForm, newUser)" ng-disabled="userForm.$invalid || saving">{{ saving ? 'Saving...' : 'Create'}}</button>
+    <button class="btn btn-default" ng-click="$dismiss()" dt-text>Cancel</button>
+</div>

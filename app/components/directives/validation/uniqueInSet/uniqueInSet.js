@@ -16,7 +16,23 @@
 'use strict';
 
 angular.module('app.components.directives.validation.uniqueInSet', [])
-// Directive: check for unique name in collection
+
+    /**
+      * @ngdoc directive
+      * @name app.components.directives.validation.uniqueInSet
+      * @restrict A
+      * @description Validation directive for ensuring that a value is unique given a set.
+      * @param {Array}         uniqueInSet The set to compare against.
+      * @param {String}        uniqueKey The key to be unique.
+      * @param {Array|Object=} exclude An object or array of objects to exclude from the unique check. 
+      *                                This can useful when the object is in the collection.
+      * @example 
+      * <pre>
+      * <input type="text" ng-model="myModel" unique-in-set="allModels" unique-key="name" exclude="myModel">
+      * </pre>
+      * 
+    **/
+    
 .directive('uniqueInSet', function() {
   return {
     restrict: 'A',

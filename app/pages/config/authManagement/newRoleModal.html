@@ -1,0 +1,36 @@
+<div class="modal-header modal-header-success">
+    <h3 class="modal-title"><span class="glyphicon glyphicon-plus"></span> <span dt-text>New Role</span></h3>
+</div>
+<div class="modal-body">
+  <form ng-submit="create(roleForm, newRole)" name="roleForm">
+    <p ng-if="saveError" class="alert alert-danger" dt-text>An error occurred creating this role.</p>
+    <div class="form-group">
+      <label for="name" dt-text>name</label>
+      <input
+        name="name"
+        class="form-control"
+        type="text"
+        ng-model="newRole.data.name"
+        focus-on="newRoleModalOpened"
+        required>
+      <div ng-messages="roleForm.name.$error" ng-show="roleForm.name.$touched">
+        <p ng-message="required" class="help-block">
+          <span class="text-danger" dt-text>A role name is required.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="roleChoice" dt-text>copy permissions from another role</label>
+      <select class="form-control" name="roleChoice" ng-options="roleChoice.permissions as roleChoice.name for roleChoice in roles.data" ng-model="newRole.data.permissions">
+      <!-- <select class="form-control" name="roleChoice" ng-options="roleChoice.data.permissions as roleChoice.data.name for roleChoice in roles.data" ng-model="newRole.data.permissions"> -->
+        <option value="">start with no permissions</option>
+      </select>
+    </div>
+    <input type="submit" style="position: absolute; left: -9999px"/>
+  </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" ng-click="create(roleForm, newRole)" ng-disabled="roleForm.$invalid || saving">{{ saving ? 'Saving...' : 'Create'}}</button>
+    <button class="btn btn-default" ng-click="$dismiss()" dt-text>Cancel</button>
+</div>

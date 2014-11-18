@@ -18,20 +18,20 @@
 
 angular.module('app')
 
-.controller('AppCtrl', function (settings, $log, authentication, userStorage, userSession, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri, webSocket) {
+.controller('AppCtrl', function (settings, $log, authentication, userStorage, currentUser, $scope, $location, $route, breadcrumbs, $routeParams, setupBreadcrumbs, notificationService, dtText, getUri, webSocket) {
   // Initialize options
   breadcrumbs.options = {};
 
   // Set to scope
   $scope.breadcrumbs = breadcrumbs;
   $scope.$routeParams = $routeParams;
-  $scope.userSession = userSession;
+  $scope.currentUser = currentUser;
   $scope.authentication = authentication;
 
   // Create logout method
   $scope.logout = function() {
     $scope.loggingOut = true;
-    userSession.logout().then(
+    currentUser.logout().then(
       function() {
         var loginScreenUrl = getUri.page('Login', null, true);
         var path = $location.path();

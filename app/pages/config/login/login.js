@@ -19,10 +19,12 @@
  * @ngdoc object
  * @name  app.pages.config.login
  * @description  Login page module.
- * @requires app.components.services.userSession
+ * @requires app.components.services.currentUser
+ * @requires app.components.directives.focusOn
  */
 angular.module('app.pages.config.login', [
-  'app.components.services.userSession'
+  'app.components.services.currentUser',
+  'app.components.directives.focusOn'
 ])
 
 // Routing
@@ -35,7 +37,7 @@ angular.module('app.pages.config.login', [
 })
 
 // Controller
-.controller('LoginPageCtrl', function($scope, userSession, $location) {
+.controller('LoginPageCtrl', function($scope, currentUser, $location, $timeout) {
 
   // Initialize credentials object
   $scope.credentials = {};
@@ -44,8 +46,8 @@ angular.module('app.pages.config.login', [
   $scope.login = function(credentials) {
     $scope.loginError = null;
     $scope.attemptingLogin = true;
-    userSession
-      .login(credentials.principal, credentials.password)
+    currentUser
+      .login(credentials.userName, credentials.password)
       .then(
         function() {
           // login successful
@@ -64,5 +66,9 @@ angular.module('app.pages.config.login', [
         $scope.attemptingLogin = false;
       });
   };
+
+  $timeout(function() {
+    $scope.$broadcast('loginPageLoaded');
+  });
 
 });

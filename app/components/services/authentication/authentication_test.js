@@ -18,11 +18,11 @@
 
 describe('Factory: authentication', function () {
 
-  var userSession;
+  var currentUser;
 
   // load the service's module
   beforeEach(module('app.components.services.authentication', function($provide) {
-    $provide.value('userSession', userSession = {
+    $provide.value('currentUser', currentUser = {
       data: {}
     });
     $provide.value('webSocket', {});
@@ -41,10 +41,10 @@ describe('Factory: authentication', function () {
   beforeEach(function() {
     dfd = $q.defer();
 
-    userSession.fetch = function() {
+    currentUser.fetch = function() {
       return dfd.promise;
     };
-    spyOn(userSession, 'fetch').and.callThrough();
+    spyOn(currentUser, 'fetch').and.callThrough();
   });
 
   it('should assume auth is enabled by default', function() {
@@ -60,21 +60,21 @@ describe('Factory: authentication', function () {
       expect(authentication.isAuthenticated()).toEqual(false);
     });
     
-    it('should return false if userSession.authStatus is true && userSession.data.authScheme and userSession.data.principal are not defined', function() {
+    it('should return false if currentUser.authStatus is true && currentUser.data.authScheme and currentUser.data.userName are not defined', function() {
       authentication.isEnabled = function() {
         return true;
       };
-      delete userSession.data.authScheme;
-      delete userSession.data.principal;
+      delete currentUser.data.authScheme;
+      delete currentUser.data.userName;
       expect(authentication.isAuthenticated()).toEqual(false);
     });
 
-    it('should return true if userSession.authStatus and userSession.data.authScheme and userSession.data.principal', function() {
+    it('should return true if currentUser.authStatus and currentUser.data.authScheme and currentUser.data.userName', function() {
       authentication.isEnabled = function() {
         return true;
       };
-      userSession.data.authScheme = 'kerberos';
-      userSession.data.principal = 'mrbojangles';
+      currentUser.data.authScheme = 'kerberos';
+      currentUser.data.userName = 'mrbojangles';
       expect(authentication.isAuthenticated()).toEqual(true);
     });
 
@@ -82,9 +82,9 @@ describe('Factory: authentication', function () {
 
   describe('retrieveAuthStatus method', function() {
 
-    it('should call userSession.fetch', function() {
+    it('should call currentUser.fetch', function() {
       authentication.retrieveAuthStatus();
-      expect(userSession.fetch).toHaveBeenCalled();
+      expect(currentUser.fetch).toHaveBeenCalled();
     });
 
     it('should return a promise', function() {
@@ -94,9 +94,9 @@ describe('Factory: authentication', function () {
 
     describe('when fetch is successful', function() {
 
-      it('should mark auth as enabled if userSession.data.authScheme is truthy', function() {
+      it('should mark auth as enabled if currentUser.data.authScheme is truthy', function() {
         authentication.retrieveAuthStatus();
-        userSession.data.authScheme = 'kerberos';
+        currentUser.data.authScheme = 'kerberos';
         dfd.resolve({
           status: status
         });
@@ -104,9 +104,9 @@ describe('Factory: authentication', function () {
         expect(authentication.isEnabled()).toEqual(true);
       });
 
-      it('should mark auth as disabled if userSession.data.authScheme is falsey', function() {
+      it('should mark auth as disabled if currentUser.data.authScheme is falsey', function() {
         authentication.retrieveAuthStatus();
-        userSession.data.authScheme = '';
+        currentUser.data.authScheme = '';
         dfd.resolve({
           status: status
         });

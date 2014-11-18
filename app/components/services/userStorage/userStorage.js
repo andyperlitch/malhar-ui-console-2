@@ -22,13 +22,17 @@ angular.module('app.components.services.userStorage', [
 
   var storage = {};
   var saveFunction = angular.noop;
+  var instance;
 
   return {
     setSaveFunction: function(fn) {
       saveFunction = fn;
     },
+    getInstance: function() {
+      return instance;
+    },
     $get: function() {
-      return {
+      instance = {
 
         setItem: function(key, value) {
           storage[key] = value;
@@ -49,7 +53,11 @@ angular.module('app.components.services.userStorage', [
         },
 
         clear: function() {
-          storage = {};
+          for (var k in storage) {
+            if (storage.hasOwnProperty(k)) {
+              delete storage[k];
+            }
+          }
           this.save();
         },
 
@@ -74,6 +82,7 @@ angular.module('app.components.services.userStorage', [
         }
 
       };
+      return instance;
     }
   };
     

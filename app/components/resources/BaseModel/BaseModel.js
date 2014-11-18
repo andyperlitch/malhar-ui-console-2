@@ -105,6 +105,7 @@ angular.module('app.components.resources.BaseModel', [
      */
     set: function(data) {
       _.extend(this.data, data);
+      return this;
     },
 
     // TEMP FIX UNTIL RECORDING BRANCH IS MERGED

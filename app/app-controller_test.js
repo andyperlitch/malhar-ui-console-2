@@ -18,10 +18,10 @@
 
 describe('Controller: AppCtrl', function() {
 
-  var $scope, $q, authentication, $location, $route, notifier, getUri, userSession, webSocket, $log, setupBreadcrumbs;
+  var $scope, $q, authentication, $location, $route, notifier, getUri, currentUser, webSocket, $log, setupBreadcrumbs;
 
   beforeEach(module('app', function($provide) {
-    $provide.value('userSession', userSession = {});
+    $provide.value('currentUser', currentUser = {});
   }));
 
   beforeEach(inject(function($rootScope, $controller, _$q_, _$log_){
@@ -308,7 +308,7 @@ describe('Controller: AppCtrl', function() {
 
     beforeEach(function() {
       dfd = $q.defer();
-      userSession.logout = function() {
+      currentUser.logout = function() {
         return dfd.promise;
       };
       $location.path = function() {
@@ -322,16 +322,16 @@ describe('Controller: AppCtrl', function() {
       };
       $location.url = jasmine.createSpy();
       $location.search = jasmine.createSpy();
-      spyOn(userSession, 'logout').and.callThrough();
+      spyOn(currentUser, 'logout').and.callThrough();
     });
     
     it('should be a function', function() {
       expect(typeof $scope.logout).toEqual('function');
     });
 
-    it('should call userSession.logout', function() {
+    it('should call currentUser.logout', function() {
       $scope.logout();
-      expect(userSession.logout).toHaveBeenCalled();
+      expect(currentUser.logout).toHaveBeenCalled();
     });
 
     it('should set loggingOut on scope to true', function() {

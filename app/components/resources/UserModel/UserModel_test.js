@@ -19,7 +19,7 @@
 describe('Resource: UserModel', function () {
 
   // load the service's module
-  var url, loginUrl, logoutUrl;
+  var url, loginUrl, logoutUrl, usersUrl, confirmDfd, $q, confirm, $rootScope;
   beforeEach(module('app.components.resources.UserModel', function($provide) {
     $provide.value('webSocket', {
       subscribe: function() {},
@@ -27,19 +27,32 @@ describe('Resource: UserModel', function () {
     });
     $provide.constant('settings', {
       urls: {
-        User: url = '/profile/user'
+        User: url = '/profile/user',
+        Users: usersUrl = '/users'
       },
       actions: {
         login: loginUrl = '/login',
         logout: logoutUrl = '/logout'
       }
     });
+    $provide.constant('PERMISSIONS', {
+      BE_AWESOME: 'BE_TOTALLY_AWESOME',
+      BE_AVERAGE: 'BE_TOTALLY_AVERAGE',
+      BE_SUBPAR: 'BE_TOTALLY_SUBPAR'
+    });
+    $provide.value('confirm', confirm = jasmine.createSpy('confirm').and.callFake(function() {
+      return confirmDfd.promise;
+    }));
   }));
 
   // instantiate service
-  var UserModel;
-  beforeEach(inject(function (_UserModel_) {
+  var UserModel, $log;
+  beforeEach(inject(function (_UserModel_, _$log_, _$q_, _$rootScope_) {
+    $rootScope = _$rootScope_;
+    $q = _$q_;
     UserModel = _UserModel_;
+    $log = _$log_;
+    confirmDfd = $q.defer();
   }));
 
   it('should be a function', function() {
@@ -90,7 +103,7 @@ describe('Resource: UserModel', function () {
       
       _.each([401, 403], function(status) {
         it('should reset the data object', function() {
-          u.data = { scheme: 'kerberos', principal: 'mrbojangles' };
+          u.data = { scheme: 'kerberos', userName: 'mrbojangles' };
           $httpBackend.whenGET(url).respond(status, {
             message: 'unauthenticated'
           });
@@ -105,13 +118,13 @@ describe('Resource: UserModel', function () {
     describe('when the server responds with a non-auth related error code', function() {
 
       it('should not reset the data object', function() {
-          u.data = { scheme: 'kerberos', principal: 'mrbojangles' };
+          u.data = { scheme: 'kerberos', userName: 'mrbojangles' };
           $httpBackend.whenGET(url).respond(500, {
             message: 'unauthenticated'
           });
           u.fetch();
           $httpBackend.flush();
-          expect(u.data).toEqual({ scheme: 'kerberos', principal: 'mrbojangles' });
+          expect(u.data).toEqual({ scheme: 'kerberos', userName: 'mrbojangles' });
       });
 
     });
@@ -158,7 +171,7 @@ describe('Resource: UserModel', function () {
       it('should resolve the promise returned by the login call', function() {
         $httpBackend.whenPOST(loginUrl).respond(200, {
           authScheme: 'kerberos',
-          principal: 'mrbojangles'
+          userName: 'mrbojangles'
         });
         var promise = u.login('mrbojangles', 'admin');
         $httpBackend.flush();
@@ -168,7 +181,7 @@ describe('Resource: UserModel', function () {
       it('should call the set method with the server response', function() {
         $httpBackend.whenPOST(loginUrl).respond(200, {
           authScheme: 'kerberos',
-          principal: 'mrbojangles'
+          userName: 'mrbojangles'
         });
         u.login('mrbojangles', 'admin');
         $httpBackend.flush();
@@ -197,7 +210,7 @@ describe('Resource: UserModel', function () {
     beforeEach(function() {
       u = new UserModel();
       u.set({
-        principal: 'mrbojangles',
+        userName: 'mrbojangles',
         authScheme: 'kerberos'
       });
     });
@@ -266,6 +279,314 @@ describe('Resource: UserModel', function () {
         expect(result.$$state.status).toEqual(2);
       });
 
+    });
+
+  });
+
+  describe('the can method', function() {
+
+    var u;
+
+    beforeEach(function() {
+      u = new UserModel();
+      u.set({
+        userName: 'mrbojangles',
+        authScheme: 'kerberos',
+        permissions: [
+          'BE_TOTALLY_AVERAGE'
+        ]
+      });
+      spyOn($log, 'warn');
+    });
+    
+    it('should call $log.warn and return TRUE if the ability is not found in the list of known abilities', function() {
+      var result = u.can('DANCE');
+      expect($log.warn).toHaveBeenCalled();
+      expect(result).toEqual(true);
+    });
+
+    describe('when the ability is in the list of known abilities', function() {
+      
+      it('should return false if the user does not have it in his/her list of permissions', function() {
+        expect(u.can('BE_AWESOME')).toEqual(false);
+      });
+
+      it('should return true if the user has it in his/her list of permissions', function() {
+        expect(u.can('BE_AVERAGE')).toEqual(true);
+      });
+
+    });
+
+  });
+
+  describe('the is method', function() {
+
+    var u;
+
+    beforeEach(function() {
+      u = new UserModel().set({
+        roles: ['admin']
+      });
+    });
+    
+    it('should return true if the user has the provided role', function() {
+      expect(u.is('admin')).toEqual(true);
+    });
+
+    it('should return false if the user does not have the provided role', function() {
+      expect(u.is('superadmin')).toEqual(false);
+    });
+
+    describe('when there is no roles', function() {
+
+      beforeEach(function() {
+        delete u.data.roles;
+      });
+      
+      it('should not throw', function() {
+        expect(function() {
+          u.is('something');
+        }).not.toThrow();
+      });
+
+      it('should return false', function() {
+        expect(u.is('admin')).toEqual(false);
+      });
+
+    });
+
+  });
+
+  describe('the addRole method', function() {
+
+    var u;
+
+    beforeEach(function() {
+      u = new UserModel().set({
+        roles: ['admin']
+      });
+    });
+    
+    it('should add the provided role to the roles object', function() {
+      u.addRole('super');
+      expect(u.is('super')).toEqual(true);
+    });
+
+    it('should return the instance', function() {
+      expect(u.addRole('super') === u).toEqual(true);
+    });
+
+    it('should do nothing if the role is already in the user roles', function() {
+      var init = JSON.stringify(u.data);
+      u.addRole('admin');
+      expect(JSON.stringify(u.data)).toEqual(init);
+    });
+
+    describe('when there is no roles', function() {
+
+      beforeEach(function() {
+        delete u.data.roles;
+      });
+      
+      it('should not throw', function() {
+        expect(function() {
+          u.addRole('something');
+        }).not.toThrow();
+      });
+
+      it('should add the role', function() {
+        u.addRole('admin');
+        expect(u.is('admin')).toEqual(true);
+      });
+
+    });
+
+  });
+
+  describe('the removeRole method', function() {
+    
+    var u;
+
+    beforeEach(function() {
+      u = new UserModel().set({
+        roles: ['admin', 'super']
+      });
+    });
+
+    it('should remove the role', function() {
+      u.removeRole('super');
+      expect(u.is('super')).toEqual(false);
+    });
+
+    it('should do nothing if the role is not there', function() {
+      var init = JSON.stringify(u.data);
+      u.removeRole('duper');
+      expect(JSON.stringify(u.data)).toEqual(init);
+    });
+
+    describe('when there is no roles', function() {
+
+      beforeEach(function() {
+        delete u.data.roles;
+      });
+      
+      it('should not throw', function() {
+        expect(function() {
+          u.removeRole('something');
+        }).not.toThrow();
+      });
+
+      it('should add an empty array for roles', function() {
+        u.removeRole('duper');
+        expect(u.data.roles instanceof Array).toEqual(true);
+      });
+
+    });
+
+  });
+
+  describe('the create method', function() {
+    
+    // test backend
+    var $httpBackend, u, createUrl;
+    
+    beforeEach(inject(function(_$httpBackend_) {
+      $httpBackend = _$httpBackend_;
+      u = new UserModel().set({ userName: 'blandy' });
+      createUrl = usersUrl + '/blandy';
+      $httpBackend.whenPUT(createUrl).respond({});
+    }));
+    
+    afterEach(function() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should PUT the user with the User url', function() {
+      $httpBackend.expectPUT(createUrl);
+      u.create();
+      $httpBackend.flush();
+    });
+
+    it('should return a promise', function() {
+      $httpBackend.expectPUT(createUrl);
+      expect(typeof u.create().then).toEqual('function');
+      $httpBackend.flush();
+    });
+
+  });
+
+  describe('the save method', function() {
+    // test backend
+    var $httpBackend, u, saveUrl;
+    
+    beforeEach(inject(function(_$httpBackend_) {
+      $httpBackend = _$httpBackend_;
+      u = new UserModel().set({ userName: 'blandy' });
+      saveUrl = usersUrl + '/blandy';
+      $httpBackend.whenPOST(saveUrl).respond({});
+    }));
+    
+    afterEach(function() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should POST the user with the User url', function() {
+      $httpBackend.expectPOST(saveUrl);
+      u.save();
+      $httpBackend.flush();
+    });
+
+    it('should return a promise', function() {
+      $httpBackend.expectPOST(saveUrl);
+      expect(typeof u.save().then).toEqual('function');
+      $httpBackend.flush();
+    });
+
+    describe('when a new password is supplied', function() {
+      
+      it('should add newPassword to the data object being sent', function() {
+        $httpBackend.expectPOST(saveUrl, { userName: 'blandy', newPassword: 'password123' });
+        u.save('password123');
+        $httpBackend.flush(); 
+      });
+
+      it('should not alter the instance data object', function() {
+        $httpBackend.expectPOST(saveUrl);
+        u.save('password123');
+        $httpBackend.flush(); 
+        expect(u.newPassword).toBeUndefined();
+      });
+
+      describe('and old password is supplied', function() {
+        
+        it('should add newPassword and oldPassword to the data object being sent', function() {
+          $httpBackend.expectPOST(saveUrl, { userName: 'blandy', newPassword: 'password123', oldPassword: 'passwd' });
+          u.save('password123', 'passwd');
+          $httpBackend.flush();
+        });
+
+        it('should not alter the instance data object', function() {
+          $httpBackend.expectPOST(saveUrl);
+          u.save('password123', 'passwd');
+          $httpBackend.flush(); 
+          expect(u.newPassword).toBeUndefined();
+          expect(u.oldPassword).toBeUndefined();
+        });
+
+      });
+
+    });
+  });
+
+  describe('the delete method', function() {
+    
+    var $httpBackend, u, delUrl;
+    
+    beforeEach(inject(function(_$httpBackend_) {
+      $httpBackend = _$httpBackend_;
+      u = new UserModel().set({ userName: 'blandy' });
+      delUrl = usersUrl + '/blandy';
+      $httpBackend.whenDELETE(delUrl).respond({});
+    }));
+    
+    
+    beforeEach(inject(function(_$httpBackend_) {
+      $httpBackend = _$httpBackend_;
+    
+      // USAGE:
+      // $httpBackend.whenGET('/my-url?key=value').respond({});
+      // $httpBackend.expectGET('/my-url?key=value');
+      // $httpBackend.flush();
+    }));
+    
+    afterEach(function() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should first confirm with the user', function() {
+      u.delete();
+      expect(confirm).toHaveBeenCalled();
+    });
+
+    it('should DELETE the user when confirmed', function() {
+      $httpBackend.expectDELETE(delUrl);
+      u.delete();
+      confirmDfd.resolve();
+      $rootScope.$apply();
+      $httpBackend.flush();
+    });
+
+    describe('when the force flag is used', function() {
+
+      it('should DELETE the user without asking for confirmation', function() {
+        $httpBackend.expectDELETE(delUrl);
+        u.delete(true);
+        $httpBackend.flush(); 
+      });
+      
     });
 
   });

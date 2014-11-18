@@ -2,14 +2,24 @@
   <h1>Configuration</h1>
   <hr>
 
-  <h2 class="h3"><a dt-page-href="SystemDiagnostics" dt-text>System Diagnostics</a></h2>
+  <h2 class="h3"><a dt-page-href="SystemDiagnostics"><span class="fa fa-stethoscope"></span> <span dt-text>System Diagnostics</span></a></h2>
   <p>Use this page to review any potential issues regarding your DataTorrent installation.</p>
   <hr>
 
-  <h2 class="h3"><a dt-page-href="LicenseInfo" dt-text>License Information</a></h2>
-  <p>View the license your DataTorrent installation is currently running on. You will be able to see basic license info, check on your memory usage, upload a new license file, and upgrade your license.</p>
+  <h2 class="h3"><a dt-page-href="LicenseInfo"><span class="fa fa-tag"></span> <span dt-text>License Information</span></a></h2>
+  <p>View the license your DataTorrent installation is currently running on. See basic license info, check memory usage, upload a new license file, and upgrade your license.</p>
   <hr>
 
-  <h2 class="h3"><a dt-page-href="InstallWizard" dt-text>Installation Wizard</a></h2>
+  <h2 class="h3"><a dt-page-href="UserProfile" ng-if="authentication.isEnabled()"><span class="fa fa-user"></span> <span dt-text>User Profile</span></a></h2>
+  <p>This page will tell you about your user, such as your permissions and your settings.</p>
+  <hr>
+
+  <div ng-if="currentUser.can('MANAGE_ROLES') || currentUser.can('MANAGE_USERS')">
+    <h2 class="h3"><a dt-page-href="AuthManagement"><span class="fa fa-users"></span> <span dt-text>Auth Management</span></a></h2>
+    <p>Use this page to manage authentication and authorization of DataTorrent users.</p>
+    <hr>
+  </div>
+
+  <h2 class="h3"><a dt-page-href="InstallWizard"><span class="glyphicon glyphicon-import"></span> <span dt-text>Installation Wizard</span></a></h2>
   <p>This page will take you through the initial installation setup. Running through this wizard after initial installation will not disrupt any of your currently running DataTorrent apps.</p>
 </div>
