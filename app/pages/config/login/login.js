@@ -25,7 +25,8 @@
 angular.module('app.pages.config.login', [
   'app.components.services.currentUser',
   'app.components.directives.focusOn',
-  'app.components.directives.loginForm'
+  'app.components.directives.loginForm',
+  'app.components.services.delayedBroadcast'
 ])
 
 // Routing
@@ -38,7 +39,7 @@ angular.module('app.pages.config.login', [
 })
 
 // Controller
-.controller('LoginPageCtrl', function($scope, currentUser, $location, $timeout) {
+.controller('LoginPageCtrl', function($scope, currentUser, $location, $timeout, delayedBroadcast) {
 
   $scope.loginSuccessHandler = function() {
     // login successful
@@ -49,8 +50,6 @@ angular.module('app.pages.config.login', [
     $location.url(redirectUrl);
   };
 
-  $timeout(function() {
-    $scope.$broadcast('putFocusOnLoginUsername');
-  }, 200);
+  delayedBroadcast('putFocusOnLoginUsername');
 
 });
