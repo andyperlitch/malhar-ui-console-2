@@ -24,6 +24,8 @@ angular.module('app.components.directives.loginForm', [
  * @name app.components.directives.loginForm
  * @restrict EA
  * @description A form used to login.
+ * @param {Function} onSuccess The function to call when login is successful
+ * @param {Boolean=} omitTitle If true, the "Login" title will be omitted.
 **/
     
 .directive('loginForm', function(currentUser) {
@@ -31,7 +33,8 @@ angular.module('app.components.directives.loginForm', [
   return {
     templateUrl: 'components/directives/loginForm/loginForm.html',
     scope: {
-      onSuccess: '='
+      onSuccess: '=',
+      omitTitle: '=?'
     },
     link: function($scope) {
 

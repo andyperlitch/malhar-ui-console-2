@@ -1,5 +1,5 @@
 <form novalidate ng-submit="login(credentials)" name="login_form">
-  <h3>Login</h3>
+  <h3 ng-if="!omitTitle">Login</h3>
   <p ng-if="loginError" class="alert-danger alert">
     {{ loginError }}
   </p>
