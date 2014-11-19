@@ -19,9 +19,10 @@ angular.module('app.components.services.changePasswordModal',[
   'ui.bootstrap.modal',
   'app.components.directives.focusOn',
   'app.components.services.currentUser',
-  'ui.validate'
+  'ui.validate',
+  'app.components.services.delayedBroadcast'
 ])
-.factory('changePasswordModal', function($modal, $rootScope, $timeout, currentUser) {
+.factory('changePasswordModal', function($modal, $rootScope, $timeout, currentUser, delayedBroadcast) {
 
   return function(user) {
 
@@ -38,13 +39,11 @@ angular.module('app.components.services.changePasswordModal',[
 
     // Put focus on the field (must defer)
     instance.opened.then(function() {
-      $timeout(function() {
-        if (currentUser.can('MANAGE_USERS')) {
-          $rootScope.$broadcast('changePasswordModalOpened_admin');
-        } else {
-          $rootScope.$broadcast('changePasswordModalOpened');
-        }
-      }, 200);
+      if (currentUser.can('MANAGE_USERS')) {
+        delayedBroadcast('changePasswordModalOpened_admin');
+      } else {
+        delayedBroadcast('changePasswordModalOpened');
+      }
     });
 
     return instance.result;

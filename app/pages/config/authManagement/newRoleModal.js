@@ -17,10 +17,11 @@
 
 angular.module('app.pages.config.authManagement.newRoleModal', [
   'ui.bootstrap.modal',
-  'app.components.resources.RoleModel'
+  'app.components.resources.RoleModel',
+  'app.components.services.delayedBroadcast'
 ])
 
-.factory('newRoleModal', function($modal, $timeout, $rootScope) {
+.factory('newRoleModal', function($modal, $timeout, $rootScope, delayedBroadcast) {
 
   return function(roles) {
     var instance = $modal.open({
@@ -35,9 +36,7 @@ angular.module('app.pages.config.authManagement.newRoleModal', [
 
     // Put focus on the field (must defer)
     instance.opened.then(function() {
-      $timeout(function() {
-        $rootScope.$broadcast('newRoleModalOpened');
-      }, 200);
+      delayedBroadcast('newRoleModalOpened');
     });
 
     return instance.result;

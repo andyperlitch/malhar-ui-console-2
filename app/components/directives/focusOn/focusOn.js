@@ -18,9 +18,10 @@
 angular.module('app.components.directives.focusOn', [])
 /**
  * @ngdoc directive
- * @name app.components.directives.directives:focusOn
+ * @name app.components.directives.focusOn
  * @restrict A
  * @description Listens for the supplied event and puts focus on the element when this event is fired.
+ *              Use the {@link app.components.services.delayedBroadcast delayedBroadcast} service to fire events.
  * @element ANY
  * @param {String}        focusOn      The event to listen for and trigger focus.
  * @example 

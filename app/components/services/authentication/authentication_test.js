@@ -95,7 +95,9 @@ describe('Factory: authentication', function () {
     describe('when fetch is successful', function() {
 
       it('should mark auth as enabled if currentUser.data.authScheme is truthy', function() {
-        authentication.retrieveAuthStatus();
+        authentication.retrieveAuthStatus().then(function(enabled) {
+          expect(enabled).toEqual(true);
+        });
         currentUser.data.authScheme = 'kerberos';
         dfd.resolve({
           status: status
@@ -105,7 +107,9 @@ describe('Factory: authentication', function () {
       });
 
       it('should mark auth as disabled if currentUser.data.authScheme is falsey', function() {
-        authentication.retrieveAuthStatus();
+        authentication.retrieveAuthStatus().then(function(enabled) {
+          expect(enabled).toEqual(false);
+        });
         currentUser.data.authScheme = '';
         dfd.resolve({
           status: status
