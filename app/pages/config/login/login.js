@@ -24,7 +24,8 @@
  */
 angular.module('app.pages.config.login', [
   'app.components.services.currentUser',
-  'app.components.directives.focusOn'
+  'app.components.directives.focusOn',
+  'app.components.directives.loginForm'
 ])
 
 // Routing
@@ -39,36 +40,17 @@ angular.module('app.pages.config.login', [
 // Controller
 .controller('LoginPageCtrl', function($scope, currentUser, $location, $timeout) {
 
-  // Initialize credentials object
-  $scope.credentials = {};
-
-  // Define login action
-  $scope.login = function(credentials) {
-    $scope.loginError = null;
-    $scope.attemptingLogin = true;
-    currentUser
-      .login(credentials.userName, credentials.password)
-      .then(
-        function() {
-          // login successful
-          var redirectUrl = $location.search().redirect;
-          if (typeof redirectUrl !== 'string' || !redirectUrl.length) {
-            redirectUrl = '/ops';
-          }
-          $location.url(redirectUrl);
-        },
-        function() {
-          // login unsuccessful
-          $scope.loginError = 'Login failed.';
-        }
-      )
-      .finally(function() {
-        $scope.attemptingLogin = false;
-      });
+  $scope.loginSuccessHandler = function() {
+    // login successful
+    var redirectUrl = $location.search().redirect;
+    if (typeof redirectUrl !== 'string' || !redirectUrl.length) {
+      redirectUrl = '/ops';
+    }
+    $location.url(redirectUrl);
   };
 
   $timeout(function() {
-    $scope.$broadcast('loginPageLoaded');
-  });
+    $scope.$broadcast('putFocusOnLoginUsername');
+  }, 200);
 
 });
