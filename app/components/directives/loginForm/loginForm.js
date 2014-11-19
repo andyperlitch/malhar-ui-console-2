@@ -16,7 +16,7 @@
 'use strict';
 
 angular.module('app.components.directives.loginForm', [
-
+  'app.components.services.currentUser'
 ])
 
 /**
