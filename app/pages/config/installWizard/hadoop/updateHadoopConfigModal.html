@@ -2,6 +2,17 @@
     <h3 class="modal-title" dt-text>Updating Hadoop Configuration</h3>
 </div>
 <div class="modal-body" style="text-align: center;">
-  <div dt-spinner></div>
-  <p>{{ currentAction.message }}</p>
+
+  <div ng-if="!currentAction.mustLogin">
+    <div dt-spinner></div>
+    <p>{{ currentAction.message }}</p>  
+  </div>
+  
+  <div ng-if="currentAction.mustLogin" id="gateway-restart-login-form">
+    <p dt-text>
+      The gateway has restarted so you will need to log back in to continue.
+    </p>
+    <div login-form on-success="onLoginSuccess" omit-title="true"></div>
+  </div>
+
 </div>

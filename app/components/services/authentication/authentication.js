@@ -87,12 +87,12 @@ angular.module('app.components.services.authentication', [
             authStatus = false;
           }
 
-          dfd.resolve();
+          dfd.resolve(authStatus);
         },
         function(res) {
           if (res.status === 401 || res.status === 403) {
             authStatus = true;
-            dfd.resolve();
+            dfd.resolve(authStatus);
           }
           else {
             dfd.reject(res);

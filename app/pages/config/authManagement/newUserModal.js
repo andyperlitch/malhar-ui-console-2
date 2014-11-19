@@ -20,7 +20,8 @@ angular.module('app.pages.config.authManagement.newUserModal', [
   'ui.bootstrap.modal',
   'app.components.directives.validation.uniqueInSet',
   'app.components.directives.focusOn',
-  'ui.validate'
+  'ui.validate',
+  'app.components.services.delayedBroadcast'
 ])
 
 /**
@@ -34,7 +35,7 @@ angular.module('app.pages.config.authManagement.newUserModal', [
  * @requires  app.components.directives.validation.uniqueInSet
  * @requires  app.components.directives.focusOn
  */
-.factory('newUserModal', function($modal, $rootScope, $timeout) {
+.factory('newUserModal', function($modal, $rootScope, $timeout, delayedBroadcast) {
 
   return function(users, roles) {
 
@@ -54,9 +55,7 @@ angular.module('app.pages.config.authManagement.newUserModal', [
 
     // Put focus on the field (must defer)
     instance.opened.then(function() {
-      $timeout(function() {
-        $rootScope.$broadcast('newUserModalOpened');
-      }, 200);
+      delayedBroadcast('newUserModalOpened');
     });
 
     return instance.result;
