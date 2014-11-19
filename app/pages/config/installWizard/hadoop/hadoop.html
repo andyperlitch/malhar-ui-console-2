@@ -48,13 +48,13 @@
       </thead>
       <tbody>
 
-        <!-- Hadoop Installation Location -->
+        <!-- Hadoop Location -->
         <tr>
-          <td>Hadoop Installation</td>
-          <td>The absolute path to the location of your Hadoop installation, typically specified by <code>$HADOOP_PREFIX</code>.</td>
+          <td>Hadoop Location</td>
+          <td>The absolute path to the location of your Hadoop executable.</td>
           <td>
             
-            <input name="hadoopLocation" tabindex="1" type="text" class="form-control" ng-model="hadoopLocation.data.value" placeholder="e.g. /my/hadoop/dir" required>
+            <input name="hadoopLocation" tabindex="1" type="text" class="form-control" ng-model="hadoopLocation.data.value" placeholder="e.g. /usr/bin/hadoop" required>
             <div ng-messages="hadoopForm.hadoopLocation.$error">
               <div ng-message="required">
                 <span class="text-danger" dt-text>A hadoop location is required.</span>
