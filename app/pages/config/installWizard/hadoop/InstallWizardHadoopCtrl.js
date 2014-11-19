@@ -20,9 +20,14 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
   'app.components.resources.ConfigIssueCollection',
   'app.components.resources.HadoopLocation',
   'app.components.services.gatewayManager',
-  'ui.bootstrap.modal'
+  'ui.bootstrap.modal',
+  'app.components.services.delayedBroadcast'
 ])
-.controller('InstallWizardHadoopCtrl', function($scope, $element, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal, $timeout) {
+.controller('InstallWizardHadoopCtrl', function($scope, $element, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal, $timeout, delayedBroadcast) {
+
+  // Flag that will be set to true if the gateway gets restarted and
+  // a login is required to continue.
+  var loginRequired;
 
   // Set up models for the two properties to set
   $scope.hadoopLocation = new HadoopLocation();
@@ -73,6 +78,9 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
       keyboard: false,
       controller: function($scope, currentAction) {
         $scope.currentAction = currentAction;
+        $scope.onLoginSuccess = function() {
+          currentAction.onLoginSuccess();
+        };
       },
       resolve: {
         currentAction: function() {
@@ -146,6 +154,12 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
 
           result.then(
             function() {
+
+              if (restartNeeded) {
+                loginRequired = true;
+                $log.info('Gateway restart has logged user out, sign in required.');
+              }
+
               // Clear server error
               $scope.hadoopLocationServerError = null;
             },
@@ -220,12 +234,39 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
     .then(
       function() {
         $scope.submittingChanges = false;
+
+        // Ensure the modal has opened.
+        // This would only NOT be open if restart was 
+        // not required and everything went really fast
         $modalInstance.opened.then(function() {
-          currentAction.message = 'Configuration updated!';
-          $timeout(function() {
-            $modalInstance.close();
-            $scope.goToStep('license');
-          }, 1000);
+
+          // This function notifies the user that
+          // config was successfully updated, then
+          // moves the installer to the next step.
+          var success = function() {
+            currentAction.mustLogin = false;
+            currentAction.message = 'Configuration updated!';
+            $timeout(function() {
+              $modalInstance.close();
+              $scope.goToStep('license');
+            }, 1000);
+          };
+
+          // If login is required, we'll need to
+          // notify the status modal
+          if (loginRequired) {
+            currentAction.mustLogin = true;
+            currentAction.onLoginSuccess = success;
+            $timeout(function() {
+              delayedBroadcast('putFocusOnLoginUsername');
+            }, 100);
+          }
+
+          // Otherwise we are good to move on.
+          else {
+            success();
+          }
+          
         });
         
       },

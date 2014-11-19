@@ -37,7 +37,7 @@
   </div>
 
   <!-- Form (table) for changing values -->
-  <form name="hadoopForm" ng-show="!loading && !loadError">
+  <form name="hadoopForm" ng-show="!loading && !loadError" ng-submit="next()">
     <table class="table">
       <thead>
         <tr>
@@ -110,6 +110,7 @@
       </tbody>
 
     </table>
+    <input type="submit" style="position: absolute; left: -9999px"/>
   </form>
 
   <button class="btn btn-default backButton" ng-if="currentStep.prev" ng-click="goToStep('welcome')" tabindex="4">

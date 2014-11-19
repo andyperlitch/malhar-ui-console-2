@@ -16,18 +16,33 @@
 'use strict';
 
 angular.module('app.components.services.gatewayManager', [
-  'app.components.services.getUri'
+  'app.components.services.getUri',
+  'ui.websocket',
+  'app.components.services.authentication'
 ])
-.factory('gatewayManager', function($q, $log, $http, $timeout, getUri, webSocket) {
+/**
+  * @ngdoc service
+  * @name app.components.services.gatewayManager
+  * @requires app.components.services.getUri
+  * @requires ui.websocket
+  * @requires app.components.services.authentication
+**/
+.factory('gatewayManager', function($q, $log, $http, $timeout, getUri, webSocket, authentication) {
 
   return {
 
     /**
-     * Restarts the gateway
-     * @param  {number} retryTimeout Timeout in millis to check if gateway has restarted.
+     * @ngdoc            method
+     * @name             restart
+     * @methodOf         app.components.services.gatewayManager
+     * @description      Restarts the gateway
+     * 
+     * @param  {number}  retryTimeout Timeout in millis to check if gateway has restarted.
      * @return {Promise} Resolves when the gateway has come back up. 
      *                   Rejected if the gateway does not come back up 
-     *                   after retryTimeout milliseconds
+     *                   after retryTimeout milliseconds. Resolve callbacks
+     *                   receive one boolean argument: loginRequired. This will
+     *                   be true if login is required once restart has finished.
      */
     restart: function(retryTimeout) {
 
@@ -73,9 +88,21 @@ angular.module('app.components.services.gatewayManager', [
               // Success!
               $log.info('Gateway info received. Assuming gateway has successfully restarted...');
 
-              // reconnect to the websocket
-              webSocket.reconnect();
-              dfd.resolve();
+              // Check if auth is enabled
+              authentication.retrieveAuthStatus().then(function(isEnabled) {
+                if (!isEnabled) {
+                  // not enabled, go ahead and reconnect and resolve the deferred.
+                  webSocket.connect();
+                  // false here indicates that re-login is not required
+                  dfd.resolve(false);
+                }
+                else {
+                  // enabled, resolve without connecting to the webSocket
+                  // true here indicates that login is required.
+                  dfd.resolve(true);
+                }
+              });
+
             }
           },
 
