@@ -5,7 +5,8 @@ dist
 .sass-cache
 .idea
 .DS_Store
-app/bower_components
+app/bower_components/*
+!app/bower_components/dagre-d3/
 /coverage
 /util/deploy.prod.sh
 prod_start.sh
