@@ -98,11 +98,11 @@ function startServer(baseDirs, port) {
   //   }, 1000);
 
   // });
-  // app.get('/ws/v1/config/hadoopInstallDirectory', function(req, res) {
+  // app.get('/ws/v1/config/hadoopExecutable', function(req, res) {
 
   //   // Error
   //   setTimeout(function() {
-  //     res.status(500).send('hadoopInstallDirectory could not be retrieved');
+  //     res.status(500).send('hadoopExecutable could not be retrieved');
   //   }, 1000);
     
   // app.post('/ws/v1/licenses/files/:filename/makeCurrent', function(req, res) {

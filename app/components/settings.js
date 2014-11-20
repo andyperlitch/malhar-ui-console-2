@@ -182,7 +182,7 @@ angular.module('app.settings', [])
       ContainerLog             :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/logs',
       DependencyJar            :'/ws/:v/dependencyJars',
       GatewayInfo              :'/ws/:v/about',
-      HadoopLocation           :'/ws/:v/config/hadoopInstallDirectory',
+      HadoopLocation           :'/ws/:v/config/hadoopExecutable',
       Jar                      :'/ws/:v/jars',
       JarApps                  :'/ws/:v/jars/:fileName/applications',
       JarDependencies          :'/ws/:v/jars/:fileName/dependencyJars',
