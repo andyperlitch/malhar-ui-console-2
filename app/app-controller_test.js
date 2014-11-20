@@ -59,7 +59,7 @@ describe('Controller: AppCtrl', function() {
         return '/not/the/page';
       };
       $route.reload = jasmine.createSpy();
-      notifier.error = jasmine.createSpy();
+      notifier.notify = jasmine.createSpy();
       dfd = $q.defer();
       authentication.retrieveAuthStatus = function() {
         return dfd.promise;
@@ -122,8 +122,8 @@ describe('Controller: AppCtrl', function() {
               expect($route.reload).toHaveBeenCalled();
             });
 
-            it('should not call the error method of notificationService', function() {
-              expect(notifier.error).not.toHaveBeenCalled();   
+            it('should not call the notify method of notificationService', function() {
+              expect(notifier.notify).not.toHaveBeenCalled();   
             });
 
             it('should call connect on the websocket', function() {
@@ -204,8 +204,8 @@ describe('Controller: AppCtrl', function() {
           expect($route.reload).toHaveBeenCalled();
         });
 
-        it('should call the error method of notificationService', function() {
-          expect(notifier.error).toHaveBeenCalled();
+        it('should call the notify method of notificationService', function() {
+          expect(notifier.notify).toHaveBeenCalled();
         });
 
       });
@@ -358,15 +358,15 @@ describe('Controller: AppCtrl', function() {
       
       beforeEach(function() {
         spyOn($log, 'error');
-        notifier.error = jasmine.createSpy();
+        notifier.notify = jasmine.createSpy();
         $scope.logout();
         dfd.reject();
         $scope.$digest();
       });
 
-      it('should call notificationService.error and $log.error', function() {
+      it('should call notificationService.notify and $log.error', function() {
         expect($log.error).toHaveBeenCalled();
-        expect(notifier.error).toHaveBeenCalled();
+        expect(notifier.notify).toHaveBeenCalled();
       });    
 
     });
