@@ -294,6 +294,11 @@ describe('Controller: AppCtrl', function() {
             expect($location.url).not.toHaveBeenCalledWith('/testing/login');
           });
 
+          it('should call webSocket.connect', function() {
+            obj.handler($event, url);
+            expect(webSocket.connect).toHaveBeenCalled();
+          });
+
         });
 
       });
