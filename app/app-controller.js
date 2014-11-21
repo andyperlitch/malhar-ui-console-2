@@ -35,6 +35,7 @@ angular.module('app')
       function() {
         var loginScreenUrl = getUri.page('Login', null, true);
         var path = $location.path();
+        webSocket.disconnect();
         $location.url(loginScreenUrl);
         $location.search('redirect', path);
       },
@@ -139,7 +140,8 @@ angular.module('app')
       }
 
       else {
-        $log.debug('User is authenticated.');  
+        $log.debug('User is authenticated.');
+        webSocket.connect();
       }
 
     }
