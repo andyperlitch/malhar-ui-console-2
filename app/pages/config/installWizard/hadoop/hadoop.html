@@ -54,8 +54,16 @@
           <td>The absolute path to the location of your Hadoop executable.</td>
           <td>
             
-            <input name="hadoopLocation" tabindex="1" type="text" class="form-control" ng-model="hadoopLocation.data.value" placeholder="e.g. /usr/bin/hadoop" required>
-            <div ng-messages="hadoopForm.hadoopLocation.$error">
+            <input
+              name="hadoopLocation"
+              focus-on="hadoopPropertiesNotFound"
+              tabindex="1"
+              type="text"
+              class="form-control"
+              ng-model="hadoopLocation.data.value"
+              placeholder="e.g. /usr/bin/hadoop"
+              required>
+            <div ng-messages="hadoopForm.hadoopLocation.$error" ng-show="hadoopForm.hadoopLocation.$touched">
               <div ng-message="required">
                 <span class="text-danger" dt-text>A hadoop location is required.</span>
               </div>
@@ -86,8 +94,15 @@
           </td>
           <td>
 
-            <input name="dfsLocation" tabindex="2" type="text" class="form-control" ng-model="dfsLocation.data.value" placeholder="e.g. /user/USER/datatorrent" required>
-            <div ng-messages="hadoopForm.dfsLocation.$error">
+            <input
+              name="dfsLocation"
+              tabindex="2"
+              type="text"
+              class="form-control"
+              ng-model="dfsLocation.data.value"
+              placeholder="e.g. /user/USER/datatorrent" 
+              required>
+            <div ng-messages="hadoopForm.dfsLocation.$error" ng-show="hadoopForm.dfsLocation.$touched">
               <div ng-message="required">
                 <span class="text-danger" dt-text>A DFS location is required.</span>
               </div>
@@ -117,7 +132,7 @@
     <span class="glyphicon glyphicon-circle-arrow-left"></span>
     <span ng-text>back</span>
   </button>
-  <button class="btn btn-success nextButton" ng-click="next()" ng-disabled="loading || loadError || hadoopForm.$invalid || submittingChanges" tabindex="3">
+  <button class="btn btn-success nextButton" focus-on="hadoopPropertiesFound" ng-click="next()" ng-disabled="loading || loadError || hadoopForm.$invalid || submittingChanges" tabindex="3">
     <span ng-text>continue</span>
     <span class="glyphicon glyphicon-circle-arrow-right"></span>
   </button>

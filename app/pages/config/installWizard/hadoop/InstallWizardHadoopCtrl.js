@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', [
+  'app.components.directives.focusOn',
   'app.components.resources.ConfigPropertyModel',
   'app.components.resources.ConfigIssueCollection',
   'app.components.resources.HadoopLocation',
@@ -36,32 +37,45 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
 
   // Loading
   $scope.loading = true;
-  $q.all([$scope.dfsLocation.fetch(), $scope.hadoopLocation.fetch()])
-    .then(
-      // Successfully loaded property values
-      function(){
-        $scope.loading = false;
+  $scope.initialValues = {
+    hadoopLocation: '',
+    dfsLocation: ''
+  };
 
-        // Set the initial values for testing
-        $scope.initialValues = {
-          hadoopLocation: $scope.hadoopLocation.data.value,
-          dfsLocation: $scope.dfsLocation.data.value
-        };
+  var loadingPromise = $q.all([$scope.dfsLocation.fetch(), $scope.hadoopLocation.fetch()]);
+  loadingPromise.then(
+    // Successfully loaded property values
+    function(){
 
-        // Focus on element
-        _.defer(function() {
-          // Puts focus on first text box
-          // $element.find('input[name="hadoopLocation"]').focus()[0].setSelectionRange(0,9999);
-          // Puts focus on next button
-          $element.find('.nextButton').focus();
-        });
-      },
-      // Failed to load properties
-      function() {
-        $scope.loading = false;
+      // Set the initial values for testing
+      $scope.initialValues = {
+        hadoopLocation: $scope.hadoopLocation.data.value,
+        dfsLocation: $scope.dfsLocation.data.value
+      };
+
+      // triggers focus on the next button
+      delayedBroadcast('hadoopPropertiesFound');
+
+    },
+    // Failed to load properties
+    function(res) {
+
+      if (res.status !== 404) {
         $scope.loadError = true;
+        $log.error(
+          'An error occurred getting hadoop properties:',
+          'hadoopLocation.fetchError', $scope.hadoopLocation.fetchError,
+          'dfsLocation.fetchError: ', $scope.dfsLocation.fetchError
+        );
       }
-    );
+      delayedBroadcast('hadoopPropertiesNotFound');
+
+    }
+  );
+
+  loadingPromise.finally(function() {
+    $scope.loading = false;
+  });
 
   // Continue action
   $scope.next = function() {
