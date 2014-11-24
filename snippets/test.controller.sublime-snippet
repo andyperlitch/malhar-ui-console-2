@@ -1,0 +1,27 @@
+<snippet>
+    <content><![CDATA[
+'use strict';
+
+describe('Controller: ${10:CONTROLLER_NAME}', function() {
+
+  var \$scope;
+  
+  beforeEach(module('${20:MODULE_NAME}'));
+
+  beforeEach(inject(function(\$rootScope, \$controller){
+    \$scope = \$rootScope.\$new();
+    \$controller('${10:CONTROLLER_NAME}', {
+      \$scope: \$scope
+
+      // Put other mock injections here...
+        
+    });
+  }));
+
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>testcontroller</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <scope>source.js</scope>
+</snippet>

@@ -1,0 +1,23 @@
+<snippet>
+    <content><![CDATA[
+'use strict';
+
+describe('${10:Service|Factory|Provider}: ${20:SERVICE_NAME}', function () {
+
+  // load the service's module
+  beforeEach(module('${30:MODULE_NAME}'));
+
+  // instantiate service
+  var ${20:SERVICE_NAME};
+  beforeEach(inject(function (_${20:SERVICE_NAME}_) {
+    ${20:SERVICE_NAME} = _${20:SERVICE_NAME}_;
+  }));
+
+
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>testservice</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>
