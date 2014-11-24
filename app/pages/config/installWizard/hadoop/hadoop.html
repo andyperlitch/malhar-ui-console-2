@@ -107,7 +107,7 @@
                 <span class="text-danger" dt-text>A DFS location is required.</span>
               </div>
               <div ng-if="dfsLocationServerError">
-                <span class="text-danger">
+                <span class="text-danger" ng-if="!dfsLocationServerError.permissions">
                   {{ dfsLocationServerError.message }}
                   <button
                   ng-if="dfsLocationServerError.stack"
@@ -116,6 +116,20 @@
                   modal-title="'Error Details'"
                   modal-size="lg">view details</button>
                 </span>
+                <div class="alert alert-danger" ng-if="dfsLocationServerError.permissions">
+                  <h4>Failed to save new DFS Location due to a permissions error</h4>
+                  <p>
+                    Depending on your Hadoop installation, a possible solution could be to run the following hadoop commands, replacing USER is the user running the DTGateway.
+                  </p>
+                  <pre>sudo -u hdfs hdfs dfs -mkdir -p /user/USER
+                    sudo -u hdfs hdfs dfs -chown USER /user/USER</pre>
+                  <button
+                    ng-if="dfsLocationServerError.stack"
+                    class="btn btn-default"
+                    view-raw-in-modal="dfsLocationServerError.stack"
+                    modal-title="'Error Details'"
+                    modal-size="lg">view details</button>
+                </div>
               </div>
             </div>
 
