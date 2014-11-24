@@ -228,8 +228,6 @@ describe('Controller: InstallWizardHadoopCtrl', function() {
 
   describe('the next method', function() {
 
-
-    
     it('should be a function', function() {
       expect(typeof $scope.next).toEqual('function');
     });
@@ -344,6 +342,14 @@ describe('Controller: InstallWizardHadoopCtrl', function() {
             $scope.$apply();
             expect($log.error).toHaveBeenCalled();
             expect($scope.hadoopLocationServerError).toEqual(err.data);
+          });
+
+          it('should close the modal without even checking for issues', function() {
+            $modal.openedDfd.resolve();
+            $scope.$apply();
+            $timeout.flush(1000);
+            expect($scope.issues.fetch).not.toHaveBeenCalled();
+            expect($modal.close).toHaveBeenCalled();
           });
 
         });

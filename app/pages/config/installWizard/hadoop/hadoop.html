@@ -69,7 +69,8 @@
               </div>
               <div ng-if="hadoopLocationServerError">
                 <span class="text-danger">
-                  {{ hadoopLocationServerError.message }}
+                  An error occurred saving the hadoop location.
+                  <span ng-if="hadoopLocationServerError.message">{{ hadoopLocationServerError.message }}</span>
                   <button
                   ng-if="hadoopLocationServerError.stack"
                   class="btn btn-default"
