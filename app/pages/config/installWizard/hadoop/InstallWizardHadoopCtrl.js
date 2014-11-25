@@ -16,6 +16,7 @@
 'use strict';
 
 angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', [
+  'app.components.directives.focusOn',
   'app.components.resources.ConfigPropertyModel',
   'app.components.resources.ConfigIssueCollection',
   'app.components.resources.HadoopLocation',
@@ -23,7 +24,19 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
   'ui.bootstrap.modal',
   'app.components.services.delayedBroadcast'
 ])
-.controller('InstallWizardHadoopCtrl', function($scope, $element, $q, $log, ConfigPropertyModel, HadoopLocation, ConfigIssueCollection, gatewayManager, $modal, $timeout, delayedBroadcast) {
+.controller('InstallWizardHadoopCtrl', function(
+  $scope,
+  $q,
+  $log,
+  ConfigPropertyModel,
+  HadoopLocation,
+  ConfigIssueCollection,
+  gatewayManager,
+  $modal,
+  $timeout,
+  delayedBroadcast,
+  authentication
+) {
 
   // Flag that will be set to true if the gateway gets restarted and
   // a login is required to continue.
@@ -36,32 +49,45 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
 
   // Loading
   $scope.loading = true;
-  $q.all([$scope.dfsLocation.fetch(), $scope.hadoopLocation.fetch()])
-    .then(
-      // Successfully loaded property values
-      function(){
-        $scope.loading = false;
+  $scope.initialValues = {
+    hadoopLocation: '',
+    dfsLocation: ''
+  };
 
-        // Set the initial values for testing
-        $scope.initialValues = {
-          hadoopLocation: $scope.hadoopLocation.data.value,
-          dfsLocation: $scope.dfsLocation.data.value
-        };
+  var loadingPromise = $q.all([$scope.dfsLocation.fetch(), $scope.hadoopLocation.fetch()]);
+  loadingPromise.then(
+    // Successfully loaded property values
+    function(){
 
-        // Focus on element
-        _.defer(function() {
-          // Puts focus on first text box
-          // $element.find('input[name="hadoopLocation"]').focus()[0].setSelectionRange(0,9999);
-          // Puts focus on next button
-          $element.find('.nextButton').focus();
-        });
-      },
-      // Failed to load properties
-      function() {
-        $scope.loading = false;
+      // Set the initial values for testing
+      $scope.initialValues = {
+        hadoopLocation: $scope.hadoopLocation.data.value,
+        dfsLocation: $scope.dfsLocation.data.value
+      };
+
+      // triggers focus on the next button
+      delayedBroadcast('hadoopPropertiesFound');
+
+    },
+    // Failed to load properties
+    function(res) {
+
+      if (res.status !== 404) {
         $scope.loadError = true;
+        $log.error(
+          'An error occurred getting hadoop properties:',
+          'hadoopLocation.fetchError', $scope.hadoopLocation.fetchError,
+          'dfsLocation.fetchError: ', $scope.dfsLocation.fetchError
+        );
       }
-    );
+      delayedBroadcast('hadoopPropertiesNotFound');
+
+    }
+  );
+
+  loadingPromise.finally(function() {
+    $scope.loading = false;
+  });
 
   // Continue action
   $scope.next = function() {
@@ -114,7 +140,7 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
           $scope.hadoopLocationServerError = null;
         },
         function(response) {
-          $log.warn('Failed to save new hadoop location. Response: ', response);
+          $log.error('Failed to save new hadoop location. Response: ', response);
           $scope.hadoopLocationServerError = response.data;
         }
       );
@@ -127,8 +153,12 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
     // ---------------------------------
     function step2() {
       currentAction.message = 'Checking if gateway needs to be restarted...';
+
+      var step2dfd = $q.defer();
+      var step2promise = step2dfd.promise;
+
       // Get the issues
-      return $scope.issues.fetch().then(
+      $scope.issues.fetch().then(
         function(issues) {
 
           // check for RESTART_NEEDED issue
@@ -150,14 +180,37 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
           }
 
           // Create promise
-          var result = $q.when(restartPromise);
+          var restartDfd = $q.defer();
+          var result = restartDfd.promise;
 
-          result.then(
+          $q.when(restartPromise).then(
             function() {
 
               if (restartNeeded) {
-                loginRequired = true;
-                $log.info('Gateway restart has logged user out, sign in required.');
+
+                authentication.retrieveAuthStatus().then(function(isEnabled) {
+                  if (isEnabled) {
+                    loginRequired = true;
+                    currentAction.mustLogin = true;
+                    currentAction.onLoginSuccess = function() {
+                      restartDfd.resolve();
+                    };
+                    delayedBroadcast('putFocusOnLoginUsername');
+                    
+                    $log.info('Gateway restart has logged user out, sign in required.');
+                  }
+
+                  else {
+                    $log.info('Gateway restarted successfully, no login required because auth is disabled.');
+                    restartDfd.resolve();
+                  }
+                });
+
+                  
+              }
+
+              else {
+                restartDfd.resolve();
               }
 
               // Clear server error
@@ -165,23 +218,27 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
             },
             // STEP 2 FAILED: gateway failed to restart
             function(reason) {
-              $log.warn('Gateway didnt restart: ', reason);
+              $log.error('Gateway didnt restart: ', reason);
               $scope.hadoopLocationServerError = {
                 message: 'The gateway could not be restarted.'
               };
+              restartDfd.reject();
             }
           );
 
-          return result;
+          result.then(step2dfd.resolve, step2dfd.reject);
         },
         // STEP 2 FAILED: Issues failed to load
         function() {
-          $log.warn('Issues failed to load from the gateway!');
+          $log.error('Issues failed to load from the gateway!');
           $scope.hadoopLocationServerError = {
             message: 'Issues could not be loaded from the gateway.'
           };
+          step2dfd.reject();
         }
       );
+
+      return step2promise;
     }
 
     // -----------------------------------
@@ -213,6 +270,7 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
           var permissionDeniedRegExp = /permission\s+denied/i;
           if (permissionDeniedRegExp.test(response.data.message)) {
             $scope.dfsLocationServerError = {
+              permissions: true,
               message: 'You do not have permission to set the DFS location to "' + $scope.dfsLocation.data.value + '".',
               stack: response.data.message
             };
@@ -240,38 +298,19 @@ angular.module('app.pages.config.installWizard.hadoop.InstallWizardHadoopCtrl', 
         // not required and everything went really fast
         $modalInstance.opened.then(function() {
 
-          // This function notifies the user that
-          // config was successfully updated, then
-          // moves the installer to the next step.
-          var success = function() {
-            currentAction.mustLogin = false;
-            currentAction.message = 'Configuration updated!';
-            $timeout(function() {
-              $modalInstance.close();
-              $scope.goToStep('license');
-            }, 1000);
-          };
-
-          // If login is required, we'll need to
-          // notify the status modal
-          if (loginRequired) {
-            currentAction.mustLogin = true;
-            currentAction.onLoginSuccess = success;
-            $timeout(function() {
-              delayedBroadcast('putFocusOnLoginUsername');
-            }, 100);
-          }
-
-          // Otherwise we are good to move on.
-          else {
-            success();
-          }
+          // Notifies the user that config was successfully 
+          // updated, then moves the installer to the next step.
+          currentAction.message = 'Configuration updated!';
+          $timeout(function() {
+            $modalInstance.close();
+            $scope.goToStep('license');
+          }, 1000);
           
         });
         
       },
       function() {
-        $log.warn('Failure updating hadoop configuration.');
+        $log.error('Failure updating hadoop configuration.');
         $scope.submittingChanges = false;
         $timeout(function() {
           $modalInstance.close();

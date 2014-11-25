@@ -25,6 +25,9 @@ var livereload = require('connect-livereload');
 var httpProxy = require('http-proxy');
 var config = require('./../config');
 
+// Mock calls here
+var mockInstallerCalls = require('./mockInstallerCalls');
+
 // Set up the proxy that goes to the gateway
 var proxy = httpProxy.createProxyServer({
   target: {
@@ -64,6 +67,9 @@ function startServer(baseDirs, port) {
     next();
   });
 
+  // Mock installer calls
+  // mockInstallerCalls.addErrorCalls(app, 404);
+
   // ------------------------------------------
   // MOCK DATA FOR DAG CREATOR OPERATOR CLASSES
   // ------------------------------------------
@@ -87,35 +93,7 @@ function startServer(baseDirs, port) {
   // ----------------------------------------------
 
 
-  // ----------------------------------
-  // MOCK CALLS FOR INSTALLATION WIZARD
-  // ----------------------------------
-  // app.get('/ws/v1/config/properties/dt.dfsRootDirectory', function(req, res) {
 
-  //   // Error
-  //   setTimeout(function() {
-  //     res.status(500).send('Some kind of crazy error occurred');
-  //   }, 1000);
-
-  // });
-  // app.get('/ws/v1/config/hadoopExecutable', function(req, res) {
-
-  //   // Error
-  //   setTimeout(function() {
-  //     res.status(500).send('hadoopExecutable could not be retrieved');
-  //   }, 1000);
-    
-  // app.post('/ws/v1/licenses/files/:filename/makeCurrent', function(req, res) {
-  //   console.log('MOCK REQUEST TO MAKE LICENSE CURRENT. FAILING PURPOSEFULLY.');
-  //   setTimeout(function() {
-  //     res.status(500).send('Could not make license current');
-  //   }, 1000);
-  // });
-
-  // });
-  // --------------------------------------
-  // END MOCK CALLS FOR INSTALLATION WIZARD
-  // --------------------------------------
 
   // ----------------------------------
   // MOCK CALLS FOR LICENSE INFORMATION

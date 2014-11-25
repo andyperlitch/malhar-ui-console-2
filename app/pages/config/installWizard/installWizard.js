@@ -28,13 +28,13 @@ angular.module('app.pages.config.installWizard', [
 ])
 // Routing
 .config(function(settings, $routeProvider) {
-
-  $routeProvider.when(settings.pages.InstallWizard, {
+  var pageDef = {
     controller: 'InstallWizardCtrl',
     templateUrl: 'pages/config/installWizard/installWizard.html',
     label: 'Installation Wizard'
-  });
-
+  };
+  $routeProvider.when(settings.pages.InstallWizard, pageDef);
+  $routeProvider.when('/welcome', pageDef);
 })
 
 .factory('installWizardSteps', function(dtText) {

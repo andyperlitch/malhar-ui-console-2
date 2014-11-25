@@ -1,0 +1,51 @@
+<snippet>
+    <content><![CDATA[
+'use strict';
+
+describe('Directive: ${10:DIRECTIVE_NAME}', function () {
+
+  var element, scope, rootScope, isoScope, compile, sandbox;
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+    
+    // define mock objects here
+  });
+
+  // load the directive's module
+  beforeEach(module('${20:MODULE_NAME}', function(\$provide) {
+    // Inject dependencies like this:
+    // \$provide.value('$thing', mockThing);
+
+  }));
+
+  beforeEach(inject(function (\$compile, \$rootScope) {
+    // Cache these for reuse    
+    rootScope = \$rootScope;
+    compile = \$compile;
+
+    // Other setup, e.g. helper functions, etc.
+
+    // Set up the outer scope
+    scope = \$rootScope.\$new();
+
+    // Define and compile the element
+    element = angular.element('<div ${30:MY-DIRECTIVE}></div>');
+    element = compile(element)(scope);
+    scope.\$digest();
+    isoScope = element.isolateScope();
+  }));
+
+  afterEach(function() {
+    sandbox.restore();
+  });
+
+  it$0
+
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>mochadirective</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <scope>source.js</scope>
+</snippet>

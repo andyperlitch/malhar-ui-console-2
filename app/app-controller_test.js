@@ -36,7 +36,8 @@ describe('Controller: AppCtrl', function() {
       getUri: getUri = {},
       $route: $route = {},
       webSocket: webSocket = {
-        connect: jasmine.createSpy()
+        connect: jasmine.createSpy(),
+        disconnect: jasmine.createSpy()
       },
       setupBreadcrumbs: setupBreadcrumbs = jasmine.createSpy()
     });
@@ -294,6 +295,11 @@ describe('Controller: AppCtrl', function() {
             expect($location.url).not.toHaveBeenCalledWith('/testing/login');
           });
 
+          it('should call webSocket.connect', function() {
+            obj.handler($event, url);
+            expect(webSocket.connect).toHaveBeenCalled();
+          });
+
         });
 
       });
@@ -350,6 +356,10 @@ describe('Controller: AppCtrl', function() {
       it('should redirect the page to the login page, with a redirect to the original page', function() {
         expect($location.url).toHaveBeenCalledWith('/login/page');
         expect($location.search).toHaveBeenCalledWith('redirect', '/current/path');
+      });
+
+      it('should call disconnect on the webSocket service', function() {
+        expect(webSocket.disconnect).toHaveBeenCalled();
       });
 
     });

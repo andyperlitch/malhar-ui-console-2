@@ -247,7 +247,7 @@ angular.module('app.pages.ops.appInstance', [
             })
           ];
 
-          defaultWidgets = _.map(['Application Overview', 'Stram Events', 'Logical DAG'], function (name) {
+          defaultWidgets = _.map(['Application Overview', 'Stram Events'], function (name) {
             return { name: name };
           });
 
