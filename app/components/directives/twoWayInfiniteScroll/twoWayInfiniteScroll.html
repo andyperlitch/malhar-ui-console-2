@@ -1,0 +1,52 @@
+<div msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)" class="twi-scroll">
+  
+  <div class="twi-scroll-inner">
+    <!-- prepend loading -->
+    <div ng-if="isPending.prepend" class="prepend-message alert alert-info">
+      <dt-spinner></dt-spinner> <span dt-text>loading</span>
+    </div>
+    <!-- prepend error -->
+    <div ng-if="errMessage.prepend" class="prepend-message alert alert-danger">
+      <strong dt-text>Error</strong>: {{ errMessage.prepend }}
+    </div>
+    <!-- prepend no results -->
+    <div ng-if="okMessage.prepend" class="prepend-message alert alert-success">
+      {{ okMessage.prepend }}
+      <a href dt-text ng-click="okMessage.prepend = undefined">close</a>
+    </div>
+
+
+    <!-- reset loading -->
+    <div ng-if="isPending.reset" class="reset-message alert alert-warning">
+      <dt-spinner></dt-spinner> <span dt-text>loading</span>
+    </div>
+    <!-- reset error -->
+    <div ng-if="errMessage.reset" class="alert alert-danger">
+      <strong dt-text>Error</strong>: {{ errMessage.reset }}
+    </div>
+    <!-- reset no results -->
+    <div ng-if="okMessage.reset" class="reset-message alert alert-info">
+      {{ okMessage.reset }}
+    </div>
+
+    <!-- items -->
+    <div ng-if="!isPending.reset" class="items">
+      <div ng-repeat="item in items track by $index" ng-class="itemClass"><ng-include src="itemTemplateUrl"></ng-include></div>
+    </div>
+
+    <!-- append loading -->
+    <div ng-if="isPending.append" class="append-message alert alert-info">
+      <dt-spinner></dt-spinner> <span dt-text>loading</span>
+    </div>
+    <!-- append error -->
+    <div ng-if="errMessage.append" class="append-message alert alert-danger">
+      <strong dt-text>Error</strong>: {{ errMessage.append }}
+    </div>
+    <!-- append no results -->
+    <div ng-if="okMessage.append" class="append-message alert alert-success">
+      {{ okMessage.append }}
+      <a href dt-text ng-click="okMessage.append = undefined">close</a>
+    </div>
+  </div>
+
+</div>

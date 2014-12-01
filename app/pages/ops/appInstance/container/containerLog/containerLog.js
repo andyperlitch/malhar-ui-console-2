@@ -19,12 +19,12 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
   'ngRoute',
   'app.settings',
   'ngMessages',
-  'monospaced.mousewheel',
   'app.components.resources.ContainerLogModel',
   'app.components.resources.ContainerLogCollection',
   'app.components.directives.validation.readableBytes',
   'app.components.directives.validation.greaterThan',
   'app.components.directives.uiResizable',
+  'app.components.directives.twoWayInfiniteScroll',
   'app.components.services.getUri',
   'app.components.services.confirm',
   'app.components.services.dtText',
@@ -63,12 +63,34 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
     function getLogContent(log, params) {
 
+      // deferred to use for this request
+      var dfd = $q.defer();
+
       // Holds the finalized parameters to be passed to 
       // the request
       var queryParams = { includeOffset: true };
 
       // URL to send the request to
       var url = getUri.url('ContainerLog', $routeParams, $routeParams.logName);
+
+      // Setup success and error handlers for request
+      function onGetSuccess(res) {
+        if (angular.isArray(res.data.lines)){
+          dfd.resolve(res.data.lines);
+        }
+        else {
+          dfd.reject('The server response was not in the expected format.');
+        }
+      }
+
+      function onGetFailure(res){
+        if (res.status === 404) {
+          dfd.resolve([]);
+        }
+        else {
+          dfd.reject('An error (' + res.status + ') occurred on the server while trying to retrieve log content.', res);
+        }
+      }
 
       // Starting offset in bytes to get the file from
       queryParams.start = params.hasOwnProperty('start') ? params.start * 1 : 0;
@@ -82,57 +104,36 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       var bytes = queryParams.end - queryParams.start;
       if (bytes > settings.containerLogs.CONFIRM_REQUEST_THRESHOLD_KB * 1024) {
 
-        return confirm({
+        confirm({
           bytes: bytes,
           downloadHref: getUri.url('ContainerLog', $routeParams, $routeParams.logName),
           templateUrl: 'pages/ops/appInstance/container/containerLog/confirmLargeRequest.html'
         })
-        .then(function() {
-          return $http.get(url, { params: queryParams });
-        });
+        .then(
+          function() {
+            $http.get(url, { params: queryParams }).then(onGetSuccess, onGetFailure);
+          },
+          function() {
+            dfd.reject('You cancelled the large request.');
+          }
+        );
       }
-      else if (bytes === 0) {
-        return false;
+      else if (bytes <= 0) {
+
+        dfd.resolve([]);
+
+      }
+      else {
+
+        $http.get(url, { params: queryParams }).then(onGetSuccess, onGetFailure);
+
       }
 
-      return $http.get(url, { params: queryParams });
-      
+      return dfd.promise;
+
     }
 
     return getLogContent;
-  })
-
-  .directive('containerLogViewer', function() {
-    return {
-      link: function(scope, element) {
-        // Set scroll listener
-        element.on('scroll', function() {
-          var scrollTop = element.scrollTop();
-          if (element.scrollTop() === 0) {
-            scope.prependToLog();
-          }
-          else if (scrollTop + element.outerHeight() >= element[0].scrollHeight) {
-            scope.appendToLog();
-          }
-        });
-        // Set wheel listener
-        scope.onWheel = function($event, $delta, $deltaX, $deltaY) {
-          var scrollTop = element.scrollTop();
-          if (scrollTop === 0 && $deltaY > 0) {
-            scope.prependToLog();
-          } 
-          else {  
-            var bottom = scrollTop + element.outerHeight();
-            var scrollHeight = element[0].scrollHeight;
-            var scrollingDown = $deltaY < 0;
-            
-            if (bottom >= scrollHeight && scrollingDown) {
-              scope.appendToLog();
-            }
-          }
-        };
-      }
-    };
   })
 
   // Controller
@@ -141,6 +142,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
     $routeParams,
     $location,
     $http,
+    $log,
     $timeout,
     settings,
     ContainerLogModel,
@@ -207,10 +209,9 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       name: $routeParams.logName
     });
 
-    $scope.logs.fetch().then(function(res) {
+    var logFetch = $scope.logs.fetch().then(function(res) {
       var container = $scope.log.transformResponse({ logs: res });
       $scope.log.set(container);
-      $scope.getInitialContent();
     });
 
     /**
@@ -219,15 +220,23 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
      * 
      * @return {Promise} Returns the promise returned by performQuery.
      */
-    $scope.getInitialContent = function() {
+    $scope.getInitialContent = function(dfd) {
 
-      // Update log content parameters
-      var logLength = 1 * $scope.log.data.length;
-      $scope.logContent.manualRange.start = $routeParams.start || Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
-      $scope.logContent.manualRange.end = $routeParams.end || logLength;
-      $scope.logContent.manualGrep = '';
-      return $scope.performQuery();
-      
+      logFetch.then(function() {
+        // Update log content parameters
+        var logLength = 1 * $scope.log.data.length;
+        $scope.logContent.manualRange.start = $routeParams.start || Math.max(0, settings.containerLogs.DEFAULT_START_OFFSET + logLength);
+        $scope.logContent.manualRange.end = $routeParams.end || logLength;
+        $scope.logContent.manualGrep = '';
+        $scope.performQuery().then(function(){
+          dfd.resolve($scope.logContent.lines);
+        }, function() {
+          dfd.reject('Failed to load log content');
+        });
+      }, function() {
+        dfd.reject('Failed to load logs');
+      });
+
     };
 
     // Requests 
@@ -237,14 +246,7 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
      * 
      * @return {Promise} A promise that is resolved/rejected with content request.
      */
-    $scope.prependToLog = function() {
-      
-      // Check debounce flag
-      if ($scope._prependingContent_ || $scope.preventScroll) {
-        return;
-      }
-      $scope._prependingContent_ = true;
-
+    $scope.prependToLog = function(dfd) {
       // Set up param object to use with request
       var params = {
         grep: $scope.logContent.grep
@@ -258,24 +260,11 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
       // Initiate the content request
       var promise = getLogContent($scope.log, params);
-
-      if (typeof promise.then !== 'function') {
-        return;
-      }
-
-      // Add the prependMessage to the scope
-      $scope.prependMessage = {
-        type: 'info',
-        message: dtText.get('fetching log content...')
-      };
       
-      promise.then(function(res) {
-
-        // Extract the lines from the response
-        var linesToPrepend = res.data.lines;
+      promise.then(function(linesToPrepend) {
 
         // Ensure we have something to add
-        if (angular.isArray(linesToPrepend) && linesToPrepend.length) {
+        if (linesToPrepend.length) {
 
           if (!params.grep) {
             // connect that first line of the current
@@ -285,41 +274,37 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
             lastLineToPrepend.line += currentFirstLine.line;
           }
 
-          // Get current scroll position
-          var $el = $('#container-log-viewer');
-          var scrollHeight = $el[0].scrollHeight;
-          var scrollTop = $el.scrollTop();
-
-          // Defer scroll adjustment
-          $timeout(function() {
-            var newScrollHeight = $el[0].scrollHeight;
-            var newScrollTop = newScrollHeight - scrollHeight + scrollTop;
-            $el.scrollTop(newScrollTop);
-          });
-
           // Update lines
           $scope.setLines(linesToPrepend.concat($scope.logContent.lines));
           $scope.logContent.start = params.start;
 
+          // Do not include the first line if params.start does not equal 0
+          var resolveLines = linesToPrepend.slice();
+          if (params.start > 0) {
+            resolveLines.shift();
+          }
+          dfd.resolve(resolveLines);
         }
 
-        // Remove prepend message
-        $scope.prependMessage = false;
+        else {
+          if (params.start === 0) {
+            dfd.resolve({
+              message: 'Reached top of log file.',
+              timeout: 2000
+            });
+          }
+          else {
+            dfd.resolve({
+              message: 'No results found.',
+              timeout: 3000
+            });
+          }
+        }
 
       }, 
       // Error Handler
-      function() {
-        $scope.prependMessage = {
-          type: 'danger',
-          message: dtText.get('an error occurred! ')
-        };
-      });
-
-      promise.finally(function() {
-        // Unset the flag after RETRIEVE_DEBOUNCE_WAIT
-        $timeout(function() {
-          $scope._prependingContent_ = false;
-        }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT);
+      function(reason, response) {
+        dfd.reject('Failed to retrieve earlier log content: ' + reason, response);
       });
 
       return promise;
@@ -330,23 +315,11 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
      * 
      * @return {Promise} A promise that is resolved/rejected with content request.
      */
-    $scope.appendToLog = function() {
-
-      // Check appending flag
-      if ($scope._appendingContent_ || $scope.preventScroll) {
-        return;
-      }
-      $scope._appendingContent_ = true;
+    $scope.appendToLog = function(dfd) {
 
       // Initialize params for request
       var params = {
         grep: $scope.logContent.grep
-      };
-
-      // Add the appendMessage to the scope
-      $scope.appendMessage = {
-        type: 'info',
-        message: dtText.get('fetching log content...')
       };
 
       // First, get an updated picture of the log length
@@ -365,10 +338,10 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
       promise.then(
         // success
-        function(res) {
-          var linesToAppend = res.data.lines;
+        function(linesToAppend) {
+
           // Ensure we have something to add
-          if (angular.isArray(linesToAppend) && linesToAppend.length) {
+          if (linesToAppend.length) {
 
             if (!params.grep) {
               // Join last line of current and first line of new
@@ -380,33 +353,26 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
             // Update lines
             $scope.setLines($scope.logContent.lines.concat(linesToAppend));
             $scope.logContent.end = params.end || $scope.log.data.length * 1;
-          }
 
-          // Clear out message
-          $scope.appendMessage = false;
+            dfd.resolve(linesToAppend);
+          }
+          else {
+            
+            if (params.grep) {
+              dfd.resolve('No results found.');
+            }
+            else {
+              dfd.resolve('Reached end of file.');
+            }
+            
+          }
         },
 
         // error
-        function(response) {
-          if (response.status === 404) {
-            $scope.appendMessage = {
-              type: 'success',
-              message: dtText.get('reached end of file.')
-            };
-            return;
-          }
-          $scope.appendMessage = {
-            type: 'danger',
-            message: dtText.get('an error occurred! ')
-          };
+        function(reason, response) {
+          dfd.reject('Failed to retrieve more log content: ' + reason, response);
         }
       );
-
-      promise.finally(function() {
-        $timeout(function() {
-          $scope._appendingContent_ = false;
-        }, settings.containerLogs.RETRIEVE_DEBOUNCE_WAIT);
-      });
 
       return promise;
     };
@@ -419,20 +385,11 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
      * 
      * @return {Promise} A promise that is resolved/rejected with content request.
      */
-    $scope.performQuery = function() {
-      
-      // Set flag to prevent accidental scrolling
-      $scope.preventScroll = true;
+    $scope.performQuery = function(triggerReset) {
 
       // Clear out current lines
       $scope.logContent.lines = [];
 
-      // Set message
-      $scope.appendMessage = {
-        type: 'info',
-        message: dtText.get('performing query...')
-      };
-      
       // Set up parameters
       var params = { includeOffset: true };
 
@@ -453,36 +410,20 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
 
       // Check number of lines to be rendered
       promise.then(
-        function(res) {
-          var lines = res.data.lines;
+        function(lines) {
 
           // Update current offsets
           $scope.logContent.start = params.start;
-          $scope.logContent.end = params.end || lines[lines.length - 1].byteOffset + byteCount(lines[lines.length - 1].line);
-
+          if (lines.length) {
+            $scope.logContent.end = params.end || lines[lines.length - 1].byteOffset + byteCount(lines[lines.length - 1].line);
+          }
           $scope.setLines(lines);
-
-          if (!lines.length) {
-            $scope.appendMessage = {
-              type: 'warning',
-              message: dtText.get('found no results')
-            };
-          }
-          else {
-            $scope.appendMessage = false;
-          }
-        },
-        function() {
-          $scope.appendMessage = {
-            type: 'danger',
-            message: dtText.get('An error occurred!')
-          };
         }
       );
 
-      promise.finally(function() {
-        $scope.preventScroll = false;
-      });
+      if (triggerReset) {
+        $scope.$broadcast('performContainerLogQuery', promise);
+      }
 
       return promise;
     };
@@ -499,8 +440,12 @@ angular.module('app.pages.ops.appInstance.container.containerLog', [
       $scope.logContent.manualRange.start = Math.max(0, byteOffset - settings.containerLogs.GOTO_PADDING_BYTES);
       $scope.logContent.manualRange.end = byteOffset + settings.containerLogs.GOTO_PADDING_BYTES;
       $scope.logContent.manualGrep = '';
-      return $scope.performQuery();
+      return $scope.performQuery(true);
     };
+
+    $scope.$on('goToLogLocation', function(event, line) {
+      $scope.goToLogLocation(line);
+    });
 
     /**
      * Wrapper function for `$scope.logContent.lines = lines`. This

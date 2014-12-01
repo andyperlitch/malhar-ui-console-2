@@ -12,12 +12,12 @@ Building
 
 Due to a race condition bug in older npm versions, it is recommended that your npm version is at least v2.1.1. To update, run:
 
-    sudo npm -g i npm@2.1.1
+    sudo npm -g install npm@2.1.1
 
 Check out npm issues [#6309](https://github.com/npm/npm/issues/6309) and [#6318](https://github.com/npm/npm/issues/6318) for more details.
 
 ### Running the build
-To build this project, run the following commands:
+To build this project, run the following commands **inside the project folder**:
 
     npm install . --no-optional
     bower install

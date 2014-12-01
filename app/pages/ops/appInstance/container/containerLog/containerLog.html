@@ -12,7 +12,7 @@
       <span dt-text>download file</span>
     </a>
   </h1>
-  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="grep_form.$valid && performQuery()">
+  <form name="grep_form" novalidate class="form-inline grep-form" role="form" ng-submit="grep_form.$valid && performQuery(true)">
 
     <div class="form-group">
       <div class="input-group">
@@ -30,14 +30,14 @@
       <div class="input-group">
         <span class="input-group-addon">to</span>
         <input name="to" type="text" class="form-control" placeholder="eg. '10mb', '5kb'" ng-model="logContent.manualRange.end" readable-bytes greater-than="logContent.manualRange.start">
-        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.readableBytes ? 'block' : 'none' }">
+        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$touched && grep_form.to.$error.readableBytes ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
           <div class="popover-content" ng-message="readableBytes">
             <p dt-text>Enter an ending byte offset, like "12mb" or "8 kb."</p>
           </div>
         </div>
-        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$error.greaterThan ? 'block' : 'none' }">
+        <div class="popover bottom" ng-messages="grep_form.to.$error" ng-style="{ display: grep_form.to.$touched && grep_form.to.$error.greaterThan ? 'block' : 'none' }">
           <div class="arrow"></div>
           <h3 class="popover-title" dt-text>Invalid "to" offset</h3>
           <div class="popover-content" ng-message="greaterThan">
@@ -67,14 +67,19 @@
     </button>
 
   </form>
-  <div ui-resizable resizable-options="resizableOptions" id="container-log-viewer-wrapper" ng-style="{ height: initialViewportHeight + 'px' }">
-    <div class="well well-sm" id="container-log-viewer" container-log-viewer msd-wheel="onWheel($event, $delta, $deltaX, $deltaY)">
-      <div ng-if="prependMessage" ng-class="'loading-msg prepend alert alert-' + prependMessage.type">{{ prependMessage.message }}</div>
-
-      <div class="log-content" ng-repeat="line in logContent.lines track by $index"><span class="glyphicon glyphicon-eye-open go-to-log-location" ng-click="goToLogLocation(line)"></span>{{ line.line }}</div>
-
-      <div ng-if="logContent.error" class="alert alert-danger"dt-text>{{ logContent.error }}</div>
-      <div ng-if="appendMessage" ng-class="'loading-msg prepend alert alert-' + appendMessage.type">{{ appendMessage.message }}</div>
-    </div>
+  <div >
+    <div 
+      ui-resizable
+      resizable-options="resizableOptions"
+      ng-style="{ height: initialViewportHeight + 'px' }"
+      class="well well-sm"
+      id="container-log-viewer"
+      two-way-infinite-scroll
+      reset-on="performContainerLogQuery"
+      init="getInitialContent"
+      prepend="prependToLog"
+      append="appendToLog"
+      item-class="log-content"
+      item-template-url="'pages/ops/appInstance/container/containerLog/containerLogLine.html'"></div>
   </div>
 </div>
