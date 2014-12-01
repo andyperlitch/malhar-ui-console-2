@@ -12,12 +12,12 @@ Building
 
 Due to a race condition bug in older npm versions, it is recommended that your npm version is at least v2.1.1. To update, run:
 
-    sudo npm -g i npm@2.1.1
+    sudo npm -g install npm@2.1.1
 
 Check out npm issues [#6309](https://github.com/npm/npm/issues/6309) and [#6318](https://github.com/npm/npm/issues/6318) for more details.
 
 ### Running the build
-To build this project, run the following commands:
+To build this project, run the following commands **inside the project folder**:
 
     npm install . --no-optional
     bower install
@@ -46,8 +46,37 @@ Uses the `bower.json` and `package.json` files:
 * `gulp test` to launch unit tests with Karma
 * `gulp testall` to launch unit tests with Karma on all available browsers (requires optional dependencies)
 
-Unit Tests
+Testing
 ----------
+
+### One-time Run
+To run the tests once, run `gulp test`.
+
+### Continuously
+To run the tests continuously, listening for changes to test files, run `gulp karma:watch`.
+
+### Coverage
+To generate a coverage report, run `gulp coverage`.
+
+### End-to-End
+
+**NOTE: this is a work-in-progress.**
+
+1. To run end-2-end tests using protractor and selenium, you will first need to ensure that protractor and webdriver-manager are installed and up to date: 
+    ```
+    sudo npm install -g protractor
+    sudo webdriver-manager update
+    ```
+
+2. Start the selenium server
+    ```
+    webdriver-manager start
+    ```
+
+3. Run the tests with protractor
+    ```
+    protractor test/protractor.conf.js
+    ```
 
 
 Working with Dependencies
