@@ -14,6 +14,8 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var argv = require('optimist').argv;
+var protractor = require('gulp-protractor').protractor;
+var webdriver_standalone = require('gulp-protractor').webdriver_standalone;
 var express = require('express');
 var runSequence = require('run-sequence');
 require('./gulp/gateway');
@@ -26,14 +28,19 @@ var dev = {
   less: 'app/styles/main.less',
   scripts: {
     src: [
-      'app/components/**/!(*_test)+(.js)',
-      'app/pages/**/!(*_test)+(.js)',
-      'app/app!(*_test)+(.js)'
+      'app/components/**/!(*_test|*_e2e)+(.js)',
+      'app/pages/**/!(*_test|*_e2e)+(.js)',
+      'app/app!(*_test|*_e2e)+(.js)'
     ],
     test: [
       'app/*_test.js',
       'app/components/**/*_test.js',
       'app/pages/**/*_test.js'
+    ],
+    e2e: [
+      'app/*_e2e.js',
+      'app/components/**/*_e2e.js',
+      'app/pages/**/*_e2e.js'
     ]
   },
   clientSettings: 'app/client.settings.js',
@@ -61,6 +68,9 @@ var options = {
   uglify: { mangle: false }
 };
 
+/**
+ * JSHint
+ */
 gulp.task('jshint', ['jshint_main', 'jshint_test']);
 
 gulp.task('jshint_main', function () {
@@ -77,6 +87,10 @@ gulp.task('jshint_test', function () {
     .pipe($.jshint.reporter('fail'));
 });
 
+
+/**
+ * Testing
+ */
 gulp.task('test', function () {
   return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
     .pipe($.karma({
@@ -91,7 +105,6 @@ gulp.task('test', function () {
     });
 });
 
-// !!!Requires optionalDependencies to be installed!!!
 gulp.task('testall', function () {
   return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
     .pipe($.karma({
@@ -103,6 +116,16 @@ gulp.task('testall', function () {
     .on('error', function (err) {
       throw err;
     });
+});
+
+gulp.task('webdriver_standalone', webdriver_standalone);
+
+gulp.task('e2e', function() {
+  gulp.src(dev.scripts.e2e)
+    .pipe(protractor({
+      configFile: "test/protractor.conf.js"
+    })) 
+    .on('error', function(e) { throw e });
 });
 
 gulp.task('coverage', function () {
@@ -120,8 +143,8 @@ gulp.task('coverage', function () {
 gulp.task('karma:watch', [], function () {
   gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
     .pipe($.karma({
-      // configFile: 'test/karma-unit.conf.js',
-      configFile: 'test/karma-coverage.conf.js',
+      configFile: 'test/karma-unit.conf.js',
+      // configFile: 'test/karma-coverage.conf.js',
       action: 'watch',
       // browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
       // browsers: ['PhantomJS', 'Chrome']
@@ -129,51 +152,10 @@ gulp.task('karma:watch', [], function () {
     }));
 });
 
-gulp.task('less', ['clean'], function () {
-  return gulp.src('app/styles/main.less')
-    .pipe($.less({
-      paths: ['app/styles']
-    }))
-    .pipe(gulp.dest('.tmp/styles'));
-});
 
-gulp.task('ngtemplates', ['clean'], function () {
-  return gulp.src(dev.templates, { base: dev.dir })
-    .pipe($.ngtemplate({
-      module: 'app'
-    }))
-    .pipe($.concat('templates.js'))
-    .pipe(gulp.dest('.tmp'));
-});
-
-gulp.task('serve', function() {
-    runSequence('less', ['connect', 'watch']);
-  }
-);
-
-gulp.task('serve:dist', ['connect:dist']);
-
-gulp.task('watch', [], function () {
-  var server = $.livereload();
-
-  gulp.watch([
-    dev.index,
-    '.tmp/styles/main.css',
-    dev.templates,
-    dev.scripts.src,
-    dev.scripts.test,
-    dev.watchDependencies
-  ]).on('change', function (file) {
-    server.changed(file.path);
-  });
-
-  gulp.watch([
-    'app/styles/**/*.less',
-    'app/components/**/*.less',
-    'app/pages/**/*.less'
-  ], ['less']);
-});
-
+/**
+ * Transforms
+ */
 gulp.task('clean', function() {
   return gulp.src(prod.dir, options.clean)
     .pipe($.rimraf({ force: true }));
@@ -232,6 +214,54 @@ gulp.task('bower', function () {
     .pipe(gulp.dest(dev.dir));
 });
 
+gulp.task('less', ['clean'], function () {
+  return gulp.src('app/styles/main.less')
+    .pipe($.less({
+      paths: ['app/styles']
+    }))
+    .pipe(gulp.dest('.tmp/styles'));
+});
+
+gulp.task('ngtemplates', ['clean'], function () {
+  return gulp.src(dev.templates, { base: dev.dir })
+    .pipe($.ngtemplate({
+      module: 'app'
+    }))
+    .pipe($.concat('templates.js'))
+    .pipe(gulp.dest('.tmp'));
+});
+
+
+/**
+ * Server
+ */
+gulp.task('serve', function() {
+  runSequence('less', ['connect', 'watch']);
+});
+
+gulp.task('serve:dist', ['connect:dist']);
+
+gulp.task('watch', [], function () {
+  var server = $.livereload();
+
+  gulp.watch([
+    dev.index,
+    '.tmp/styles/main.css',
+    dev.templates,
+    dev.scripts.src,
+    dev.scripts.test,
+    dev.watchDependencies
+  ]).on('change', function (file) {
+    server.changed(file.path);
+  });
+
+  gulp.watch([
+    'app/styles/**/*.less',
+    'app/components/**/*.less',
+    'app/pages/**/*.less'
+  ], ['less']);
+});
+
 gulp.task('prodenv', function () {
   if (process.env.DATA_SERVER_HOST) {
     gulp.src(dev.clientSettings)
@@ -240,6 +270,10 @@ gulp.task('prodenv', function () {
   }
 });
 
+
+/**
+ * Documentation
+ */
 gulp.task('ngdocs', [], function () {
 
   var options = {
@@ -274,6 +308,10 @@ gulp.task('watch:ngdocs', ['serve:ngdocs'], function() {
   });
 });
 
+
+/**
+ * Build
+ */
 gulp.task('build', ['clean', 'jshint', 'test', 'copy']);
 
 gulp.task('travis', ['jshint', 'test']);

@@ -1,0 +1,28 @@
+.twi-scroll {
+  overflow: auto;
+
+  .twi-scroll-inner {
+    position: relative;
+    min-height: 100%;
+  }
+
+  .prepend-message, .append-message {
+    position: absolute;
+    margin: 0 auto;
+    padding: 0.2em 1em;
+    width: 50%;
+    left: 25%;
+    text-align: center;
+  }
+
+  .prepend-message {
+    top: 0;
+    border-radius: 0 0 1em 1em;
+  }
+
+  .append-message {
+    bottom: 0;
+    border-radius: 1em 1em 0 0;
+  }
+
+}
