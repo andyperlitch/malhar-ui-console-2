@@ -31,7 +31,9 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
  *               two-way scrollable list. When the user scrolls to the top or bottom, a prepend function or append
  *               function (respectively) get called with one argument: a deferred object. Those functions are then
  *               responsible for either resolving that deferred with an array containing 0 or more items, or reject
- *               the deferred to indicate that an error has occurred. 
+ *               the deferred to indicate that an error has occurred. Alternatively, the client code may resolve the
+ *               deferred with a string, which will result in a display message, e.g. "Reached top of log file", or
+ *               resolve with an object containing a message and a timeout. See the example.
  * @param {function} init The initializer function. Similar to prepend and append, this receives one 
  *                        argument, a deferred object that should resolve with the initial items array
  *                        to be rendered.
@@ -46,10 +48,24 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
  * <example module="app">
     <file name="app.js">
       var app = angular.module('app', ['app.components.directives.twoWayInfiniteScroll']);
-      app.controller('MainCtrl', function($scope) {
+      app.controller('MainCtrl', function($scope, myDataService) {
         $scope.my = {
           initFn: function(dfd) {
-            
+            myDataService.get().then(function(items) {
+              if (items.length) {
+                dfd.resolve(items);
+                return;
+              }
+
+              dfd.resolve({ message: "No items found!", timeout: 2000 }); // message will disappear after 2 seconds
+              // dfd.resolve("No items found!") <-- also acceptable, but with no timeout
+            }, dfd.reject );
+          },
+          prependFn: function(dfd) {
+            myDataService.getPrevious().then(dfd.resolve, dfd.reject);
+          },
+          apppendFn: function(dfd) {
+            myDataService.getNext().then(dfd.resolve, dfd.reject);
           }
         }
       });
