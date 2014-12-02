@@ -42,7 +42,8 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
  * @param {function} append The appending function. Takes a deferred as one argument which can be resolved or rejected
  *                           as explained in the main description.
  * @param {string} itemTemplateUrl The url of a template for the rows.
- * @param {number=} maxItems The maximum number of items to keep in memory and render. Defaults to 0 which means no limit.
+ * @param {object=} addToScope  An object containing key/value pairs that get added to the inner scope. Useful when the item
+ *                              template needs to access something from the outside scope.
  * @param {string=} itemClass A class to attach to each item.
  * @example
  * <example module="app">
@@ -95,9 +96,16 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
       append: '=',
       itemClass: '@',
       resetOn: '@?',
+      addToScope: '=?',
       itemTemplateUrl: '='
     },
     link: function(scope, element) {
+
+      if (angular.isObject(scope.addToScope)) {
+        for (var k in scope.addToScope) {
+          scope[k] = scope.addToScope[k];
+        }
+      }
 
       $log.debug('Initializing twoWayInfiniteScroll', element);
 

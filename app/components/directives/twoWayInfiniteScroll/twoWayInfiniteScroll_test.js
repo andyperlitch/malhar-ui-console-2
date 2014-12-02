@@ -18,7 +18,7 @@
 
 describe('Directive: twoWayInfiniteScroll', function () {
 
-  var element, scope, $timeout, rootScope, isoScope, compile, prependDfd, appendDfd, initDfd, createElement, itemCount;
+  var element, scope, $timeout, templateCache, rootScope, isoScope, compile, prependDfd, appendDfd, initDfd, createElement, itemCount, markup;
 
   function createItems(i, count) {
     var result = [];
@@ -47,9 +47,10 @@ describe('Directive: twoWayInfiniteScroll', function () {
     rootScope = $rootScope;
     compile = $compile;
     $timeout = _$timeout_;
+    templateCache = $templateCache;
 
     // Other setup, e.g. helper functions, etc.
-    $templateCache.put('my/template.html', '<div ng-repeat="(key,value) in item"><span ng-class="key">{{ value }}</span></div>');
+    templateCache.put('my/template.html', '<div ng-repeat="(key,value) in item"><span ng-class="key">{{ value }}</span></div>');
 
     // Set up the outer scope
     scope = $rootScope.$new();
@@ -65,22 +66,22 @@ describe('Directive: twoWayInfiniteScroll', function () {
         initDfd = dfd;
       }),
       options: {
-        itemTemplateUrl: 'my/template.html',
-        maxItems: 100
+        itemTemplateUrl: 'my/template.html'
       }
     };
 
+    markup = '<div ' +
+      'two-way-infinite-scroll ' +
+      'init="my.initFn" ' +
+      'prepend="my.prependFn" ' +
+      'append="my.appendFn" ' +
+      'item-class="my-item" ' +
+      'item-template-url="my.options.itemTemplateUrl" ' +
+    '></div>';
+
     // Define and compile the element
     createElement = function() {
-      element = angular.element(
-        '<div ' +
-          'two-way-infinite-scroll="my.options" ' +
-          'init="my.initFn" ' +
-          'prepend="my.prependFn" ' +
-          'append="my.appendFn" ' +
-          'item-class="my-item" ' +
-          'item-template-url="my.options.itemTemplateUrl" ' +
-        '></div>');
+      element = angular.element(markup);
       element = compile(element)(scope);
       scope.$digest();
       isoScope = element.isolateScope();
@@ -130,6 +131,41 @@ describe('Directive: twoWayInfiniteScroll', function () {
     it('should not call the append or prepend functions', function() {
       expect(scope.my.prependFn).not.toHaveBeenCalled();
       expect(scope.my.appendFn).not.toHaveBeenCalled();
+    });
+
+    describe('when something is provided to the addToScope attribute', function() {
+      
+      beforeEach(function() {
+
+        scope.dutchie = {
+          value: 'to the left-hand side'
+        };
+
+        markup = '<div ' +
+          'two-way-infinite-scroll ' +
+          'init="my.initFn" ' +
+          'prepend="my.prependFn" ' +
+          'append="my.appendFn" ' +
+          'item-class="my-item" ' +
+          'item-template-url="my.options.itemTemplateUrl" ' +
+          'add-to-scope="{ passThe: dutchie }"' +
+        '></div>';
+
+        // Other setup, e.g. helper functions, etc.
+        templateCache.put('my/template.html', '<div ng-repeat="(key,value) in item"><span ng-class="key">{{ value }}, {{ passThe.value }}</span></div>');
+        createElement();
+        initDfd.resolve(createItems(1, itemCount));
+        scope.$apply();
+      });
+
+      it('should have the same number of item elements as elements in the array', function() {
+        expect(element.find('.my-item').length).toEqual(itemCount);
+      });
+
+      it('should be made available to the scope of each row', function() {
+        expect(element.find('.my-item:eq(0) .key1').text()).toEqual('value1-1, to the left-hand side');
+      });
+
     });
 
     describe('when the user scrolls to the top of the div', function() {
