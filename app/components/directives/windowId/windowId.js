@@ -22,7 +22,7 @@ angular.module('app.components.directives.windowId', [
 
 /**
  * @ngdoc directive
- * @name app.components.directives.directives:windowId
+ * @name app.components.directives.windowId
  * @description Converts an opaque window id into offset with the timestamp tooltip.
  * @element ANY
  * @param {String} windowId    The string version of a window ID.

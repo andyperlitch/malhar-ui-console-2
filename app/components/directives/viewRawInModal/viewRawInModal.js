@@ -22,7 +22,7 @@ angular.module('app.components.directives.viewRawInModal', [
 
 /**
  * @ngdoc directive
- * @name app.components.directives.directives:viewRawInModal
+ * @name app.components.directives.viewRawInModal
  * @restrict A
  * @description Opens a modal with a &lt;pre&gt; tag that contains the provided content.
  * @element ANY
