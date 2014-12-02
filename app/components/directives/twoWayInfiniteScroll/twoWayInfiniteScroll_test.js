@@ -102,6 +102,16 @@ describe('Directive: twoWayInfiniteScroll', function () {
     expect(scope.my.initFn).toHaveBeenCalled();
   });
 
+  it('should be okay with an init function that gets defined later', function() {
+    var init = scope.my.initFn;
+    scope.my.initFn.calls.reset();
+    delete scope.my.initFn;
+    expect(createElement).not.toThrow();
+    scope.my.initFn = init;
+    scope.$digest();
+    expect(init).toHaveBeenCalled();
+  });
+
   describe('when the init function resolves the deferred', function() {
     
     beforeEach(function() {

@@ -99,6 +99,8 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
     },
     link: function(scope, element) {
 
+      $log.debug('Initializing twoWayInfiniteScroll', element);
+
       // Holds pending request flags
       scope.isPending = {};
 
@@ -272,9 +274,13 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
       }
 
       // Call the init function
-      var initDfd = $q.defer();
-      reset(initDfd.promise);
-      scope.init(initDfd);
+      scope.$watch('init', function(fn) {
+        if (typeof fn === 'function') {
+          var initDfd = $q.defer();
+          reset(initDfd.promise);
+          fn(initDfd);
+        }
+      });
 
       // Set the scroll events
       element.on('scroll', function() {
