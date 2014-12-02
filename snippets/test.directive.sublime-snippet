@@ -4,7 +4,7 @@
 
 describe('Directive: ${10:DIRECTIVE_NAME}', function () {
 
-  var element, scope, rootScope, isoScope, compile, sandbox, createElement;
+  var element, scope, rootScope, isoScope, compile, sandbox, markup, createElement;
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
@@ -29,9 +29,11 @@ describe('Directive: ${10:DIRECTIVE_NAME}', function () {
     // Set up the outer scope
     scope = \$rootScope.\$new();
 
+    markup = '<div ${30:MY-DIRECTIVE}></div>';
+
     createElement = function() {
       // Define and compile the element
-      element = angular.element('<div ${30:MY-DIRECTIVE}></div>');
+      element = angular.element(markup);
       element = compile(element)(scope);
       scope.\$digest();
       isoScope = element.isolateScope();
