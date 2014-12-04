@@ -22,6 +22,9 @@ angular.module('app.components.services.delayedBroadcast', [])
   * @name app.components.services.delayedBroadcast
   * @description Broadcasts an event on the root scope after `delay` milliseconds.
   *              Can be used with {@link app.components.directives.focusOn focusOn} directive.
+  * @example
+  * <pre>delayedBroadcast('myEventName', 50);
+  * <pre>delayedBroadcast('myEventName'); // defaults to 200</pre>
 **/
 .factory('delayedBroadcast', function($rootScope, $timeout) {
   return function(eventName, delay) {
