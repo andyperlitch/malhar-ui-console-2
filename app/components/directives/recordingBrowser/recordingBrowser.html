@@ -3,25 +3,32 @@
   <div class="col-sm-2">
     <h4>Info</h4>
     <div class="recording-options">
-      <h5 class="readonly">Start Time</h5>
-      <p>{{ recording.data.startTime | relativeTimestamp }}</p>
 
       <h5 class="readonly">Total Tuples</h5>
       <p>{{ recording.data.totalTuples | commaGroups }}</p>
+      
+      <div ng-if="!sample">
+        <h5 class="readonly">Start Time</h5>
+        <p>{{ recording.data.startTime | relativeTimestamp }}</p>
 
-      <h5 class="readonly">Still Recording</h5>
-      <p>{{recording.data.ended ? 'no' : 'yes'}}</p>
-
-      <h5>Enabled Ports:</h5>
-      <div class="port-checkbox" ng-repeat="(id, port) in ports">
-        <input type="checkbox" name="port-{{port.name}}" ng-model="port.enabled">
-        <label ng-attr-for="port-{{port.name}}">{{port.name}}</label>
+        <h5 class="readonly">Still Recording</h5>
+        <p>{{recording.data.ended ? 'no' : 'yes'}}</p>
       </div>
 
-      <h5>Actions</h5>
-      <div class="recording-actions">
-        <button ng-click="recording.fetch()" class="btn btn-primary"><span class="fa fa-refresh"></span> <span dt-text>refresh</span></button>
-        <button ng-click="recording.stop()" ng-if="!recording.data.ended" class="btn btn-warning"><span class="glyphicon glyphicon-stop"></span> <span dt-text>stop</span></button>
+      <div>
+        <h5>Show Ports:</h5>
+        <div class="port-checkbox" ng-repeat="(id, port) in ports" ng-class="'type-' + port.type">
+          <input type="checkbox" name="port-{{port.name}}" ng-model="port.enabled">
+          <label ng-attr-for="port-{{port.name}}">{{port.name}} <small>({{port.type}})</small></label>
+        </div>
+      </div>
+
+      <div ng-if="!sample">
+        <h5>Actions</h5>
+        <div class="recording-actions">
+          <button ng-click="recording.fetch()" class="btn btn-primary"><span class="fa fa-refresh"></span> <span dt-text>refresh</span></button>
+          <button ng-click="recording.stop()" ng-if="!recording.data.ended" class="btn btn-warning"><span class="glyphicon glyphicon-stop"></span> <span dt-text>stop</span></button>
+        </div>
       </div>
     </div>
   </div>

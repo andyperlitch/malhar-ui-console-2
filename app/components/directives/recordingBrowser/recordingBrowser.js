@@ -24,11 +24,13 @@ angular.module('app.components.directives.recordingBrowser', [
   'app.components.directives.focusOn'
 ])
     /**
-        * @ngdoc directive
-        * @name app.components.directives.recordingBrowser
-        * @restrict A
-        * @description UI Component for navigating a tuple recording.
-        * @element div
+      * @ngdoc directive
+      * @name app.components.directives.recordingBrowser
+      * @restrict A
+      * @description UI Component for navigating a tuple recording.
+      * @param {RecordingModel} recording The recording to browse
+      * @param {Boolean}        sample    If true, treats the recording as a sample, meaning it will hide some additional controls. 
+      * @element div
     **/
 
 .directive('recordingBrowser', function(BigInteger, $q, $log, $timeout, delayedBroadcast) {
@@ -47,7 +49,8 @@ angular.module('app.components.directives.recordingBrowser', [
   return {
     templateUrl: 'components/directives/recordingBrowser/recordingBrowser.html',
     scope: {
-      recording: '=recordingBrowser'
+      recording: '=recordingBrowser',
+      sample: '='
     },
     link: {
       pre: function(scope) {

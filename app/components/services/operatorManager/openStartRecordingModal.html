@@ -2,7 +2,7 @@
 <div class="modal-header modal-header-info" ng-if="!recording && !error">
   <h3 class="modal-title">
     <dt-spinner></dt-spinner>
-    <span dt-text>Starting to record</span>
+    <span dt-text>Recording a sample</span>
   </h3>
 </div>
 
@@ -18,11 +18,13 @@
 <div class="modal-header" ng-if="recording">
   <h3 class="modal-title">
     <span class="fa fa-microphone"></span>
-    <span>Tuple Recording</span>
+    <span>Sample Tuples</span>
   </h3>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" ng-if="!recording" dt-text>Sampling this operator...</div>
+
+<div class="modal-body" ng-if="recording">
   
   <div ng-show="error">
     <p ng-show="error==='id'" dt-text>
@@ -33,7 +35,7 @@
     </p>
   </div>
 
-  <div ng-if="recording" recording-browser="recording"></div>
+  <div ng-if="recording" recording-browser="recording" sample="true"></div>
 
 </div>
 <div class="modal-footer">
