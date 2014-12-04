@@ -1,0 +1,6 @@
+<div ng-attr-class="tuple-item type-{{recording.data.ports[item.portId].type}}" ng-class="{ selected: item.selected }" ng-mousedown="onTupleClick($event, item, items)">
+  <span class="tuple-index">{{ item.index }}</span>
+  <span class="tuple-port">{{ recording.data.ports[item.portId].name }}</span>
+  <span class="tuple-port-type">({{ recording.data.ports[item.portId].type }})</span>
+  <span class="tuple-click-msg" dt-text>click to view</span>
+</div>

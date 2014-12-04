@@ -1,0 +1,94 @@
+@tuple-input-color: #0986D4;
+@tuple-output-color: #0B8D1B;
+
+.recording-browser {
+  h4 {
+    margin-top: 0;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #DFDFDF;
+  }
+  h5.readonly {
+    margin-bottom: 0;
+  }
+  .recording-actions {
+    button {
+      display: block;
+      margin-bottom: 5px;
+      width: 100%;
+      text-align: left;
+    }
+  }
+  .port-checkbox {
+    padding: 0.2em 0.5em 0;
+    background-color: #EFEFEF;
+    margin-bottom: 2px;
+  }
+}
+  
+.tuple-list {
+  height: 500px;
+  overflow: auto;
+  border: 1px solid #DFDFDF;
+
+  .tuple-row {
+
+    .tuple-item {
+      cursor: pointer;
+      margin: 0 0.2em;
+      border-bottom: 1px solid #DFDFDF;
+
+      &.type-input {
+        box-shadow: inset 10px 0 0 @tuple-input-color;
+        &.selected {
+          background-color: @tuple-input-color;
+          color: white;
+          .tuple-port-type, .tuple-port {
+            color: white;
+          }
+        }
+        .tuple-port-type, .tuple-port {
+          color: @tuple-input-color;
+        }
+      }
+      &.type-output {
+        box-shadow: inset 10px 0 0 @tuple-output-color;
+        &.selected {
+          background-color: @tuple-output-color;
+          color: white;
+          .tuple-port-type, .tuple-port {
+            color: white;
+          }
+        }
+        .tuple-port-type, .tuple-port {
+          color: @tuple-output-color;
+        }
+      }
+    }
+
+    .tuple-index {
+      min-width: 5em;
+      display: inline-block;
+      padding-left: 20px;
+    }
+
+    .tuple-port {
+      font-weight: bold;
+    }
+
+    .tuple-port-type {
+      font-size: 80%;
+    }
+
+    .tuple-click-msg {
+      float: right;
+      margin-right: 0.2em;
+      font-size: 90%;
+      color: #CCC;
+    }
+
+  }
+}
+.tuple-content {
+  height: 500px;
+  overflow: auto;
+}
