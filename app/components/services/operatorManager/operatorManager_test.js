@@ -71,9 +71,9 @@ describe('Factory: operatorManager', function () {
       appId = 'application_0001';
       opUrl = '/apps/' + appId + '/physOps/' + opId + '/recordings/start';
       portUrl = '/apps/' + appId + '/physOps/' + opId + '/ports/' + portName + '/recordings/start';
-      $httpBackend.whenPOST(opUrl).respond({});
-      $httpBackend.whenPOST(portUrl).respond({});
-      spyOn(operatorManager, 'pollForRecording');
+      $httpBackend.whenPOST(opUrl).respond({ id: '123' });
+      $httpBackend.whenPOST(portUrl).respond({ id: '456' });
+      spyOn(operatorManager, 'pollForRecording').and.callThrough();
     });
     
     it('should be a function', function() {
@@ -94,7 +94,7 @@ describe('Factory: operatorManager', function () {
 
     it('should return an object with a request promise', function() {
       var result = operatorManager.startRecording(appId, opId, portName);
-      expect(typeof result.request).toEqual('object');
+      expect(typeof result.id).toEqual('object');
       $httpBackend.flush();
     });
 
@@ -161,10 +161,9 @@ describe('Factory: operatorManager', function () {
     });
 
     it('should return a promise', function() {
-       var result = operatorManager.pollForRecording(appId, opId, portUrl);
+       var result = operatorManager.pollForRecording('123', appId, opId, portUrl);
        expect(typeof result).toEqual('object');
        expect(typeof result.then).toEqual('function');
-       $httpBackend.flush();
     });
 
   });
