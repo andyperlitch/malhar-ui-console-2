@@ -27,13 +27,14 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
   'app.settings',
   'app.components.resources.PhysicalOperatorCollection',
   'app.components.services.dtText',
+  'app.components.services.operatorManager',
   'app.components.services.tableOptionsFactory',
   'app.components.filters.percent2cpu',
   'app.components.directives.dtTableResize'
 ])
 
 // Widget Data Model
-.factory('PhysicalOperatorsListWidgetDataModel', function(BaseDataModel, PhysicalOperatorCollection, dtText, tableOptionsFactory) {
+.factory('PhysicalOperatorsListWidgetDataModel', function(BaseDataModel, PhysicalOperatorCollection, dtText, tableOptionsFactory, operatorManager) {
   var PhysicalOperatorsListWidgetDataModel = BaseDataModel.extend({
 
     init: function() {
@@ -57,6 +58,12 @@ angular.module('app.components.widgets.PhysicalOperatorsList', [
         // May be defined if on logical operator page
         operatorName: scope.operatorName
       });
+
+      // Add scope methods
+      scope.startRecording = function(operator) {
+        var request = operatorManager.startRecording(scope.appId, operator);
+        operatorManager.openStartRecordingModal(request);
+      };
 
       var latest;
       resource.set = function(updates) {
