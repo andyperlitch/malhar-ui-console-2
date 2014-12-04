@@ -75,11 +75,58 @@ angular.module('app.components.directives.recordingBrowser', [
               // Clear out all other selected
               tuples.forEach(function(t) {
                 delete t.selected;
+                delete t.anchor;
               });
               tuple.selected = true;
+              tuple.anchor = true;
             }
             else {
-              tuple.selected = !tuple.selected;
+              // find the index of the selected tuples
+              var clickedIndex = tuples.indexOf(tuple);
+
+              // find index of the anchor
+              var anchorIndex;
+              for (var i = 0; i < tuples.length; i++) {
+                if (tuples[i].anchor) {
+                  anchorIndex = i;
+                  break;
+                }
+              }
+              
+              // When no anchor is found, treat as if shift 
+              // was not being pressed.
+              // 
+              // Also, if the anchor is the same as the tuple 
+              // selected, also treat as if shift was not
+              // being pressed
+              if (typeof anchorIndex === 'undefined' || anchorIndex === clickedIndex) {
+                scope.scopeAdditions.onTupleClick({ preventDefault: angular.noop }, tuple, tuples);
+                return;
+              }
+
+              // Loop through, setting selected
+              var startedSelecting = false;
+              var doneSelecting = false;
+              for (var k = 0; k < tuples.length; k++) {
+                if (k === anchorIndex || k === clickedIndex) {
+                  if (!startedSelecting) {
+                    tuples[k].selected = true;
+                    startedSelecting = true;  
+                  }
+                  else {
+                    tuples[k].selected = true;
+                    doneSelecting = true;
+                  }
+                }
+                else {
+                  if (startedSelecting && !doneSelecting) {
+                    tuples[k].selected = true;
+                  }
+                  else {
+                    delete tuples[k].selected;
+                  }
+                }
+              }
             }
             
             // Update the selectedTuples on the scope            
@@ -95,28 +142,36 @@ angular.module('app.components.directives.recordingBrowser', [
         scope.onKeydown = function($event) {
           var which = $event.which;
           var items = scope.listOptions.getItems();
-          var item, currentWasSelected;
+          var item, currentIsSelected, currentIsAnchor;
           // up
           if (which === 38) {
             $event.preventDefault();
             var nextWasSelected;
+            var nextWasAnchor;
             for (var i = items.length -1; i >= 0; i--) {
               item = items[i];
-              currentWasSelected = item.selected;
+              currentIsSelected = item.selected;
+              currentIsAnchor = item.anchor;
               item.selected = nextWasSelected;
-              nextWasSelected = currentWasSelected;
+              item.anchor = nextWasAnchor;
+              nextWasSelected = currentIsSelected;
+              nextWasAnchor = currentIsAnchor;
             }
           }
           // down
           else if (which === 40) {
             $event.preventDefault();
             var previousWasSelected;
+            var previousWasAnchor;
             var len = items.length;
             for (var k = 0; k < len; k++) {
               item = items[k];
-              currentWasSelected = item.selected;
+              currentIsSelected = item.selected;
+              currentIsAnchor = item.anchor;
               item.selected = previousWasSelected;
-              previousWasSelected = currentWasSelected;
+              item.anchor = previousWasAnchor;
+              previousWasSelected = currentIsSelected;
+              previousWasAnchor = currentIsAnchor;
             }
           }
           else {

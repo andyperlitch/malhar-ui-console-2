@@ -99,8 +99,8 @@ describe('Directive: recordingBrowser', function () {
         preventDefault: jasmine.createSpy('preventDefault')
       };
       tuple = {};
-      other = { selected: true };
-      tuples = [{},{},other, tuple];
+      other = { selected: true, anchor: true };
+      tuples = [other, {}, {}, tuple, {}];
       trigger = function() {
         isoScope.scopeAdditions.onTupleClick($event, tuple, tuples);
       };
@@ -126,6 +126,14 @@ describe('Directive: recordingBrowser', function () {
           expect(isoScope.selectedTuples.length).toEqual(1);
           expect(isoScope.selectedTuples[0]).toEqual(tuple);
         });
+
+        it('should set an anchor attribute to true on the tuple', function() {
+          expect(tuple.anchor).toEqual(true);
+        });
+
+        it('should unset the previous anchor', function() {
+          expect(other.anchor).toBeFalsy();
+        });
         
       });
 
@@ -136,8 +144,9 @@ describe('Directive: recordingBrowser', function () {
           trigger();
         });
 
-        it('should keep it selected', function() {
+        it('should keep it selected and anchored', function() {
           expect(tuple.selected).toEqual(true);
+          expect(tuple.anchor).toEqual(true);
         });
 
         it('should deselect other selected tuples', function() {
@@ -161,39 +170,60 @@ describe('Directive: recordingBrowser', function () {
           trigger();
         });
 
-        it('should select the tuple', function() {
-          expect(tuple.selected).toEqual(true);
+        it('should select all tuples between the anchor and the clicked tuple', function() {
+          expect(isoScope.selectedTuples.length).toEqual(4);
+          expect(tuples.map(function(t) {
+            return t.selected;
+          })).toEqual([true, true, true, true, undefined]);
         });
 
-        it('should deselect other tuples', function() {
-          expect(other.selected).toEqual(true);
-        });
-
-        it('should update the selectedTuples', function() {
-          expect(isoScope.selectedTuples.length).toEqual(2);
-          expect(isoScope.selectedTuples).toContain(tuple);
-          expect(isoScope.selectedTuples).toContain(other);
+        it('should maintain the anchor', function() {
+          expect(other.anchor).toEqual(true);
         });
 
       });
 
-      describe('and the tuple is selected', function() {
+      describe('and the tuple is selected and there is an anchor', function() {
         
         beforeEach(function() {
+          tuples[4].selected = true;
           tuple.selected = true;
           trigger();
         });
 
-        it('should deselect the tuple', function() {
-          expect(tuple.selected).toBeFalsy();
+        it('should select all tuples between the anchor and the clicked tuple', function() {
+          expect(isoScope.selectedTuples.length).toEqual(4);
+          expect(tuples.map(function(t) {
+            return t.selected;
+          })).toEqual([true, true, true, true, undefined]);
         });
 
-        it('should keep the other tuple selected', function() {
-          expect(other.selected).toEqual(true);
+        it('should maintain the anchor', function() {
+          expect(other.anchor).toEqual(true);
         });
 
-        it('should update selectedTuples', function() {
-          expect(isoScope.selectedTuples).toEqual([other]);
+        it('should deselect tuples outside of the range', function() {
+          expect(tuples[4].selected).toBeFalsy();
+        });
+
+      });
+
+      describe('and the tuple is selected and is the anchor', function() {
+        
+        beforeEach(function() {
+          delete other.anchor;
+          tuple.anchor = true;
+          tuples[4].selected = true;
+          trigger();
+        });
+
+        it('should keep it as the anchor', function() {
+          expect(tuple.anchor).toBeTruthy();
+        });
+
+        it('should deselect all other tuples', function() {
+          expect(isoScope.selectedTuples.length).toEqual(1);
+          expect(isoScope.selectedTuples).toContain(tuple);
         });
 
       });
@@ -208,8 +238,8 @@ describe('Directive: recordingBrowser', function () {
 
     beforeEach(function() {
       items = [
-        {selected: true},
         {},
+        {selected: true, anchor: true },
         {selected: true},
         {selected: true}
       ];
@@ -232,15 +262,21 @@ describe('Directive: recordingBrowser', function () {
       });
 
       it('should select the previous models', function() {
-        expect(items[0].selected).toBeFalsy();
+        expect(items[0].selected).toBeTruthy();
         expect(items[1].selected).toBeTruthy();
         expect(items[2].selected).toBeTruthy();
         expect(items[3].selected).toBeFalsy();
       });
 
       it('should update selectedTuples', function() {
+        expect(isoScope.selectedTuples).toContain(items[0]);
         expect(isoScope.selectedTuples).toContain(items[1]);
         expect(isoScope.selectedTuples).toContain(items[2]);
+      });
+
+      it('should move the anchor', function() {
+        expect(items[0].anchor).toEqual(true);
+        expect(items[1].anchor).toBeFalsy();
       });
 
     });
@@ -254,14 +290,19 @@ describe('Directive: recordingBrowser', function () {
 
       it('should select the previous models', function() {
         expect(items[0].selected).toBeFalsy();
-        expect(items[1].selected).toBeTruthy();
-        expect(items[2].selected).toBeFalsy();
+        expect(items[1].selected).toBeFalsy();
+        expect(items[2].selected).toBeTruthy();
         expect(items[3].selected).toBeTruthy();
       });
 
       it('should update selectedTuples', function() {
-        expect(isoScope.selectedTuples).toContain(items[1]);
+        expect(isoScope.selectedTuples).toContain(items[2]);
         expect(isoScope.selectedTuples).toContain(items[3]);
+      });
+
+      it('should move the anchor', function() {
+        expect(items[1].anchor).toBeFalsy();
+        expect(items[2].anchor).toEqual(true);
       });
 
     });
@@ -273,8 +314,9 @@ describe('Directive: recordingBrowser', function () {
       });
 
       it('should do nothing', function() {
-        expect(items[0].selected).toBeTruthy();
-        expect(items[1].selected).toBeFalsy();
+        expect(items[0].selected).toBeFalsy();
+        expect(items[1].selected).toBeTruthy();
+        expect(items[1].anchor).toBeTruthy();
         expect(items[2].selected).toBeTruthy();
         expect(items[3].selected).toBeTruthy();
       });
