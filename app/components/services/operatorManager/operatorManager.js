@@ -21,7 +21,9 @@ angular.module('app.components.services.operatorManager', [
   'app.components.resources.RecordingModel',
   'app.components.resources.RecordingCollection',
   'ui.bootstrap.modal',
-  'app.components.directives.recordingBrowser'
+  'app.components.directives.recordingBrowser',
+  'app.components.directives.dtText',
+  'app.components.filters.relativeTimestamp'
 ])
 /**
  * @ngdoc service
