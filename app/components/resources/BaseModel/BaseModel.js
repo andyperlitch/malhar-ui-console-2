@@ -16,7 +16,11 @@
 'use strict';
 
 /**
- * Base Model
+ * @ngdoc service
+ * @name  app.components.resources.BaseModel
+ * @requires app.components.resources.BaseResource
+ * @description The base model class for other model resources.
+ * @example 
  *
  * The base model class for other model resources.
  * Subclasses can be created with the following:
@@ -34,7 +38,7 @@
  *                         // identified by a key other than "id"
  *   });
  *   return MySubModel;
- * })
+ * });
  * ```
  */
 
@@ -48,11 +52,11 @@ angular.module('app.components.resources.BaseModel', [
   var BaseModel = BaseResource.extend({
 
     /**
-     * Constructor for models. 
-     * 
-     * @param  {object|String|number} params  Parameters to be used when interpolating
-     *                                        url or topic URIs. Can also be this.idAttribute, 
-     *                                        i.e. string or number.
+     * @ngdoc method
+     * @name  constructor
+     * @methodOf app.components.resources.BaseModel
+     * @description Constructor for models.
+     * @param  {object|string|number} params Parameters to be used when interpolating url or topic URIs. Can also be this.idAttribute, i.e. string or number.
      */
     constructor: function (params) {
       this.data = {};
@@ -60,16 +64,13 @@ angular.module('app.components.resources.BaseModel', [
     },
 
     /**
-     * Updates the parameters used for url and topic interpolation.
-     * Sets this.url based on this.urlKey and the passed
-     * params object and id object. Used by this.constructor
-     * but is also useful when this.url has to be updated
-     * after instantiation.
-     * 
-     * Expects this.urlKey and/or this.topicKey
-     * to be defined in a subclass.
-     * 
-     * @param  {object|String|number} params  Parameters to be used when interpolating
+     * @ngdoc method
+     * @name  updateParams
+     * @methodOf app.components.resources.BaseModel
+     * @description  Updates the parameters used for url and topic interpolation. Sets this.url based on this.urlKey and the passed
+     *               params object and id object. Used by this.constructor but is also useful when this.url has to be updated after instantiation.
+     *               Expects this.urlKey and/or this.topicKey to be defined in a subclass.
+     * @param  {object|string|number} params  Parameters to be used when interpolating
      *                                        url or topic URIs. Can also be this.idAttribute, 
      *                                        i.e. string or number.
      */
@@ -97,25 +98,18 @@ angular.module('app.components.resources.BaseModel', [
     },
 
     /**
-     * Called when new data from the server comes in, e.g. from fetch or webSocket.
-     * If this is a websocket message and a scope was supplied to the subscribe
-     * function, scope.$apply() will be called AFTER this function is executed.
-     * 
+     * @ngdoc method
+     * @name  set
+     * @methodOf app.components.resources.BaseModel
+     * @description  Called when new data from the server comes in, e.g. from fetch or webSocket.
+     *               If this is a websocket message and a scope was supplied to the subscribe
+     *               function, scope.$apply() will be called AFTER this function is executed.
      * @param  {object} data  The transformed data from the server.
      */
     set: function(data) {
       _.extend(this.data, data);
       return this;
     },
-
-    // TEMP FIX UNTIL RECORDING BRANCH IS MERGED
-    // the recording branch has the proper ngdocs
-    // for this service.
-    /**
-      * @ngdoc service
-      * @name app.components.resources.BaseModel
-    **/
-    // END TEMP FIX
 
     /**
      * @ngdoc method

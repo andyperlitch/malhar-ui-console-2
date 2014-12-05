@@ -16,6 +16,11 @@
 
 'use strict';
 
+/**
+ * @ngdoc object
+ * @name  app.settings
+ * @description Holds various configuration data for the DataTorrent Console.
+ */
 angular.module('app.settings', [])
   .constant('settings', {
     //wsRoot: 'http://localhost:3000',
@@ -156,6 +161,13 @@ angular.module('app.settings', [])
     NONENDED_CONTAINER_STATES: ['ACTIVE', 'ALLOCATED'],
     STORAGE_KEY: 'datatorrent-ui-console',
     VISIBILITY_TIMEOUT: 20000,
+
+    /**
+     * @ngdoc object
+     * @name app.settings.urls
+     * @description Holds URL templates for gateway API resources.
+     * @type {Object}
+     */
     urls: {
 
       Alert                    :'/ws/:v/applications/:appId/alerts',
@@ -201,6 +213,12 @@ angular.module('app.settings', [])
       PackageApplication       :'/ws/:v/appPackages/:packageName/:packageVersion/applications/:appName'
     },
     
+    /**
+     * @ngdoc object
+     * @name app.settings.actions
+     * @description Holds URL templates for gateway API actions.
+     * @type {Object}
+     */
     actions: {
       killApp                  :'/ws/:v/applications/:appId/kill',
       killContainer            :'/ws/:v/applications/:appId/physicalPlan/containers/:containerId/kill',
@@ -217,6 +235,12 @@ angular.module('app.settings', [])
       stopPortRecording        :'/ws/:v/applications/:appId/physicalPlan/operators/:operatorId/ports/:portName/recordings/stop'
     },
     
+    /**
+     * @ngdoc object
+     * @name app.settings.topics
+     * @description Holds URI templates for gateway API WebSocket topics.
+     * @type {Object}
+     */
     topics: {
       
       ClusterMetrics           :'cluster.metrics',
@@ -230,12 +254,12 @@ angular.module('app.settings', [])
 
     },
 
-    // Page Routes
-    // 
-    // Used by routing definitions and 
-    // by the dt-page-href directive.
-    // This is the single source of truth
-    // for routes.
+    /**
+     * @ngdoc object
+     * @name app.settings.pages
+     * @description Used by routing definitions and by the dt-page-href directive. This is the single source of truth for routes.
+     * @type {Object}
+     */
     pages: {
       // Configuration
       AuthManagement           :'/config/auth-management',
@@ -266,6 +290,12 @@ angular.module('app.settings', [])
       DagEditor                :'/packages/:packageName/:packageVersion/applications/:appName/edit'
     },
 
+    /**
+     * @ngdoc object
+     * @name  app.settings.breadcrumbs
+     * @description Used to form the text in breadcrumbs.
+     * @type {Object}
+     */
     breadcrumbs: {
       appInstance              :':appId',
       appName                  :':appName',
@@ -323,18 +353,43 @@ angular.module('app.settings', [])
           dasharray: '1,5'
         }
       }
+    },
+
+    /**
+     * @ngdoc object
+     * @name  app.settings.recording
+     * @description Settings pertaining to the recording feature.
+     * @type {Object}
+     */
+    recording: {
+      /**
+       * @ngdoc property
+       * @name  app.settings.recording.POLLING_FOR_RECORDING_TIMEOUT
+       * @propertyOf app.settings.recording
+       * @description Amount of time that a new recording should be looked for.
+       * @type {Object}
+       */
+      POLLING_FOR_RECORDING_TIMEOUT: 10000,
+      /**
+       * @ngdoc property
+       * @name  app.settings.recording.POLLING_FOR_RECORDING_TIMEOUT
+       * @propertyOf app.settings.recording
+       * @description Interval time that should be used when polling for a recording
+       * @type {Object}
+       */
+      POLLING_FOR_RECORDING_INTERVAL: 1000
     }
   })
   .constant('PERMISSIONS', {
-    VIEW_OTHERS_APPS: 'VIEW_OTHERS_APPS',
-    EDIT_AND_KILL_OTHERS_APPS: 'EDIT_AND_KILL_OTHERS_APPS',
+    VIEW_OTHER_USERS_APPS: 'VIEW_OTHER_USERS_APPS',
+    MANAGE_OTHER_USERS_APPS: 'MANAGE_OTHER_USERS_APPS',
     VIEW_GLOBAL_CONFIG: 'VIEW_GLOBAL_CONFIG',
     EDIT_GLOBAL_CONFIG: 'EDIT_GLOBAL_CONFIG',
     ACCESS_RM_PROXY: 'ACCESS_RM_PROXY',
     VIEW_LICENSES: 'VIEW_LICENSES',
     MANAGE_LICENSES: 'MANAGE_LICENSES',
     VIEW_APP_PACKAGES: 'VIEW_APP_PACKAGES',
-    LAUNCH_APP_PACKAGES: 'LAUNCH_APP_PACKAGES',
+    LAUNCH_APPS: 'LAUNCH_APPS',
     MANAGE_APP_PACKAGES: 'MANAGE_APP_PACKAGES',
     MANAGE_USERS: 'MANAGE_USERS',
     MANAGE_ROLES: 'MANAGE_ROLES',

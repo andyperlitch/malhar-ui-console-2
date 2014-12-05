@@ -1,0 +1,46 @@
+<!-- loading header -->
+<div class="modal-header modal-header-info" ng-if="!recording && !error">
+  <h3 class="modal-title">
+    <dt-spinner></dt-spinner>
+    <span dt-text>Recording a sample</span>
+  </h3>
+</div>
+
+<!-- error header -->
+<div class="modal-header modal-header-danger" ng-if="error">
+  <h3 class="modal-title">
+    <span class="fa fa-warning"></span>
+    <span dt-text>An error occurred</span>
+  </h3>
+</div>
+
+<!-- loaded header -->
+<div class="modal-header" ng-if="recording">
+  <h3 class="modal-title">
+    <span class="fa fa-microphone"></span>
+    <span>Sample Tuples</span>
+  </h3>
+</div>
+
+<div class="modal-body" ng-if="!recording" dt-text>Sampling this operator...</div>
+
+<div class="modal-body" ng-if="recording">
+  
+  <div ng-show="error">
+    <p ng-show="error==='id'" dt-text>
+      The request to start a recording failed. Check to ensure that the operator is still running.
+    </p>
+    <p ng-show="error==='available'">
+      The request to start a recording succeeded, however the recording cannot be found.
+    </p>
+  </div>
+
+  <div ng-if="recording" recording-browser="recording" sample="true"></div>
+
+</div>
+<div class="modal-footer">
+  <!-- Uncomment this when a list of recordings is available -->
+  <!-- <button class="btn btn-primary" ng-show="recording" ng-click="deleteAndClose(recording)" dt-text>Delete and Close</button> -->
+  <!-- <button class="btn btn-default" ng-click="$dismiss()" dt-text>Close</button> -->
+  <button class="btn btn-primary" ng-show="recording" ng-click="deleteAndClose(recording)" dt-text>Close</button>
+</div>

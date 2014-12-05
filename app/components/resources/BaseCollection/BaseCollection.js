@@ -20,13 +20,23 @@ angular.module('app.components.resources.BaseCollection', [
   'app.components.resources.BaseResource',
   'app.components.resources.BaseModel'
 ])
+/**
+ * @ngdoc service
+ * @name  app.components.resources.BaseCollection
+ * @description  Base class for a collection of something.
+ * @requires  app.components.services.getUri
+ * @requires  app.components.resources.BaseResource
+ * @requires  app.components.resources.BaseModel
+ */
 .factory('BaseCollection', function(getUri, BaseResource, BaseModel) {
 
   var BaseCollection = BaseResource.extend({
     /**
-     * Constructor for collections. Expects this.urlKey and/or this.topicKey
-     * to be defined in a subclass.
-     * 
+     * @ngdoc method
+     * @name  constructor
+     * @methodOf app.components.resources.BaseCollection
+     * @description  Constructor for collections. Expects this.urlKey and/or this.topicKey
+     *               to be defined in a subclass.
      * @param  {object} params  Parameters to be used when interpolating url or topic URIs
      */
     constructor: function(params) {
@@ -40,21 +50,29 @@ angular.module('app.components.resources.BaseCollection', [
     },
 
     /**
-     * Default options to be passed to the set method.
+     * @ngdoc property
+     * @name  app.components.resources.BaseCollection.defaultSetOptions
+     * @description Default options to be passed to the set method.
      * @type {Object}
      */
     defaultSetOptions: {
       /**
-       * If enabled, members of the collection that are not receiving
-       * an update will be removed from this.data
+       * @ngdoc property
+       * @name  remove
+       * @propertyOf app.components.resources.BaseCollection.defaultSetOptions
+       * @description If enabled, members of the collection that are not receiving
+       *              an update will be removed from this.data
        * @type {Boolean}
        */
       remove: false,
       /**
-       * If the 'remove' option is enabled and this is enabled,
-       * the collection will simply be replaced by the updates
-       * passed to this.set. This can improve performance significantly,
-       * especially with large datasets.
+       * @ngdoc property
+       * @name  alwaysReset
+       * @propertyOf app.components.resources.BaseCollection.defaultSetOptions
+       * @description If the 'remove' option is enabled and this is enabled,
+       *              the collection will simply be replaced by the updates
+       *              passed to this.set. This can improve performance significantly,
+       *              especially with large datasets.
        * @type {Boolean}
        */
       alwaysReset: false,
@@ -68,9 +86,13 @@ angular.module('app.components.resources.BaseCollection', [
     },
 
     /**
-     * Called when new data from the server comes in, e.g. from fetch or webSocket.
+     * @ngdoc method
+     * @name  set
+     * @methodOf app.components.resources.BaseCollection
+     * @description  Called when new data from the server comes in, e.g. from fetch or webSocket.
      * 
-     * @param  {object} data  The transformed data from the server.
+     * @param  {Array} updates    The transformed data from the server.
+     * @param  {object} [options] Options to override defaultSetOptions.
      */
     set: function(updates, options) {
 
@@ -93,6 +115,11 @@ angular.module('app.components.resources.BaseCollection', [
       var updatedIds = {};
 
       _.each(updates, function(m) {
+
+        // Ensure this is an object (stopgap measure for SPOI-3476)
+        if (!angular.isObject(m)) {
+          return;
+        }
 
         // Look for existent model
         var current = self.get(m[self._idAttribute_]);
@@ -119,7 +146,10 @@ angular.module('app.components.resources.BaseCollection', [
     },
 
     /**
-     * Gets the model by model.prototype.idAttribute
+     * @ngdoc method
+     * @name  get
+     * @methodOf app.components.resources.BaseCollection
+     * @description  Gets the model by model.prototype.idAttribute
      * @param  {Mixed} id  The id value to compare to idAttribute of current models
      * @return {Object}    Object in collection, if found. If not, will return undefined.
      */
@@ -139,6 +169,13 @@ angular.module('app.components.resources.BaseCollection', [
 
     debugName: 'collection',
 
+    /**
+     * @ngdoc property
+     * @name  model
+     * @propertyOf app.components.resources.BaseCollection
+     * @description The class to use as a model for this collection. Used to determine what the idAttribute is for each model.
+     * @type {BaseModel}
+     */
     model: BaseModel
 
   });

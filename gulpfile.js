@@ -152,6 +152,15 @@ gulp.task('karma:watch', [], function () {
     }));
 });
 
+gulp.task('coverage:watch', [], function () {
+  gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
+    .pipe($.karma({
+      configFile: 'test/karma-coverage.conf.js',
+      action: 'watch',
+      browsers: ['Chrome']
+    }));
+});
+
 
 /**
  * Transforms

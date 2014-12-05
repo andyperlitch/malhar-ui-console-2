@@ -26,6 +26,14 @@ angular.module('app.components.resources.ApplicationModel', [
   'app.components.filters.relativeTimestamp',
   'app.components.filters.commaGroups'
 ])
+/**
+ * @ngdoc service
+ * @name  app.components.resources.ApplicationModel
+ * @description Represents an application instance.
+ * @requires app.components.resources.BaseModel
+ * @requires app.components.filters.commaGroups
+ * @requires app.components.filters.relativeTimestamp
+ */
 .factory('ApplicationModel', function(BaseModel) {
 
   var ApplicationModel = BaseModel.extend({

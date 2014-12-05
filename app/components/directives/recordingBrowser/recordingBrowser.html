@@ -1,0 +1,62 @@
+<div class="row recording-browser">
+
+  <div class="col-sm-2">
+    <h4>Info</h4>
+    <div class="recording-options">
+
+      <h5 class="readonly">Total Tuples</h5>
+      <p>{{ recording.data.totalTuples | commaGroups }}</p>
+      
+      <div ng-if="!sample">
+        <h5 class="readonly">Start Time</h5>
+        <p>{{ recording.data.startTime | relativeTimestamp }}</p>
+
+        <h5 class="readonly">Still Recording</h5>
+        <p>{{recording.data.ended ? 'no' : 'yes'}}</p>
+      </div>
+
+      <div>
+        <h5>Show Ports:</h5>
+        <div class="port-checkbox" ng-repeat="(id, port) in ports" ng-class="'type-' + port.type">
+          <input type="checkbox" name="port-{{port.name}}" ng-model="port.enabled">
+          <label ng-attr-for="port-{{port.name}}">{{port.name}} <small>({{port.type}})</small></label>
+        </div>
+      </div>
+
+      <div ng-if="!sample">
+        <h5>Actions</h5>
+        <div class="recording-actions">
+          <button ng-click="recording.fetch()" class="btn btn-primary"><span class="fa fa-refresh"></span> <span dt-text>refresh</span></button>
+          <button ng-click="recording.stop()" ng-if="!recording.data.ended" class="btn btn-warning"><span class="glyphicon glyphicon-stop"></span> <span dt-text>stop</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-5">
+    <h4>Tuples</h4>
+    <div class="tuple-list"
+      two-way-infinite-scroll
+      reset-on="resetTuples"
+      init="init"
+      options="listOptions"
+      prepend="prependTuples"
+      append="appendTuples"
+      item-class="tuple-row"
+      item-template-url="'components/directives/recordingBrowser/tupleRowTemplate.html'"
+      add-to-scope="scopeAdditions"
+      tabindex="0"
+      focus-on="focusOnTupleList"
+      ng-keydown="onKeydown($event)">
+    </div>
+  </div>
+
+  <div class="col-sm-5">
+    <h4>Content</h4>
+    <div ng-if="selectedTuples.length" class="tuple-content">
+      <pre ng-repeat="tuple in selectedTuples">{{tuple.data | json}}</pre>
+    </div>
+    <p ng-hide="selectedTuples.length" dt-text>Select a tuple in the list to see its contents.</p>
+  </div>
+
+</div>

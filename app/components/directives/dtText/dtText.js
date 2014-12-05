@@ -61,4 +61,16 @@ angular.module('app.components.directives.dtText', [
       };
     }
   };
+})
+.directive('dtTextSprintf', function(dtText) {
+  return {
+    restrict: 'A',
+    scope: false,
+    link: function postLink(scope, element, attrs) {
+      var key = $.trim(element.text());
+      var args = scope.$eval(attrs.dtTextSprintf);
+      args.unshift(key);
+      element.text(dtText.sprintf.apply(dtText, args));
+    }
+  };
 });

@@ -41,7 +41,8 @@ angular.module('app')
       },
       function(res) {
         $log.error('Logout failed. Response: ', res);
-        notificationService.error({
+        notificationService.notify({
+          type: 'error',
           title: dtText.get('Could not logout!'),
           text: dtText.get('An error occurred trying to logout of the system. Please contact your network administrator. More details have been logged to the browser console.')
         });
@@ -97,7 +98,8 @@ angular.module('app')
         },
         function(err) {
           // Error occurred trying to determine auth status, error and trigger anyway
-          notificationService.error({
+          notificationService.notify({
+            type: 'error',
             title: dtText.get('Could not get authentication status'),
             text: dtText.get('It could not be determined whether or not your DataTorrent cluster has authentication enabled or disabled.')
           });

@@ -192,6 +192,14 @@ describe('Resource: BaseCollection', function () {
       expect(data.length).toEqual(4);
     });
 
+    it('should discard null and falsy items', function() {
+      expect(function() {
+        c.set([{ id: 1 }, { id: 2 }, null]);
+      }).not.toThrow();
+      c.set([{ id: 1 }, { id: 2 }, null]);
+      expect(c.data.length).toEqual(2);
+    });
+
   });
 
 });

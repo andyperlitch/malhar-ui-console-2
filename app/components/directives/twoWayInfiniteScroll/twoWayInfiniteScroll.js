@@ -42,7 +42,9 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
  * @param {function} append The appending function. Takes a deferred as one argument which can be resolved or rejected
  *                           as explained in the main description.
  * @param {string} itemTemplateUrl The url of a template for the rows.
- * @param {number=} maxItems The maximum number of items to keep in memory and render. Defaults to 0 which means no limit.
+ * @param {object=} addToScope  An object containing key/value pairs that get added to the inner scope. Useful when the item
+ *                              template needs to access something from the outside scope. Note: it is not recommended to do
+ *                              object literal notation directly in the attribute value. This can lead to some strange results.
  * @param {string=} itemClass A class to attach to each item.
  * @example
  * <example module="app">
@@ -89,15 +91,18 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
     replace: true,
     templateUrl: 'components/directives/twoWayInfiniteScroll/twoWayInfiniteScroll.html',
     scope: {
-      options: '=',
+      options: '=?',
       init: '=',
       prepend: '=',
       append: '=',
       itemClass: '@',
       resetOn: '@?',
+      addToScope: '=?',
       itemTemplateUrl: '='
     },
     link: function(scope, element) {
+
+      $log.debug('Initializing twoWayInfiniteScroll', element);
 
       // Holds pending request flags
       scope.isPending = {};
@@ -272,9 +277,22 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
       }
 
       // Call the init function
-      var initDfd = $q.defer();
-      reset(initDfd.promise);
-      scope.init(initDfd);
+      scope.$watch('init', function(fn) {
+        if (typeof fn === 'function') {
+          var initDfd = $q.defer();
+          reset(initDfd.promise);
+          fn(initDfd);
+        }
+      });
+
+      // Add things to inner scope
+      scope.$watch('addToScope', function() {
+        if (angular.isObject(scope.addToScope)) {
+          for (var k in scope.addToScope) {
+            scope[k] = scope.addToScope[k];
+          }
+        }
+      }, true); 
 
       // Set the scroll events
       element.on('scroll', function() {
@@ -310,6 +328,13 @@ angular.module('app.components.directives.twoWayInfiniteScroll', [
         scope.$on(scope.resetOn, function(event, promise) {
           reset(promise);
         });
+      }
+
+      // Decorate the options
+      if (scope.options) {
+        scope.options.getItems = function() {
+          return scope.items;
+        };
       }
     }
   };
