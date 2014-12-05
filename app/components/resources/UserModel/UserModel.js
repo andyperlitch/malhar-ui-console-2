@@ -103,11 +103,17 @@ angular.module('app.components.resources.UserModel', [
      * 
      * @param  {string}   ability The ability that this user can or cannot do.
      * @return {boolean}          True if the user can do it, false if it cannot.
+     *                                 Note that this will always return true if
+     *                                 auth is disabled.
      * 
      * @example
      * <pre>user.can('MANAGE_ROLES')</pre>
      */
     can: function(ability) {
+
+      if (!this.data.authScheme) {
+        return true;
+      }
 
       if (!PERMISSIONS.hasOwnProperty(ability)) {
         $log.warn('Permission ability "' + ability + '" is unknown to the UI! Assuming the user CAN do these things and let errors happen if need be.');

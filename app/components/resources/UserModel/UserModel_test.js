@@ -317,6 +317,23 @@ describe('Resource: UserModel', function () {
 
     });
 
+    describe('when auth is disabled', function() {
+      
+      beforeEach(function() {
+        u.set({
+          userName: undefined,
+          authScheme: '',
+          permissions: undefined
+        });
+      });
+
+      it('should return true for anything', function() {
+        expect(u.can('DO_ANYTHING')).toEqual(true);
+        expect(u.can('BE_SUBPAR')).toEqual(true);
+      });
+
+    });
+
   });
 
   describe('the is method', function() {
