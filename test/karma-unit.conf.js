@@ -20,6 +20,7 @@
  */
 
 var sharedConfig = require('./karma-shared.conf');
+var argv = require('optimist').argv;
 
 module.exports = function(config, chain) {
   var conf = sharedConfig();
@@ -27,13 +28,23 @@ module.exports = function(config, chain) {
   conf.files = conf.files.concat([
     //extra testing code
     'app/bower_components/angular-mocks/angular-mocks.js',
+  ]);
 
-    //test files
-    'app/components/**/*_test.js',
-    'app/pages/**/*_test.js',
-    'app/app_test.js',
-    'app/app-controller_test.js',
+  if (argv.f) {
+    conf.files = conf.files.concat(argv.f);
+  }
 
+  else {
+    conf.files = conf.files.concat([
+      //test files
+      'app/components/**/*_test.js',
+      'app/pages/**/*_test.js',
+      'app/app_test.js',
+      'app/app-controller_test.js',
+    ]);
+  }
+
+  conf.files = conf.files.concat([
     // template files
     'app/components/**/*.html',
     'app/pages/**/*.html'

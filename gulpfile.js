@@ -13,6 +13,7 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
+var karma = require('karma').server;
 var argv = require('optimist').argv;
 var protractor = require('gulp-protractor').protractor;
 var webdriver_standalone = require('gulp-protractor').webdriver_standalone;
@@ -91,76 +92,66 @@ gulp.task('jshint_test', function () {
 /**
  * Testing
  */
-gulp.task('test', function () {
-  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
-    .pipe($.karma({
-      configFile: 'test/karma-unit.conf.js',
-      //configFile: 'test/karma-coverage.conf.js',
-      action: 'run',
-      //browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
-      browsers: ['PhantomJS']
-    }))
-    .on('error', function (err) {
-      throw err;
-    });
+
+// Unit tests
+gulp.task('unit', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/karma-unit.conf.js',
+    singleRun: true,
+    autoWatch: false,
+    browsers: ['Chrome']
+  }, done);
 });
 
-gulp.task('testall', function () {
-  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
-    .pipe($.karma({
-      configFile: 'test/karma-unit.conf.js',
-      //configFile: 'test/karma-coverage.conf.js',
-      action: 'run',
-      browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
-    }))
-    .on('error', function (err) {
-      throw err;
-    });
+gulp.task('unit:all', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/karma-unit.conf.js',
+    singleRun: true,
+    autoWatch: false,
+    browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
+  }, done);
 });
 
+gulp.task('unit:watch', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/karma-unit.conf.js',
+    singleRun: false,
+    autoWatch: true,
+    browsers: ['Chrome']
+  }, done);
+});
+
+// Code coverage
+gulp.task('coverage', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/karma-coverage.conf.js',
+    singleRun: true,
+    autoWatch: false,
+    browsers: ['Chrome']
+  }, done);
+});
+
+gulp.task('coverage:watch', function (done) {
+  karma.start({
+    configFile: __dirname + '/test/karma-coverage.conf.js',
+    singleRun: false,
+    autoWatch: true,
+    browsers: ['Chrome']
+  }, done);
+});
+
+// End-to-End tests
 gulp.task('webdriver_standalone', webdriver_standalone);
 
 gulp.task('e2e', function() {
   gulp.src(dev.scripts.e2e)
     .pipe(protractor({
-      configFile: "test/protractor.conf.js"
+      configFile: 'test/protractor.conf.js'
     })) 
-    .on('error', function(e) { throw e });
-});
-
-gulp.task('coverage', function () {
-  return gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
-    .pipe($.karma({
-      configFile: 'test/karma-coverage.conf.js',
-      action: 'run',
-      browsers: ['Chrome']
-    }))
-    .on('error', function (err) {
-      throw err;
+    .on('error', function(e) {
+      throw e;
     });
 });
-
-gulp.task('karma:watch', [], function () {
-  gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
-    .pipe($.karma({
-      configFile: 'test/karma-unit.conf.js',
-      // configFile: 'test/karma-coverage.conf.js',
-      action: 'watch',
-      // browsers: ['PhantomJS', 'Firefox', 'Safari', 'Chrome']
-      // browsers: ['PhantomJS', 'Chrome']
-      browsers: ['Chrome']
-    }));
-});
-
-gulp.task('coverage:watch', [], function () {
-  gulp.src('./idontexist')// force karma to use files in karma.conf, workaround for https://github.com/lazd/gulp-karma/issues/9
-    .pipe($.karma({
-      configFile: 'test/karma-coverage.conf.js',
-      action: 'watch',
-      browsers: ['Chrome']
-    }));
-});
-
 
 /**
  * Transforms
@@ -321,9 +312,9 @@ gulp.task('watch:ngdocs', ['serve:ngdocs'], function() {
 /**
  * Build
  */
-gulp.task('build', ['clean', 'jshint', 'test', 'copy']);
+gulp.task('build', ['clean', 'jshint', 'unit', 'copy']);
 
-gulp.task('travis', ['jshint', 'test']);
+gulp.task('travis', ['jshint', 'unit']);
 
 gulp.task('default', [], function () {
   gulp.start('build');
