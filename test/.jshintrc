@@ -32,7 +32,8 @@
     "jasmine": false,
     "spyOn": false,
     "$": false,
-    "_": false
+    "_": false,
+    "createService": false
   }
 }
 

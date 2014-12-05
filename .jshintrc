@@ -35,6 +35,7 @@
     "inject": false,
     "it": false,
     "jasmine": false,
-    "spyOn": false
+    "spyOn": false,
+    "createService": false
   }
 }
