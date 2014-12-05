@@ -29,7 +29,7 @@ angular.module('app.components.resources.RoleModel', [
  * @requires  app.components.services.getUri
  * @requires  app.components.resources.BaseModel
  */
-.factory('RoleModel', function(BaseModel, $http, getUri, confirm, dtText) {
+.factory('RoleModel', function(BaseModel, $http, getUri, confirm, dtText, $q) {
 
   function convertPermissionsToObject (arr) {
     var result = {};
@@ -60,6 +60,13 @@ angular.module('app.components.resources.RoleModel', [
       return obj;
     },
     save: function() {
+
+      if (this.data.name === 'admin') {
+        var dfd = $q.defer();
+        dfd.resolve();
+        return dfd.promise;
+      }
+
       var saveUrl = getUri.url('Role', null, this.data.name);
       var data = angular.copy(this.data);
       data.permissions = convertPermissionsToArray(data.permissions);

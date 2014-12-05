@@ -49,7 +49,7 @@ describe('Resource: RoleModel', function () {
     
     beforeEach(inject(function(_$httpBackend_) {
       $httpBackend = _$httpBackend_;
-      r.data.name = 'admin';
+      r.data.name = 'myrole';
       r.data.permissions = {
         MANAGE_USERS: true,
         MANAGE_ROLES: true,
@@ -67,10 +67,25 @@ describe('Resource: RoleModel', function () {
     });
 
     it('should PUT the role to the server with permissions as a list', function() {
-      $httpBackend.whenPUT('/roles/admin').respond({});
-      $httpBackend.expectPUT('/roles/admin', { name: 'admin', permissions: ['MANAGE_USERS', 'MANAGE_ROLES'] });
+      $httpBackend.whenPUT('/roles/myrole').respond({});
+      $httpBackend.expectPUT('/roles/myrole', { name: 'myrole', permissions: ['MANAGE_USERS', 'MANAGE_ROLES'] });
       expect(typeof r.save().then).toEqual('function');
       $httpBackend.flush();
+    });
+
+    describe('when it is the admin role', function() {
+      beforeEach(function() {
+        r.data.name = 'admin';
+      });
+
+      it('should not try and save if it is the admin role', function() {
+        r.save();
+      });
+
+      it('should return a promise', function() {
+        expect(angular.isPromise(r.save())).toEqual(true);
+      });
+
     });
 
   });
@@ -81,8 +96,8 @@ describe('Resource: RoleModel', function () {
     
     beforeEach(inject(function(_$httpBackend_) {
       $httpBackend = _$httpBackend_;
-      r.data.name = 'admin';
-      delUrl = '/roles/admin';
+      r.data.name = 'myrole';
+      delUrl = '/roles/myrole';
       $httpBackend.whenDELETE(delUrl).respond({});
     }));
     

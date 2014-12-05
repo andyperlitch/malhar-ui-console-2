@@ -112,8 +112,8 @@
         <tr ng-repeat="(ability,value) in PERMISSIONS">
           <th scope="row">{{ability}}</th>
           <td ng-repeat="role in roles.data">
-            <input type="checkbox" ng-model="role.permissions[value]" ng-show="flags.editingRoles" ng-disabled="savingRoles">
-            <div ng-hide="flags.editingRoles">
+            <input type="checkbox" ng-model="role.permissions[value]" ng-show="flags.editingRoles" ng-disabled="savingRoles" ng-if="role.name != 'admin'">
+            <div ng-hide="flags.editingRoles && role.name != 'admin'">
               <span ng-if="role.permissions[value]" class="text-success glyphicon glyphicon-ok"></span>
               <span ng-if="!role.permissions[value]" class="text-danger glyphicon glyphicon-remove"></span>
             </div>

@@ -35,7 +35,18 @@ angular.module('app.components.resources.RoleCollection', [
     model: RoleModel,
     transformResponse: function(raw) {
       var roles = raw.roles;
-      _.map(roles, RoleModel.prototype.transformResponse);
+      _.each(roles, RoleModel.prototype.transformResponse);
+      roles.sort(function(a,b) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        else if (a.name > b.name) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
       return roles;
     },
     defaultSetOptions: {
