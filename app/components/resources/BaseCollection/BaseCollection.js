@@ -116,6 +116,11 @@ angular.module('app.components.resources.BaseCollection', [
 
       _.each(updates, function(m) {
 
+        // Ensure this is an object (stopgap measure for SPOI-3476)
+        if (!angular.isObject(m)) {
+          return;
+        }
+
         // Look for existent model
         var current = self.get(m[self._idAttribute_]);
         if (current) {
