@@ -99,7 +99,7 @@ gulp.task('unit', function (done) {
     configFile: __dirname + '/test/karma-unit.conf.js',
     singleRun: true,
     autoWatch: false,
-    browsers: ['Chrome']
+    browsers: ['PhantomJS']
   }, done);
 });
 
