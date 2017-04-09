@@ -33,7 +33,7 @@ The following browsers are currently supported:
 Tests
 -----
 
-Tests are written using the [Mocha Framework](http://visionmedia.github.io/mocha/), the [Chai Assertion Library](http://chaijs.com/), and the [Sinon Library](http://sinonjs.org/). The `suite.js` file which is located in `front/test/` includes all the tests to be run. The individual test files are located in the same directory of the file under test, and by convention end in `.spec.js`.
+Tests are written using the [Mocha Framework](http://mochajs.org/), the [Chai Assertion Library](http://chaijs.com/), and the [Sinon Library](http://sinonjs.org/). The `suite.js` file which is located in `front/test/` includes all the tests to be run. The individual test files are located in the same directory of the file under test, and by convention end in `.spec.js`.
 
 ### CLI
 
